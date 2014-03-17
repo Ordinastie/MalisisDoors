@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 public class ShapedTestBlock extends Block
 {
@@ -52,14 +51,7 @@ public class ShapedTestBlock extends Block
 	@Override
 	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity par7Entity)
 	{
-		int metadata = world.getBlockMetadata(x, y, z);
-		AxisAlignedBB aabb = getBoundingBoxes();
-		aabb = aabb.getOffsetBoundingBox(x, y, z);
-		if (mask.intersectsWith(aabb))
-		{
-			MalisisCore.Message("Added " + aabb + "(mask : " + mask + ")");
-			list.add(aabb);
-		}
+
 	}
 
 	public void onBlockAdded(World world, int x, int y, int z)
@@ -72,7 +64,12 @@ public class ShapedTestBlock extends Block
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
 	{
 		MalisisCore.Message(x + ", " + y + ", " + z);
-		setBlockBounds(0, 0, 0, 1, 1, 1);
+		
+		int metadata = world.getBlockMetadata(x, y, z);
+		metadata ^= 1;
+		
+		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+		
 
 		return true;
 	}

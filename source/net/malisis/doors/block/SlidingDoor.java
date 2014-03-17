@@ -21,8 +21,6 @@ public class SlidingDoor extends Door
 		float f1 = 1.0F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
 		this.setHardness(2.0F);
-
-		soundPath = MalisisDoors.modid + ":slidingdooro";
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -51,6 +49,12 @@ public class SlidingDoor extends Door
 		iconSide = register.registerIcon(MalisisDoors.modid + ":" + getTextureName() + "_side");
 		iconTop[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_upper");
 		iconBottom[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_lower");
+	}
+	
+	public void playSound(World world, int x, int y, int z, int state)
+	{
+		if(state == stateOpening || state == stateClosing)
+			world.playSoundEffect(x, y, z, MalisisDoors.modid + ":slidingdooro", 1F, 1F);
 	}
 
 	public float[][] calculateBlockBounds(int metadata, boolean selBox)

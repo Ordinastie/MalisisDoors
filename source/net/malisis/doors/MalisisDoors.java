@@ -1,7 +1,6 @@
 package net.malisis.doors;
 
 import net.malisis.doors.proxy.CommonProxy;
-import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import cpw.mods.fml.common.Mod;
@@ -10,8 +9,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
@@ -28,10 +25,7 @@ public class MalisisDoors
 
 	public static MalisisDoors instance;
 
-
-	public static Block blockTest;
-	public static Block shapedTest;
-	public static Block stairsTest;
+//	public static Block blockTest;
 
 	public MalisisDoors()
 	{
@@ -55,9 +49,9 @@ public class MalisisDoors
 
 
 		// TESTING
-		blockTest = (new ShapedTestBlock(700)).setUnlocalizedName("blockTest");
-		GameRegistry.registerBlock(blockTest, modid + blockTest.getUnlocalizedName().substring(5));
-		LanguageRegistry.addName(blockTest, "Block Test");
+//		blockTest = (new ShapedTestBlock(700)).setUnlocalizedName("blockTest");
+//		GameRegistry.registerBlock(blockTest, modid + blockTest.getUnlocalizedName().substring(5));
+//		LanguageRegistry.addName(blockTest, "Block Test");
 
 	}
 

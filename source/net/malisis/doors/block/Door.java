@@ -168,17 +168,16 @@ public class Door extends BlockContainer
 			// MalisisMod.Message((world.isRemote ? "[C]" : "[S]") + "Metadata set : " + bottomMetadata);
 			world.setBlockMetadataWithNotify(x, y, z, bottomMetadata, 2);
 			world.markBlockForUpdate(x, y, z);// , x, y, z);
-
-			playOpenCloseSound(world, x, y, z);
 		}
+		playSound(world, x, y, z, state);
 	}
 
-	public void playOpenCloseSound(World world, int x, int y, int z)
+	public void playSound(World world, int x, int y, int z, int state)
 	{
-		if (soundPath != null)
-			world.playSoundEffect(x, y, z, soundPath, 1F, 1F);
-		else
-			world.playSoundEffect(x, y, z, Math.random() < 0.5F ? "random.door_open" : "random.door_close", 1.0F, 1.0F);
+		if(state == stateOpening)
+			world.playSoundEffect(x, y, z, "random.door_open", 1.0F, 1.0F);
+		else if (state == stateClose)
+			world.playSoundEffect(x, y, z, "random.door_close", 1.0F, 1.0F);
 	}
 
 	/**
