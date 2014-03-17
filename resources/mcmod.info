@@ -1,0 +1,22 @@
+[
+{
+  "modid": "malisisdoors",
+  "name": "Malisis' Doors",
+  "description": "Rendering API",
+  "version": "0.5",
+  "logoFile": "malisisdoors.png",
+  "mcversion": "1.6.4",
+  "url": "http://github.com/ordinastie",
+  "updateUrl": "",
+  "authors": [ "Ordinastie" ],
+  "parent":"",
+  "screenshots": [],
+  "requiredMods" : [ "malisiscore@[1.6.4-0.5,]" ],
+  "dependencies": [
+         "mod_MinecraftForge",
+         "malisiscore"
+		],
+  "useDependencyInformation": "true"
+		
+}
+]
