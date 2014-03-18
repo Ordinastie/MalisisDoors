@@ -6,7 +6,8 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.renderer.block.DoorRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.IconFlipped;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class Door extends BlockContainer
+public class Door extends BlockDoor implements ITileEntityProvider
 {
 	protected Icon[] iconTop;
 	protected Icon[] iconBottom;
@@ -54,6 +55,7 @@ public class Door extends BlockContainer
 		float f1 = 1.0F;
 		setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
 		disableStats();
+		this.isBlockContainer = true;
 		// wood
 		if (material == Material.wood)
 		{
@@ -238,7 +240,7 @@ public class Door extends BlockContainer
 
 	}
 
-	// #region Events
+	//#region Events
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
 	{
 		if (blockMaterial == Material.iron)
@@ -308,9 +310,14 @@ public class Door extends BlockContainer
 		}
 	}
 
-	// #end Events
+	//#end Events
 
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z, boolean selBox)
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	{
+		setBlockBoundsBasedOnState(world, x, y, z, false);
+	}
+	public boolean setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z, boolean selBox)
 	{
 		int metadata = getFullMetadata(world, x, y, z);
 		boolean topBlock = (metadata & flagTopBlock) != 0;
@@ -318,10 +325,11 @@ public class Door extends BlockContainer
 		if (te != null && te.moving)
 		{
 			setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-			return;
+			return false;
 		}
 		float[][] bounds = calculateBlockBounds(metadata, selBox);
 		setBlockBounds(bounds[0][0], bounds[0][1], bounds[0][2], bounds[1][0], bounds[1][1], bounds[1][2]);
+		return true;
 	}
 
 	public double[][] calculateBlockBoundsD(int metadata, boolean selBox)
@@ -363,12 +371,6 @@ public class Door extends BlockContainer
 		return new float[][] { { x, y, z }, { X, Y, Z } };
 	}
 
-	public boolean canPlaceBlockAt(World world, int x, int y, int z)
-	{
-		return y >= 255 ? false : world.doesBlockHaveSolidTopSurface(x, y - 1, z) && super.canPlaceBlockAt(world, x, y, z)
-				&& super.canPlaceBlockAt(world, x, y + 1, z);
-	}
-
 	public int getFullMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
@@ -404,6 +406,17 @@ public class Door extends BlockContainer
 			world.setBlockToAir(x, y - 1, z);
 		}
 	}
+	
+    /**
+     * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
+     * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter
+     */
+    public boolean onBlockEventReceived(World world, int x, int y, int z, int blockID, int eventID)
+    {
+        super.onBlockEventReceived(world, x, y, z, blockID, eventID);
+        TileEntity tileentity = world.getBlockTileEntity(x, y, z);
+        return tileentity != null ? tileentity.receiveClientEvent(blockID, eventID) : false;
+    }
 
 	public int idDropped(int metadata, Random par2Random, int par3)
 	{
@@ -413,14 +426,18 @@ public class Door extends BlockContainer
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		setBlockBoundsBasedOnState(world, x, y, z, true);
-		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+		if(setBlockBoundsBasedOnState(world, x, y, z, true))
+			return getAABB(world, x, y, z);
+		else
+			return null;
 	}
 
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		setBlockBoundsBasedOnState(world, x, y, z, false);
-		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+		if(setBlockBoundsBasedOnState(world, x, y, z, false))
+			return getAABB(world, x, y, z);
+		else
+			return null;
 	}
 
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
@@ -428,6 +445,11 @@ public class Door extends BlockContainer
 		setBlockBoundsBasedOnState(world, x, y, z, false);
 		return super.collisionRayTrace(world, x, y, z, par5Vec3, par6Vec3);
 	}
+	public AxisAlignedBB getAABB(World world, int x, int y, int z)
+	{
+		return AxisAlignedBB.getAABBPool().getAABB((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
+	}
+	
 
 	public int getMobilityFlag()
 	{
