@@ -20,6 +20,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -158,7 +159,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			{
 				DoorTileEntity te = (DoorTileEntity) world.getBlockTileEntity(x, y, z);
 				if (te != null)
+				{
+					if(!te.moving)
+						playSound(world, x, y, z, state);
 					te.startAnimation(state);
+				}
 				world.markBlockForUpdate(x, y, z);
 			}
 		}
@@ -170,8 +175,10 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			// MalisisMod.Message((world.isRemote ? "[C]" : "[S]") + "Metadata set : " + bottomMetadata);
 			world.setBlockMetadataWithNotify(x, y, z, bottomMetadata, 2);
 			world.markBlockForUpdate(x, y, z);// , x, y, z);
+			playSound(world, x, y, z, state);
 		}
-		playSound(world, x, y, z, state);
+	
+		
 	}
 
 	public void playSound(World world, int x, int y, int z, int state)
@@ -210,6 +217,30 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		return true;
 	}
 
+	
+	protected ForgeDirection findDoubleDoor(World world, int x, int y, int z)
+	{
+		int metadata = getFullMetadata(world, x, y, z);
+		int dir = metadata & 3;
+		
+		if (dir == DIR_NORTH || dir == DIR_SOUTH)
+		{
+			if (this.isDoubleDoor(world, x - 1, y, z, metadata))
+				return ForgeDirection.WEST;
+			if (this.isDoubleDoor(world, x + 1, y, z, metadata))
+				return ForgeDirection.EAST;
+		}
+		else if (dir == DIR_EAST || dir == DIR_WEST)
+		{
+			if (this.isDoubleDoor(world, x, y, z - 1, metadata))
+				return ForgeDirection.NORTH;
+			if (this.isDoubleDoor(world, x, y, z + 1, metadata))
+				return ForgeDirection.SOUTH;
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Open/close associated double door
 	 * @param world
@@ -217,29 +248,25 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	 * @param y
 	 * @param z
 	 */
-	protected void openDoubleDoor(World world, int x, int y, int z)
+	protected void openDoubleDoor(World world, int x, int y, int z, int state)
 	{
-		int metadata = getFullMetadata(world, x, y, z);
-		boolean opened = (metadata & flagOpened) != 0;
-		int dir = metadata & 3;
-
-		if (dir == DIR_NORTH || dir == DIR_SOUTH)
-		{
-			if (this.isDoubleDoor(world, x - 1, y, z, metadata))
-				setDoorState(world, x - 1, y, z, opened ? stateClosing : stateOpening);
-			if (this.isDoubleDoor(world, x + 1, y, z, metadata))
-				setDoorState(world, x + 1, y, z, opened ? stateClosing : stateOpening);
-		}
-		else if (dir == DIR_EAST || dir == DIR_WEST)
-		{
-			if (this.isDoubleDoor(world, x, y, z - 1, metadata))
-				setDoorState(world, x, y, z - 1, opened ? stateClosing : stateOpening);
-			if (this.isDoubleDoor(world, x, y, z + 1, metadata))
-				setDoorState(world, x, y, z + 1, opened ? stateClosing : stateOpening);
-		}
-
+		ForgeDirection d = findDoubleDoor(world, x, y, z);
+		if(d != null)
+			setDoorState(world, x + d.offsetX, y + d.offsetY, z + d.offsetZ, state);		
 	}
 
+	
+	/**
+	 * 
+	 */
+	protected boolean isDoubleDoorPowered(World world, int x, int y, int z)
+	{
+		ForgeDirection d = findDoubleDoor(world, x, y, z);
+		if(d != null)
+			return world.isBlockIndirectlyGettingPowered(x + d.offsetX, y + d.offsetY, z + d.offsetZ) || world.isBlockIndirectlyGettingPowered( x + d.offsetX, y + d.offsetY + 1, z + d.offsetZ);
+		return false;
+	}
+	
 	//#region Events
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
 	{
@@ -248,7 +275,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
 		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
-		openDoubleDoor(world, x, y, z);
+		openDoubleDoor(world, x, y, z, opened ? stateClosing : stateOpening);
 
 		return true;
 	}
@@ -259,8 +286,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		DoorTileEntity te = (DoorTileEntity) world.getBlockTileEntity(x, y, z);
 		if ((opened != powered) || (te != null && te.moving))
 		{
+			if(!powered && isDoubleDoorPowered(world, x, y, z))
+				return;
+			
 			setDoorState(world, x, y, z, powered ? stateOpening : stateClosing);
-			openDoubleDoor(world, x, y, z);
+			openDoubleDoor(world, x, y, z, powered ? stateOpening : stateClosing);
 		}
 	}
 
