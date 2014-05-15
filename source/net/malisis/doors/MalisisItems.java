@@ -1,12 +1,12 @@
 package net.malisis.doors;
 
 import net.malisis.doors.item.SlidingDoorItem;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class MalisisItems
 {
@@ -17,7 +17,7 @@ public class MalisisItems
 	public static void init()
 	{
 		instantiate();
-		registerNames();
+		registerItems();
 		registerRecipes();
 
 	}
@@ -25,22 +25,21 @@ public class MalisisItems
 	private static void instantiate()
 	{
 		// Sliding Door items
-		woodSlidingDoorItem = (new SlidingDoorItem(5000, Material.wood)).setUnlocalizedName("woodSlidingDoor");
-		ironSlidingDoorItem = (new SlidingDoorItem(5001, Material.iron)).setUnlocalizedName("ironSlidingDoor");
+		woodSlidingDoorItem = (new SlidingDoorItem(Material.wood)).setUnlocalizedName("wood_sliding_door");
+		ironSlidingDoorItem = (new SlidingDoorItem(Material.iron)).setUnlocalizedName("iron_sliding_door");
 	}
 
-	private static void registerNames()
+	private static void registerItems()
 	{
-		LanguageRegistry.addName(woodSlidingDoorItem, "Wood Sliding Door");
-		LanguageRegistry.addName(ironSlidingDoorItem, "Iron Sliding Door");
+		GameRegistry.registerItem(woodSlidingDoorItem, woodSlidingDoorItem.getUnlocalizedName());	
+		GameRegistry.registerItem(ironSlidingDoorItem, ironSlidingDoorItem.getUnlocalizedName());
 	}
-
+	
 	private static void registerRecipes()
 	{
 		// Sliding Door recipes
-		GameRegistry.addRecipe(new ItemStack(woodSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Block.planks, 'B', Block.glass });
-		GameRegistry
-				.addRecipe(new ItemStack(ironSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Item.ingotIron, 'B', Block.glass });
+		GameRegistry.addRecipe(new ItemStack(woodSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Blocks.planks, 'B', Blocks.glass });
+		GameRegistry.addRecipe(new ItemStack(ironSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Items.iron_ingot, 'B', Blocks.glass });
 
 	}
 }

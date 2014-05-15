@@ -1,0 +1,7 @@
+item.wood_sliding_door.name=Wooden Sliding Door
+item.iron_sliding_door.name=Iron Sliding Door
+tile.player_sensor.name=Player Sensor
+tile.vanishing_block_wood.name=Wooden Vanishing Frame
+tile.vanishing_block_iron.name=Iron Vanishing Frame
+tile.vanishing_block_gold.name=Gold Vanishing Frame
+tile.block_mixer.name=Block Mixer

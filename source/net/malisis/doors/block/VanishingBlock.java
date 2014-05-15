@@ -5,20 +5,21 @@ import java.util.Random;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.VanishingTileEntity;
-import net.malisis.doors.renderer.DefaultBlockRenderer;
+import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,26 +32,27 @@ public class VanishingBlock extends BlockContainer
     public static final int flagPowered = 1 << 2;
     public static final int flagInTransition = 1 << 3;
 
-    private Icon[] icons = new Icon[3];
+    private IIcon[] icons = new IIcon[3];
 
-    public VanishingBlock(int par1)
+    public VanishingBlock()
     {
-        super(par1, Material.wood);
+        super(Material.wood);
         setCreativeTab(CreativeTabs.tabRedstone);
         setHardness(0.5F);
     }
 
     // #region Icons
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister iconRegister)
+    @Override
+    public void registerBlockIcons(IIconRegister register)
     {
-        icons[typeWoodFrame] = iconRegister.registerIcon(MalisisDoors.modid + ":vanishingBlockWood");
-        icons[typeIronFrame] = iconRegister.registerIcon(MalisisDoors.modid + ":vanishingBlockIron");
-        icons[typeGoldFrame] = iconRegister.registerIcon(MalisisDoors.modid + ":vanishingBlockGold");
+        icons[typeWoodFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_wood");
+        icons[typeIronFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_iron");
+        icons[typeGoldFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_gold");
     }
 
     @Override
-    public Icon getIcon(int side, int frameType)
+    public IIcon getIcon(int side, int frameType)
     {
         frameType &= 3;
         if(frameType == typeIronFrame)
@@ -68,7 +70,7 @@ public class VanishingBlock extends BlockContainer
      */
     public boolean isPowered(World world, int x, int y, int z)
     {
-        return world.getBlockId(x, y, z) == blockID && (world.getBlockMetadata(x, y, z) & flagPowered) != 0;
+        return world.getBlock(x, y, z) == this && (world.getBlockMetadata(x, y, z) & flagPowered) != 0;
     }
 
     /**
@@ -76,12 +78,12 @@ public class VanishingBlock extends BlockContainer
      */
     public void setPowerState(World world, int x, int y, int z, boolean powered)
     {
-        if (world.getBlockId(x, y, z) != this.blockID) // block is VanishingBlock ?
+        if (world.getBlock(x, y, z) != this) // block is VanishingBlock ?
             return;
         if (isPowered(world, x, y, z) == powered) // same power state?
             return;
 
-        VanishingTileEntity te = (VanishingTileEntity) world.getBlockTileEntity(x, y, z);
+        VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
         te.setPowerState(powered);
 
         if(powered)
@@ -89,7 +91,7 @@ public class VanishingBlock extends BlockContainer
         else
             world.setBlockMetadataWithNotify(x, y, z, te.blockMetadata & ~flagPowered, 2);
 
-        world.scheduleBlockUpdate(x, y, z, this.blockID, 1);
+        world.scheduleBlockUpdate(x, y, z, this, 1);
     }
 
     /**
@@ -97,20 +99,20 @@ public class VanishingBlock extends BlockContainer
      */
     public boolean shouldPropagate(World world, int x, int y, int z, VanishingTileEntity source)
     {
-        if (world.getBlockId(x, y, z) != this.blockID) // block is VanishingBlock ?
+        if (world.getBlock(x, y, z) != this) // block is VanishingBlock ?
             return false;
 
         if ((source.getBlockMetadata() & 3) == typeWoodFrame)
             return true;
 
-        VanishingTileEntity dest = (VanishingTileEntity) world.getBlockTileEntity(x, y, z);
+        VanishingTileEntity dest = (VanishingTileEntity) world.getTileEntity(x, y, z);
         if(source.copiedBlock == null || dest.copiedBlock == null)
             return true;
 
-        if ((source.getBlockMetadata() & 3) == typeIronFrame && source.copiedBlockID == dest.copiedBlockID)
+        if ((source.getBlockMetadata() & 3) == typeIronFrame && source.copiedBlock== dest.copiedBlock)
             return true;
 
-        if ((source.getBlockMetadata() & 3) == typeGoldFrame && source.copiedBlockID == dest.copiedBlockID && source.copiedMetadata == dest.copiedMetadata)
+        if ((source.getBlockMetadata() & 3) == typeGoldFrame && source.copiedBlock == dest.copiedBlock && source.copiedMetadata == dest.copiedMetadata)
             return true;
 
         return false;
@@ -121,7 +123,7 @@ public class VanishingBlock extends BlockContainer
      */
     public void propagateState(World world, int x, int y, int z)
     {
-        VanishingTileEntity te = (VanishingTileEntity) world.getBlockTileEntity(x, y, z);
+        VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
         {
             if (shouldPropagate(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, te))
@@ -139,17 +141,18 @@ public class VanishingBlock extends BlockContainer
         ItemStack is = p.getHeldItem();
         if (is == null)
             return false;
-        if (!Block.isNormalCube(is.itemID) || is.itemID == blockID)
+        Block block = Block.getBlockFromItem(is.getItem());
+        if (!block.isNormalCube() || block == this)
             return false;
 
-        VanishingTileEntity te = (VanishingTileEntity) world.getBlockTileEntity(x, y, z);
+        VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
         if (te.copiedBlock != null)
             return false;
 
-        te.setBlock(is.itemID, is.getItemDamage());
-        blockHardness = te.copiedBlock.blockHardness;
-        slipperiness = te.copiedBlock.slipperiness;
-        stepSound = te.copiedBlock.stepSound;
+        te.setBlock(block, is.getItemDamage());
+        setHardness(block.getBlockHardness(world, x, y, z));
+        setStepSound(block.stepSound);
+        slipperiness = block.slipperiness;
 
         //if(!world.isRemote && !((EntityPlayerMP)p).theItemInWorldManager.isCreative())
         if(!p.capabilities.isCreativeMode)
@@ -160,13 +163,13 @@ public class VanishingBlock extends BlockContainer
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
         if (world.isRemote)
             return;
 
         boolean powered = world.isBlockIndirectlyGettingPowered(x, y, z);
-        if (powered || (blockID > 0 && Block.blocksList[blockID].canProvidePower() && blockID != this.blockID))
+        if (powered || (block.canProvidePower() && block != this))
         {
             if (isPowered(world, x, y, z) != powered)
                 world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, MalisisDoors.modid + ":portal", 0.3F, 0.5F);
@@ -181,13 +184,13 @@ public class VanishingBlock extends BlockContainer
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int i, int j)
+    public void breakBlock(World world, int x, int y, int z, Block block, int j)
     {
-        VanishingTileEntity te = (VanishingTileEntity) world.getBlockTileEntity(x, y, z);
+        VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
         if(te.copiedBlock != null)
         	te.copiedBlock.dropBlockAsItem(world, x, y, z, te.copiedMetadata, 0);
 
-         world.removeBlockTileEntity(x, y, z);
+         world.removeTileEntity(x, y, z);
     }
     //#end Events
 
@@ -211,11 +214,11 @@ public class VanishingBlock extends BlockContainer
     }
 
     @Override
-    public void getSubBlocks(int id, CreativeTabs tab, List list)
+    public void getSubBlocks(Item item, CreativeTabs tab, List list)
     {
-        list.add(new ItemStack(id, 1, typeWoodFrame));
-        list.add(new ItemStack(id, 1, typeIronFrame));
-        list.add(new ItemStack(id, 1, typeGoldFrame));
+        list.add(new ItemStack(item, 1, typeWoodFrame));
+        list.add(new ItemStack(item, 1, typeIronFrame));
+        list.add(new ItemStack(item, 1, typeGoldFrame));
     }
 
     @Override
@@ -225,7 +228,7 @@ public class VanishingBlock extends BlockContainer
     }
 
     @Override
-    public boolean isBlockNormalCube(World world, int x, int y, int z)
+    public boolean isNormalCube()
     {
         return false;
     }
@@ -238,8 +241,7 @@ public class VanishingBlock extends BlockContainer
     @Override
     public int getRenderType()
     {
-        return DefaultBlockRenderer.vanishingBlockRenderId;
-        //return 0;
+        return VanishingBlockRenderer.renderId;
     }
 
     @Override
@@ -261,13 +263,7 @@ public class VanishingBlock extends BlockContainer
     // }
 
     @Override
-    public TileEntity createNewTileEntity(World world)
-    {
-        return new VanishingTileEntity();
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int metadata)
+    public TileEntity createNewTileEntity(World world, int metadata)
     {
         return new VanishingTileEntity(metadata);
     }

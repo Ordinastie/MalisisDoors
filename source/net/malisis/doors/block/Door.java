@@ -10,25 +10,26 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.IconFlipped;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class Door extends BlockDoor implements ITileEntityProvider
 {
-	protected Icon[] iconTop;
-	protected Icon[] iconBottom;
-	protected Icon iconSide;
+	protected IIcon[] iconTop;
+	protected IIcon[] iconBottom;
+	protected IIcon iconSide;
 	protected String soundPath;
 
 	public static final int DIR_WEST = 0;
@@ -49,9 +50,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 	public static final int openingTime = 4;
 
-	public Door(int id, Material material)
+	public Door(Material material)
 	{
-		super(id, material);
+		super(material);
 		float f = 0.5F;
 		float f1 = 1.0F;
 		setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
@@ -61,23 +62,26 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (material == Material.wood)
 		{
 			setHardness(3.0F);
-			setStepSound(soundWoodFootstep);
-			setUnlocalizedName("doorWood");
+			setStepSound(soundTypeWood);
+			setBlockName("doorWood");
 			disableStats();
-			setTextureName("door_wood");
+			setBlockTextureName("door_wood");
 		}
 		else
 		{
 			setHardness(5.0F);
-			setStepSound(soundMetalFootstep);
-			setUnlocalizedName("doorIron");
-			setTextureName("door_iron");
+			setStepSound(soundTypeMetal);
+			setBlockName("doorIron");
+			setBlockTextureName("door_iron");
 		}
+		
+		
 	}
 
 	// #region Icons
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata)
+	@Override
+	public IIcon getIcon(int side, int metadata)
 	{
 		// return icons[(metadata & flagTopBlock) >> 3];
 		if (side == 1 || side == 0)
@@ -128,16 +132,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+	@Override
+	public void registerBlockIcons(IIconRegister register)
 	{
-		return getIcon(side, getFullMetadata(world, x, y, z));
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister register)
-	{
-		iconTop = new Icon[2];
-		iconBottom = new Icon[2];
+		iconTop = new IIcon[2];
+		iconBottom = new IIcon[2];
 		iconSide = register.registerIcon(MalisisDoors.modid + ":" + getTextureName() + "_side");
 		iconTop[0] = register.registerIcon(getTextureName() + "_upper");
 		iconBottom[0] = register.registerIcon(getTextureName() + "_lower");
@@ -157,7 +156,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		{
 			if (!world.isRemote)
 			{
-				DoorTileEntity te = (DoorTileEntity) world.getBlockTileEntity(x, y, z);
+				DoorTileEntity te = (DoorTileEntity) world.getTileEntity(x, y, z);
 				if (te != null)
 				{
 					if(!te.moving)
@@ -202,7 +201,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	{
 		int metadata2 = getFullMetadata(world, x, y, z);
 
-		if (world.getBlockId(x, y, z) != blockID) // different block
+		if (world.getBlock(x, y, z) != this) // different block
 			return false;
 
 		if ((metadata & 3) != (metadata2 & 3)) // different direction
@@ -268,6 +267,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 	
 	//#region Events
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
 	{
 		if (blockMaterial == Material.iron)
@@ -280,10 +280,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		return true;
 	}
 
+	//@Override
 	public void onPoweredBlockChange(World world, int x, int y, int z, boolean powered)
 	{
 		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
-		DoorTileEntity te = (DoorTileEntity) world.getBlockTileEntity(x, y, z);
+		DoorTileEntity te = (DoorTileEntity) world.getTileEntity(x, y, z);
 		if ((opened != powered) || (te != null && te.moving))
 		{
 			if(!powered && isDoubleDoorPowered(world, x, y, z))
@@ -294,7 +295,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		}
 	}
 
-	public void onNeighborBlockChange(World world, int x, int y, int z, int blockID)
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
 
@@ -302,18 +304,18 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		{
 			boolean flag = false;
 
-			if (world.getBlockId(x, y + 1, z) != this.blockID)
+			if (world.getBlock(x, y + 1, z) != this)
 			{
 				world.setBlockToAir(x, y, z);
 				flag = true;
 			}
 
-			if (!world.doesBlockHaveSolidTopSurface(x, y - 1, z))
+			if (!World.doesBlockHaveSolidTopSurface(world, x, y - 1, z))
 			{
 				world.setBlockToAir(x, y, z);
 				flag = true;
 
-				if (world.getBlockId(x, y + 1, z) == this.blockID)
+				if (world.getBlock(x, y + 1, z) == this)
 					world.setBlockToAir(x, y + 1, z);
 			}
 
@@ -326,17 +328,17 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			{
 				boolean flag1 = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
 
-				if ((flag1 || blockID > 0 && Block.blocksList[blockID].canProvidePower()) && blockID != this.blockID)
+				if ((flag1 || block.canProvidePower()) && block != this)
 					onPoweredBlockChange(world, x, y, z, flag1);
 			}
 		}
 		else
 		{
-			if (world.getBlockId(x, y - 1, z) != this.blockID)
+			if (world.getBlock(x, y - 1, z) != this)
 				world.setBlockToAir(x, y, z);
 
-			if (blockID > 0 && blockID != this.blockID)
-				onNeighborBlockChange(world, x, y - 1, z, blockID);
+			if (block != this)
+				onNeighborBlockChange(world, x, y - 1, z, block);
 		}
 	}
 
@@ -351,8 +353,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	{
 		int metadata = getFullMetadata(world, x, y, z);
 		boolean topBlock = (metadata & flagTopBlock) != 0;
-		DoorTileEntity te = (DoorTileEntity) world.getBlockTileEntity(x, y - (topBlock ? 1 : 0), z);
-		if (te != null && te.moving)
+		DoorTileEntity te = (DoorTileEntity) world.getTileEntity(x, y - (topBlock ? 1 : 0), z);
+		if (te != null && (te.moving || te.draw))
 		{
 			setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 			return false;
@@ -401,6 +403,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		return new float[][] { { x, y, z }, { X, Y, Z } };
 	}
 
+	//@Override
 	public int getFullMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
@@ -424,14 +427,16 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 
 	@SideOnly(Side.CLIENT)
-	public int idPicked(World par1World, int par2, int par3, int par4)
+	@Override
+	public Item getItem(World par1World, int par2, int par3, int par4)
 	{
-		return blockMaterial == Material.iron ? Item.doorIron.itemID : Item.doorWood.itemID;
+		return blockMaterial == Material.iron ? Items.iron_door : Items.wooden_door;
 	}
 
+	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int metadata, EntityPlayer p)
 	{
-		if (p.capabilities.isCreativeMode && (metadata & flagTopBlock) != 0 && world.getBlockId(x, y - 1, z) == blockID)
+		if (p.capabilities.isCreativeMode && (metadata & flagTopBlock) != 0 && world.getBlock(x, y - 1, z) == this)
 		{
 			world.setBlockToAir(x, y - 1, z);
 		}
@@ -441,19 +446,22 @@ public class Door extends BlockDoor implements ITileEntityProvider
      * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
      * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter
      */
+	@Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int blockID, int eventID)
     {
         super.onBlockEventReceived(world, x, y, z, blockID, eventID);
-        TileEntity tileentity = world.getBlockTileEntity(x, y, z);
+        TileEntity tileentity = world.getTileEntity(x, y, z);
         return tileentity != null ? tileentity.receiveClientEvent(blockID, eventID) : false;
     }
 
-	public int idDropped(int metadata, Random par2Random, int par3)
+    @Override
+	public Item getItemDropped(int metadata, Random par2Random, int par3)
 	{
-		return (metadata & flagTopBlock) != 0 ? 0 : (blockMaterial == Material.iron ? Item.doorIron.itemID : Item.doorWood.itemID);
+		return (metadata & flagTopBlock) != 0 ? null : (blockMaterial == Material.iron ? Items.iron_door : Items.wooden_door);
 	}
 
 	@SideOnly(Side.CLIENT)
+	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		if(setBlockBoundsBasedOnState(world, x, y, z, true))
@@ -462,6 +470,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			return null;
 	}
 
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		if(setBlockBoundsBasedOnState(world, x, y, z, false))
@@ -470,6 +479,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			return null;
 	}
 
+	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
 	{
 		setBlockBoundsBasedOnState(world, x, y, z, false);
@@ -479,42 +489,14 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	{
 		return AxisAlignedBB.getAABBPool().getAABB((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
 	}
-	
-
-	public int getMobilityFlag()
-	{
-		return 1;
-	}
-
-	public boolean isOpaqueCube()
-	{
-		return false;
-	}
-
-	public boolean getBlocksMovement(IBlockAccess world, int x, int y, int z)
-	{
-		return (getFullMetadata(world, x, y, z) & flagOpened) != 0;
-	}
-
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
 
 	public int getRenderType()
 	{
 		return DoorRenderer.renderId;
-		// return 7;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world)
-	{
-		return new DoorTileEntity();
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int metadata)
+	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new DoorTileEntity();
 	}

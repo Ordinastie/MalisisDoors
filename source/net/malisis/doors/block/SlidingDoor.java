@@ -5,8 +5,9 @@ import java.util.Random;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisItems;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,9 +15,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class SlidingDoor extends Door
 {
 
-	public SlidingDoor(int id, Material material)
+	public SlidingDoor(Material material)
 	{
-		super(id, material);
+		super(material);
 		float f = 0.5F;
 		float f1 = 1.0F;
 		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
@@ -24,7 +25,8 @@ public class SlidingDoor extends Door
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int metadata)
+	@Override
+	public IIcon getIcon(int side, int metadata)
 	{
 		// return icons[(metadata & flagTopBlock) >> 3];
 		if (side == 1 || side == 0)
@@ -42,21 +44,24 @@ public class SlidingDoor extends Door
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister register)
+	@Override
+	public void registerBlockIcons(IIconRegister register)
 	{
-		iconTop = new Icon[1];
-		iconBottom = new Icon[1];
+		iconTop = new IIcon[1];
+		iconBottom = new IIcon[1];
 		iconSide = register.registerIcon(MalisisDoors.modid + ":" + getTextureName() + "_side");
 		iconTop[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_upper");
 		iconBottom[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_lower");
 	}
 	
+	@Override
 	public void playSound(World world, int x, int y, int z, int state)
 	{
 		if(state == stateOpening || state == stateClosing)
 			world.playSoundEffect(x, y, z, MalisisDoors.modid + ":slidingdooro", 1F, 1F);
 	}
 
+	@Override
 	public float[][] calculateBlockBounds(int metadata, boolean selBox)
 	{
 		float f = DOOR_WIDTH;
@@ -82,6 +87,7 @@ public class SlidingDoor extends Door
 
 		if (dir == DIR_NORTH)
 		{
+			z = 0.01F;
 			Z = f;
 			if (opened)
 			{
@@ -92,6 +98,7 @@ public class SlidingDoor extends Door
 		if (dir == DIR_SOUTH)
 		{
 			z = 1 - f;
+			Z = 0.99F;
 			if (opened)
 			{
 				x += reversed ? right : left;
@@ -100,6 +107,7 @@ public class SlidingDoor extends Door
 		}
 		if (dir == DIR_WEST)
 		{
+			x = 0.01F;
 			X = f;
 			if(opened)
 			{
@@ -110,6 +118,7 @@ public class SlidingDoor extends Door
 		if (dir == DIR_EAST)
 		{
 			x = 1 - f;
+			X = 0.99F;
 			if(opened)
 			{
 				z += reversed ? left : right;
@@ -120,20 +129,22 @@ public class SlidingDoor extends Door
 		return new float[][] { { x, y, z }, { X, Y, Z } };
 	}
 
-	public int idDropped(int metadata, Random rand, int i)
+	@Override
+	public Item getItemDropped(int metadata, Random par2Random, int par3)
 	{
 		if ((metadata & 8) != 0)
-			return 0;
+			return null;
 
 		if (this.blockMaterial == Material.iron)
-			return MalisisItems.ironSlidingDoorItem.itemID;
+			return MalisisItems.ironSlidingDoorItem;
 		else
-			return MalisisItems.woodSlidingDoorItem.itemID;
+			return MalisisItems.woodSlidingDoorItem;
 	}
 
-	public int idPicked(World world, int x, int y, int z)
+	@Override
+	public Item getItem(World world, int x, int y, int z)
 	{
-		return this.blockMaterial == Material.iron ? MalisisItems.ironSlidingDoorItem.itemID : MalisisItems.woodSlidingDoorItem.itemID;
+		return this.blockMaterial == Material.iron ? MalisisItems.ironSlidingDoorItem : MalisisItems.woodSlidingDoorItem;
 	}
 
 }

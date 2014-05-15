@@ -1,0 +1,6 @@
+item.wood_sliding_door.name=Porte Coulissante en bois
+item.iron_sliding_door.name=Porte Coulissante en fer
+tile.player_sensor.name=Detecteur de joueur
+tile.vanishing_block_wood.name=Cadre de disparition en bois
+tile.vanishing_block_iron.name=Cadre de disparition en fer
+tile.vanishing_block_gold.name=Cadre de disparition en or

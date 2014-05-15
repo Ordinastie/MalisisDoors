@@ -5,6 +5,7 @@ import java.util.Random;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.element.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
+import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.block.SlidingDoor;
 import net.malisis.doors.entity.DoorTileEntity;
@@ -40,6 +41,7 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 		t.draw();
 		t.startDrawingQuads();
 	}
+
 	private void end()
 	{
 		t.draw();
@@ -58,23 +60,20 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 
 		init(x, y, z);
 
-		if(te instanceof VanishingTileEntity)
+		if (te instanceof VanishingTileEntity)
 			renderVanishingTileEntityAt((VanishingTileEntity) te, x, y, z, f);
-		else if(te instanceof DoorTileEntity)
+		else if (te instanceof DoorTileEntity)
 			renderDoorTileEntity((DoorTileEntity) te, x, y, z, f);
-
 
 		end();
 	}
 
 	public void renderDoorTileEntity(DoorTileEntity te, double x, double y, double z, float f)
 	{
-		if(!te.moving)
+		if (!te.draw)
 			return;
 
-		
-		
-		if(te.getBlockType() instanceof SlidingDoor)
+		if (te.getBlockType() instanceof SlidingDoor)
 		{
 			te.setSlidingDoorPosition(f);
 			GL11.glTranslatef(te.hingeOffsetX, 0, te.hingeOffsetZ);
@@ -87,26 +86,25 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 			GL11.glTranslatef(-te.hingeOffsetX, 0, -te.hingeOffsetZ);
 		}
 
-
-		BaseRenderer mrenderer = new BaseRenderer().set(te.worldObj, te.getBlockType(), te.xCoord, te.yCoord, te.zCoord, te.getBlockMetadata());
+		BaseRenderer mrenderer = new BaseRenderer().set(te.getWorldObj(), te.getBlockType(), te.xCoord, te.yCoord, te.zCoord,
+				te.getBlockMetadata());
 
 		RenderParameters rp = new RenderParameters();
 		rp.renderAllFaces = true;
 		rp.useBlockBounds = false;
 		rp.renderBounds = te.blockType.calculateBlockBoundsD(te.getBlockMetadata(), false);
 		rp.useBlockBrightness = false;
-		rp.brightness = te.worldObj.getLightBrightnessForSkyBlocks(te.xCoord, te.yCoord, te.zCoord, 0);
+		rp.brightness = te.getWorldObj().getLightBrightnessForSkyBlocks(te.xCoord, te.yCoord, te.zCoord, 0);
 		rp.calculateAOColor = false;
-	//	rp.colorFactor = te.brightnessFactor();
-		mrenderer.drawShape(Shape.Cube, rp);
+		rp.colorFactor = te.brightnessFactor();
+		mrenderer.drawShape(ShapePreset.Cube(), rp);
 
 		next();
 
 		GL11.glTranslated(0, 1, 0);
 		mrenderer.set(te.xCoord, te.yCoord + 1, te.zCoord);
 		mrenderer.set(te.getBlockMetadata() | Door.flagTopBlock);
-		mrenderer.drawShape(Shape.Cube, rp);
-
+		mrenderer.drawShape(ShapePreset.Cube(), rp);
 
 	}
 
@@ -118,8 +116,8 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		BaseRenderer mrenderer = new BaseRenderer().set(te.worldObj, te.blockType, te.xCoord, te.yCoord, te.zCoord, te.blockMetadata);
-		RenderParameters params = RenderParameters.Default();
+		BaseRenderer mrenderer = new BaseRenderer().set(te.getWorldObj(), te.blockType, te.xCoord, te.yCoord, te.zCoord, te.blockMetadata);
+		RenderParameters params = RenderParameters.setDefault();
 		float fx = 0.0F;
 		float fy = 0.0F;
 		float fz = 0.0F;
@@ -127,6 +125,7 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 
 		params.useBlockBounds = false;
 
+		Shape shape = ShapePreset.Cube();
 		// randomize position for vibrations
 		if (!te.inTransition && !te.powered)
 		{
@@ -142,21 +141,20 @@ public class TileEntityRenderer extends TileEntitySpecialRenderer
 		else
 		{
 			params.alpha = (int) (scale * 255);
-			params.scale = scale;
+			shape.scale(scale);
 		}
 
-		mrenderer.drawShape(Shape.Cube, params);
+		mrenderer.drawShape(ShapePreset.Cube(), params);
 
-		if(te.copiedBlock != null)
+		if (te.copiedBlock != null)
 		{
 			mrenderer.set(te.copiedBlock, te.copiedMetadata);
-			mrenderer.drawShape(Shape.Cube, params);
+			mrenderer.drawShape(shape, params);
 		}
 
 	}
 
 	public void test(VanishingTileEntity te, double x, double y, double z, float f)
-	{
-	}
+	{}
 
 }

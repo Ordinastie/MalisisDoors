@@ -1,9 +1,6 @@
 package net.malisis.doors.block;
 
-import static net.minecraftforge.common.ForgeDirection.EAST;
-import static net.minecraftforge.common.ForgeDirection.NORTH;
-import static net.minecraftforge.common.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.ForgeDirection.WEST;
+import static net.minecraftforge.common.util.ForgeDirection.*;
 
 import java.util.List;
 import java.util.Random;
@@ -11,14 +8,14 @@ import java.util.Random;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,14 +24,15 @@ public class PlayerSensor extends Block
 
 	//dir : 1 > West / 2 > South / 3 > North /  4 > East
 
-	public PlayerSensor(int id)
+	public PlayerSensor()
 	{
-		super(id, Material.circuits);
+		super(Material.circuits);
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister)
 	{
 		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
 	}
@@ -62,15 +60,15 @@ public class PlayerSensor extends Block
 	public boolean canPlaceBlockOnSide(World world, int x, int y, int z, int d)
 	{
 		ForgeDirection dir = ForgeDirection.getOrientation(d);
-		return (dir == NORTH && world.isBlockSolidOnSide(x, y, z + 1, NORTH)) || (dir == SOUTH && world.isBlockSolidOnSide(x, y, z - 1, SOUTH))
-				|| (dir == WEST && world.isBlockSolidOnSide(x + 1, y, z, WEST)) || (dir == EAST && world.isBlockSolidOnSide(x - 1, y, z, EAST));
+		return (dir == NORTH && world.isSideSolid(x, y, z + 1, NORTH)) || (dir == SOUTH && world.isSideSolid(x, y, z - 1, SOUTH))
+				|| (dir == WEST && world.isSideSolid(x + 1, y, z, WEST)) || (dir == EAST && world.isSideSolid(x - 1, y, z, EAST));
 	}
 
 	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z)
 	{
-		return (world.isBlockSolidOnSide(x - 1, y, z, EAST)) || (world.isBlockSolidOnSide(x + 1, y, z, WEST)) || (world.isBlockSolidOnSide(x, y, z - 1, SOUTH))
-				|| (world.isBlockSolidOnSide(x, y, z + 1, NORTH));
+		return (world.isSideSolid(x - 1, y, z, EAST)) || (world.isSideSolid(x + 1, y, z, WEST)) || (world.isSideSolid(x, y, z - 1, SOUTH))
+				|| (world.isSideSolid(x, y, z + 1, NORTH));
 	}
 
 	@Override
@@ -82,13 +80,13 @@ public class PlayerSensor extends Block
 
 		ForgeDirection dir = ForgeDirection.getOrientation(side);
 
-		if (dir == NORTH && world.isBlockSolidOnSide(x, y, z + 1, NORTH))
+		if (dir == NORTH && world.isSideSolid(x, y, z + 1, NORTH))
 			metadata = 4;
-		else if (dir == SOUTH && world.isBlockSolidOnSide(x, y, z - 1, SOUTH))
+		else if (dir == SOUTH && world.isSideSolid(x, y, z - 1, SOUTH))
 			metadata = 3;
-		else if (dir == WEST && world.isBlockSolidOnSide(x + 1, y, z, WEST))
+		else if (dir == WEST && world.isSideSolid(x + 1, y, z, WEST))
 			metadata = 2;
-		else if (dir == EAST && world.isBlockSolidOnSide(x - 1, y, z, EAST))
+		else if (dir == EAST && world.isSideSolid(x - 1, y, z, EAST))
 			metadata = 1;
 		else
 			metadata = this.getOrientation(world, x, y, z);
@@ -98,13 +96,13 @@ public class PlayerSensor extends Block
 
 	private int getOrientation(World world, int x, int y, int z)
 	{
-		if (world.isBlockSolidOnSide(x - 1, y, z, EAST))
+		if (world.isSideSolid(x - 1, y, z, EAST))
 			return 1;
-		if (world.isBlockSolidOnSide(x + 1, y, z, WEST))
+		if (world.isSideSolid(x + 1, y, z, WEST))
 			return 2;
-		if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH))
+		if (world.isSideSolid(x, y, z - 1, SOUTH))
 			return 3;
-		if (world.isBlockSolidOnSide(x, y, z + 1, NORTH))
+		if (world.isSideSolid(x, y, z + 1, NORTH))
 			return 4;
 		return 1;
 	}
@@ -135,23 +133,23 @@ public class PlayerSensor extends Block
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int metadata)
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
 		if (this.redundantCanPlaceBlockAt(world, x, y, z))
 		{
 			int dir = world.getBlockMetadata(x, y, z) & 7;
 			boolean drop = false;
 
-			if (!world.isBlockSolidOnSide(x - 1, y, z, EAST) && dir == 1)
+			if (!world.isSideSolid(x - 1, y, z, EAST) && dir == 1)
 				drop = true;
 
-			if (!world.isBlockSolidOnSide(x + 1, y, z, WEST) && dir == 2)
+			if (!world.isSideSolid(x + 1, y, z, WEST) && dir == 2)
 				drop = true;
 
-			if (!world.isBlockSolidOnSide(x, y, z - 1, SOUTH) && dir == 3)
+			if (!world.isSideSolid(x, y, z - 1, SOUTH) && dir == 3)
 				drop = true;
 
-			if (!world.isBlockSolidOnSide(x, y, z + 1, NORTH) && dir == 4)
+			if (!world.isSideSolid(x, y, z + 1, NORTH) && dir == 4)
 				drop = true;
 
 			if (drop)
@@ -180,15 +178,15 @@ public class PlayerSensor extends Block
 	}
 
 	@Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, int par5, int par6)
+	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
-		if ((par6 & 8) > 0)
+		if ((metadata & 8) > 0)
 		{
-			int j1 = par6 & 7;
-			this.notifyPower(par1World, par2, par3, par4, j1);
+			int j1 = metadata & 7;
+			this.notifyPower(world, x, y, z, j1);
 		}
 
-		super.breakBlock(par1World, par2, par3, par4, par5, par6);
+		super.breakBlock(world, x, y, z, block, metadata);
 	}
 
 	@Override
@@ -219,7 +217,7 @@ public class PlayerSensor extends Block
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		world.scheduleBlockUpdate(x, y, z, this.blockID, this.tickRate(world));
+		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 	}
 
 	private AxisAlignedBB getDetectionBox(World world, int x, int y, int z)
@@ -270,7 +268,7 @@ public class PlayerSensor extends Block
 	{
 		if (!world.isRemote)
 		{
-			world.scheduleBlockUpdate(x, y, z, this.blockID, this.tickRate(world));
+			world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 
 			List list = world.getEntitiesWithinAABB(EntityPlayer.class, this.getDetectionBox(world, x, y, z));
 			int metadata = world.getBlockMetadata(x, y, z);
@@ -333,24 +331,24 @@ public class PlayerSensor extends Block
 
 		if (flag1)
 		{
-			par1World.scheduleBlockUpdate(par2, par3, par4, this.blockID, this.tickRate(par1World));
+			par1World.scheduleBlockUpdate(par2, par3, par4, this, this.tickRate(par1World));
 		}
 	}
 
 	private void notifyPower(World world, int x, int y, int z, int dir)
 	{
-		world.notifyBlocksOfNeighborChange(x, y, z, this.blockID);
+		world.notifyBlocksOfNeighborChange(x, y, z, this);
 
 		if (dir == 1)
-			world.notifyBlocksOfNeighborChange(x - 1, y, z, this.blockID);
+			world.notifyBlocksOfNeighborChange(x - 1, y, z, this);
 		else if (dir == 2)
-			world.notifyBlocksOfNeighborChange(x + 1, y, z, this.blockID);
+			world.notifyBlocksOfNeighborChange(x + 1, y, z, this);
 		else if (dir == 3)
-			world.notifyBlocksOfNeighborChange(x, y, z - 1, this.blockID);
+			world.notifyBlocksOfNeighborChange(x, y, z - 1, this);
 		else if (dir == 4)
-			world.notifyBlocksOfNeighborChange(x, y, z + 1, this.blockID);
+			world.notifyBlocksOfNeighborChange(x, y, z + 1, this);
 		else
-			world.notifyBlocksOfNeighborChange(x, y - 1, z, this.blockID);
+			world.notifyBlocksOfNeighborChange(x, y - 1, z, this);
 	}
 
 	/**

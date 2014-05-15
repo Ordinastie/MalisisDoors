@@ -1,11 +1,10 @@
 package net.malisis.doors.entity;
 
 import net.malisis.doors.block.Door;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -13,6 +12,7 @@ public class DoorTileEntity extends TileEntity
 {
     public Door blockType;
     public boolean moving = false;
+    public boolean draw = false;
     public int state = 0;
 
     public float hingeOffsetX;
@@ -160,8 +160,6 @@ public class DoorTileEntity extends TileEntity
         else
         	timer--;
         
-
-        
         if(timer > Door.openingTime || timer < 0)
         {
             moving = false;
@@ -176,7 +174,7 @@ public class DoorTileEntity extends TileEntity
     public Door getBlockType()
     {
         if (blockType == null)
-            blockType = (Door) Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)];
+            blockType = (Door) worldObj.getBlock(xCoord, yCoord, zCoord);
 
         return blockType;
     }
@@ -207,7 +205,7 @@ public class DoorTileEntity extends TileEntity
 
         if(worldObj != null)
         {
-	        blockType = (Door) Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)];
+	        blockType = (Door) worldObj.getBlock(xCoord, yCoord, zCoord);
 	        blockMetadata = blockType.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
         }
     }
@@ -225,13 +223,14 @@ public class DoorTileEntity extends TileEntity
     {
         NBTTagCompound nbt = new NBTTagCompound();
         this.writeToNBT(nbt);
-        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
     }
 
     @Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
-        this.readFromNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);//, xCoord, yCoord, zCoord);
+        this.readFromNBT(packet.func_148857_g());
+        //TODO
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);//, xCoord, yCoord, zCoord);
     }
 }
