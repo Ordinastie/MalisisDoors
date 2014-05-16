@@ -17,7 +17,7 @@ public class MalisisDoors
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
-	public static final String version = "0.01";
+	public static final String version = "1.7.2-0.6.1";
 
 
 	public static MalisisDoors instance;
@@ -46,11 +46,6 @@ public class MalisisDoors
 	{
 	    NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	    
-		// TESTING
-//		blockTest = (new ShapedTestBlock(700)).setUnlocalizedName("blockTest");
-//		GameRegistry.registerBlock(blockTest, modid + blockTest.getUnlocalizedName().substring(5));
-//		LanguageRegistry.addName(blockTest, "Block Test");
-
 	}
 
 }
