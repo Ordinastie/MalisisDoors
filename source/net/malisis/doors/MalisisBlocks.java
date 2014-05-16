@@ -53,8 +53,8 @@ public class MalisisBlocks
 
 	private static void registerBlocks()
 	{
-		MalisisCore.replaceVanillaBlock(64, "wooden_door", doubleDoorWood, Blocks.wooden_door);
-		MalisisCore.replaceVanillaBlock(71, "iron_door", doubleDoorIron, Blocks.iron_door);
+		MalisisCore.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", doubleDoorWood, Blocks.wooden_door);
+		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", doubleDoorIron, Blocks.iron_door);
 		
 		GameRegistry.registerBlock(woodSlidingDoor, woodSlidingDoor.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(ironSlidingDoor, ironSlidingDoor.getUnlocalizedName().substring(5));
