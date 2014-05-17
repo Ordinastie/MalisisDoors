@@ -5,10 +5,11 @@ import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.Vertex;
+import net.malisis.core.renderer.preset.FacePreset;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.Door;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
@@ -19,15 +20,14 @@ import org.lwjgl.opengl.GL11;
 public class MixedBlockRenderer extends BaseRenderer
 {
 	public static int renderId;
-	public Door block;
 	private static int currentPass;
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		if(!item.hasTagCompound())
+		if (!item.hasTagCompound())
 			return;
-		
+
 		GL11.glPushMatrix();
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -44,9 +44,9 @@ public class MixedBlockRenderer extends BaseRenderer
 		int metadata2 = item.getTagCompound().getInteger("metadata2");
 
 		set(b1, metadata1);
-		drawShape(ShapePreset.Cube());
+		drawPass(0, null);
 		set(b2, metadata2);
-		drawSecondPass(ForgeDirection.WEST);
+		drawPass(1, ForgeDirection.WEST);
 
 		clean();
 
@@ -64,44 +64,60 @@ public class MixedBlockRenderer extends BaseRenderer
 		if (te == null)
 			return false;
 
-
-		
 		prepare(TYPE_WORLD);
-		
-		if(renderer.hasOverrideBlockTexture())
+
+		if (renderer.hasOverrideBlockTexture())
 		{
 			RenderParameters rp = RenderParameters.setDefault();
 			rp.icon = renderer.overrideBlockTexture;
 			drawShape(ShapePreset.Cube(), rp);
 		}
-		else if (currentPass == 0 && te.block1 != null)
+		else
 		{
-			set(te.block1, te.metadata1);
-			drawShape(ShapePreset.Cube());
-		}
-		else if (te.block2 != null)
-		{
-			GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
-			set(te.block2, te.metadata2);
-			drawSecondPass(ForgeDirection.getOrientation(metadata));
+			if(currentPass == 0)
+				set(te.block1, te.metadata1);
+			else 
+			{
+				GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
+				set(te.block2, te.metadata2);
+			}
+			drawPass(currentPass, ForgeDirection.getOrientation(metadata));
 		}
 		clean();
 
 		return true;
 	}
 
-	private void drawSecondPass(ForgeDirection dir)
+	private void drawPass(int pass, ForgeDirection dir)
 	{
 		RenderParameters rp = RenderParameters.setDefault();
 		rp.usePerVertexAlpha = true;
+		rp.useBlockBounds = false;
 
 		Shape cube = ShapePreset.Cube();
-		for (Face f : cube.getFaces())
+		int color = typeRender == TYPE_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
+
+		if (block instanceof BlockGrass)
 		{
-			for (Vertex v : f.getVertexes())
+			rp.colorMultiplier = 0xFFFFFF;
+			RenderParameters rpGrass = new RenderParameters();
+			rpGrass.colorMultiplier = color;
+			rpGrass.usePerVertexAlpha = true;
+			rpGrass.useBlockBounds = false;
+			cube.setParameters(FacePreset.Top(), rpGrass, true);
+		}
+		else
+			rp.colorMultiplier = color;
+
+		if(pass == 1)
+		{
+			for (Face f : cube.getFaces())
 			{
-				if (v.name().toLowerCase().contains(dir.name().toLowerCase()))
-					v.setAlpha(0);
+				for (Vertex v : f.getVertexes())
+				{
+					if (v.name().toLowerCase().contains(dir.name().toLowerCase()))
+						v.setAlpha(0);
+				}
 			}
 		}
 		drawShape(cube, rp);

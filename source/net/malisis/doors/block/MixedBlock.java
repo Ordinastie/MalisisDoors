@@ -1,5 +1,7 @@
 package net.malisis.doors.block;
 
+import java.util.ArrayList;
+
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.renderer.block.MixedBlockRenderer;
@@ -10,6 +12,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -75,7 +78,14 @@ public class MixedBlock extends BlockContainer
 		MixedBlockRenderer.setRenderPass(pass);
 		return true;
 	}
-
+	
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
+		return MixedBlockBlockItem.fromTileEntity(te);
+	}
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
@@ -163,5 +173,22 @@ public class MixedBlock extends BlockContainer
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new MixedBlockTileEntity();
+	}
+	
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if(!player.capabilities.isCreativeMode)
+		{
+			MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
+			dropBlockAsItem(world, x, y, z, MixedBlockBlockItem.fromTileEntity(te));
+		}
+		return super.removedByPlayer(world, player, x, y, z);
+	}
+	
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		return new ArrayList<ItemStack>();	
 	}
 }

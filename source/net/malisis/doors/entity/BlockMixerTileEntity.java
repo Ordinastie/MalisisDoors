@@ -50,10 +50,6 @@ public class BlockMixerTileEntity extends TileEntityInventory
 		}
 	}
 	
-	public void resetMixTimer()
-	{
-		mixTimer = 0;
-	}
 	public float getMixTimer()
 	{
 		return (float) mixTimer / (float) mixTotalTime;
