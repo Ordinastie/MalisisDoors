@@ -3,9 +3,9 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.VanishingTileEntity;
-import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -23,7 +23,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class VanishingBlock extends BlockContainer
+public class VanishingBlock extends BlockContainer implements IBaseRendering
 {
     public static final int typeWoodFrame = 0;
     public static final int typeIronFrame = 1;
@@ -33,6 +33,8 @@ public class VanishingBlock extends BlockContainer
     public static final int flagInTransition = 1 << 3;
 
     private IIcon[] icons = new IIcon[3];
+    
+    private int renderType = -1;
 
     public VanishingBlock()
     {
@@ -237,11 +239,17 @@ public class VanishingBlock extends BlockContainer
     {
     	return (world.getBlockMetadata(x, y, z) & (flagPowered | flagInTransition)) == 0 ? 0.2F : 1.0F;
     }
+    
+    @Override
+    public void setRenderId(int id)
+    {
+    	renderType = id;
+    }
 
     @Override
     public int getRenderType()
     {
-        return VanishingBlockRenderer.renderId;
+        return renderType;
     }
 
     @Override
@@ -249,18 +257,6 @@ public class VanishingBlock extends BlockContainer
     {
         return false;
     }
-
-    // @Override
-    // public boolean isOpaqueCube(IBlockAccess world, int x, int y, int z)
-    // {
-    // return (world.getBlockMetadata(x, y, z) & flagPowered) == 0;
-    // }
-    //
-    // @Override
-    // public boolean renderAsNormalBlock(World world, int x, int y, int z)
-    // {
-    // return renderAsNormalBlock();
-    // }
 
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)

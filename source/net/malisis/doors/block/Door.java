@@ -2,9 +2,9 @@ package net.malisis.doors.block;
 
 import java.util.Random;
 
+import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
-import net.malisis.doors.renderer.block.DoorRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
@@ -25,7 +25,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class Door extends BlockDoor implements ITileEntityProvider
+public class Door extends BlockDoor implements ITileEntityProvider, IBaseRendering
 {
 	protected IIcon[] iconTop;
 	protected IIcon[] iconBottom;
@@ -49,6 +49,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public static final int stateOpening = 3;
 
 	public static final int openingTime = 4;
+	
+	private int renderType = -1;
 
 	public Door(Material material)
 	{
@@ -490,9 +492,15 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		return AxisAlignedBB.getAABBPool().getAABB((double)x + this.minX, (double)y + this.minY, (double)z + this.minZ, (double)x + this.maxX, (double)y + this.maxY, (double)z + this.maxZ);
 	}
 
+	
+	public void setRenderId(int id)
+	{
+		renderType = id;
+	}
+	
 	public int getRenderType()
 	{
-		return DoorRenderer.renderId;
+		return renderType;
 	}
 
 	@Override

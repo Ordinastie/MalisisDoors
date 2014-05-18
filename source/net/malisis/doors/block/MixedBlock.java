@@ -2,6 +2,7 @@ package net.malisis.doors.block;
 
 import java.util.ArrayList;
 
+import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.renderer.block.MixedBlockRenderer;
@@ -22,8 +23,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class MixedBlock extends BlockContainer
+public class MixedBlock extends BlockContainer implements IBaseRendering
 {
+	private int renderType = -1;
+	
 	public MixedBlock()
 	{
 		super(Material.rock);
@@ -61,24 +64,6 @@ public class MixedBlock extends BlockContainer
 		te.setBlocks(block1, metadata1, block2, metadata2);
 	}
 
-	@Override
-	public int getRenderType()
-	{
-		return MixedBlockRenderer.renderId;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
-
-	public boolean canRenderInPass(int pass)
-	{
-		MixedBlockRenderer.setRenderPass(pass);
-		return true;
-	}
-	
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
@@ -190,5 +175,29 @@ public class MixedBlock extends BlockContainer
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
 		return new ArrayList<ItemStack>();	
+	}
+	
+	@Override
+	public void setRenderId(int id)
+	{
+		renderType = id;		
+	}
+	
+	@Override
+	public int getRenderType()
+	{
+		return renderType;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
+
+	public boolean canRenderInPass(int pass)
+	{
+		MixedBlockRenderer.setRenderPass(pass);
+		return true;
 	}
 }

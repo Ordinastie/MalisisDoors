@@ -1,6 +1,7 @@
 package net.malisis.doors.proxy;
 
 import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisBlocks;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
@@ -19,16 +20,19 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void initRenderers()
 	{
-		MixedBlockRenderer mbr = BaseRenderer.create(MixedBlockRenderer.class);
-		RenderingRegistry.registerBlockHandler(BaseRenderer.create(VanishingBlockRenderer.class));
-		RenderingRegistry.registerBlockHandler(BaseRenderer.create(DoorRenderer.class));
+		MixedBlockRenderer mbr = BaseRenderer.create(MixedBlockRenderer.class, (IBaseRendering) MalisisBlocks.mixedBlock);
+		RenderingRegistry.registerBlockHandler(BaseRenderer.create(VanishingBlockRenderer.class,
+				(IBaseRendering) MalisisBlocks.vanishingBlock));
+		RenderingRegistry.registerBlockHandler(BaseRenderer.create(DoorRenderer.class, (IBaseRendering) MalisisBlocks.doubleDoorWood,
+				(IBaseRendering) MalisisBlocks.doubleDoorWood, (IBaseRendering) MalisisBlocks.woodSlidingDoor,
+				(IBaseRendering) MalisisBlocks.ironSlidingDoor));
 		RenderingRegistry.registerBlockHandler(mbr);
 
 		TileEntityRenderer ter = new TileEntityRenderer();
 		ClientRegistry.bindTileEntitySpecialRenderer(VanishingTileEntity.class, ter);
 		ClientRegistry.bindTileEntitySpecialRenderer(DoorTileEntity.class, ter);
-		
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MalisisBlocks.mixedBlock), mbr);	
+
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(MalisisBlocks.mixedBlock), mbr);
 	}
 
 	@Override
