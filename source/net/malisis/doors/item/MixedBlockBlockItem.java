@@ -47,7 +47,7 @@ public class MixedBlockBlockItem extends ItemBlock
 	
 	public static boolean canBeMixed(Block block, boolean second)
 	{
-		return block.getIcon(0, 0) != null && (second || block.isOpaqueCube());
+		return second || block.isOpaqueCube();
 	}
 	
 	public static ItemStack fromTileEntity(MixedBlockTileEntity te)

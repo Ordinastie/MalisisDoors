@@ -17,7 +17,7 @@ public class MalisisDoors
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
-	public static final String version = "1.7.2-0.6.3";
+	public static final String version = "1.7.2-0.6.4";
 
 
 	public static MalisisDoors instance;
