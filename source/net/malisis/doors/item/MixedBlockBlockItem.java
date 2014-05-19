@@ -1,6 +1,7 @@
 package net.malisis.doors.item;
 
 import net.malisis.doors.MalisisBlocks;
+import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +48,7 @@ public class MixedBlockBlockItem extends ItemBlock
 	
 	public static boolean canBeMixed(Block block, boolean second)
 	{
-		return second || block.isOpaqueCube();
+		return !(block instanceof MixedBlock) && (second || block.isOpaqueCube());
 	}
 	
 	public static ItemStack fromTileEntity(MixedBlockTileEntity te)
