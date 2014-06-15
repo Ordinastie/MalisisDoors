@@ -1,8 +1,8 @@
 package net.malisis.doors.renderer.block;
 
 import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Face;
-import net.malisis.core.renderer.element.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.Vertex;
 import net.malisis.core.renderer.preset.FacePreset;
@@ -68,20 +68,21 @@ public class MixedBlockRenderer extends BaseRenderer
 
 		if (renderer.hasOverrideBlockTexture())
 		{
-			RenderParameters rp = RenderParameters.setDefault();
-			rp.icon = renderer.overrideBlockTexture;
+			RenderParameters rp = new RenderParameters();
+			rp.icon.set(renderer.overrideBlockTexture);
 			drawShape(ShapePreset.Cube(), rp);
 		}
 		else
 		{
-			if(currentPass == 0)
+			if (currentPass == 0)
 				set(te.block1, te.metadata1);
-			else 
+			else
 			{
 				GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
 				set(te.block2, te.metadata2);
 			}
-			drawPass(currentPass, ForgeDirection.getOrientation(metadata));
+			if (block instanceof Block)
+				drawPass(currentPass, ForgeDirection.getOrientation(metadata));
 		}
 		clean();
 
@@ -90,26 +91,26 @@ public class MixedBlockRenderer extends BaseRenderer
 
 	private void drawPass(int pass, ForgeDirection dir)
 	{
-		RenderParameters rp = RenderParameters.setDefault();
-		rp.usePerVertexAlpha = true;
-		rp.useBlockBounds = false;
+		RenderParameters rp = new RenderParameters();
+		rp.usePerVertexAlpha.set(true);
+		rp.useBlockBounds.set(false);
 
 		Shape cube = ShapePreset.Cube();
 		int color = typeRender == TYPE_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
 
 		if (block instanceof BlockGrass)
 		{
-			rp.colorMultiplier = 0xFFFFFF;
+			rp.colorMultiplier.set(0xFFFFFF);
 			RenderParameters rpGrass = new RenderParameters();
-			rpGrass.colorMultiplier = color;
-			rpGrass.usePerVertexAlpha = true;
-			rpGrass.useBlockBounds = false;
+			rpGrass.colorMultiplier.set(color);
+			rpGrass.usePerVertexAlpha.set(true);
+			rpGrass.useBlockBounds.set(false);
 			cube.setParameters(FacePreset.Top(), rpGrass, true);
 		}
 		else
-			rp.colorMultiplier = color;
+			rp.colorMultiplier.set(color);
 
-		if(pass == 1)
+		if (pass == 1)
 		{
 			for (Face f : cube.getFaces())
 			{

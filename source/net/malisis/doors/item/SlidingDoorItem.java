@@ -1,6 +1,5 @@
 package net.malisis.doors.item;
 
-import net.malisis.doors.MalisisBlocks;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -47,9 +46,9 @@ public class SlidingDoorItem extends ItemDoor
 
             Block block;
             if (this.material == Material.wood)
-                block = MalisisBlocks.woodSlidingDoor;
+                block = MalisisDoors.Blocks.woodSlidingDoor;
             else
-            	block = MalisisBlocks.ironSlidingDoor;
+            	block = MalisisDoors.Blocks.ironSlidingDoor;
 
 
 

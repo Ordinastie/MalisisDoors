@@ -32,6 +32,5 @@ public class GuiHandler implements IGuiHandler
 			return new BlockMixerGui(player.inventory, (BlockMixerTileEntity) tileEntity);
 		}
 		return null;
-
 	}
 }

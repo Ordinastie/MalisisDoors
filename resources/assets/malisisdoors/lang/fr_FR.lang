@@ -4,5 +4,6 @@ tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
 tile.vanishing_block_iron.name=Cadre de disparition en fer
 tile.vanishing_block_gold.name=Cadre de disparition en or
+tile.vanishing_block_diamond.name=Cadre de disparition en diamant
 tile.block_mixer.name=Mixer de bloc
 tile.mixed_block.name=Block mixé

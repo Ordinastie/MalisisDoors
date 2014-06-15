@@ -1,6 +1,6 @@
 package net.malisis.doors.item;
 
-import net.malisis.doors.MalisisBlocks;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
@@ -36,7 +36,7 @@ public class MixedBlockBlockItem extends ItemBlock
 		if(block1 == block2 && metadata1 == metadata2)
 			return null;
 		
-		ItemStack itemStack = new ItemStack(MalisisBlocks.mixedBlock, 1);
+		ItemStack itemStack = new ItemStack(MalisisDoors.Blocks.mixedBlock, 1);
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("block1", Block.getIdFromBlock(block1));
 		itemStack.stackTagCompound.setInteger("block2", Block.getIdFromBlock(block2));
@@ -53,7 +53,7 @@ public class MixedBlockBlockItem extends ItemBlock
 	
 	public static ItemStack fromTileEntity(MixedBlockTileEntity te)
 	{
-		ItemStack itemStack = new ItemStack(MalisisBlocks.mixedBlock, 1);
+		ItemStack itemStack = new ItemStack(MalisisDoors.Blocks.mixedBlock, 1);
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("block1", Block.getIdFromBlock(te.block1));
 		itemStack.stackTagCompound.setInteger("block2", Block.getIdFromBlock(te.block2));

@@ -4,5 +4,6 @@ tile.player_sensor.name=Spielersensor
 tile.vanishing_block_wood.name=Verschwindendes Holzgerüst
 tile.vanishing_block_iron.name=Verschwindendes Eisengerüst
 tile.vanishing_block_gold.name=Verschwindendes Goldgerüst
+tile.vanishing_block_diamond.name=Verschwindender Diamantblock
 tile.block_mixer.name=Block Mixer
 
