@@ -41,7 +41,6 @@ import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity.DirectionState;
 import net.malisis.doors.network.VanishingDiamondFrameMessage;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.common.eventbus.Subscribe;
@@ -56,7 +55,7 @@ public class VanishingDiamondGui extends MalisisGui
 	protected HashMap<ForgeDirection, UIComponent[]> configs = new HashMap<>();
 	protected VanishingDiamondTileEntity tileEntity;
 
-	public VanishingDiamondGui(VanishingDiamondTileEntity te, MalisisInventoryContainer container, EntityPlayer player)
+	public VanishingDiamondGui(VanishingDiamondTileEntity te, MalisisInventoryContainer container)
 	{
 		setInventoryContainer(container);
 		this.tileEntity = te;
@@ -108,10 +107,8 @@ public class VanishingDiamondGui extends MalisisGui
 		window.add(cont);
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
-		playerInv.setPosition(0, 0, Anchor.BOTTOM | Anchor.CENTER);
 		window.add(playerInv);
 
-		addToScreen(window);
 		tileEntity.guiUpdated = false;
 	}
 

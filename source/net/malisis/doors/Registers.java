@@ -4,14 +4,14 @@ import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.block.BlockMixer;
-import net.malisis.doors.block.Door;
-import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
-import net.malisis.doors.block.SlidingDoor;
-import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
+import net.malisis.doors.block.doors.Door;
+import net.malisis.doors.block.doors.FenceGate;
+import net.malisis.doors.block.doors.SlidingDoor;
+import net.malisis.doors.block.doors.TrapDoor;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.entity.FenceGateTileEntity;
@@ -57,7 +57,7 @@ public class Registers
 		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", doubleDoorIron, Blocks.iron_door);
 
 		MalisisCore.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
-		MalisisCore.replaceVanillaBlock(96, "trapdoor", "TBD", trapDoor, Blocks.trapdoor);
+		MalisisCore.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", trapDoor, Blocks.trapdoor);
 
 		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");

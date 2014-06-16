@@ -31,9 +31,9 @@ import net.malisis.core.renderer.animation.AnimationRenderer2;
 import net.malisis.core.renderer.animation.Rotation;
 import net.malisis.core.renderer.animation.Translation;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.Door;
-import net.malisis.doors.block.DoorHandler;
-import net.malisis.doors.block.SlidingDoor;
+import net.malisis.doors.block.doors.Door;
+import net.malisis.doors.block.doors.DoorHandler;
+import net.malisis.doors.block.doors.SlidingDoor;
 import net.malisis.doors.entity.DoorTileEntity;
 
 import org.lwjgl.opengl.GL11;

@@ -1,49 +1,53 @@
 package net.malisis.doors.gui;
 
-import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.entity.BlockMixerContainer;
+import net.malisis.core.client.gui.Anchor;
+import net.malisis.core.client.gui.MalisisGui;
+import net.malisis.core.client.gui.component.UISlot;
+import net.malisis.core.client.gui.component.container.UIPlayerInventory;
+import net.malisis.core.client.gui.component.container.UIWindow;
+import net.malisis.core.client.gui.component.decoration.UIProgressBar;
+import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.doors.entity.BlockMixerTileEntity;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
-import org.lwjgl.opengl.GL11;
-
-public class BlockMixerGui extends GuiContainer
+public class BlockMixerGui extends MalisisGui
 {
-	ResourceLocation texture = new ResourceLocation(MalisisDoors.modid, "textures/gui/block_mixer.png");
-	BlockMixerTileEntity te;
-	
-	public BlockMixerGui(InventoryPlayer inventoryPlayer, BlockMixerTileEntity tileEntity)
+	BlockMixerTileEntity tileEntity;
+	UIProgressBar progressBar;
+	UIProgressBar progressBarReversed;
+
+	public BlockMixerGui(BlockMixerTileEntity tileEntity, MalisisInventoryContainer container)
 	{
-		super(new BlockMixerContainer(inventoryPlayer, tileEntity));
-		te = tileEntity;
-//		xSize = 156;
-//		ySize = 62;
+		setInventoryContainer(container);
+		this.tileEntity = tileEntity;
+
+		UIWindow window = new UIWindow("tile.vanishing_block_diamond.name", 176, 166);
+
+		UISlot firstInputSlot = new UISlot(tileEntity.firstInput).setPosition(-60, 34, Anchor.CENTER);
+		UISlot secondInputSlot = new UISlot(tileEntity.secondInput).setPosition(60, 34, Anchor.CENTER);
+		UISlot outputSlot = new UISlot(tileEntity.output).setPosition(0, 34, Anchor.CENTER);
+
+		progressBar = new UIProgressBar().setPosition(-30, 35, Anchor.CENTER);
+		progressBarReversed = new UIProgressBar().setPosition(30, 35, Anchor.CENTER).setReversed();
+
+		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
+
+		window.add(firstInputSlot);
+		window.add(secondInputSlot);
+		window.add(outputSlot);
+
+		window.add(progressBar);
+		window.add(progressBarReversed);
+
+		window.add(playerInv);
+
+		addToScreen(window);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int param1, int param2)
+	public void updateScreen()
 	{
-		fontRendererObj.drawString(StatCollector.translateToLocal("tile.block_mixer.name"), 8, 6, 4210752);
-		fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 4210752);
-	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float par1, int mouseX, int mouseY)
-	{
-		ResourceLocation texture = new ResourceLocation(MalisisDoors.modid, "textures/gui/block_mixer.png");
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture(texture);
-		int x = (width - xSize) / 2;
-		int y = (height - ySize) / 2;
-		this.drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-		
-		float timer = te.getMixTimer();
-        this.drawTexturedModalRect(x + 46, y + 35, 176, 14, (int) (timer * 24) + 1, 16);
-        timer = 1 - timer;
-        this.drawTexturedModalRect(x + 107 + (int) (timer * 24), y + 35, 176 + (int) (timer * 24), 31, 24 - (int) (timer * 24) - 1, 16);
+		progressBar.setProgress(tileEntity.getMixTimer());
+		progressBarReversed.setProgress(tileEntity.getMixTimer());
 	}
 
 }

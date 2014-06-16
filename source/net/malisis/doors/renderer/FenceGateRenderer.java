@@ -30,8 +30,8 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.Rotation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.Door;
-import net.malisis.doors.block.DoorHandler;
+import net.malisis.doors.block.doors.Door;
+import net.malisis.doors.block.doors.DoorHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 

@@ -1,7 +1,7 @@
 package net.malisis.doors.entity;
 
-import net.malisis.doors.block.Door;
-import net.malisis.doors.block.DoorHandler;
+import net.malisis.doors.block.doors.Door;
+import net.malisis.doors.block.doors.DoorHandler;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;

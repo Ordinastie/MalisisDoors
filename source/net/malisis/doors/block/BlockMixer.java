@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -37,6 +38,7 @@ public class BlockMixer extends BlockContainer
 		this.frontIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
 	}
 
+	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
 		if ((metadata != 0 && side == metadata) || (metadata == 0 && side == 3))
@@ -47,7 +49,7 @@ public class BlockMixer extends BlockContainer
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
-		int side = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int side = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		int metadata = 0;
 		if (side == 0)
 			metadata = 2;
@@ -63,14 +65,14 @@ public class BlockMixer extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float hitX, float hitY, float hitZ)
 	{
-		if(world.isRemote)
+		if (world.isRemote)
 			return true;
-		
+
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if (tileEntity == null || player.isSneaking())
 			return false;
-		
-		player.openGui(MalisisDoors.instance, 0, world, x, y, z);
+
+		((BlockMixerTileEntity) tileEntity).getInventory().open((EntityPlayerMP) player);
 		return true;
 	}
 

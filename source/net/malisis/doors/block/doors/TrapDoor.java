@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block;
+package net.malisis.doors.block.doors;
 
-import static net.malisis.doors.block.DoorHandler.*;
+import static net.malisis.doors.block.doors.DoorHandler.*;
 import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.entity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;

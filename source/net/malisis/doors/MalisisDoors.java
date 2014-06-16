@@ -10,7 +10,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
 public class MalisisDoors
@@ -20,7 +19,7 @@ public class MalisisDoors
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
-	public static final String version = "1.7.2-0.6.4";
+	public static final String version = "1.7.2-0.6.5";
 
 	public static MalisisDoors instance;
 	public static Settings settings;
@@ -47,8 +46,6 @@ public class MalisisDoors
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkHandler.init(modid);
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 	}
 
 	public static class Blocks

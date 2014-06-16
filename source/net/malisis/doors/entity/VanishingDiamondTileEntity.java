@@ -35,7 +35,6 @@ import net.malisis.core.inventory.MalisisSlot;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.gui.VanishingDiamondGui;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
@@ -159,9 +158,9 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public MalisisGui getGui(MalisisInventoryContainer container, EntityPlayer player)
+	public MalisisGui getGui(MalisisInventoryContainer container)
 	{
-		return new VanishingDiamondGui(this, container, player);
+		return new VanishingDiamondGui(this, container);
 	}
 
 	public class DirectionState

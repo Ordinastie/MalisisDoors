@@ -40,7 +40,7 @@ public class VanishingBlockRenderer extends BaseRenderer
 			if (te.copiedBlock != null)
 			{
 				tessellatorUnshift();
-				renderBlocks.blockAccess = ProxyAccess.get(te.getWorldObj());
+				renderBlocks.blockAccess = ProxyAccess.get(world);
 				renderBlocks.renderAllFaces = true;
 				try
 				{

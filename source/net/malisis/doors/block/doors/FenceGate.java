@@ -22,14 +22,14 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block;
+package net.malisis.doors.block.doors;
 
 /**
  * @author Ordinastie
  *
  */
 
-import static net.malisis.doors.block.DoorHandler.*;
+import static net.malisis.doors.block.doors.DoorHandler.*;
 import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.entity.FenceGateTileEntity;
 import net.minecraft.block.Block;

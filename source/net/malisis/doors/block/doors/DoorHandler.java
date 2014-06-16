@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block;
+package net.malisis.doors.block.doors;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;

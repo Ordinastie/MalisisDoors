@@ -1,6 +1,6 @@
-package net.malisis.doors.block;
+package net.malisis.doors.block.doors;
 
-import static net.malisis.doors.block.DoorHandler.*;
+import static net.malisis.doors.block.doors.DoorHandler.*;
 
 import java.util.Random;
 
