@@ -7,3 +7,13 @@ tile.vanishing_block_gold.name=Gold Vanishing Frame
 tile.vanishing_block_diamond.name=Diamond Vanishing Frame
 tile.block_mixer.name=Block Mixer
 tile.mixed_block.name=Mixed Block
+
+malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
+
+config.title=MalisisDoors' configuration
+config.modifyVanillaDoors=Enable vanilla doors improvement
+config.enableMixedBlocks=Enable Block Mixer and Mixed Blocks
+config.simpleMixedBlockRendering=Simple Mixed Blocks rendering
+config.enableVanishingBlocks=Enable Vanishing Frames
+config.enableVanishingGlitch=Enable Vanishing Frames glitch animation
+config.vanishingGlitchChance=Vanishing Frames glitch frequency

@@ -1,8 +1,10 @@
 package net.malisis.doors.proxy;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
+import net.malisis.core.configuration.ConfigurationGui;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.entity.FenceGateTileEntity;
 import net.malisis.doors.entity.TrapDoorTileEntity;
@@ -58,5 +60,11 @@ public class ClientProxy extends CommonProxy
 	public void initSounds()
 	{
 		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@Override
+	public void openConfigurationGui()
+	{
+		(new ConfigurationGui(MalisisDoors.settings)).display();
 	}
 }

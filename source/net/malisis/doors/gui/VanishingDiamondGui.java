@@ -37,6 +37,7 @@ import net.malisis.core.client.gui.component.container.UIWindow;
 import net.malisis.core.client.gui.component.decoration.UILabel;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UITextField;
+import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity.DirectionState;
@@ -110,17 +111,19 @@ public class VanishingDiamondGui extends MalisisGui
 		window.add(playerInv);
 
 		tileEntity.guiUpdated = false;
+
+		addToScreen(window);
 	}
 
 	@Subscribe
-	public void onChecked(UICheckBox.CheckedEvent event)
+	public void onChecked(ComponentEvent.ValueChanged<UICheckBox, Boolean> event)
 	{
 		for (Entry<ForgeDirection, UIComponent[]> entry : configs.entrySet())
 		{
 			if (entry.getValue()[0] == event.getComponent())
 			{
-				entry.getValue()[1].setDisabled(!event.getNewState()); // Textfield
-				entry.getValue()[2].setDisabled(!event.getNewState()); // Checkbox
+				entry.getValue()[1].setDisabled(!event.getNewValue()); // Textfield
+				entry.getValue()[2].setDisabled(!event.getNewValue()); // Checkbox
 			}
 		}
 
@@ -128,7 +131,7 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onTextChanged(UITextField.TextChanged event)
+	public void onTextChanged(ComponentEvent.ValueChanged<UITextField, String> event)
 	{
 		updateConfig();
 	}

@@ -100,9 +100,9 @@ public class DoorRenderer extends BaseRenderer
 		setupShape();
 		setupRenderParameters();
 
-		if (typeRender == TYPE_WORLD)
+		if (renderType == TYPE_ISBRH_WORLD)
 			renderBlock();
-		else if (typeRender == TYPE_TESR_WORLD)
+		else if (renderType == TYPE_TESR_WORLD)
 			renderTileEntity();
 	}
 

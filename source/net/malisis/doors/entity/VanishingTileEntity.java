@@ -27,8 +27,8 @@ package net.malisis.doors.entity;
 import java.util.Random;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.ProxyAccess;
-import net.malisis.doors.Settings;
 import net.malisis.doors.block.VanishingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +45,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class VanishingTileEntity extends TileEntity
 {
-	public final static int maxTransitionTime = 20;
+	public final static int maxTransitionTime = 8;
 	public final static int maxVibratingTime = 15;
 
 	public Block copiedBlock;
@@ -62,7 +62,8 @@ public class VanishingTileEntity extends TileEntity
 
 	private final Random rand = new Random();
 
-	private Block[] excludes = new Block[] { Blocks.ladder, Blocks.stone_button, Blocks.wooden_button, Blocks.lever, Blocks.vine };
+	private Block[] excludes = new Block[] { MalisisDoors.Blocks.vanishingBlock, Blocks.air, Blocks.ladder, Blocks.stone_button,
+			Blocks.wooden_button, Blocks.lever, Blocks.vine };
 
 	public VanishingTileEntity()
 	{
@@ -93,16 +94,30 @@ public class VanishingTileEntity extends TileEntity
 		}
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());
-		if (block == MalisisDoors.Blocks.vanishingBlock || ArrayUtils.contains(excludes, block))
+		if (ArrayUtils.contains(excludes, block))
 			return false;
 
 		World proxy = (World) ProxyAccess.get(getWorldObj());
-		copiedTileEntity = block.createTileEntity(getWorldObj(), copiedMetadata);
 		copiedBlock = block;
-		copiedMetadata = block.onBlockPlaced(proxy, xCoord, yCoord, zCoord, side, hitX, hitY, hitZ, itemStack.getItemDamage());
+		copiedMetadata = itemStack.getItemDamage();
+		initCopiedTileEntity();
+		copiedMetadata = block.onBlockPlaced(proxy, xCoord, yCoord, zCoord, side, hitX, hitY, hitZ, copiedMetadata);
 		if (p != null)
 			block.onBlockPlacedBy(proxy, xCoord, yCoord, zCoord, p, itemStack);
 		return true;
+	}
+
+	private void initCopiedTileEntity()
+	{
+		copiedTileEntity = copiedBlock.createTileEntity(getWorldObj(), copiedMetadata);
+		if (copiedTileEntity != null)
+		{
+			copiedTileEntity.setWorldObj((World) ProxyAccess.get(getWorldObj()));
+			copiedTileEntity.xCoord = xCoord;
+			copiedTileEntity.yCoord = yCoord;
+			copiedTileEntity.zCoord = zCoord;
+		}
+
 	}
 
 	public boolean setPowerState(boolean powered)
@@ -125,15 +140,15 @@ public class VanishingTileEntity extends TileEntity
 		if (!inTransition && !powered)
 		{
 			float r = rand.nextFloat();
-			boolean b = r < Settings.vanishingGlitchChance * 0;
-			if (b && Settings.enableVanishingGlitch)
+			boolean b = r < MalisisDoorsSettings.vanishingGlitchChance.get();
+			if (b && MalisisDoorsSettings.enableVanishingGlitch.get())
 			{
 				vibrating = true;
 				vibratingTimer = 0;
 				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | VanishingBlock.flagInTransition, 2);
 			}
 
-			if (vibrating && vibratingTimer++ >= duration)
+			if (vibrating && vibratingTimer++ >= maxVibratingTime)
 			{
 				vibrating = false;
 				vibratingTimer = 0;
@@ -180,7 +195,7 @@ public class VanishingTileEntity extends TileEntity
 			copiedMetadata = nbt.getInteger("BlockMetadata");
 			if (nbt.hasKey("copiedTileEntity"))
 			{
-				copiedTileEntity = copiedBlock.createTileEntity(worldObj, copiedMetadata);
+				initCopiedTileEntity();
 				copiedTileEntity.readFromNBT(nbt.getCompoundTag("copiedTileEntity"));
 			}
 		}

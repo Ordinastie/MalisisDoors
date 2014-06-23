@@ -3,6 +3,7 @@ package net.malisis.doors.block;
 import java.util.ArrayList;
 
 import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.renderer.block.MixedBlockRenderer;
@@ -26,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MixedBlock extends BlockContainer implements IBaseRendering
 {
 	private int renderType = -1;
-	
+
 	public MixedBlock()
 	{
 		super(Material.rock);
@@ -35,16 +36,15 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 
 	@Override
 	public void registerBlockIcons(IIconRegister p_149651_1_)
-	{
-	}
-	
+	{}
+
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
 		if (!(itemStack.getItem() instanceof MixedBlockBlockItem))
 			return;
 
-		int side = MathHelper.floor_double((double) (player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int side = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		int metadata = 0;
 		if (side == 0)
 			metadata = 2;
@@ -70,7 +70,7 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
 		return MixedBlockBlockItem.fromTileEntity(te);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
@@ -78,20 +78,20 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		int x = target.blockX;
 		int y = target.blockY;
 		int z = target.blockZ;
-		
+
 		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
 		if (te == null)
 			return true;
-		
+
 		Block[] blocks = { te.block1, te.block2 };
 		int[] metadata = { te.metadata1, te.metadata2 };
 
 		float f = 0.1F;
 		ForgeDirection side = ForgeDirection.getOrientation(target.sideHit);
 
-		double fxX = (double) x + world.rand.nextDouble();
-		double fxY = (double) y + world.rand.nextDouble();
-		double fxZ = (double) z + world.rand.nextDouble();
+		double fxX = x + world.rand.nextDouble();
+		double fxY = y + world.rand.nextDouble();
+		double fxZ = z + world.rand.nextDouble();
 
 		switch (side)
 		{
@@ -110,9 +110,9 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 			default:
 				break;
 		}
-		
+
 		int i = world.rand.nextBoolean() ? 0 : 1;
-		
+
 		EntityDiggingFX fx = new EntityDiggingFX(world, fxX, fxY, fxZ, 0.0D, 0.0D, 0.0D, blocks[i], metadata[i]);
 		fx.multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
 		effectRenderer.addEffect(fx);
@@ -140,12 +140,11 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 			{
 				for (int k = 0; k < nb; ++k)
 				{
-					double fxX = (double) x + ((double) i + 0.5D) / (double) nb;
-					double fxY = (double) y + ((double) j + 0.5D) / (double) nb;
-					double fxZ = (double) z + ((double) k + 0.5D) / (double) nb;
+					double fxX = x + (i + 0.5D) / nb;
+					double fxY = y + (j + 0.5D) / nb;
+					double fxZ = z + (k + 0.5D) / nb;
 					int l = (i + j + k) % 2;
-					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - (double) x - 0.5D, fxY - (double) y - 0.5D, fxZ - (double) z
-							- 0.5D, blocks[l], metadata[l]);
+					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - x - 0.5D, fxY - y - 0.5D, fxZ - z - 0.5D, blocks[l], metadata[l]);
 					effectRenderer.addEffect(fx);
 				}
 			}
@@ -159,45 +158,47 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	{
 		return new MixedBlockTileEntity();
 	}
-	
+
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{
-		if(!player.capabilities.isCreativeMode)
+		if (!player.capabilities.isCreativeMode)
 		{
 			MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
 			dropBlockAsItem(world, x, y, z, MixedBlockBlockItem.fromTileEntity(te));
 		}
 		return super.removedByPlayer(world, player, x, y, z);
 	}
-	
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
-		return new ArrayList<ItemStack>();	
+		return new ArrayList<ItemStack>();
 	}
-	
+
 	@Override
 	public void setRenderId(int id)
 	{
-		renderType = id;		
+		renderType = id;
 	}
-	
+
 	@Override
 	public int getRenderType()
 	{
 		return renderType;
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderBlockPass()
 	{
-		return 1;
+		return MalisisDoorsSettings.simpleMixedBlockRendering.get() ? 0 : 1;
 	}
 
+	@Override
 	public boolean canRenderInPass(int pass)
 	{
 		MixedBlockRenderer.setRenderPass(pass);
-		return true;
+		return MalisisDoorsSettings.simpleMixedBlockRendering.get() ? pass == 0 : true;
 	}
 }

@@ -7,9 +7,11 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.ProxyAccess;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -22,15 +24,15 @@ public class VanishingBlockRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
-		if (typeRender == TYPE_TESR_WORLD)
+		if (renderType == TYPE_TESR_WORLD)
 			renderVanishingTileEntity();
-		else if (typeRender == TYPE_ISBRH_INVENTORY)
+		else if (renderType == TYPE_ISBRH_INVENTORY)
 		{
 			RenderParameters rp = new RenderParameters();
 			rp.useBlockBounds.set(false);
 			drawShape(ShapePreset.Cube(), rp);
 		}
-		else if (typeRender == TYPE_WORLD)
+		else if (renderType == TYPE_ISBRH_WORLD)
 		{
 			VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
 
@@ -59,18 +61,22 @@ public class VanishingBlockRenderer extends BaseRenderer
 			}
 			else if (((VanishingBlock) block).renderPass == 0)
 				drawShape(ShapePreset.Cube());
-
-			// if (te.copiedBlock != null)
-			// set(te.copiedBlock, te.copiedMetadata);
-			// drawShape(ShapePreset.Cube());
 		}
 	}
 
 	private void renderVanishingTileEntity()
 	{
 		VanishingTileEntity te = (VanishingTileEntity) this.tileEntity;
+
 		if (!te.inTransition && !te.vibrating)
+		{
+			if (!te.powered && te.copiedTileEntity != null)
+			{
+				clean();
+				TileEntityRendererDispatcher.instance.renderTileEntity(te.copiedTileEntity, partialTick);
+			}
 			return;
+		}
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -80,6 +86,7 @@ public class VanishingBlockRenderer extends BaseRenderer
 		float fy = 0.0F;
 		float fz = 0.0F;
 		float scale = (float) (te.getDuration() - te.transitionTimer) / (float) te.getDuration();
+		boolean rendered = te.copiedBlock != null;
 
 		RenderParameters rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
@@ -100,7 +107,8 @@ public class VanishingBlockRenderer extends BaseRenderer
 		}
 		else
 		{
-			rp.alpha.set((int) (255 - scale * 255));
+			int alpha = te.copiedBlock != null ? 255 - (int) (scale * 255) : (int) (scale * 255);
+			rp.alpha.set(alpha);
 			shape.scale(scale - 0.001F);
 		}
 
@@ -110,25 +118,47 @@ public class VanishingBlockRenderer extends BaseRenderer
 			renderBlocks.renderAllFaces = true;
 			try
 			{
-				// drawShape(shape, rp);
-				// next();
+				boolean smbr = MalisisDoorsSettings.simpleMixedBlockRendering.get();
+				MalisisDoorsSettings.simpleMixedBlockRendering.set(true);
+
+				GL11.glPushMatrix();
 				GL11.glTranslated(0.5F, 0.5F, 0.5F);
 				GL11.glScalef(scale, scale, scale);
 				GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+
+				GL11.glBlendFunc(GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
+				GL14.glBlendColor(0, 0, 0, 1 - scale);
+				renderBlocks.overrideBlockTexture = block.getIcon(blockMetadata, 0);
+				rendered = renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
+				renderBlocks.overrideBlockTexture = null;
+				next();
+
 				if (te.copiedBlock.canRenderInPass(0))
 				{
-					GL11.glBlendFunc(GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
 					GL14.glBlendColor(0, 0, 0, scale);
-					renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
+					rendered |= renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
 					next();
-					GL14.glBlendColor(0, 0, 0, 1 - scale);
-					renderBlocks.overrideBlockTexture = block.getIcon(blockMetadata, 0);
-					renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
 				}
 				if (te.copiedBlock.canRenderInPass(1))
 				{
-					renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					rendered |= renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
+					next();
 				}
+
+				if (!rendered)
+					drawShape(shape, rp);
+
+				GL11.glPopMatrix();
+
+				if (te.copiedTileEntity != null)
+				{
+					clean();
+					TileEntityRendererDispatcher.instance.renderTileEntity(te.copiedTileEntity, partialTick);
+				}
+
+				MalisisDoorsSettings.simpleMixedBlockRendering.set(smbr);
+
 			}
 			catch (Exception e)
 			{

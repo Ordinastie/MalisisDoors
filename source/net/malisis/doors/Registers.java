@@ -32,16 +32,16 @@ public class Registers
 {
 	public static void init()
 	{
-		if (Settings.modifyVanillaDoors)
+		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 			registerVanillaDoors();
 
 		registerSlidingDoors();
 		registerPlayerSensor();
 
-		if (Settings.enableVanishingBlocks)
+		if (MalisisDoorsSettings.enableVanishingBlocks.get())
 			registerVanishingBlock();
 
-		if (Settings.enableMixedBlocks)
+		if (MalisisDoorsSettings.enableMixedBlocks.get())
 			registerMixedBlock();
 
 	}

@@ -137,6 +137,8 @@ public class ProxyAccess
 		{
 			super(world.getSaveHandler(), null, new WorldSettings(world.getWorldInfo()), world.provider, (Profiler) null);
 			original = world;
+			// reset back the world for the provider
+			provider.worldObj = world;
 		}
 
 		@Override

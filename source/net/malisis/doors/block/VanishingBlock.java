@@ -5,7 +5,6 @@ import java.util.Random;
 
 import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.minecraft.block.Block;
@@ -239,7 +238,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 			if (te == null || te.copiedBlock == null)
 				setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 			else
-				te.copiedBlock.setBlockBoundsBasedOnState(world, x, y, z);
+				te.copiedBlock.setBlockBoundsBasedOnState(ProxyAccess.get(world), x, y, z);
 		}
 	}
 
@@ -255,7 +254,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 			if (te == null || te.copiedBlock == null)
 				return AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
 			else
-				return te.copiedBlock.getSelectedBoundingBoxFromPool(world, x, y, z);
+				return te.copiedBlock.getSelectedBoundingBoxFromPool((World) ProxyAccess.get(world), x, y, z);
 		}
 	}
 
@@ -273,7 +272,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 			if (te == null || te.copiedBlock == null)
 				return super.collisionRayTrace(world, x, y, z, src, dest);
 			else
-				return te.copiedBlock.collisionRayTrace(world, x, y, z, src, dest);
+				return te.copiedBlock.collisionRayTrace((World) ProxyAccess.get(world), x, y, z, src, dest);
 		}
 	}
 
@@ -282,7 +281,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 	public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_)
 	{
 		// VanishingDiamondBlock has its own unused itemBlock, but we don't want it
-		return Item.getItemFromBlock(Blocks.vanishingBlock);
+		return Item.getItemFromBlock(MalisisDoors.Blocks.vanishingBlock);
 	}
 
 	@Override

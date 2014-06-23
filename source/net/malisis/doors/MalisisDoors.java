@@ -1,18 +1,21 @@
 package net.malisis.doors;
 
+import net.malisis.core.IMalisisMod;
+import net.malisis.core.MalisisCore;
+import net.malisis.core.configuration.Settings;
 import net.malisis.doors.network.NetworkHandler;
 import net.malisis.doors.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
-public class MalisisDoors
+public class MalisisDoors implements IMalisisMod
 {
 	@SidedProxy(clientSide = "net.malisis.doors.proxy.ClientProxy", serverSide = "net.malisis.doors.proxy.CommonProxy")
 	public static CommonProxy proxy;
@@ -22,19 +25,44 @@ public class MalisisDoors
 	public static final String version = "1.7.2-0.6.5";
 
 	public static MalisisDoors instance;
-	public static Settings settings;
+	public static MalisisDoorsSettings settings;
 
 	// public static Block blockTest;
 
 	public MalisisDoors()
 	{
 		instance = this;
+		MalisisCore.registerMod(this);
+	}
+
+	@Override
+	public String getModId()
+	{
+		return modid;
+	}
+
+	@Override
+	public String getName()
+	{
+		return modname;
+	}
+
+	@Override
+	public String getVersion()
+	{
+		return version;
+	}
+
+	@Override
+	public Settings getSettings()
+	{
+		return settings;
 	}
 
 	@EventHandler
 	public static void preInit(FMLPreInitializationEvent event)
 	{
-		settings = new Settings(new Configuration(event.getSuggestedConfigurationFile()));
+		settings = new MalisisDoorsSettings(event.getSuggestedConfigurationFile());
 
 		Registers.init();
 
@@ -46,6 +74,12 @@ public class MalisisDoors
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkHandler.init(modid);
+	}
+
+	@EventHandler
+	public void serverStart(FMLServerStartingEvent event)
+	{
+		event.registerServerCommand(new Command());
 	}
 
 	public static class Blocks

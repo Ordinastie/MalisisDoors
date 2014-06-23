@@ -1,0 +1,8 @@
+item.wood_sliding_door.name=Деревянные раздвижные двери
+item.iron_sliding_door.name=Железные раздвижные двери
+tile.player_sensor.name=Сенсор игрока
+tile.vanishing_block_wood.name=Деревянная рамка-транслятор
+tile.vanishing_block_iron.name=Железная рамка-транслятор
+tile.vanishing_block_gold.name=Золотая рамка-транслятор
+tile.block_mixer.name=Смешиватель блоков
+tile.mixed_block.name=Микс-Блок
