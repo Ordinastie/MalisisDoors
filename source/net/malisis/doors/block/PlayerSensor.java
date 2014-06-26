@@ -37,7 +37,6 @@ public class PlayerSensor extends Block
 		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
 	}
 
-
 	@Override
 	public boolean isOpaqueCube()
 	{
@@ -204,7 +203,8 @@ public class PlayerSensor extends Block
 			return 0;
 
 		int dir = metadata & 7;
-		return dir == 5 && side == 1 ? 15 : (dir == 4 && side == 2 ? 15 : (dir == 3 && side == 3 ? 15 : (dir == 2 && side == 4 ? 15 : (dir == 1 && side == 5 ? 15 : 0))));
+		return dir == 5 && side == 1 ? 15 : (dir == 4 && side == 2 ? 15 : (dir == 3 && side == 3 ? 15 : (dir == 2 && side == 4 ? 15 : (dir == 1
+				&& side == 5 ? 15 : 0))));
 
 	}
 
@@ -223,47 +223,47 @@ public class PlayerSensor extends Block
 	private AxisAlignedBB getDetectionBox(World world, int x, int y, int z)
 	{
 		int dir = world.getBlockMetadata(x, y, z) & 7;
-		double x1 = (double) x, x2 = (double) x;
-		double z1 = (double) z, z2 = (double) z;
+		double x1 = x, x2 = x;
+		double z1 = z, z2 = z;
 		int yOffset = 1;
-		boolean isAir = world.isAirBlock(x, y -1, z);
+		boolean isAir = world.isAirBlock(x, y - 1, z);
 
-
-		if(dir == 1)
-		{
-			x1 -=1;
-			x2 += 2;
-			z2 += 1;
-		}
-		else if(dir == 2)
+		if (dir == 1)
 		{
 			x1 -= 1;
 			x2 += 2;
 			z2 += 1;
 		}
-		else if(dir == 3)
+		else if (dir == 2)
+		{
+			x1 -= 1;
+			x2 += 2;
+			z2 += 1;
+		}
+		else if (dir == 3)
 		{
 			x2 += 1;
 			z1 -= 1;
 			z2 += 2;
 		}
-		else if(dir == 4)
+		else if (dir == 4)
 		{
 			x2 += 1;
 			z1 -= 1;
 			z2 += 2;
 		}
 
-		while(isAir && yOffset < 6)
+		while (isAir && yOffset < 6)
 			isAir = world.isAirBlock(x, y - yOffset++, z);
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x1, (double) y - yOffset, z1, x2, (double) y, z2);
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x1, (double) y - yOffset, z1, x2, y, z2);
 		return aabb;
 	}
 
 	/**
 	 * Ticks the block if it's been scheduled
 	 */
+	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand)
 	{
 		if (!world.isRemote)
@@ -275,17 +275,17 @@ public class PlayerSensor extends Block
 
 			if (list != null && !list.isEmpty())
 			{
-				if((metadata & 8) != 0) //already active
+				if ((metadata & 8) != 0) //already active
 					return;
 				metadata |= 8;
 				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
-				this.notifyPower(world, x, y, z,  metadata);
+				this.notifyPower(world, x, y, z, metadata);
 			}
-			else if((metadata & 8) != 0) // active
+			else if ((metadata & 8) != 0) // active
 			{
 				metadata &= ~8;
 				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
-				this.notifyPower(world, x, y, z,  metadata);
+				this.notifyPower(world, x, y, z, metadata);
 			}
 
 		}
@@ -294,12 +294,12 @@ public class PlayerSensor extends Block
 	/**
 	 * Sets the block's bounds for rendering it as an item
 	 */
+	@Override
 	public void setBlockBoundsForItemRender()
 	{
 		float f = 0.125F;
 		this.setBlockBounds(f, 0.5F - f, 0.5F - f, 1.0F - f, 0.5F + f, 0.5F + f);
 	}
-
 
 	protected void func_82535_o(World par1World, int par2, int par3, int par4)
 	{
@@ -309,8 +309,8 @@ public class PlayerSensor extends Block
 		// this.func_82534_e(l);
 		List list = par1World.getEntitiesWithinAABB(
 				EntityArrow.class,
-				AxisAlignedBB.getAABBPool().getAABB((double) par2 + this.minX, (double) par3 + this.minY, (double) par4 + this.minZ, (double) par2 + this.maxX,
-						(double) par3 + this.maxY, (double) par4 + this.maxZ));
+				AxisAlignedBB.getBoundingBox(par2 + this.minX, par3 + this.minY, par4 + this.minZ, par2 + this.maxX, par3 + this.maxY, par4
+						+ this.maxZ));
 		boolean flag1 = !list.isEmpty();
 
 		if (flag1 && !flag)
@@ -318,7 +318,7 @@ public class PlayerSensor extends Block
 			par1World.setBlockMetadataWithNotify(par2, par3, par4, i1 | 8, 3);
 			this.notifyPower(par1World, par2, par3, par4, i1);
 			par1World.markBlockRangeForRenderUpdate(par2, par3, par4, par2, par3, par4);
-			par1World.playSoundEffect((double) par2 + 0.5D, (double) par3 + 0.5D, (double) par4 + 0.5D, "random.click", 0.3F, 0.6F);
+			par1World.playSoundEffect(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "random.click", 0.3F, 0.6F);
 		}
 
 		if (!flag1 && flag)
@@ -326,7 +326,7 @@ public class PlayerSensor extends Block
 			par1World.setBlockMetadataWithNotify(par2, par3, par4, i1, 3);
 			this.notifyPower(par1World, par2, par3, par4, i1);
 			par1World.markBlockRangeForRenderUpdate(par2, par3, par4, par2, par3, par4);
-			par1World.playSoundEffect((double) par2 + 0.5D, (double) par3 + 0.5D, (double) par4 + 0.5D, "random.click", 0.3F, 0.5F);
+			par1World.playSoundEffect(par2 + 0.5D, par3 + 0.5D, par4 + 0.5D, "random.click", 0.3F, 0.5F);
 		}
 
 		if (flag1)
@@ -354,6 +354,7 @@ public class PlayerSensor extends Block
 	/**
 	 * How many world ticks before ticking
 	 */
+	@Override
 	public int tickRate(World par1World)
 	{
 		return 5;

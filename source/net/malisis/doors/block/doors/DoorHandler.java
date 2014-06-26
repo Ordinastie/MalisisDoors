@@ -246,7 +246,8 @@ public class DoorHandler
 		}
 
 		float[][] bounds = calculateBlockBounds(block, metadata, selBox);
-		block.setBlockBounds(bounds[0][0], bounds[0][1], bounds[0][2], bounds[1][0], bounds[1][1], bounds[1][2]);
+		if (bounds != null)
+			block.setBlockBounds(bounds[0][0], bounds[0][1], bounds[0][2], bounds[1][0], bounds[1][1], bounds[1][2]);
 		return true;
 	}
 
