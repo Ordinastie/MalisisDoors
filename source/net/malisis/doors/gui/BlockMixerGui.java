@@ -20,7 +20,7 @@ public class BlockMixerGui extends MalisisGui
 		setInventoryContainer(container);
 		this.tileEntity = tileEntity;
 
-		UIWindow window = new UIWindow("tile.vanishing_block_diamond.name", 176, 166);
+		UIWindow window = new UIWindow("tile.block_mixer.name", 176, 166);
 
 		UISlot firstInputSlot = new UISlot(tileEntity.firstInput).setPosition(-60, 34, Anchor.CENTER);
 		UISlot secondInputSlot = new UISlot(tileEntity.secondInput).setPosition(60, 34, Anchor.CENTER);

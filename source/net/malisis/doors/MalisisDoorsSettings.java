@@ -27,4 +27,13 @@ public class MalisisDoorsSettings extends Settings
 	{
 		super(file);
 	}
+
+	@Override
+	protected void initSettings()
+	{
+		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
+		simpleMixedBlockRendering.setComment("config.simpleMixedBlockRendering.comment1", "config.simpleMixedBlockRendering.comment2");
+		enableVanishingGlitch.setComment("config.enableVanishingGlitch.comment");
+		vanishingGlitchChance.setComment("config.vanishingGlitchChance.comment");
+	}
 }

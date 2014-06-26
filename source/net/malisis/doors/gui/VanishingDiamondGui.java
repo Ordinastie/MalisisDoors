@@ -94,7 +94,7 @@ public class VanishingDiamondGui extends MalisisGui
 			i++;
 		}
 
-		UIContainer cont = new UIContainer(50, 60).setPosition(0, 40, Anchor.RIGHT);
+		UIContainer cont = (UIContainer) new UIContainer(50, 60).setPosition(0, 40, Anchor.RIGHT);
 
 		duration = new UITextField(30).setPosition(0, 10, Anchor.CENTER).setFilter("\\d+").register(this);
 		cont.add(new UILabel("Duration").setPosition(0, 0, Anchor.CENTER));

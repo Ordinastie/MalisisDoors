@@ -11,9 +11,21 @@ tile.mixed_block.name=Bloc mixé
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
 config.title=Configuration de MalisisDoors
+
 config.modifyVanillaDoors=Activer l'amélioration des portes vanilla.
+config.modifyVanillaDoors.comment1=Active l'animation des portes, trappes et portillons.
+config.modifyVanillaDoors.comment2=Les blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
+
 config.enableMixedBlocks=Activer le Mixeur de blocs et les blocs mixés
+
 config.simpleMixedBlockRendering=Activer le rendu simplifié des blocs mixés
-config.enableVanishingBlocks=Activer les cadres de disparition 
+config.simpleMixedBlockRendering.comment1=Active un rendu moins avancé pour les blocs mixés.
+config.simpleMixedBlockRendering.comment2=Activez cette option si des problèmes de rendu sont visible pour ces blocs.
+
+config.enableVanishingBlocks=Activer les cadres de disparition
+
 config.enableVanishingGlitch=Activer l'animation d'instabilité des cadres de disparition
+config.enableVanishingGlitch.comment=Les cadres deviennent instables et changent temporairement de dimension.
+
 config.vanishingGlitchChance=Fréquence d'instabilité des cadres de disparition
+config.vanishingGlitchChance.comment=A quelle fréquence les cadres deviennent instable.

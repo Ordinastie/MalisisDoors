@@ -33,7 +33,7 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBaseRenderi
 	protected IIcon iconSide;
 	protected String soundPath;
 
-	public static final int openingTime = 20;
+	public static final int openingTime = 6;
 
 	private int renderType = -1;
 
@@ -293,8 +293,7 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBaseRenderi
 
 	public AxisAlignedBB getAABB(World world, int x, int y, int z)
 	{
-		return AxisAlignedBB.getAABBPool()
-				.getAABB(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
+		return AxisAlignedBB.getBoundingBox(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
 	}
 
 	@Override

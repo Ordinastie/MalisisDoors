@@ -11,9 +11,21 @@ tile.mixed_block.name=Mixed Block
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
 config.title=MalisisDoors' configuration
+
 config.modifyVanillaDoors=Enable vanilla doors improvement
+config.modifyVanillaDoors.comment1=Enables the animations for doors, fence gates and trap doors.
+config.modifyVanillaDoors.comment2=This replaces the doors entirely so conflicts may arise if another mod tries to modify them too.
+
 config.enableMixedBlocks=Enable Block Mixer and Mixed Blocks
+
 config.simpleMixedBlockRendering=Simple Mixed Blocks rendering
+config.simpleMixedBlockRendering.comment1=Enables less fancy rendering for Mixed Blocks.
+config.simpleMixedBlockRendering.comment2=Enable this option if you experience z-fighting issue or glitched rendering.
+
 config.enableVanishingBlocks=Enable Vanishing Frames
+
 config.enableVanishingGlitch=Enable Vanishing Frames glitch animation
+config.enableVanishingGlitch.comment=Frames randomly become unstable and are temporarily out of this dimension.
+ 
 config.vanishingGlitchChance=Vanishing Frames glitch frequency
+config.vanishingGlitchChance.comment=How often the frame become unstable.

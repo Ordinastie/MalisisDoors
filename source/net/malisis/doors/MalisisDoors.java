@@ -12,7 +12,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
 public class MalisisDoors implements IMalisisMod
@@ -74,12 +73,6 @@ public class MalisisDoors implements IMalisisMod
 	public void init(FMLInitializationEvent event)
 	{
 		NetworkHandler.init(modid);
-	}
-
-	@EventHandler
-	public void serverStart(FMLServerStartingEvent event)
-	{
-		event.registerServerCommand(new Command());
 	}
 
 	public static class Blocks
