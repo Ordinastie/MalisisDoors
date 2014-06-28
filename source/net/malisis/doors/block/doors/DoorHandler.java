@@ -28,6 +28,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -53,6 +54,11 @@ public class DoorHandler
 	public static final int stateClosing = 1;
 	public static final int stateOpen = 2;
 	public static final int stateOpening = 3;
+
+	public static String state(int state)
+	{
+		return (new String[] { "close", "closing", "open", "opening" })[state];
+	}
 
 	public static int getFullMetadata(IBlockAccess world, int x, int y, int z)
 	{
@@ -238,7 +244,10 @@ public class DoorHandler
 		if (block instanceof Door)
 			y -= (metadata & flagTopBlock) != 0 ? 1 : 0;
 
-		DoorTileEntity te = (DoorTileEntity) world.getTileEntity(x, y, z);
+		TileEntity tmpTe = world.getTileEntity(x, y, z);
+		if (tmpTe == null || !(tmpTe instanceof DoorTileEntity))
+			return true;
+		DoorTileEntity te = (DoorTileEntity) tmpTe;
 		if (te != null && (te.moving || te.draw))
 		{
 			block.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
