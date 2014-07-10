@@ -10,11 +10,13 @@ import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.FenceGate;
+import net.malisis.doors.block.doors.GarageDoor;
 import net.malisis.doors.block.doors.SlidingDoor;
 import net.malisis.doors.block.doors.TrapDoor;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.entity.FenceGateTileEntity;
+import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.entity.TrapDoorTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
@@ -43,6 +45,8 @@ public class Registers
 
 		if (MalisisDoorsSettings.enableMixedBlocks.get())
 			registerMixedBlock();
+
+		registerGarageDoor();
 
 	}
 
@@ -136,5 +140,14 @@ public class Registers
 
 		GameRegistry.registerTileEntity(BlockMixerTileEntity.class, "blockMixerTileEntity");
 		GameRegistry.registerTileEntity(MixedBlockTileEntity.class, "mixedBlockTileEntity");
+	}
+
+	private static void registerGarageDoor()
+	{
+		garageDoor = (new GarageDoor()).setBlockName("garage_door");
+
+		GameRegistry.registerBlock(garageDoor, garageDoor.getUnlocalizedName().substring(5));
+
+		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
 	}
 }

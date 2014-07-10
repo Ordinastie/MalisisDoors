@@ -88,6 +88,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block vanishingDiamondBlock;
 		public static Block blockMixer;
 		public static Block mixedBlock;
+		public static Block garageDoor;
 	}
 
 	public static class Items

@@ -26,8 +26,8 @@ package net.malisis.doors.renderer;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.RenderParameters;
-import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
@@ -127,7 +127,7 @@ public class TrapDoorRenderer extends DoorRenderer
 		if (!tileEntity.draw)
 			return;
 
-		Animation animation;
+		Transformation animation;
 		float f = 0.5F - width / 2;
 		float fromAngle = 0, toAngle = 90;
 
@@ -141,10 +141,10 @@ public class TrapDoorRenderer extends DoorRenderer
 			fromAngle = tmp;
 		}
 
-		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f);
+		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(Door.openingTime, 0);
 
 		ar.setStartTime(tileEntity.startTime);
-		ar.render(animation.forTicks(Door.openingTime, 0), shape, null);
+		ar.animate(shape, animation);
 
 		drawShape(shape, rp);
 	}

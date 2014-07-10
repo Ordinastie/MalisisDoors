@@ -26,10 +26,10 @@ package net.malisis.doors.renderer;
 
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
-import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.AnimationRenderer2;
-import net.malisis.core.renderer.animation.Rotation;
-import net.malisis.core.renderer.animation.Translation;
+import net.malisis.core.renderer.animation.AnimationRenderer;
+import net.malisis.core.renderer.animation.transformation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
@@ -50,7 +50,7 @@ public class DoorRenderer extends BaseRenderer
 
 	RenderParameters rp;
 
-	AnimationRenderer2 ar = new AnimationRenderer2(this);
+	AnimationRenderer ar = new AnimationRenderer(this);
 
 	protected void setupShape()
 	{
@@ -134,7 +134,7 @@ public class DoorRenderer extends BaseRenderer
 		if (!tileEntity.draw)
 			return;
 
-		Animation animation;
+		Transformation animation;
 		if (block instanceof SlidingDoor)
 		{
 			float fromX = 0, toX = 1 - width;
@@ -171,11 +171,11 @@ public class DoorRenderer extends BaseRenderer
 				fromAngle = tmp;
 			}
 
-			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ);
+			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(Door.openingTime, 0);
 		}
 
 		ar.setStartTime(tileEntity.startTime);
-		ar.render(animation.forTicks(Door.openingTime, 0), shape, null);
+		ar.animate(shape, animation);
 
 		drawShape(shape, rp);
 	}

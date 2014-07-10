@@ -26,8 +26,8 @@ package net.malisis.doors.renderer;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.RenderParameters;
-import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
@@ -160,12 +160,14 @@ public class FenceGateRenderer extends DoorRenderer
 			toAngle = tmp;
 		}
 
-		Animation animationLeft = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ);
-		Animation animationRight = new Rotation(-fromAngle, -toAngle).aroundAxis(0, 1, 0).offset(-hingeX, 0, -hingeZ);
+		Transformation animationLeft = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ)
+				.forTicks(Door.openingTime, 0);
+		Transformation animationRight = new Rotation(-fromAngle, -toAngle).aroundAxis(0, 1, 0).offset(-hingeX, 0, -hingeZ)
+				.forTicks(Door.openingTime, 0);
 
 		ar.setStartTime(tileEntity.startTime);
-		ar.render(animationLeft.forTicks(Door.openingTime, 0), left, null);
-		ar.render(animationRight.forTicks(Door.openingTime, 0), right, null);
+		ar.animate(left, animationLeft);
+		ar.animate(right, animationRight);
 
 		drawShape(left, rp);
 		drawShape(right, rp);

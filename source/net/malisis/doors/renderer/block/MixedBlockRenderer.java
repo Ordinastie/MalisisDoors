@@ -127,7 +127,6 @@ public class MixedBlockRenderer extends BaseRenderer
 
 		if (block instanceof BlockGrass)
 		{
-			rp.colorMultiplier.set(0xFFFFFF);
 			RenderParameters rpGrass = new RenderParameters();
 			rpGrass.colorMultiplier.set(color);
 			rpGrass.usePerVertexAlpha.set(true);

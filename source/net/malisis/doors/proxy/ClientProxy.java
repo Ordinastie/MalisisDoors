@@ -7,10 +7,12 @@ import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.malisis.doors.entity.FenceGateTileEntity;
+import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.TrapDoorTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.renderer.DoorRenderer;
 import net.malisis.doors.renderer.FenceGateRenderer;
+import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.TrapDoorRenderer;
 import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.malisis.doors.renderer.block.MixedBlockRenderer;
@@ -54,6 +56,10 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(vbr);
 		ClientRegistry.bindTileEntitySpecialRenderer(VanishingTileEntity.class, vbr);
 
+		// garage door
+		GarageDoorRenderer gdr = BaseRenderer.create(GarageDoorRenderer.class, (IBaseRendering) garageDoor);
+		RenderingRegistry.registerBlockHandler(gdr);
+		ClientRegistry.bindTileEntitySpecialRenderer(GarageDoorTileEntity.class, gdr);
 	}
 
 	@Override
