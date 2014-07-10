@@ -28,12 +28,7 @@ public class ClientProxy extends CommonProxy
 	public void initRenderers()
 	{
 		// doors
-		IBaseRendering[] blocks = new IBaseRendering[] { (IBaseRendering) doubleDoorWood, (IBaseRendering) doubleDoorIron,
-				(IBaseRendering) woodSlidingDoor, (IBaseRendering) ironSlidingDoor };
-		DoorRenderer doorRenderer = BaseRenderer.create(DoorRenderer.class, blocks);
-
-		RenderingRegistry.registerBlockHandler(doorRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(DoorTileEntity.class, doorRenderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(DoorTileEntity.class, BaseRenderer.create(DoorRenderer.class));
 
 		// fence gate
 		FenceGateRenderer fenceGateRenderer = BaseRenderer.create(FenceGateRenderer.class, (IBaseRendering) fenceGate);

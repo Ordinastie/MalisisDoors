@@ -25,14 +25,12 @@
 package net.malisis.doors.renderer;
 
 import net.malisis.core.MalisisCore;
-import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.malisis.doors.block.doors.TrapDoor;
-import net.malisis.doors.entity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 
@@ -44,40 +42,14 @@ public class TrapDoorRenderer extends DoorRenderer
 {
 	public static int renderId;
 
-	public TrapDoorRenderer()
-	{
-
-	}
-
 	@Override
-	public void render()
+	protected void setup()
 	{
-		blockMetadata = DoorHandler.getFullMetadata(world, x, y, z);
-		tileEntity = (DoorTileEntity) world.getTileEntity(x, y, z);
-
-		if (tileEntity == null)
-			return;
-
-		setupShape();
-		setupRenderParameters();
-
-		if (renderType == TYPE_ISBRH_WORLD)
-			renderBlock();
-		else if (renderType == TYPE_TESR_WORLD)
-			renderTileEntity();
-	}
-
-	@Override
-	protected void setupShape()
-	{
-		direction = blockMetadata & 3;
-		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
-		topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
-
 		shape = ShapePreset.Cube();
 		shape.setSize(1, width, 1);
 
 		applyTexture(shape);
+		rp.applyTexture.set(false);
 
 		float angle = 0;
 		if (direction == TrapDoor.DIR_NORTH)
@@ -94,39 +66,8 @@ public class TrapDoorRenderer extends DoorRenderer
 	}
 
 	@Override
-	protected void setupRenderParameters()
-	{
-		rp = new RenderParameters();
-		rp.renderAllFaces.set(true);
-		rp.calculateAOColor.set(false);
-		rp.useBlockBounds.set(false);
-		rp.useBlockBrightness.set(false);
-		rp.applyTexture.set(false);
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
-	}
-
-	@Override
-	public void renderBlock()
-	{
-		if (tileEntity.moving)
-		{
-			tileEntity.draw = true;
-			return;
-		}
-
-		float f = 0.5F - width / 2;
-		if (opened)
-			shape.rotate(topBlock ? -90 : 90, 1, 0, 0, 0, -f, f);
-
-		drawShape(shape, rp);
-	}
-
-	@Override
 	public void renderTileEntity()
 	{
-		if (!tileEntity.draw)
-			return;
-
 		Transformation animation;
 		float f = 0.5F - width / 2;
 		float fromAngle = 0, toAngle = 90;
@@ -134,14 +75,14 @@ public class TrapDoorRenderer extends DoorRenderer
 		if (topBlock)
 			toAngle = -toAngle;
 
-		if (tileEntity.state == DoorHandler.stateClosing)
+		if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
 		{
 			float tmp = toAngle;
 			toAngle = fromAngle;
 			fromAngle = tmp;
 		}
 
-		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(Door.openingTime, 0);
+		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(Door.openingTime);
 
 		ar.setStartTime(tileEntity.startTime);
 		ar.animate(shape, animation);

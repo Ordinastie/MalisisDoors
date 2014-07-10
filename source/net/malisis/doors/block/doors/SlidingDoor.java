@@ -1,17 +1,11 @@
 package net.malisis.doors.block.doors;
 
-import static net.malisis.doors.block.doors.DoorHandler.*;
-
 import java.util.Random;
 
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class SlidingDoor extends Door
 {
@@ -21,38 +15,13 @@ public class SlidingDoor extends Door
 		super(material);
 		float f = 0.5F;
 		float f1 = 1.0F;
-		this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
-		this.setHardness(2.0F);
-	}
+		setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
+		setHardness(2.0F);
+		if (material == Material.wood)
+			setBlockTextureName(MalisisDoors.modid + ":sliding_door_wood");
+		else
+			setBlockTextureName(MalisisDoors.modid + ":sliding_door_iron");
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		// return icons[(metadata & flagTopBlock) >> 3];
-		if (side == 1 || side == 0)
-			return iconSide;
-
-		int dir = metadata & 3;
-		boolean topBlock = (metadata & flagTopBlock) != 0;
-
-		if ((dir == DIR_NORTH || dir == DIR_SOUTH) && (side == 4 || side == 5))
-			return iconSide;
-		if ((dir == DIR_EAST || dir == DIR_WEST) && (side == 2 || side == 3))
-			return iconSide;
-
-		return topBlock ? iconTop[0] : iconBottom[0];
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		iconTop = new IIcon[1];
-		iconBottom = new IIcon[1];
-		iconSide = register.registerIcon(MalisisDoors.modid + ":" + getTextureName() + "_side");
-		iconTop[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_upper");
-		iconBottom[0] = register.registerIcon(MalisisDoors.modid + ":sliding_" + getTextureName() + "_lower");
 	}
 
 	@Override

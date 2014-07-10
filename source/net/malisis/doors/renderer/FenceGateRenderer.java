@@ -25,7 +25,6 @@
 package net.malisis.doors.renderer;
 
 import net.malisis.core.MalisisCore;
-import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.element.Shape;
@@ -42,18 +41,13 @@ import net.minecraft.client.renderer.RenderBlocks;
 public class FenceGateRenderer extends DoorRenderer
 {
 	public static int renderId;
-	private Shape baseLeft, baseRight;
-	private Shape left, right;
-	private boolean opened, reversedOpen;
-	private int direction;
-	private float hingeOffset = -0.5F + 0.125F / 2;
+	protected Shape baseLeft, baseRight;
+	protected Shape left, right;
+	protected boolean reversedOpen;
+	protected float hingeOffset = -0.5F + 0.125F / 2;
 
-	public FenceGateRenderer()
-	{
-		buildShapes();
-	}
-
-	private void buildShapes()
+	@Override
+	protected void init()
 	{
 		float w = 0.125F; // fence depth and hinge width
 		float w2 = 0.1875F; //
@@ -71,18 +65,20 @@ public class FenceGateRenderer extends DoorRenderer
 
 		baseLeft = Shape.fromShapes(hingeLeft, gateHLeft, gateBottomLeft, gateTopLeft);
 		baseRight = Shape.fromShapes(hingeRight, gateHRight, gateBottomRight, gateTopRight);
+
+		super.init();
 	}
 
 	@Override
-	protected void setupShape()
+	protected void setup()
 	{
+		init();
+
+		reversedOpen = ((blockMetadata >> 1) & 1) == 1;
+
 		// work on copies
 		left = new Shape(baseLeft);
 		right = new Shape(baseRight);
-
-		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
-		reversedOpen = ((blockMetadata >> 1) & 1) == 1;
-		direction = blockMetadata & 3;
 
 		if (direction == DoorHandler.DIR_NORTH || direction == DoorHandler.DIR_SOUTH)
 		{
@@ -91,57 +87,19 @@ public class FenceGateRenderer extends DoorRenderer
 			right.rotate(90, 0, 1, 0);
 		}
 
-		applyTexture(left);
-		applyTexture(right);
-
-	}
-
-	@Override
-	protected void setupRenderParameters()
-	{
-		rp = new RenderParameters();
-		rp.renderAllFaces.set(true);
-		rp.useBlockBounds.set(false);
-		rp.useBlockBrightness.set(true);
+		rp.interpolateUV.set(true);
 		rp.applyTexture.set(false);
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
-	}
+		applyTexture(left, rp);
+		applyTexture(right, rp);
 
-	@Override
-	public void renderBlock()
-	{
-		if (tileEntity.moving)
-		{
-			tileEntity.draw = true;
-			return;
-		}
+		left.applyMatrix();
+		right.applyMatrix();
 
-		buildShapes();
-
-		if (opened)
-		{
-			float angle = reversedOpen ? 90 : -90;
-			float hingeX = hingeOffset;
-			float hingeZ = 0;
-			if (direction == DoorHandler.DIR_NORTH || direction == DoorHandler.DIR_SOUTH)
-			{
-				hingeX = 0;
-				hingeZ = -hingeOffset;
-			}
-			left.rotate(angle, 0, 1, 0, hingeX, 0, hingeZ);
-			right.rotate(-angle, 0, 1, 0, -hingeX, 0, -hingeZ);
-		}
-
-		drawShape(left, rp);
-		drawShape(right, rp);
 	}
 
 	@Override
 	public void renderTileEntity()
 	{
-		if (!tileEntity.draw)
-			return;
-
 		float fromAngle = 0, toAngle = 90;
 		float hingeX = hingeOffset;
 		float hingeZ = 0;
@@ -153,7 +111,7 @@ public class FenceGateRenderer extends DoorRenderer
 
 		if (!reversedOpen)
 			toAngle = -90;
-		if (tileEntity.state == DoorHandler.stateClosing)
+		if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
 		{
 			float tmp = fromAngle;
 			fromAngle = toAngle;
@@ -161,9 +119,9 @@ public class FenceGateRenderer extends DoorRenderer
 		}
 
 		Transformation animationLeft = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ)
-				.forTicks(Door.openingTime, 0);
+				.forTicks(Door.openingTime);
 		Transformation animationRight = new Rotation(-fromAngle, -toAngle).aroundAxis(0, 1, 0).offset(-hingeX, 0, -hingeZ)
-				.forTicks(Door.openingTime, 0);
+				.forTicks(Door.openingTime);
 
 		ar.setStartTime(tileEntity.startTime);
 		ar.animate(left, animationLeft);

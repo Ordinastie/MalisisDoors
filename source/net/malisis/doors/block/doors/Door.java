@@ -4,15 +4,16 @@ import static net.malisis.doors.block.doors.DoorHandler.*;
 
 import java.util.Random;
 
-import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.core.renderer.MalisisIcon;
+import net.malisis.core.renderer.TextureIcon;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.IconFlipped;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -26,16 +27,14 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class Door extends BlockDoor implements ITileEntityProvider, IBaseRendering
+public class Door extends BlockDoor implements ITileEntityProvider
 {
-	protected IIcon[] iconTop;
-	protected IIcon[] iconBottom;
-	protected IIcon iconSide;
+	protected MalisisIcon iconTop;
+	protected MalisisIcon iconBottom;
+	protected MalisisIcon iconSide;
 	protected String soundPath;
 
-	public static final int openingTime = 6;
-
-	private int renderType = -1;
+	public static final int openingTime = 20;
 
 	public Door(Material material)
 	{
@@ -51,7 +50,6 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBaseRenderi
 			setHardness(3.0F);
 			setStepSound(soundTypeWood);
 			setBlockName("doorWood");
-			disableStats();
 			setBlockTextureName("door_wood");
 		}
 		else
@@ -66,82 +64,51 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBaseRenderi
 	// #region Icons
 	@SideOnly(Side.CLIENT)
 	@Override
+	public void registerBlockIcons(IIconRegister register)
+	{
+		String textureName = getTextureName();
+		iconTop = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_upper"));
+		iconBottom = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_lower"));
+		if (textureName.equals("door_wood") || textureName.equals("door_iron"))
+			textureName = MalisisDoors.modid + ":" + textureName;
+		iconSide = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_side"));
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
-		// return icons[(metadata & flagTopBlock) >> 3];
-		if (side == 1 || side == 0)
-			return iconSide;
-
-		int dir = metadata & 3;
-		boolean opened = (metadata & flagOpened) != 0;
 		boolean topBlock = (metadata & flagTopBlock) != 0;
 		boolean reversed = (metadata & flagReversed) != 0;
+		MalisisIcon icon = iconBottom;
 
 		switch (side)
 		{
 			case 0:
 			case 1:
+				icon = iconSide.clone();
+				icon.clip(0, 0, 3, 16);
+				icon.setRotation(1);
+				return icon;
 			case 4:
+				icon = iconSide.clone();
+				icon.clip(topBlock ? 3 : 9, 0, 3, 16);
+				return icon;
 			case 5:
-				return iconSide;
+				icon = iconSide.clone();
+				icon.clip(topBlock ? 6 : 12, 0, 3, 16);
+				return icon;
 			case 2:
-				return topBlock ? iconTop[reversed ? 0 : 1] : iconBottom[reversed ? 0 : 1];
+				icon = topBlock ? iconTop : iconBottom;
+				icon.flip(reversed, false);
+				return icon;
 			case 3:
-				return topBlock ? iconTop[reversed ? 0 : 1] : iconBottom[reversed ? 0 : 1];
+				icon = topBlock ? iconTop : iconBottom;
+				icon.flip(!reversed, false);
+				return icon;
 			default:
-				break;
+				return icon;
 		}
-
-		if (((dir == DIR_NORTH || dir == DIR_SOUTH) && !opened) || ((dir == DIR_WEST || dir == DIR_EAST) && opened))
-		{
-			// {DOWN, UP, NORTH, SOUTH, WEST, EAST}
-			if (side == 4 || side == 5)
-				return iconSide;
-		}
-		else if (side == 2 || side == 3)
-			return iconSide;
-
-		if (opened)
-		{
-			if (dir == DIR_WEST && side == 2)
-				reversed = true;
-			else if (dir == DIR_NORTH && side != 4)
-				reversed = true;
-			else if (dir == DIR_EAST && side == 3)
-				reversed = true;
-			else if (dir == DIR_SOUTH && side == 4)
-				reversed = true;
-		}
-		else
-		{
-			if (dir == DIR_WEST && side == 5)
-				reversed = true;
-			else if (dir == DIR_NORTH && side == 3)
-				reversed = true;
-			else if (dir == DIR_EAST && side == 4)
-				reversed = true;
-			else if (dir == DIR_SOUTH && side == 2)
-				reversed = true;
-
-			if ((metadata & flagReversed) != 0)
-				reversed = !reversed;
-		}
-
-		return topBlock ? iconTop[reversed ? 1 : 0] : iconBottom[reversed ? 1 : 0];
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerBlockIcons(IIconRegister register)
-	{
-		iconTop = new IIcon[2];
-		iconBottom = new IIcon[2];
-		iconSide = register.registerIcon(MalisisDoors.modid + ":" + getTextureName() + "_side");
-		iconTop[0] = register.registerIcon(getTextureName() + "_upper");
-		iconBottom[0] = register.registerIcon(getTextureName() + "_lower");
-		iconTop[1] = new IconFlipped(iconTop[0], true, false);
-		iconBottom[1] = new IconFlipped(iconBottom[0], true, false);
-
 	}
 
 	// #end
@@ -297,20 +264,14 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBaseRenderi
 	}
 
 	@Override
-	public void setRenderId(int id)
-	{
-		renderType = id;
-	}
-
-	@Override
 	public int getRenderType()
 	{
-		return renderType;
+		return -1;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-		return new DoorTileEntity();
+		return (metadata & flagTopBlock) == 0 ? new DoorTileEntity() : null;
 	}
 }

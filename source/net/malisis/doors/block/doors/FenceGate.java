@@ -42,7 +42,7 @@ import net.minecraft.world.World;
 
 public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IBaseRendering
 {
-	private int renderType = -1;
+	private int renderId = -1;
 
 	public FenceGate()
 	{
@@ -50,15 +50,6 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
 		setBlockName("fenceGate");
-	}
-
-	/**
-	 * The type of render function that is called for this block
-	 */
-	@Override
-	public int getRenderType()
-	{
-		return renderType;
 	}
 
 	/**
@@ -101,14 +92,24 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	}
 
 	@Override
-	public void setRenderId(int id)
-	{
-		renderType = id;
-	}
-
-	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)
 	{
 		return new FenceGateTileEntity();
 	}
+
+	/**
+	 * The type of render function that is called for this block
+	 */
+	@Override
+	public int getRenderType()
+	{
+		return renderId;
+	}
+
+	@Override
+	public void setRenderId(int id)
+	{
+		renderId = id;
+	}
+
 }

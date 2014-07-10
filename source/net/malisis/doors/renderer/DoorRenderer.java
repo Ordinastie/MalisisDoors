@@ -30,110 +30,90 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
+import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.malisis.doors.block.doors.SlidingDoor;
 import net.malisis.doors.entity.DoorTileEntity;
 
-import org.lwjgl.opengl.GL11;
-
 public class DoorRenderer extends BaseRenderer
 {
 	public static int renderId;
 	protected DoorTileEntity tileEntity;
-	int direction;
-	boolean opened;
-	boolean reversed;
-	boolean topBlock;
-	float width = DoorHandler.DOOR_WIDTH;
+	protected int direction;
+	protected boolean opened;
+	protected boolean reversed;
+	protected boolean topBlock;
+	protected float width = DoorHandler.DOOR_WIDTH;
 
-	RenderParameters rp;
+	protected Shape baseShape;
+	protected Shape s;
+	protected RenderParameters rp;
+	protected AnimationRenderer ar = new AnimationRenderer(this);
 
-	AnimationRenderer ar = new AnimationRenderer(this);
-
-	protected void setupShape()
+	public DoorRenderer()
 	{
-		direction = blockMetadata & 3;
-		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
-		reversed = (blockMetadata & DoorHandler.flagReversed) != 0;
-		topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
-
-		shape = ShapePreset.Cube();
-		shape.setSize(1, 1, width);
-
-		if (block instanceof SlidingDoor)
-			shape.scale(1, 1, 0.999F);
-
-		blockMetadata = 1 + (blockMetadata & (DoorHandler.flagTopBlock | DoorHandler.flagReversed));
-		applyTexture(shape);
-
-		if (direction == DoorHandler.DIR_SOUTH)
-			shape.rotate(180, 0, 1, 0);
-		if (direction == DoorHandler.DIR_EAST)
-			shape.rotate(-90, 0, 1, 0);
-		if (direction == DoorHandler.DIR_WEST)
-			shape.rotate(90, 0, 1, 0);
+		init();
 	}
 
-	protected void setupRenderParameters()
+	protected void init()
 	{
+		//Shapes
+		baseShape = ShapePreset.Cube();
+		baseShape.setSize(1, 1, width);
+		baseShape.scale(1, 1, 0.999F);
+
+		//RenderParameters
 		rp = new RenderParameters();
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
 		rp.useBlockBrightness.set(false);
-		rp.applyTexture.set(false);
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
+		rp.interpolateUV.set(false);
 	}
 
 	@Override
 	public void render()
 	{
-		blockMetadata = DoorHandler.getFullMetadata(world, x, y, z);
-		boolean topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
-		tileEntity = (DoorTileEntity) world.getTileEntity(x, y - (topBlock ? 1 : 0), z);
-
-		if (tileEntity == null)
+		init();
+		if (renderType == TYPE_ISBRH_WORLD)
 			return;
 
-		setupShape();
-		setupRenderParameters();
+		int metadata = DoorHandler.getFullMetadata(world, x, y, z);
+		direction = metadata & 3;
+		opened = (metadata & DoorHandler.flagOpened) != 0;
+		reversed = (metadata & DoorHandler.flagReversed) != 0;
+		topBlock = (metadata & DoorHandler.flagTopBlock) != 0;
+		this.tileEntity = (DoorTileEntity) super.tileEntity;
 
-		if (renderType == TYPE_ISBRH_WORLD)
-			renderBlock();
-		else if (renderType == TYPE_TESR_WORLD)
-			renderTileEntity();
+		//set rp
+		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
+
+		setup();
+		renderTileEntity();
 	}
 
-	public void renderBlock()
+	protected void setup()
 	{
-		if (tileEntity.moving)
-		{
-			tileEntity.draw = true;
-			return;
-		}
+		this.tileEntity = (DoorTileEntity) super.tileEntity;
 
-		if (opened)
-		{
-			if (block instanceof SlidingDoor)
-				shape.translate(reversed ? -1 + width : 1 - width, 0, 0);
-			else
-				shape.rotate(reversed ? -90 : 90, 0, 1, 0, reversed ? -0.5F + width / 2 : 0.5F - width / 2, 0, -0.5F + width / 2);
-		}
+		//set shape
+		s = new Shape(baseShape);
 
-		if (renderBlocks.hasOverrideBlockTexture())
-			GL11.glTranslatef(0, (blockMetadata & DoorHandler.flagTopBlock) != 0 ? -0.5F : 0.5F, 0);
+		if (direction == DoorHandler.DIR_SOUTH)
+			s.rotate(180, 0, 1, 0);
+		if (direction == DoorHandler.DIR_EAST)
+			s.rotate(-90, 0, 1, 0);
+		if (direction == DoorHandler.DIR_WEST)
+			s.rotate(90, 0, 1, 0);
 
-		drawShape(shape, rp);
-		tileEntity.draw = false;
+		//reset direction
+		blockMetadata = 1 + (blockMetadata & (DoorHandler.flagTopBlock | DoorHandler.flagReversed));
 	}
 
 	public void renderTileEntity()
 	{
-		if (!tileEntity.draw)
-			return;
-
 		Transformation animation;
 		if (block instanceof SlidingDoor)
 		{
@@ -143,14 +123,14 @@ public class DoorRenderer extends BaseRenderer
 				fromX = 0;
 				toX = -1 + width;
 			}
-			if (tileEntity.state == DoorHandler.stateClosing)
+			if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
 			{
 				float tmp = fromX;
 				fromX = toX;
 				toX = tmp;
 			}
 
-			animation = new Translation(fromX, 0, 0, toX, 0, 0);
+			animation = new Translation(fromX, 0, 0, toX, 0, 0).forTicks(Door.openingTime);
 		}
 		else
 		{
@@ -164,20 +144,24 @@ public class DoorRenderer extends BaseRenderer
 				toAngle = -90;
 			}
 
-			if (tileEntity.state == DoorHandler.stateClosing)
+			if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
 			{
 				float tmp = toAngle;
 				toAngle = fromAngle;
 				fromAngle = tmp;
 			}
 
-			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(Door.openingTime, 0);
+			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(Door.openingTime);
 		}
 
 		ar.setStartTime(tileEntity.startTime);
-		ar.animate(shape, animation);
+		ar.animate(s, animation);
 
-		drawShape(shape, rp);
+		drawShape(new Shape(s), rp);
+
+		s.translate(0, 1F, 0);
+		blockMetadata |= DoorHandler.flagTopBlock;
+		drawShape(s, rp);
 	}
 
 	@Override

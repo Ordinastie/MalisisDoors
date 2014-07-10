@@ -132,7 +132,7 @@ public class GarageDoorRenderer extends BaseRenderer
 				chained.reversed(true);
 
 			Shape s = new Shape(baseShape);
-			ar.animate(s, chained);
+			//ar.animate(s, chained);
 			drawShape(s, rp);
 		}
 

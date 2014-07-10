@@ -46,12 +46,12 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBaseRendering
 {
+	private int renderId = -1;
+
 	public static final int DIR_SOUTH = 0;
 	public static final int DIR_NORTH = 1;
 	public static final int DIR_EAST = 2;
 	public static final int DIR_WEST = 3;
-
-	private int renderId = -1;
 
 	public TrapDoor()
 	{
@@ -122,6 +122,15 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	}
 
 	@Override
+	public TileEntity createNewTileEntity(World var1, int var2)
+	{
+		return new TrapDoorTileEntity();
+	}
+
+	/**
+	 * The type of render function that is called for this block
+	 */
+	@Override
 	public int getRenderType()
 	{
 		return renderId;
@@ -133,9 +142,4 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 		renderId = id;
 	}
 
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
-	{
-		return new TrapDoorTileEntity();
-	}
 }
