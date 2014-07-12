@@ -60,6 +60,17 @@ public class DoorHandler
 		return (new String[] { "close", "closing", "open", "opening" })[state];
 	}
 
+	public static DoorTileEntity getTileEntity(IBlockAccess world, int x, int y, int z)
+	{
+		Block block = world.getBlock(x, y, z);
+		int metadata = getFullMetadata(world, x, y, z);
+		if (block instanceof Door)
+			y -= (metadata & flagTopBlock) != 0 ? 1 : 0;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		return (DoorTileEntity) te;
+	}
+
 	public static int getFullMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
@@ -89,36 +100,10 @@ public class DoorHandler
 
 	public static void setDoorState(World world, int x, int y, int z, int state)
 	{
-		Block block = world.getBlock(x, y, z);
-		int metadata = getFullMetadata(world, x, y, z);
-		if (block instanceof Door)
-			y -= (metadata & flagTopBlock) != 0 ? 1 : 0;
-
-		if (state == stateOpening || state == stateClosing)
-		{
-			if (!world.isRemote)
-			{
-				DoorTileEntity te = (DoorTileEntity) world.getTileEntity(x, y, z);
-				if (te != null)
-				{
-					if (!te.moving)
-						playSound(world, x, y, z, state);
-					te.startAnimation(state);
-				}
-				world.markBlockForUpdate(x, y, z);
-			}
-		}
-		else
-		{
-			if (block instanceof Door)
-				metadata = metadata & 7;
-			metadata = state == stateOpen ? metadata | flagOpened : metadata & ~flagOpened;
-
-			// MalisisMod.Message((world.isRemote ? "[C]" : "[S]") + "Metadata set : " + bottomMetadata);
-			world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-			world.markBlockForUpdate(x, y, z);// , x, y, z);
-			playSound(world, x, y, z, state);
-		}
+		DoorTileEntity te = getTileEntity(world, x, y, z);
+		if (te == null)
+			return;
+		te.setDoorState(state);
 	}
 
 	public static void playSound(World world, int x, int y, int z, int state)
@@ -148,7 +133,6 @@ public class DoorHandler
 			if (!powered && isDoubleDoorPowered(world, x, y, z))
 				return;
 
-			setDoorState(world, x, y, z, powered ? stateOpening : stateClosing);
 			openDoubleDoor(world, x, y, z, powered ? stateOpening : stateClosing);
 		}
 	}
@@ -209,7 +193,7 @@ public class DoorHandler
 	}
 
 	/**
-	 * Open/close associated double door
+	 * Open/close double doors
 	 * 
 	 * @param world
 	 * @param x
@@ -218,6 +202,8 @@ public class DoorHandler
 	 */
 	public static void openDoubleDoor(World world, int x, int y, int z, int state)
 	{
+		setDoorState(world, x, y, z, state);
+
 		Block block = world.getBlock(x, y, z);
 		ForgeDirection d = findDoubleDoor(world, x, y, z, block);
 		if (d != null)
@@ -241,14 +227,11 @@ public class DoorHandler
 	{
 		Block block = world.getBlock(x, y, z);
 		int metadata = getFullMetadata(world, x, y, z);
-		if (block instanceof Door)
-			y -= (metadata & flagTopBlock) != 0 ? 1 : 0;
-
-		TileEntity tmpTe = world.getTileEntity(x, y, z);
-		if (tmpTe == null || !(tmpTe instanceof DoorTileEntity))
+		DoorTileEntity te = getTileEntity(world, x, y, z);
+		if (te == null)
 			return true;
-		DoorTileEntity te = (DoorTileEntity) tmpTe;
-		if (te != null && (te.moving || te.draw))
+
+		if (te != null && te.moving)
 		{
 			block.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 			return false;

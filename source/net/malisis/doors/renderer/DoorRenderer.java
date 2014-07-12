@@ -30,12 +30,14 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
+import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.malisis.doors.block.doors.SlidingDoor;
 import net.malisis.doors.entity.DoorTileEntity;
+import net.minecraft.client.renderer.DestroyBlockProgress;
 
 public class DoorRenderer extends BaseRenderer
 {
@@ -55,6 +57,8 @@ public class DoorRenderer extends BaseRenderer
 	public DoorRenderer()
 	{
 		init();
+
+		getBlockDamage = true;
 	}
 
 	protected void init()
@@ -80,11 +84,11 @@ public class DoorRenderer extends BaseRenderer
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
 
-		int metadata = DoorHandler.getFullMetadata(world, x, y, z);
-		direction = metadata & 3;
-		opened = (metadata & DoorHandler.flagOpened) != 0;
-		reversed = (metadata & DoorHandler.flagReversed) != 0;
-		topBlock = (metadata & DoorHandler.flagTopBlock) != 0;
+		blockMetadata = DoorHandler.getFullMetadata(world, x, y, z);
+		direction = blockMetadata & 3;
+		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
+		reversed = (blockMetadata & DoorHandler.flagReversed) != 0;
+		topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
 		this.tileEntity = (DoorTileEntity) super.tileEntity;
 
 		//set rp
@@ -108,8 +112,6 @@ public class DoorRenderer extends BaseRenderer
 		if (direction == DoorHandler.DIR_WEST)
 			s.rotate(90, 0, 1, 0);
 
-		//reset direction
-		blockMetadata = 1 + (blockMetadata & (DoorHandler.flagTopBlock | DoorHandler.flagReversed));
 	}
 
 	public void renderTileEntity()
@@ -161,7 +163,26 @@ public class DoorRenderer extends BaseRenderer
 
 		s.translate(0, 1F, 0);
 		blockMetadata |= DoorHandler.flagTopBlock;
-		drawShape(s, rp);
+		drawShape(new Shape(s), rp);
+	}
+
+	@Override
+	public void renderDestroyProgress()
+	{
+		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+		rp.applyTexture.set(true);
+		s.translate(0, -.5F, 0.005F);
+		s.scale(1.011F);
+		s.applyMatrix();
+		Shape shape = new Shape(new Face[] { s.getFaces()[0], s.getFaces()[1] });
+		drawShape(shape, rp);
+	}
+
+	@Override
+	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
+	{
+		return dbp.getPartialBlockX() == x && (dbp.getPartialBlockY() == y || dbp.getPartialBlockY() == y + 1)
+				&& dbp.getPartialBlockZ() == z;
 	}
 
 	@Override

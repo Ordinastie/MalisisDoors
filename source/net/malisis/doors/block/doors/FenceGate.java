@@ -37,6 +37,7 @@ import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -58,6 +59,9 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
+		if (world.isRemote)
+			return true;
+
 		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
 
 		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
@@ -89,6 +93,15 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 				onPoweredBlockChange(world, x, y, z, powered);
 
 		}
+	}
+
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	{
+		if (DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false))
+			return AxisAlignedBB.getBoundingBox(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
+		else
+			return null;
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package net.malisis.doors.block.doors;
 
 import static net.malisis.doors.block.doors.DoorHandler.*;
-
-import java.util.Random;
-
 import net.malisis.core.renderer.MalisisIcon;
 import net.malisis.core.renderer.TextureIcon;
 import net.malisis.doors.MalisisDoors;
@@ -15,8 +12,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -34,7 +29,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	protected MalisisIcon iconSide;
 	protected String soundPath;
 
-	public static final int openingTime = 20;
+	public static final int openingTime = 6;
 
 	public Door(Material material)
 	{
@@ -120,10 +115,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (blockMaterial == Material.iron)
 			return false;
 
-		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
-		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
-		openDoubleDoor(world, x, y, z, opened ? stateClosing : stateOpening);
+		if (world.isRemote)
+			return true;
 
+		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
+		openDoubleDoor(world, x, y, z, opened ? stateClosing : stateOpening);
 		return true;
 	}
 
@@ -137,7 +133,6 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (opening && opened)
 			return;
 
-		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
 		openDoubleDoor(world, x, y, z, opened ? stateClosing : stateOpening);
 	}
 
@@ -194,42 +189,6 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false);
-	}
-
-	// @Override
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public Item getItem(World par1World, int par2, int par3, int par4)
-	{
-		return blockMaterial == Material.iron ? Items.iron_door : Items.wooden_door;
-	}
-
-	@Override
-	public void onBlockHarvested(World world, int x, int y, int z, int metadata, EntityPlayer p)
-	{
-		if (p.capabilities.isCreativeMode && (metadata & flagTopBlock) != 0 && world.getBlock(x, y - 1, z) == this)
-		{
-			world.setBlockToAir(x, y - 1, z);
-		}
-	}
-
-	/**
-	 * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile entity at this location.
-	 * Args: world, x, y, z, blockID, EventID, event parameter
-	 */
-	@Override
-	public boolean onBlockEventReceived(World world, int x, int y, int z, int blockID, int eventID)
-	{
-		super.onBlockEventReceived(world, x, y, z, blockID, eventID);
-		TileEntity tileentity = world.getTileEntity(x, y, z);
-		return tileentity != null ? tileentity.receiveClientEvent(blockID, eventID) : false;
-	}
-
-	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
-	{
-		return (metadata & flagTopBlock) != 0 ? null : (blockMaterial == Material.iron ? Items.iron_door : Items.wooden_door);
 	}
 
 	@SideOnly(Side.CLIENT)

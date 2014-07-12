@@ -1,5 +1,6 @@
 package net.malisis.doors.entity;
 
+import static net.malisis.doors.block.doors.DoorHandler.*;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.minecraft.block.Block;
@@ -9,36 +10,73 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 public class DoorTileEntity extends TileEntity
 {
-	public Block blockType;
 	public boolean moving = false;
-	public boolean draw = false;
 	public int state = 0;
-
-	public float hingeOffsetX;
-	public float hingeOffsetZ;
-	public float angle;
 
 	public long startTime;
 	public int timer = 0;
 
-	public void startAnimation(int state)
+	public void setDoorState(int newState)
 	{
-		// make sure we don't start the animation multiple times
-		if (moving && state == this.state)
+		if (state == newState)
 			return;
 
-		getBlockType();// make sure blockType is loaded
-		getBlockMetadata();
+		state = newState;
+		if (state == stateClosing || state == stateOpening)
+		{
+			timer = moving ? Door.openingTime - timer : 0;
+			startTime = worldObj.getTotalWorldTime() - timer;
+			moving = true;
+		}
+		else
+		{
+			if (getWorldObj() == null)
+				return;
 
-		timer = moving ? Door.openingTime - timer : 0;
+			int metadata = getBlockMetadata();
+			if (getBlockType() instanceof Door)
+				metadata = metadata & 7;
+			metadata = state == stateOpen ? metadata | flagOpened : metadata & ~flagOpened;
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+			moving = false;
+		}
 
-		startTime = worldObj.getTotalWorldTime() - timer;
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		if (!worldObj.isRemote)
+			DoorHandler.playSound(worldObj, xCoord, yCoord, zCoord, state);
+	}
 
-		moving = true;
-		this.state = state;
+	@Override
+	public void updateEntity()
+	{
+		if (!moving)
+			return;
+
+		timer++;
+		if (startTime + Door.openingTime < worldObj.getTotalWorldTime())
+		{
+			setDoorState(state == DoorHandler.stateClosing ? DoorHandler.stateClose : DoorHandler.stateOpen);
+			timer = 0;
+		}
+	}
+
+	@Override
+	public int getBlockMetadata()
+	{
+		if (getBlockType() != null && blockMetadata == -1)
+			blockMetadata = DoorHandler.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
+
+		return blockMetadata;
+	}
+
+	@Override
+	public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z)
+	{
+		return (oldBlock != newBlock);
 	}
 
 	/**
@@ -51,74 +89,16 @@ public class DoorTileEntity extends TileEntity
 	}
 
 	@Override
-	public void updateEntity()
-	{
-		if (!moving)
-			return;
-
-		timer++;
-		if (startTime + Door.openingTime < worldObj.getTotalWorldTime())
-		{
-			moving = false;
-			if (getBlockType() != null && !worldObj.isRemote)
-			{
-				DoorHandler.setDoorState(worldObj, xCoord, yCoord, zCoord,
-						state == DoorHandler.stateClosing ? DoorHandler.stateClose : DoorHandler.stateOpen);
-			}
-			timer = 0;
-		}
-
-	}
-
-	@Override
-	public Block getBlockType()
-	{
-		if (blockType == null)
-			blockType = worldObj.getBlock(xCoord, yCoord, zCoord);
-
-		return blockType;
-	}
-
-	@Override
-	public int getBlockMetadata()
-	{
-		return getBlockMetadata(false);
-	}
-
-	public int getBlockMetadata(boolean top)
-	{
-		// get full door metadata but discard opened state
-		if (getBlockType() != null && blockMetadata == -1)
-			blockMetadata = DoorHandler.getFullMetadata(worldObj, xCoord, yCoord, zCoord) & ~DoorHandler.flagOpened;
-		if (top)
-			blockMetadata |= DoorHandler.flagTopBlock;
-
-		return blockMetadata & ~DoorHandler.flagOpened;
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		timer = nbt.getInteger("timer");
-		startTime = nbt.getLong("startTime");
-		moving = nbt.getBoolean("moving");
-		state = nbt.getInteger("state");
-
-		if (worldObj != null)
-		{
-			blockType = worldObj.getBlock(xCoord, yCoord, zCoord);
-			blockMetadata = DoorHandler.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
-		}
+		setDoorState(nbt.getInteger("state"));
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		nbt.setInteger("timer", timer);
-		nbt.setLong("startTime", startTime);
-		nbt.setBoolean("moving", moving);
 		nbt.setInteger("state", state);
 	}
 
@@ -134,6 +114,5 @@ public class DoorTileEntity extends TileEntity
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		this.readFromNBT(packet.func_148857_g());
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 }

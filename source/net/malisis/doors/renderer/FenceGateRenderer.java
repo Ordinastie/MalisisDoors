@@ -32,6 +32,7 @@ import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
 
 /**
@@ -129,6 +130,24 @@ public class FenceGateRenderer extends DoorRenderer
 
 		drawShape(left, rp);
 		drawShape(right, rp);
+
+	}
+
+	@Override
+	public void renderDestroyProgress()
+	{
+		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+		rp.applyTexture.set(true);
+
+		drawShape(left, rp);
+		drawShape(right, rp);
+	}
+
+	@Override
+	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
+	{
+		return dbp.getPartialBlockX() == x && (dbp.getPartialBlockY() == y || dbp.getPartialBlockY() == y + 1)
+				&& dbp.getPartialBlockZ() == z;
 	}
 
 	@Override

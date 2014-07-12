@@ -27,11 +27,14 @@ package net.malisis.doors.renderer;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.element.Face;
+import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.DoorHandler;
 import net.malisis.doors.block.doors.TrapDoor;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
 
 /**
@@ -88,6 +91,21 @@ public class TrapDoorRenderer extends DoorRenderer
 		ar.animate(shape, animation);
 
 		drawShape(shape, rp);
+	}
+
+	@Override
+	public void renderDestroyProgress()
+	{
+		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+		rp.applyTexture.set(true);
+		Shape s = new Shape(new Face[] { shape.getFaces()[4].setStandardUV(), shape.getFaces()[5].setStandardUV() });
+		drawShape(s, rp);
+	}
+
+	@Override
+	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
+	{
+		return dbp.getPartialBlockX() == x && dbp.getPartialBlockY() == y && dbp.getPartialBlockZ() == z;
 	}
 
 	@Override
