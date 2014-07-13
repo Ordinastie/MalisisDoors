@@ -3,6 +3,7 @@ package net.malisis.doors;
 import java.util.HashMap;
 
 import lombok.Delegate;
+import net.malisis.core.MalisisCore;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -18,6 +19,7 @@ public class ProxyAccess
 {
 	private static HashMap<IBlockAccess, IBlockAccess> cache = new HashMap<>();
 	private static World tmpCache;
+	private static boolean worldInstanciationFailed = false;
 
 	private interface IProxyAccess
 	{
@@ -50,9 +52,20 @@ public class ProxyAccess
 		{
 			if (world instanceof World)
 			{
-				tmpCache = (World) world;
-				proxy = new ProxyWorld((World) world);
-				tmpCache = null;
+				if (worldInstanciationFailed)
+					return world;
+				try
+				{
+					tmpCache = (World) world;
+					proxy = new ProxyWorld((World) world);
+					tmpCache = null;
+				}
+				catch (Exception e)
+				{
+					MalisisCore.log.error("[ProxyAccess] Proxy wold instanciation failed : ", e);
+					worldInstanciationFailed = true;
+					return world;
+				}
 			}
 			else
 				proxy = new ProxyBlockAccess(world);
