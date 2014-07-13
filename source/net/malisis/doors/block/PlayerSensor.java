@@ -9,7 +9,6 @@ import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.AxisAlignedBB;
@@ -27,7 +26,7 @@ public class PlayerSensor extends Block
 	public PlayerSensor()
 	{
 		super(Material.circuits);
-		this.setCreativeTab(CreativeTabs.tabRedstone);
+		setCreativeTab(MalisisDoors.tab);
 	}
 
 	@SideOnly(Side.CLIENT)

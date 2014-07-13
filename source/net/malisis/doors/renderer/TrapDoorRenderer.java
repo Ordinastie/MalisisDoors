@@ -48,10 +48,10 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	protected void setup()
 	{
-		shape = ShapePreset.Cube();
-		shape.setSize(1, width, 1);
+		s = ShapePreset.Cube();
+		s.setSize(1, width, 1);
 
-		applyTexture(shape);
+		applyTexture(s);
 		rp.applyTexture.set(false);
 
 		float angle = 0;
@@ -61,10 +61,10 @@ public class TrapDoorRenderer extends DoorRenderer
 			angle = 90;
 		else if (direction == TrapDoor.DIR_WEST)
 			angle = 270;
-		shape.rotate(angle, 0, 1, 0);
+		s.rotate(angle, 0, 1, 0);
 
 		if (topBlock)
-			shape.translate(0, 1 - width, 0);
+			s.translate(0, 1 - width, 0);
 
 	}
 
@@ -88,9 +88,9 @@ public class TrapDoorRenderer extends DoorRenderer
 		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(Door.openingTime);
 
 		ar.setStartTime(tileEntity.startTime);
-		ar.animate(shape, animation);
+		ar.animate(s, animation);
 
-		drawShape(shape, rp);
+		drawShape(s, rp);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	{
 		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
 		rp.applyTexture.set(true);
-		Shape s = new Shape(new Face[] { shape.getFaces()[4].setStandardUV(), shape.getFaces()[5].setStandardUV() });
+		s = new Shape(new Face[] { s.getFaces()[4].setStandardUV(), s.getFaces()[5].setStandardUV() });
 		drawShape(s, rp);
 	}
 

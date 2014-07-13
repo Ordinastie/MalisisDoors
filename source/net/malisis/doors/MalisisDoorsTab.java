@@ -22,48 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block.doors;
+package net.malisis.doors;
 
-import java.util.Random;
-
-import net.malisis.doors.MalisisDoors;
-import net.minecraft.block.material.Material;
+import net.malisis.doors.MalisisDoors.Blocks;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class SlidingDoor extends Door
+/**
+ * @author Ordinastie
+ * 
+ */
+public class MalisisDoorsTab extends CreativeTabs
 {
-
-	public SlidingDoor(Material material)
+	public MalisisDoorsTab()
 	{
-		super(material);
-		float f = 0.5F;
-		float f1 = 1.0F;
-		setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
-		setHardness(2.0F);
-		if (material == Material.wood)
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_wood");
-		else
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_iron");
-
+		super("Malisis' Doors");
 	}
 
 	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
+	@SideOnly(Side.CLIENT)
+	public Item getTabIconItem()
 	{
-		if ((metadata & 8) != 0)
-			return null;
-
-		if (this.blockMaterial == Material.iron)
-			return MalisisDoors.Items.ironSlidingDoorItem;
-		else
-			return MalisisDoors.Items.woodSlidingDoorItem;
+		return Item.getItemFromBlock(Blocks.vanishingDiamondBlock);
 	}
 
 	@Override
-	public Item getItem(World world, int x, int y, int z)
+	@SideOnly(Side.CLIENT)
+	public int func_151243_f()
 	{
-		return this.blockMaterial == Material.iron ? MalisisDoors.Items.ironSlidingDoorItem : MalisisDoors.Items.woodSlidingDoorItem;
+		return 3;
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public String getTranslatedTabLabel()
+	{
+		return this.getTabLabel();
+	}
 }

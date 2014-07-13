@@ -24,14 +24,12 @@
 
 package net.malisis.doors.block.doors;
 
-import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -49,15 +47,16 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  * 
  */
-public class GarageDoor extends Block implements ITileEntityProvider, IBaseRendering
+public class GarageDoor extends Block implements ITileEntityProvider
 {
 	private IIcon topBlockIcon;
-	private int renderId = -1;
 
 	public GarageDoor()
 	{
 		super(Material.wood);
-		setCreativeTab(CreativeTabs.tabRedstone);
+		setCreativeTab(MalisisDoors.tab);
+		setHardness(2.0F);
+		setStepSound(soundTypeWood);
 	}
 
 	@Override
@@ -70,7 +69,7 @@ public class GarageDoor extends Block implements ITileEntityProvider, IBaseRende
 	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
-		if ((metadata & DoorHandler.flagTopBlock) != 0)
+		if ((metadata & DoorHandler.flagTopBlock) != 0 && (side == 4 || side == 5))
 			return topBlockIcon;
 		else
 			return blockIcon;
@@ -189,15 +188,9 @@ public class GarageDoor extends Block implements ITileEntityProvider, IBaseRende
 	}
 
 	@Override
-	public void setRenderId(int id)
-	{
-		renderId = id;
-	}
-
-	@Override
 	public int getRenderType()
 	{
-		return renderId;
+		return -1;
 	}
 
 	public static boolean isEastOrWest(int metadata)

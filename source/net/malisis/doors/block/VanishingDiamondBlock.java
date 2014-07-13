@@ -36,7 +36,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
- * @author -
+ * @author Ordinastie
  * 
  */
 public class VanishingDiamondBlock extends VanishingBlock

@@ -1,4 +1,30 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2014 Ordinastie
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package net.malisis.doors.item;
+
+import java.util.List;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
@@ -67,4 +93,19 @@ public class MixedBlockBlockItem extends ItemBlock
 		return itemStack;
 	}
 
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedTooltip)
+	{
+		Block block1 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block1"));
+		int metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
+		ItemStack is1 = new ItemStack(block1, 0, metadata1);
+
+		Block block2 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block2"));
+		int metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
+		ItemStack is2 = new ItemStack(block2, 0, metadata2);
+
+		list.addAll(is1.getTooltip(player, advancedTooltip));
+		list.addAll(is2.getTooltip(player, advancedTooltip));
+
+	}
 }

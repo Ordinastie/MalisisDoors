@@ -52,9 +52,9 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(VanishingTileEntity.class, vbr);
 
 		// garage door
-		GarageDoorRenderer gdr = BaseRenderer.create(GarageDoorRenderer.class, (IBaseRendering) garageDoor);
-		RenderingRegistry.registerBlockHandler(gdr);
+		GarageDoorRenderer gdr = BaseRenderer.create(GarageDoorRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(GarageDoorTileEntity.class, gdr);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(garageDoor), gdr);
 	}
 
 	@Override

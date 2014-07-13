@@ -34,6 +34,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -216,6 +217,16 @@ public class GarageDoorTileEntity extends TileEntity
 		}
 	}
 
+	/**
+	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
+	 */
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return AxisAlignedBB.getBoundingBox(xCoord - childDoors.size(), yCoord - childDoors.size(), zCoord - childDoors.size(), xCoord
+				+ childDoors.size() + 1, yCoord + 1, zCoord + childDoors.size() + 1);
+	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
@@ -230,7 +241,6 @@ public class GarageDoorTileEntity extends TileEntity
 		super.readFromNBT(tag);
 		state = tag.getInteger("state");
 		startTime = tag.getLong("startTime");
-
 	}
 
 	@Override

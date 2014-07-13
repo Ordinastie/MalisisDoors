@@ -56,19 +56,21 @@ public class DoorRenderer extends BaseRenderer
 
 	public DoorRenderer()
 	{
-		init();
+		initShape();
+		initRenderParameters();
 
 		getBlockDamage = true;
 	}
 
-	protected void init()
+	protected void initShape()
 	{
-		//Shapes
 		baseShape = ShapePreset.Cube();
 		baseShape.setSize(1, 1, width);
 		baseShape.scale(1, 1, 0.999F);
+	}
 
-		//RenderParameters
+	protected void initRenderParameters()
+	{
 		rp = new RenderParameters();
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);
@@ -80,7 +82,6 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
-		init();
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
 
@@ -89,19 +90,24 @@ public class DoorRenderer extends BaseRenderer
 		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
 		reversed = (blockMetadata & DoorHandler.flagReversed) != 0;
 		topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
-		this.tileEntity = (DoorTileEntity) super.tileEntity;
 
 		//set rp
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
+		rp.brightness.set(world
+				.getLightBrightnessForSkyBlocks(super.tileEntity.xCoord, super.tileEntity.yCoord, super.tileEntity.zCoord, 0));
+		rp.icon.set(null);
 
+		setTileEntity();
 		setup();
 		renderTileEntity();
 	}
 
-	protected void setup()
+	protected void setTileEntity()
 	{
 		this.tileEntity = (DoorTileEntity) super.tileEntity;
+	}
 
+	protected void setup()
+	{
 		//set shape
 		s = new Shape(baseShape);
 
@@ -114,7 +120,7 @@ public class DoorRenderer extends BaseRenderer
 
 	}
 
-	public void renderTileEntity()
+	protected void renderTileEntity()
 	{
 		Transformation animation;
 		if (block instanceof SlidingDoor)
@@ -169,7 +175,8 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	public void renderDestroyProgress()
 	{
-		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+		//rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+		rp.icon.set(damagedIcons[8]);
 		rp.applyTexture.set(true);
 		s.translate(0, -.5F, 0.005F);
 		s.scale(1.011F);

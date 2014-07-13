@@ -48,7 +48,7 @@ public class FenceGateRenderer extends DoorRenderer
 	protected float hingeOffset = -0.5F + 0.125F / 2;
 
 	@Override
-	protected void init()
+	protected void initShape()
 	{
 		float w = 0.125F; // fence depth and hinge width
 		float w2 = 0.1875F; //
@@ -66,15 +66,11 @@ public class FenceGateRenderer extends DoorRenderer
 
 		baseLeft = Shape.fromShapes(hingeLeft, gateHLeft, gateBottomLeft, gateTopLeft);
 		baseRight = Shape.fromShapes(hingeRight, gateHRight, gateBottomRight, gateTopRight);
-
-		super.init();
 	}
 
 	@Override
 	protected void setup()
 	{
-		init();
-
 		reversedOpen = ((blockMetadata >> 1) & 1) == 1;
 
 		// work on copies

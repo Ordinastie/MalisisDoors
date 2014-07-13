@@ -6,6 +6,7 @@ import net.malisis.core.configuration.Settings;
 import net.malisis.doors.network.NetworkHandler;
 import net.malisis.doors.proxy.CommonProxy;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -26,7 +27,7 @@ public class MalisisDoors implements IMalisisMod
 	public static MalisisDoors instance;
 	public static MalisisDoorsSettings settings;
 
-	// public static Block blockTest;
+	public static CreativeTabs tab = new MalisisDoorsTab();
 
 	public MalisisDoors()
 	{
