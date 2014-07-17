@@ -35,6 +35,7 @@ import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.block.doors.Door;
 import net.malisis.doors.block.doors.FenceGate;
 import net.malisis.doors.block.doors.GarageDoor;
+import net.malisis.doors.block.doors.JailDoor;
 import net.malisis.doors.block.doors.SlidingDoor;
 import net.malisis.doors.block.doors.TrapDoor;
 import net.malisis.doors.entity.BlockMixerTileEntity;
@@ -45,6 +46,7 @@ import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.entity.TrapDoorTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
+import net.malisis.doors.item.JailDoorItem;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.item.SlidingDoorItem;
 import net.malisis.doors.item.VanishingBlockItem;
@@ -71,6 +73,8 @@ public class Registers
 			registerMixedBlock();
 
 		registerGarageDoor();
+
+		registerJailDoor();
 
 	}
 
@@ -173,5 +177,19 @@ public class Registers
 		GameRegistry.registerBlock(garageDoor, garageDoor.getUnlocalizedName().substring(5));
 
 		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
+	}
+
+	private static void registerJailDoor()
+	{
+		//Block
+		jailDoor = (new JailDoor()).setBlockName("jail_door");
+		GameRegistry.registerBlock(jailDoor, jailDoor.getUnlocalizedName().substring(5));
+
+		//Item
+		jailDoorItem = (new JailDoorItem()).setUnlocalizedName("jail_door");
+		GameRegistry.registerItem(jailDoorItem, jailDoorItem.getUnlocalizedName());
+
+		//Recipes
+		GameRegistry.addRecipe(new ItemStack(woodSlidingDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
 	}
 }

@@ -110,7 +110,12 @@ public class DoorHandler
 	{
 		Block block = world.getBlock(x, y, z);
 
-		if (block instanceof SlidingDoor)
+		if (block instanceof JailDoor)
+		{
+			if (state == stateOpening || state == stateClosing)
+				world.playSoundEffect(x, y, z, MalisisDoors.modid + ":jaildoor", 1F, 1F);
+		}
+		else if (block instanceof SlidingDoor)
 		{
 			if (state == stateOpening || state == stateClosing)
 				world.playSoundEffect(x, y, z, MalisisDoors.modid + ":slidingdooro", 1F, 1F);

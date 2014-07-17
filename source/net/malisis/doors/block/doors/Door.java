@@ -58,9 +58,6 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public Door(Material material)
 	{
 		super(material);
-		float f = 0.5F;
-		float f1 = 1.0F;
-		setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
 		disableStats();
 		this.isBlockContainer = true;
 		// wood

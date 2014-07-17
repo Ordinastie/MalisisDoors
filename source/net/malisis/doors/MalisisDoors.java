@@ -90,12 +90,14 @@ public class MalisisDoors implements IMalisisMod
 		public static Block blockMixer;
 		public static Block mixedBlock;
 		public static Block garageDoor;
+		public static Block jailDoor;
 	}
 
 	public static class Items
 	{
 		public static Item woodSlidingDoorItem;
 		public static Item ironSlidingDoorItem;
+		public static Item jailDoorItem;
 	}
 
 }

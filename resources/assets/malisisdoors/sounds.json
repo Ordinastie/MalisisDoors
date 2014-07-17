@@ -1,4 +1,5 @@
 {
 	"slidingdooro": {"category": "master","sounds": [{"name": "slidingdooro","stream": false}]},
-	"portal": {"category": "master","sounds": [{"name": "portal","stream": false}]}
+	"portal": {"category": "master","sounds": [{"name": "portal","stream": false}]},
+	"jaildoor": {"category": "master","sounds": [{"name": "jaildoor","stream": false}]}
 }

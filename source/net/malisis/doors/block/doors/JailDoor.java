@@ -31,18 +31,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class SlidingDoor extends Door
+/**
+ * @author Ordinastie
+ * 
+ */
+public class JailDoor extends SlidingDoor
 {
-
-	public SlidingDoor(Material material)
+	public JailDoor()
 	{
-		super(material);
-		setHardness(2.0F);
-		if (material == Material.wood)
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_wood");
-		else
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_iron");
-
+		super(Material.iron);
+		setHardness(5.0F);
+		setBlockTextureName(MalisisDoors.modid + ":jail_door");
 	}
 
 	@Override
@@ -51,16 +50,12 @@ public class SlidingDoor extends Door
 		if ((metadata & 8) != 0)
 			return null;
 
-		if (this.blockMaterial == Material.iron)
-			return MalisisDoors.Items.ironSlidingDoorItem;
-		else
-			return MalisisDoors.Items.woodSlidingDoorItem;
+		return MalisisDoors.Items.jailDoorItem;
 	}
 
 	@Override
 	public Item getItem(World world, int x, int y, int z)
 	{
-		return this.blockMaterial == Material.iron ? MalisisDoors.Items.ironSlidingDoorItem : MalisisDoors.Items.woodSlidingDoorItem;
+		return MalisisDoors.Items.jailDoorItem;
 	}
-
 }

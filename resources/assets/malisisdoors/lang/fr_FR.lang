@@ -1,5 +1,6 @@
 item.wood_sliding_door.name=Porte coulissante en bois
 item.iron_sliding_door.name=Porte coulissante en fer
+item.jail_door.name=Porte de prison
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
 tile.vanishing_block_iron.name=Cadre de disparition en fer
@@ -7,6 +8,8 @@ tile.vanishing_block_gold.name=Cadre de disparition en or
 tile.vanishing_block_diamond.name=Cadre de disparition en diamant
 tile.block_mixer.name=Mixeur de blocs
 tile.mixed_block.name=Bloc mixé
+tile.garage_door.name=Porte de garage
+tile.jail_door.name=Porte de prison
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
