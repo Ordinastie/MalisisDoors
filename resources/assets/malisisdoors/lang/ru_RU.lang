@@ -1,8 +1,34 @@
 item.wood_sliding_door.name=Деревянные раздвижные двери
 item.iron_sliding_door.name=Железные раздвижные двери
+item.jail_door.name=Тюремная дверь
 tile.player_sensor.name=Сенсор игрока
 tile.vanishing_block_wood.name=Деревянная рамка-транслятор
 tile.vanishing_block_iron.name=Железная рамка-транслятор
 tile.vanishing_block_gold.name=Золотая рамка-транслятор
+tile.vanishing_block_diamond.name=Алмазная рамка-транслятор
 tile.block_mixer.name=Смешиватель блоков
 tile.mixed_block.name=Микс-Блок
+tile.garage_door.name=Гаражные ворота
+tile.jail_door.name=Тюремная дверь
+
+malisisdoors.command.usage=Используйте /malisisdoors <команда> для управления настройками мода
+
+config.title=Настройки MalisisDoors
+
+config.modifyVanillaDoors=Включить улучшение стандартных дверей
+config.modifyVanillaDoors.comment1=Включить анимацию для дверей, калиток и люков-ловушек.
+config.modifyVanillaDoors.comment2=Эта настройка полностью перенастраивает двери, что может решить конфликты, если другой мод также изменяет их.
+
+config.enableMixedBlocks=Включить смешиватель блоков и микс-блок
+
+config.simpleMixedBlockRendering=Упрощённое отображение микс-блоков
+config.simpleMixedBlockRendering.comment1=Включает менее качественное отображение для микс-блоков.
+config.simpleMixedBlockRendering.comment2=Включите эту опцию, если наблюдаются ошибки в отображении блоков и эффектов мода.
+
+config.enableVanishingBlocks=Включить использование рамок-трансляторов
+
+config.enableVanishingGlitch=Включает "мерцающий" эффект рамок-трансляторов
+config.enableVanishingGlitch.comment=Блоки в рамках-трансляторах периодически становятся нестабильными и на время выпадают из своего измерения.
+ 
+config.vanishingGlitchChance=Частота эффекта "мерцания" рамок-трансляторов
+config.vanishingGlitchChance.comment=Как часто блоки в рамках-трансляторах будут нестабильны.
