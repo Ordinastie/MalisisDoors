@@ -1,9 +1,34 @@
 item.wood_sliding_door.name=Holz-Schiebetür
 item.iron_sliding_door.name=Eisen-Schiebetür
+item.jail_door.name=Gefängnistür
 tile.player_sensor.name=Spielersensor
-tile.vanishing_block_wood.name=Verschwindendes Holzgerüst
-tile.vanishing_block_iron.name=Verschwindendes Eisengerüst
-tile.vanishing_block_gold.name=Verschwindendes Goldgerüst
-tile.vanishing_block_diamond.name=Verschwindender Diamantblock
-tile.block_mixer.name=Block Mixer
-
+tile.vanishing_block_wood.name=Schwindender Holzrahmen
+tile.vanishing_block_iron.name=Schwindender Eisenrahmen
+tile.vanishing_block_gold.name=Schwindender Goldrahmen
+tile.vanishing_block_diamond.name=Schwindender Diamantrahmen
+tile.block_mixer.name=Blockmischer
+tile.mixed_block.name=Gemischter Block
+tile.garage_door.name=Garagentor
+tile.jail_door.name=Gefängnistür
+ 
+malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
+ 
+config.title=MalisisDoors - Konfiguration
+ 
+config.modifyVanillaDoors=Aktiviere Vanilla-Verbesserungen
+config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter und Falltüren.
+config.modifyVanillaDoors.comment2=Dies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
+ 
+config.enableMixedBlocks=Aktiviere den Blockmischer sowie gemischte Blöcke
+ 
+config.simpleMixedBlockRendering=Einfaches Rendern von gemischten Blöcken
+config.simpleMixedBlockRendering.comment1=Aktiviert weniger attraktives Rendern gemischter Blöcke.
+config.simpleMixedBlockRendering.comment2=Aktiviere diese Option, wenn du Z-Fighting oder andere Rendering-Probleme erlebst.
+ 
+config.enableVanishingBlocks=Aktiviere Schwindende Rahmen
+ 
+config.enableVanishingGlitch=Aktiviere Wackeln von Schwindenden Rahmen
+config.enableVanishingGlitch.comment=Rahmen werden kurzzeitig instabil und fallen aus unserer Dimension.
+ 
+config.vanishingGlitchChance=Häufigkeit des Wackelns von verschw. Rahmen
+config.vanishingGlitchChance.comment=Wie oft werden die Rahmen instabil.

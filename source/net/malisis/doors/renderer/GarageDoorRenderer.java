@@ -62,10 +62,11 @@ public class GarageDoorRenderer extends DoorRenderer
 	{
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
+			enableBlending();
 			s = new Shape(baseShape);
-			rp.icon.set(null);
-			//s.rotate(90, 0, 1, 0);
 			s.translate(0.5F - width / 2, 0, 0);
+			rp.icon.set(null);
+			blockMetadata = DoorHandler.flagTopBlock;
 			drawShape(s, rp);
 			return;
 		}

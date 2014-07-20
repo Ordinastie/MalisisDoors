@@ -177,6 +177,8 @@ public class Registers
 		GameRegistry.registerBlock(garageDoor, garageDoor.getUnlocalizedName().substring(5));
 
 		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
+
+		GameRegistry.addRecipe(new ItemStack(garageDoor), new Object[] { "ABA", "AAA", 'A', Blocks.planks, 'B', Blocks.glass });
 	}
 
 	private static void registerJailDoor()
@@ -190,6 +192,6 @@ public class Registers
 		GameRegistry.registerItem(jailDoorItem, jailDoorItem.getUnlocalizedName());
 
 		//Recipes
-		GameRegistry.addRecipe(new ItemStack(woodSlidingDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
+		GameRegistry.addRecipe(new ItemStack(jailDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
 	}
 }

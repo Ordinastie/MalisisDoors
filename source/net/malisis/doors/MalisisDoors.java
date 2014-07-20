@@ -22,7 +22,7 @@ public class MalisisDoors implements IMalisisMod
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
-	public static final String version = "1.7.2-0.8";
+	public static final String version = "1.7.2-0.9";
 
 	public static MalisisDoors instance;
 	public static MalisisDoorsSettings settings;
