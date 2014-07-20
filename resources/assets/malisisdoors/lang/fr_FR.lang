@@ -7,28 +7,28 @@ tile.vanishing_block_iron.name=Cadre de disparition en fer
 tile.vanishing_block_gold.name=Cadre de disparition en or
 tile.vanishing_block_diamond.name=Cadre de disparition en diamant
 tile.block_mixer.name=Mixeur de blocs
-tile.mixed_block.name=Bloc mixé
+tile.mixed_block.name=Bloc mixÃ©
 tile.garage_door.name=Porte de garage
 tile.jail_door.name=Porte de prison
 
-malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
+malisisdoors.command.usage=Utilisez /malisisdoors <commande> oÃ¹ commande est config ou version
 
 config.title=Configuration de MalisisDoors
 
-config.modifyVanillaDoors=Activer l'amélioration des portes vanilla.
+config.modifyVanillaDoors=Activer l'amÃ©lioration des portes vanilla.
 config.modifyVanillaDoors.comment1=Active l'animation des portes, trappes et portillons.
-config.modifyVanillaDoors.comment2=Les blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
+config.modifyVanillaDoors.comment2=Les blocs sont remplacÃ©s et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
 
-config.enableMixedBlocks=Activer le Mixeur de blocs et les blocs mixés
+config.enableMixedBlocks=Activer le Mixeur de blocs et les blocs mixÃ©s
 
-config.simpleMixedBlockRendering=Activer le rendu simplifié des blocs mixés
-config.simpleMixedBlockRendering.comment1=Active un rendu moins avancé pour les blocs mixés.
-config.simpleMixedBlockRendering.comment2=Activez cette option si des problèmes de rendu sont visible pour ces blocs.
+config.simpleMixedBlockRendering=Activer le rendu simplifiÃ© des blocs mixÃ©s
+config.simpleMixedBlockRendering.comment1=Active un rendu moins avancÃ© pour les blocs mixÃ©s.
+config.simpleMixedBlockRendering.comment2=Activez cette option si des problÃ¨mes de rendu sont visible pour ces blocs.
 
 config.enableVanishingBlocks=Activer les cadres de disparition
 
-config.enableVanishingGlitch=Activer l'animation d'instabilité des cadres de disparition
+config.enableVanishingGlitch=Activer l'animation d'instabilitÃ© des cadres de disparition
 config.enableVanishingGlitch.comment=Les cadres deviennent instables et changent temporairement de dimension.
 
-config.vanishingGlitchChance=Fréquence d'instabilité des cadres de disparition
-config.vanishingGlitchChance.comment=A quelle fréquence les cadres deviennent instable.
+config.vanishingGlitchChance=FrÃ©quence d'instabilitÃ© des cadres de disparition
+config.vanishingGlitchChance.comment=A quelle frÃ©quence les cadres deviennent instable.
