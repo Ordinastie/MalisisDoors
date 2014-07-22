@@ -71,7 +71,8 @@ public class GarageDoorRenderer extends DoorRenderer
 			return;
 		}
 
-		if (!((GarageDoorTileEntity) world.getTileEntity(x, y, z)).isTopDoor())
+		GarageDoorTileEntity te = (GarageDoorTileEntity) world.getTileEntity(x, y, z);
+		if (te == null || !te.isTopDoor())
 		{
 			getBlockDamage = false;
 			return;

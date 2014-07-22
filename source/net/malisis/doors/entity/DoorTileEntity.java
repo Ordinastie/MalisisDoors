@@ -26,6 +26,9 @@ public class DoorTileEntity extends TileEntity
 			return;
 
 		state = newState;
+		if (getWorldObj() == null)
+			return;
+
 		if (state == stateClosing || state == stateOpening)
 		{
 			timer = moving ? Door.openingTime - timer : 0;
