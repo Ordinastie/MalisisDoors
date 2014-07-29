@@ -1,10 +1,8 @@
 package net.malisis.doors.entity;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class MixedBlockTileEntity extends TileEntity
@@ -14,12 +12,12 @@ public class MixedBlockTileEntity extends TileEntity
 	public int metadata1;
 	public int metadata2;
 
-	public void setBlocks(Block block1, int metadata1, Block block2, int metadata2)
+	public void set(ItemStack itemStack)
 	{
-		this.block1 = block1;
-		this.block2 = block2;
-		this.metadata1 = metadata1;
-		this.metadata2 = metadata2;
+		block1 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block1"));
+		block2 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block2"));
+		metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
+		metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class MixedBlockTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if(block1 != null && block2 != null)
+		if (block1 != null && block2 != null)
 		{
 			nbt.setInteger("block1", Block.getIdFromBlock(block1));
 			nbt.setInteger("block2", Block.getIdFromBlock(block2));
@@ -45,21 +43,6 @@ public class MixedBlockTileEntity extends TileEntity
 		}
 
 	}
-	
-	@Override
-	public Packet getDescriptionPacket()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
-	}
-	
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
-    {
-        this.readFromNBT(packet.func_148857_g());
-    }
-    
 
 	@Override
 	public boolean canUpdate()

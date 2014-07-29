@@ -32,6 +32,7 @@ import net.malisis.core.inventory.InventoryEvent;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.inventory.MalisisSlot;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.gui.VanishingDiamondGui;
 import net.minecraft.block.Block;
@@ -57,7 +58,6 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 	protected MalisisSlot slot;
 	protected int changedPowerStateTimer;
 	protected HashMap<ForgeDirection, DirectionState> directionStates = new HashMap<>();
-	public boolean guiUpdated = true;
 
 	public VanishingDiamondTileEntity()
 	{
@@ -147,7 +147,7 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		super.onDataPacket(net, packet);
-		guiUpdated = false;
+		TileEntityUtils.updateGui(this);
 	}
 
 	@Override

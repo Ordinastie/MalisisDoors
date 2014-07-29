@@ -24,11 +24,9 @@
 
 package net.malisis.doors;
 
-import net.malisis.doors.MalisisDoors.Blocks;
+import net.malisis.doors.MalisisDoors.Items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -42,23 +40,9 @@ public class MalisisDoorsTab extends CreativeTabs
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem()
 	{
-		return Item.getItemFromBlock(Blocks.vanishingDiamondBlock);
+		return Items.jailDoorItem;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public int func_151243_f()
-	{
-		return 3;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public String getTranslatedTabLabel()
-	{
-		return this.getTabLabel();
-	}
 }

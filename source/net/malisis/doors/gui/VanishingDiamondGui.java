@@ -39,6 +39,7 @@ import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity.DirectionState;
 import net.malisis.doors.network.VanishingDiamondFrameMessage;
@@ -52,9 +53,10 @@ import com.google.common.eventbus.Subscribe;
  */
 public class VanishingDiamondGui extends MalisisGui
 {
+	protected VanishingDiamondTileEntity tileEntity;
+
 	protected UITextField duration;
 	protected HashMap<ForgeDirection, UIComponent[]> configs = new HashMap<>();
-	protected VanishingDiamondTileEntity tileEntity;
 
 	public VanishingDiamondGui(VanishingDiamondTileEntity te, MalisisInventoryContainer container)
 	{
@@ -110,9 +112,9 @@ public class VanishingDiamondGui extends MalisisGui
 		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
 		window.add(playerInv);
 
-		tileEntity.guiUpdated = false;
-
 		addToScreen(window);
+
+		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
 	}
 
 	@Subscribe
@@ -142,11 +144,8 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Override
-	public void updateScreen()
+	public void updateGui()
 	{
-		if (tileEntity.guiUpdated)
-			return;
-
 		if (!duration.isFocused())
 			duration.setText("" + tileEntity.getDuration());
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -160,7 +159,6 @@ public class VanishingDiamondGui extends MalisisGui
 			((UICheckBox) configs.get(dir)[2]).setDisabled(!state.shouldPropagate).setChecked(state.inversed);
 		}
 
-		tileEntity.guiUpdated = true;
 	}
 
 }

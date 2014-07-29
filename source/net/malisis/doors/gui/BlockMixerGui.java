@@ -11,9 +11,10 @@ import net.malisis.doors.entity.BlockMixerTileEntity;
 
 public class BlockMixerGui extends MalisisGui
 {
-	BlockMixerTileEntity tileEntity;
-	UIProgressBar progressBar;
-	UIProgressBar progressBarReversed;
+	private BlockMixerTileEntity tileEntity;
+
+	private UIProgressBar progressBar;
+	private UIProgressBar progressBarReversed;
 
 	public BlockMixerGui(BlockMixerTileEntity tileEntity, MalisisInventoryContainer container)
 	{

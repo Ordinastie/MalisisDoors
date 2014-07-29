@@ -27,7 +27,6 @@ package net.malisis.doors.block;
 import java.util.ArrayList;
 
 import net.malisis.core.renderer.IBaseRendering;
-import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.renderer.block.MixedBlockRenderer;
@@ -41,7 +40,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -63,29 +61,18 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	{}
 
 	@Override
+	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
+	{
+		return side;
+	}
+
+	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
 		if (!(itemStack.getItem() instanceof MixedBlockBlockItem))
 			return;
 
-		int side = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		int metadata = 0;
-		if (side == 0)
-			metadata = 2;
-		if (side == 1)
-			metadata = 5;
-		if (side == 2)
-			metadata = 3;
-		if (side == 3)
-			metadata = 4;
-		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-
-		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		Block block1 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block1"));
-		Block block2 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block2"));
-		int metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
-		int metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
-		te.setBlocks(block1, metadata1, block2, metadata2);
+		((MixedBlockTileEntity) world.getTileEntity(x, y, z)).set(itemStack);
 	}
 
 	@Override
@@ -201,6 +188,12 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	}
 
 	@Override
+	public boolean isOpaqueCube()
+	{
+		return false;
+	}
+
+	@Override
 	public void setRenderId(int id)
 	{
 		renderType = id;
@@ -216,13 +209,13 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	@SideOnly(Side.CLIENT)
 	public int getRenderBlockPass()
 	{
-		return MalisisDoorsSettings.simpleMixedBlockRendering.get() ? 0 : 1;
+		return 1;
 	}
 
 	@Override
 	public boolean canRenderInPass(int pass)
 	{
 		MixedBlockRenderer.setRenderPass(pass);
-		return MalisisDoorsSettings.simpleMixedBlockRendering.get() ? pass == 0 : true;
+		return true;
 	}
 }
