@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.renderer;
+package net.malisis.doors.door.renderer;
 
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
@@ -33,10 +33,10 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.doors.Door;
-import net.malisis.doors.block.doors.DoorHandler;
-import net.malisis.doors.block.doors.SlidingDoor;
-import net.malisis.doors.entity.DoorTileEntity;
+import net.malisis.doors.door.DoorMouvement;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 
 public class DoorRenderer extends BaseRenderer
@@ -47,7 +47,7 @@ public class DoorRenderer extends BaseRenderer
 	protected boolean opened;
 	protected boolean reversed;
 	protected boolean topBlock;
-	protected float width = DoorHandler.DOOR_WIDTH;
+	protected float width = Door.DOOR_WIDTH;
 
 	protected Shape baseShape;
 	protected Shape s;
@@ -85,11 +85,11 @@ public class DoorRenderer extends BaseRenderer
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
 
-		blockMetadata = DoorHandler.getFullMetadata(world, x, y, z);
+		blockMetadata = Door.getFullMetadata(world, x, y, z);
 		direction = blockMetadata & 3;
-		opened = (blockMetadata & DoorHandler.flagOpened) != 0;
-		reversed = (blockMetadata & DoorHandler.flagReversed) != 0;
-		topBlock = (blockMetadata & DoorHandler.flagTopBlock) != 0;
+		opened = (blockMetadata & Door.FLAG_OPENED) != 0;
+		reversed = (blockMetadata & Door.FLAG_REVERSED) != 0;
+		topBlock = (blockMetadata & Door.FLAG_TOPBLOCK) != 0;
 
 		//set rp
 		rp.brightness.set(world
@@ -111,19 +111,19 @@ public class DoorRenderer extends BaseRenderer
 		//set shape
 		s = new Shape(baseShape);
 
-		if (direction == DoorHandler.DIR_SOUTH)
+		if (direction == Door.DIR_SOUTH)
 			s.rotate(180, 0, 1, 0);
-		if (direction == DoorHandler.DIR_EAST)
+		if (direction == Door.DIR_EAST)
 			s.rotate(-90, 0, 1, 0);
-		if (direction == DoorHandler.DIR_WEST)
+		if (direction == Door.DIR_WEST)
 			s.rotate(90, 0, 1, 0);
 
 	}
 
 	protected void renderTileEntity()
 	{
-		Transformation animation;
-		if (block instanceof SlidingDoor)
+		Transformation animation = null;
+		if (tileEntity.getMouvement() == DoorMouvement.SLIDING)
 		{
 			float fromX = 0, toX = 1 - width;
 			if (reversed)
@@ -131,16 +131,16 @@ public class DoorRenderer extends BaseRenderer
 				fromX = 0;
 				toX = -1 + width;
 			}
-			if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
+			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 			{
 				float tmp = fromX;
 				fromX = toX;
 				toX = tmp;
 			}
 
-			animation = new Translation(fromX, 0, 0, toX, 0, 0).forTicks(Door.openingTime);
+			animation = new Translation(fromX, 0, 0, toX, 0, 0).forTicks(tileEntity.getOpeningTime());
 		}
-		else
+		else if (tileEntity.getMouvement() == DoorMouvement.ROTATING)
 		{
 			float fromAngle = 0, toAngle = 90;
 			float hinge = 0.5F - width / 2;
@@ -152,23 +152,23 @@ public class DoorRenderer extends BaseRenderer
 				toAngle = -90;
 			}
 
-			if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
+			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 			{
 				float tmp = toAngle;
 				toAngle = fromAngle;
 				fromAngle = tmp;
 			}
 
-			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(Door.openingTime);
+			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(tileEntity.getOpeningTime());
 		}
 
-		ar.setStartTime(tileEntity.startTime);
+		ar.setStartTime(tileEntity.getStartTime());
 		ar.animate(s, animation);
 
 		drawShape(new Shape(s), rp);
 
 		s.translate(0, 1F, 0);
-		blockMetadata |= DoorHandler.flagTopBlock;
+		blockMetadata |= Door.FLAG_TOPBLOCK;
 		drawShape(new Shape(s), rp);
 	}
 

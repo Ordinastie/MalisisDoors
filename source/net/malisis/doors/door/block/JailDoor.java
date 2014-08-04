@@ -22,23 +22,60 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.entity;
+package net.malisis.doors.door.block;
 
-import net.minecraft.util.AxisAlignedBB;
+import java.util.Random;
+
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  * 
  */
-public class TrapDoorTileEntity extends DoorTileEntity
+public class JailDoor extends SlidingDoor
 {
-	/**
-	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
-	 */
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
+	public JailDoor()
 	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+		super(Material.iron);
+		setHardness(5.0F);
+		setStepSound(soundTypeMetal);
+		setBlockName("jail_door");
+		setBlockTextureName(MalisisDoors.modid + ":jail_door");
 	}
 
+	@Override
+	public void setTileEntityInformations(DoorTileEntity te)
+	{
+		super.setTileEntityInformations(te);
+		te.setOpeningTime(12);
+	}
+
+	@Override
+	public String getSoundPath(DoorState state)
+	{
+		if (state == DoorState.OPENING || state == DoorState.CLOSING)
+			return MalisisDoors.modid + ":jaildoor";
+
+		return null;
+	}
+
+	@Override
+	public Item getItemDropped(int metadata, Random par2Random, int par3)
+	{
+		if ((metadata & 8) != 0)
+			return null;
+
+		return MalisisDoors.Items.jailDoorItem;
+	}
+
+	@Override
+	public Item getItem(World world, int x, int y, int z)
+	{
+		return MalisisDoors.Items.jailDoorItem;
+	}
 }

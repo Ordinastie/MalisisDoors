@@ -22,11 +22,12 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block.doors;
+package net.malisis.doors.door.block;
 
-import static net.malisis.doors.block.doors.DoorHandler.*;
 import net.malisis.core.renderer.IBaseRendering;
-import net.malisis.doors.entity.TrapDoorTileEntity;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -72,56 +73,117 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 		if (world.isRemote)
 			return true;
 
-		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
-		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return true;
+
+		te.openOrCloseDoor();
 		return true;
 	}
 
 	@Override
 	public void func_150120_a(World world, int x, int y, int z, boolean opening)
 	{
-		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
-		if (opening && opened)
-			return;
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te != null)
+			te.setPowered(opening);
+	}
 
-		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
+	//#region BoundingBox
+	private AxisAlignedBB getBoundingBox(DoorTileEntity te)
+	{
+		int dir = te.getDirection();
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		float X = 1;
+		float Y = 1;
+		float Z = 1;
+
+		if (!te.isOpened())
+		{
+			if ((te.getBlockMetadata() & Door.FLAG_TOPBLOCK) != 0)
+				y = 1 - Door.DOOR_WIDTH;
+			else
+				Y = Door.DOOR_WIDTH;
+		}
+		else
+		{
+			if (dir == TrapDoor.DIR_NORTH)
+				Z = Door.DOOR_WIDTH;
+			if (dir == TrapDoor.DIR_SOUTH)
+				z = 1 - Door.DOOR_WIDTH;
+			if (dir == TrapDoor.DIR_EAST)
+				x = 1 - Door.DOOR_WIDTH;
+			if (dir == TrapDoor.DIR_WEST)
+				X = Door.DOOR_WIDTH;
+		}
+
+		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+	}
+
+	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
+	{
+		if (aabb == null)
+			return null;
+		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
+		return aabb;
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false);
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return;
+
+		setBlockBounds(getBoundingBox(te));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		if (DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, true))
-			return getAABB(world, x, y, z);
-		else
-			return null;
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null || te.isMoving())
+			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+
+		AxisAlignedBB aabb = getBoundingBox(te);
+		if (aabb == null)
+			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+
+		return aabb.offset(x, y, z);
 	}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		if (DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false))
-			return getAABB(world, x, y, z);
-		else
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null || te.isMoving())
 			return null;
+
+		return setBlockBounds(getBoundingBox(te).offset(x, y, z));
 	}
 
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
 	{
-		DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false);
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null || te.isMoving())
+			return null;
 		return super.collisionRayTrace(world, x, y, z, par5Vec3, par6Vec3);
 	}
 
-	public AxisAlignedBB getAABB(World world, int x, int y, int z)
+	//#end BoudingBox
+
+	public String getSoundPath(DoorState state)
 	{
-		return AxisAlignedBB.getBoundingBox(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
+		if (state == DoorState.OPENING)
+			return "random.door_open";
+		else if (state == DoorState.CLOSED)
+			return "random.door_close";
+
+		return null;
 	}
 
 	@Override

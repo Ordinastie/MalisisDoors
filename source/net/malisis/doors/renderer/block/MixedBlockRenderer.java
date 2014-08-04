@@ -155,7 +155,7 @@ public class MixedBlockRenderer extends BaseRenderer
 
 		Block b = reversed ? block2 : block1;
 		int m = reversed ? metadata2 : metadata1;
-		if (b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
+		if (b instanceof Block && b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
 		{
 			set(b, m);
 			drawShape(shape, rp);
@@ -163,7 +163,7 @@ public class MixedBlockRenderer extends BaseRenderer
 
 		b = reversed ? block1 : block2;
 		m = reversed ? metadata1 : metadata2;
-		if (b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
+		if (b instanceof Block && b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
 		{
 			shape.translate(offsetX, offestY, offsetZ);
 			set(b, m);

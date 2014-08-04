@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.renderer;
+package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.animation.transformation.Rotation;
@@ -30,9 +30,8 @@ import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.doors.Door;
-import net.malisis.doors.block.doors.DoorHandler;
-import net.malisis.doors.block.doors.TrapDoor;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.TrapDoor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -78,16 +77,16 @@ public class TrapDoorRenderer extends DoorRenderer
 		if (topBlock)
 			toAngle = -toAngle;
 
-		if (tileEntity.state == DoorHandler.stateClosing || tileEntity.state == DoorHandler.stateClose)
+		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 		{
 			float tmp = toAngle;
 			toAngle = fromAngle;
 			fromAngle = tmp;
 		}
 
-		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(Door.openingTime);
+		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(tileEntity.getOpeningTime());
 
-		ar.setStartTime(tileEntity.startTime);
+		ar.setStartTime(tileEntity.getStartTime());
 		ar.animate(s, animation);
 
 		drawShape(s, rp);

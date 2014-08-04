@@ -27,8 +27,9 @@ package net.malisis.doors.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.malisis.doors.block.doors.DoorHandler;
-import net.malisis.doors.block.doors.GarageDoor;
+import net.malisis.doors.block.GarageDoor;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -48,7 +49,7 @@ public class GarageDoorTileEntity extends TileEntity
 	protected boolean removed = false;
 	protected GarageDoorTileEntity topDoor;
 	protected Set<GarageDoorTileEntity> childDoors = new HashSet<>();
-	protected int state;
+	protected DoorState state = DoorState.CLOSED;
 	public boolean draw = false;
 	public long startTime;
 
@@ -62,7 +63,7 @@ public class GarageDoorTileEntity extends TileEntity
 		return blockMetadata & 3;
 	}
 
-	public int getState()
+	public DoorState getState()
 	{
 		return state;
 	}
@@ -116,7 +117,7 @@ public class GarageDoorTileEntity extends TileEntity
 		this.topDoor = topDoor;
 		if (isTopDoor())
 		{
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | DoorHandler.flagTopBlock, 2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | Door.FLAG_TOPBLOCK, 2);
 			GarageDoorTileEntity te = this;
 			while ((te = te.getGarageDoor(ForgeDirection.DOWN)) != null)
 			{
@@ -126,7 +127,7 @@ public class GarageDoorTileEntity extends TileEntity
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		else
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~DoorHandler.flagTopBlock, 2);
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~Door.FLAG_TOPBLOCK, 2);
 	}
 
 	public void add()
@@ -158,14 +159,14 @@ public class GarageDoorTileEntity extends TileEntity
 			return;
 		}
 
-		if (state == DoorHandler.stateOpening || state == DoorHandler.stateClosing)
+		if (state == DoorState.OPENING || state == DoorState.CLOSING)
 			return;
 
 		startTime = worldObj.getTotalWorldTime();
-		if (state == DoorHandler.stateClose)
-			setState(DoorHandler.stateOpening);
-		else if (state == DoorHandler.stateOpen)
-			setState(DoorHandler.stateClosing);
+		if (state == DoorState.CLOSED)
+			setState(DoorState.OPENING);
+		else if (state == DoorState.OPENED)
+			setState(DoorState.CLOSING);
 
 		GarageDoorTileEntity te = getGarageDoor(GarageDoor.isEastOrWest(blockMetadata) ? ForgeDirection.NORTH : ForgeDirection.EAST);
 		if (te != null)
@@ -177,7 +178,7 @@ public class GarageDoorTileEntity extends TileEntity
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	private void setState(int newState)
+	private void setState(DoorState newState)
 	{
 		if (state == newState)
 			return;
@@ -186,10 +187,10 @@ public class GarageDoorTileEntity extends TileEntity
 
 		if (getWorldObj() != null)
 		{
-			if (state == DoorHandler.stateClose)
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata & ~DoorHandler.flagOpened, 2);
+			if (state == DoorState.CLOSED)
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata & ~Door.FLAG_OPENED, 2);
 			else
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata | DoorHandler.flagOpened, 2);
+				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata | Door.FLAG_OPENED, 2);
 		}
 
 		if (isTopDoor())
@@ -205,15 +206,15 @@ public class GarageDoorTileEntity extends TileEntity
 		if (!isTopDoor())
 			return;
 
-		if (state == DoorHandler.stateClose || state == DoorHandler.stateOpen)
+		if (state == DoorState.CLOSED || state == DoorState.OPENED)
 			return;
 
 		if (startTime + (childDoors.size() + 1) * maxOpenTime < worldObj.getTotalWorldTime())
 		{
-			if (state == DoorHandler.stateClosing)
-				setState(DoorHandler.stateClose);
-			else if (state == DoorHandler.stateOpening)
-				setState(DoorHandler.stateOpen);
+			if (state == DoorState.CLOSING)
+				setState(DoorState.CLOSED);
+			else if (state == DoorState.OPENING)
+				setState(DoorState.OPENED);
 		}
 	}
 
@@ -231,7 +232,7 @@ public class GarageDoorTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		tag.setInteger("state", state);
+		tag.setInteger("state", state.ordinal());
 		tag.setLong("startTime", startTime);
 	}
 
@@ -239,7 +240,7 @@ public class GarageDoorTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		state = tag.getInteger("state");
+		state = DoorState.values()[tag.getInteger("state")];
 		startTime = tag.getLong("startTime");
 	}
 

@@ -22,16 +22,17 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block.doors;
+package net.malisis.doors.door.block;
 
 /**
  * @author Ordinastie
  *
  */
 
-import static net.malisis.doors.block.doors.DoorHandler.*;
 import net.malisis.core.renderer.IBaseRendering;
-import net.malisis.doors.entity.FenceGateTileEntity;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.ITileEntityProvider;
@@ -62,10 +63,13 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 		if (world.isRemote)
 			return true;
 
-		boolean opened = (getFullMetadata(world, x, y, z) & flagOpened) != 0;
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return true;
 
-		setDoorState(world, x, y, z, opened ? stateClosing : stateOpening);
+		boolean opened = te.isOpened();
 
+		te.openOrCloseDoor();
 		if (opened)
 			return true;
 
@@ -83,25 +87,31 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		int metadata = world.getBlockMetadata(x, y, z);
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return;
 
-		if ((metadata & flagTopBlock) == 0)
-		{
-			boolean powered = world.isBlockIndirectlyGettingPowered(x, y, z) || world.isBlockIndirectlyGettingPowered(x, y + 1, z);
-
-			if ((powered || block.canProvidePower()) && block != this)
-				onPoweredBlockChange(world, x, y, z, powered);
-
-		}
+		te.setPowered(te.isPowered());
 	}
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		if (DoorHandler.setBlockBoundsBasedOnState(world, x, y, z, false))
-			return AxisAlignedBB.getBoundingBox(x + this.minX, y + this.minY, z + this.minZ, x + this.maxX, y + this.maxY, z + this.maxZ);
-		else
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null || te.isMoving())
 			return null;
+
+		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+	}
+
+	public String getSoundPath(DoorState state)
+	{
+		if (state == DoorState.OPENING)
+			return "random.door_open";
+		else if (state == DoorState.CLOSED)
+			return "random.door_close";
+
+		return null;
 	}
 
 	@Override

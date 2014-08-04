@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.item;
+package net.malisis.doors.door.item;
 
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
@@ -45,6 +45,10 @@ public class SlidingDoorItem extends ItemDoor
 		super(material);
 		this.material = material;
 		setCreativeTab(MalisisDoors.tab);
+		if (material == Material.wood)
+			setUnlocalizedName("wood_sliding_door");
+		else
+			setUnlocalizedName("iron_sliding_door");
 	}
 
 	@Override

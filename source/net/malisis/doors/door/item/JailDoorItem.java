@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.item;
+package net.malisis.doors.door.item;
 
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
@@ -41,6 +41,7 @@ public class JailDoorItem extends ItemDoor
 	public JailDoorItem()
 	{
 		super(Material.iron);
+		setUnlocalizedName("jail_door");
 		setCreativeTab(MalisisDoors.tab);
 	}
 

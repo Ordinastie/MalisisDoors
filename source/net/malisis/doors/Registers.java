@@ -28,27 +28,29 @@ import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.block.BlockMixer;
+import net.malisis.doors.block.DoorFactory;
+import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.block.doors.Door;
-import net.malisis.doors.block.doors.FenceGate;
-import net.malisis.doors.block.doors.GarageDoor;
-import net.malisis.doors.block.doors.JailDoor;
-import net.malisis.doors.block.doors.SlidingDoor;
-import net.malisis.doors.block.doors.TrapDoor;
+import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.block.GlassDoor;
+import net.malisis.doors.door.block.JailDoor;
+import net.malisis.doors.door.block.TrapDoor;
+import net.malisis.doors.door.block.VanillaDoor;
+import net.malisis.doors.door.item.JailDoorItem;
+import net.malisis.doors.door.item.SlidingDoorItem;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.tileentity.FenceGateTileEntity;
+import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.malisis.doors.entity.BlockMixerTileEntity;
-import net.malisis.doors.entity.DoorTileEntity;
-import net.malisis.doors.entity.FenceGateTileEntity;
+import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.MixedBlockTileEntity;
-import net.malisis.doors.entity.TrapDoorTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
-import net.malisis.doors.item.JailDoorItem;
 import net.malisis.doors.item.MixedBlockBlockItem;
-import net.malisis.doors.item.SlidingDoorItem;
 import net.malisis.doors.item.VanishingBlockItem;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -76,12 +78,15 @@ public class Registers
 
 		registerJailDoor();
 
+		registerDoorFactory();
+
+		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 	}
 
 	private static void registerVanillaDoors()
 	{
-		doubleDoorWood = new Door(Material.wood);
-		doubleDoorIron = new Door(Material.iron);
+		doubleDoorWood = new VanillaDoor(Material.wood);
+		doubleDoorIron = new VanillaDoor(Material.iron);
 		fenceGate = new FenceGate();
 		trapDoor = new TrapDoor();
 
@@ -98,15 +103,15 @@ public class Registers
 	private static void registerSlidingDoors()
 	{
 		// Sliding Door blocks
-		woodSlidingDoor = (new SlidingDoor(Material.wood)).setBlockName("wood_sliding_door");
-		ironSlidingDoor = (new SlidingDoor(Material.iron)).setBlockName("iron_sliding_door");
+		woodSlidingDoor = new GlassDoor(Material.wood);
+		ironSlidingDoor = new GlassDoor(Material.iron);
 
 		GameRegistry.registerBlock(woodSlidingDoor, woodSlidingDoor.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(ironSlidingDoor, ironSlidingDoor.getUnlocalizedName().substring(5));
 
 		// Sliding Door items
-		woodSlidingDoorItem = (new SlidingDoorItem(Material.wood)).setUnlocalizedName("wood_sliding_door");
-		ironSlidingDoorItem = (new SlidingDoorItem(Material.iron)).setUnlocalizedName("iron_sliding_door");
+		woodSlidingDoorItem = new SlidingDoorItem(Material.wood);
+		ironSlidingDoorItem = new SlidingDoorItem(Material.iron);
 
 		GameRegistry.registerItem(woodSlidingDoorItem, woodSlidingDoorItem.getUnlocalizedName());
 		GameRegistry.registerItem(ironSlidingDoorItem, ironSlidingDoorItem.getUnlocalizedName());
@@ -117,13 +122,11 @@ public class Registers
 		GameRegistry.addRecipe(new ItemStack(ironSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Items.iron_ingot, 'B',
 				Blocks.glass });
 
-		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
-
 	}
 
 	private static void registerPlayerSensor()
 	{
-		playerSensor = (new PlayerSensor()).setBlockName("player_sensor");
+		playerSensor = new PlayerSensor();
 
 		GameRegistry.registerBlock(playerSensor, playerSensor.getUnlocalizedName().substring(5));
 
@@ -172,7 +175,7 @@ public class Registers
 
 	private static void registerGarageDoor()
 	{
-		garageDoor = (new GarageDoor()).setBlockName("garage_door");
+		garageDoor = new GarageDoor();
 
 		GameRegistry.registerBlock(garageDoor, garageDoor.getUnlocalizedName().substring(5));
 
@@ -184,14 +187,25 @@ public class Registers
 	private static void registerJailDoor()
 	{
 		//Block
-		jailDoor = (new JailDoor()).setBlockName("jail_door");
+		jailDoor = new JailDoor();
 		GameRegistry.registerBlock(jailDoor, jailDoor.getUnlocalizedName().substring(5));
 
 		//Item
-		jailDoorItem = (new JailDoorItem()).setUnlocalizedName("jail_door");
+		jailDoorItem = new JailDoorItem();
 		GameRegistry.registerItem(jailDoorItem, jailDoorItem.getUnlocalizedName());
 
 		//Recipes
 		GameRegistry.addRecipe(new ItemStack(jailDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
+	}
+
+	private static void registerDoorFactory()
+	{
+		doorFactory = (new DoorFactory()).setBlockName("door_factory");
+		GameRegistry.registerBlock(doorFactory, doorFactory.getUnlocalizedName().substring(5));
+
+		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");
+
+		GameRegistry.addRecipe(new ItemStack(doorFactory), new Object[] { "ABA", "C C", "ADA", 'A', Blocks.planks, 'B', Items.iron_door,
+				'C', Items.redstone, 'D', Blocks.piston });
 	}
 }

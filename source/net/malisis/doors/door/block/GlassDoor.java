@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block.doors;
+package net.malisis.doors.door.block;
 
 import java.util.Random;
 
@@ -31,18 +31,29 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class SlidingDoor extends Door
+/**
+ * @author Ordinastie
+ * 
+ */
+public class GlassDoor extends SlidingDoor
 {
-
-	public SlidingDoor(Material material)
+	public GlassDoor(Material material)
 	{
 		super(material);
-		setHardness(2.0F);
 		if (material == Material.wood)
+		{
+			setHardness(2.0F);
+			setStepSound(soundTypeWood);
+			setBlockName("wood_sliding_door");
 			setBlockTextureName(MalisisDoors.modid + ":sliding_door_wood");
+		}
 		else
+		{
+			setHardness(3.0F);
+			setStepSound(soundTypeMetal);
+			setBlockName("iron_sliding_door");
 			setBlockTextureName(MalisisDoors.modid + ":sliding_door_iron");
-
+		}
 	}
 
 	@Override
@@ -62,5 +73,4 @@ public class SlidingDoor extends Door
 	{
 		return this.blockMaterial == Material.iron ? MalisisDoors.Items.ironSlidingDoorItem : MalisisDoors.Items.woodSlidingDoorItem;
 	}
-
 }

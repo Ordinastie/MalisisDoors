@@ -10,6 +10,7 @@ tile.block_mixer.name=Block Mixer
 tile.mixed_block.name=Mixed Block
 tile.garage_door.name=Garage door
 tile.jail_door.name=Jail Door
+tile.door_factory.name=Door Factory
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
@@ -32,3 +33,11 @@ config.enableVanishingGlitch.comment=Frames randomly become unstable and are tem
  
 config.vanishingGlitchChance=Vanishing Frames glitch frequency
 config.vanishingGlitchChance.comment=How often the frame become unstable.
+
+gui.door_factory.door_type=Door type :
+gui.door_factory.door_type_rotating=Rotating
+gui.door_factory.door_type_sliding=Sliding
+gui.door_factory.frame_type=Frame type :
+gui.door_factory.top_material=Top block material :
+gui.door_factory.bottom_material=Bottom block material :
+gui.door_factory.create_door=Create door

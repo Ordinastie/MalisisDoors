@@ -22,9 +22,10 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block.doors;
+package net.malisis.doors.block;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -54,6 +55,7 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	public GarageDoor()
 	{
 		super(Material.wood);
+		setBlockName("garage_door");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(2.0F);
 		setStepSound(soundTypeWood);
@@ -69,7 +71,7 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
-		if ((metadata & DoorHandler.flagTopBlock) != 0 && (side == 4 || side == 5))
+		if ((metadata & Door.FLAG_TOPBLOCK) != 0 && (side == 4 || side == 5))
 			return topBlockIcon;
 		else
 			return blockIcon;
@@ -128,8 +130,8 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
-		float w = DoorHandler.DOOR_WIDTH / 2;
-		if ((metadata & DoorHandler.flagOpened) != 0)
+		float w = Door.DOOR_WIDTH / 2;
+		if ((metadata & Door.FLAG_OPENED) != 0)
 			setBlockBounds(0, 0, 0, 0, 0, 0);
 		else if (isEastOrWest(metadata))
 			setBlockBounds(0.5F - w, 0, 0, 0.5F + w, 1, 1);
@@ -156,7 +158,7 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		int metadata = world.getBlockMetadata(x, y, z);
-		if ((metadata & DoorHandler.flagOpened) != 0)
+		if ((metadata & Door.FLAG_OPENED) != 0)
 			return null;
 
 		setBlockBoundsBasedOnState(world, x, y, z);
@@ -195,6 +197,6 @@ public class GarageDoor extends Block implements ITileEntityProvider
 
 	public static boolean isEastOrWest(int metadata)
 	{
-		return (metadata & 3) == DoorHandler.DIR_EAST || (metadata & 3) == DoorHandler.DIR_WEST;
+		return (metadata & 3) == Door.DIR_EAST || (metadata & 3) == Door.DIR_WEST;
 	}
 }

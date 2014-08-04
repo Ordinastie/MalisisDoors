@@ -91,6 +91,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block mixedBlock;
 		public static Block garageDoor;
 		public static Block jailDoor;
+		public static Block doorFactory;
 	}
 
 	public static class Items

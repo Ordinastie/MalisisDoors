@@ -24,9 +24,8 @@
 
 package net.malisis.doors.block;
 
-import net.malisis.core.util.EntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.entity.BlockMixerTileEntity;
+import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -34,7 +33,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -43,11 +41,15 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockMixer extends Block implements ITileEntityProvider
+/**
+ * @author Ordinastie
+ * 
+ */
+public class DoorFactory extends Block implements ITileEntityProvider
 {
 	private IIcon frontIcon;
 
-	public BlockMixer()
+	public DoorFactory()
 	{
 		super(Material.iron);
 		setCreativeTab(MalisisDoors.tab);
@@ -95,40 +97,14 @@ public class BlockMixer extends Block implements ITileEntityProvider
 		if (tileEntity == null || player.isSneaking())
 			return false;
 
-		((BlockMixerTileEntity) tileEntity).getInventory().open((EntityPlayerMP) player);
+		((DoorFactoryTileEntity) tileEntity).getInventory().open((EntityPlayerMP) player);
 		return true;
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+	public TileEntity createNewTileEntity(World var1, int var2)
 	{
-		dropItems(world, x, y, z);
-		super.breakBlock(world, x, y, z, block, metadata);
+		return new DoorFactoryTileEntity();
 	}
 
-	private void dropItems(World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (!(tileEntity instanceof IInventory))
-			return;
-
-		IInventory inventory = (IInventory) tileEntity;
-
-		for (int i = 0; i < inventory.getSizeInventory(); i++)
-		{
-			ItemStack itemStack = inventory.getStackInSlot(i);
-
-			if (itemStack != null && itemStack.stackSize > 0)
-			{
-				EntityUtils.spawnEjectedItem(world, x, y, z, itemStack);
-				itemStack.stackSize = 0;
-			}
-		}
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int metdata)
-	{
-		return new BlockMixerTileEntity();
-	}
 }

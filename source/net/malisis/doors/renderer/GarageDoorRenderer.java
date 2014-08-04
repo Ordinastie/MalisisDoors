@@ -35,11 +35,11 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.block.doors.DoorHandler;
+import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.entity.GarageDoorTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
-import net.minecraft.client.renderer.RenderBlocks;
 
 /**
  * @author Ordinastie
@@ -66,7 +66,7 @@ public class GarageDoorRenderer extends DoorRenderer
 			s = new Shape(baseShape);
 			s.translate(0.5F - width / 2, 0, 0);
 			rp.icon.set(null);
-			blockMetadata = DoorHandler.flagTopBlock;
+			blockMetadata = Door.FLAG_TOPBLOCK;
 			drawShape(s, rp);
 			return;
 		}
@@ -130,7 +130,7 @@ public class GarageDoorRenderer extends DoorRenderer
 			Transformation horizontalAnim = new Translation(0, 0, 0, 0, delta2, 0).forTicks(t * delta2, 0);
 
 			Transformation chained = new ChainedTransformation(verticalAnim, topRotate, horizontalAnim);
-			if (tileEntity.getState() == DoorHandler.stateClosing || tileEntity.getState() == DoorHandler.stateClose)
+			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 				chained.reversed(true);
 
 			Shape tempShape = new Shape(s);
@@ -163,13 +163,6 @@ public class GarageDoorRenderer extends DoorRenderer
 				return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
-		// TODO Auto-generated method stub
-		super.renderInventoryBlock(block, metadata, modelId, renderer);
 	}
 
 	@Override

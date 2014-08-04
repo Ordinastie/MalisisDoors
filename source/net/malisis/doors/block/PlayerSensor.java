@@ -27,6 +27,7 @@ public class PlayerSensor extends Block
 	{
 		super(Material.circuits);
 		setCreativeTab(MalisisDoors.tab);
+		setBlockName("player_sensor");
 	}
 
 	@SideOnly(Side.CLIENT)
