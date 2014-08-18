@@ -22,41 +22,28 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door.movement;
 
-import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorMouvement;
+import static net.malisis.doors.door.block.Door.*;
+import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
  * 
  */
-public abstract class SlidingDoor extends Door
+public class SplitDoor implements IDoorMovement
 {
-	public SlidingDoor(Material material)
-	{
-		super(material);
-	}
-
 	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
 	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setMouvement(DoorMouvement.SLIDING);
-	}
+		if (tileEntity.isOpened() && !topBlock)
+			return null;
 
-	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity te)
-	{
-		int dir = te.getDirection();
-		boolean opened = te.isOpened();
-		boolean reversed = te.isReversed();
-		float left = -1 + DOOR_WIDTH;
-		float right = 1 - DOOR_WIDTH;
+		int dir = tileEntity.getDirection();
 
 		float x = 0;
 		float y = 0;
@@ -66,56 +53,56 @@ public abstract class SlidingDoor extends Door
 		float Z = 1;
 
 		if (dir == DIR_NORTH)
-		{
-			z = 0.01F;
 			Z = DOOR_WIDTH;
-			if (opened)
-			{
-				x += reversed ? left : right;
-				X += reversed ? left : right;
-			}
-		}
 		if (dir == DIR_SOUTH)
-		{
 			z = 1 - DOOR_WIDTH;
-			Z = 0.99F;
-			if (opened)
-			{
-				x += reversed ? right : left;
-				X += reversed ? right : left;
-			}
-		}
 		if (dir == DIR_WEST)
-		{
-			x = 0.01F;
 			X = DOOR_WIDTH;
-			if (opened)
-			{
-				z += reversed ? right : left;
-				Z += reversed ? right : left;
-			}
-		}
 		if (dir == DIR_EAST)
-		{
 			x = 1 - DOOR_WIDTH;
-			X = 0.99F;
-			if (opened)
-			{
-				z += reversed ? left : right;
-				Z += reversed ? left : right;
-			}
+
+		if (tileEntity.isOpened())
+		{
+			y += 1 - DOOR_WIDTH * (topBlock ? 1 : -1);
+			Y += 1 - DOOR_WIDTH * (topBlock ? 1 : -1);
+		}
+
+		if (selBox && !tileEntity.isOpened())
+		{
+			if (topBlock)
+				y--;
+			else
+				Y++;
 		}
 
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public Transformation getTopTransformation(DoorTileEntity tileEntity)
 	{
-		if (state == DoorState.OPENING || state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":slidingdooro";
+		return getTransformation(tileEntity, true);
+	}
 
-		return null;
+	@Override
+	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
+	{
+		return getTransformation(tileEntity, false);
+	}
+
+	private Transformation getTransformation(DoorTileEntity tileEntity, boolean top)
+	{
+		float fromY = 0, toY = 1 - DOOR_WIDTH;
+		if (!top)
+			toY = -1.1F;
+		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
+		{
+			float tmp = fromY;
+			fromY = toY;
+			toY = tmp;
+		}
+
+		return new Translation(0, fromY, 0, 0, toY, 0).forTicks(tileEntity.getOpeningTime());
 	}
 
 }

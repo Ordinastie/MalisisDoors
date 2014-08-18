@@ -24,7 +24,8 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.block.TrapDoor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.sound.VanillaDoorSound;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -36,6 +37,7 @@ public class TrapDoorTileEntity extends DoorTileEntity
 	public TrapDoorTileEntity()
 	{
 		setDoubleDoor(false);
+		setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
 	}
 
 	/**
@@ -46,16 +48,4 @@ public class TrapDoorTileEntity extends DoorTileEntity
 	{
 		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
-
-	@Override
-	public void playSound()
-	{
-		if (worldObj.isRemote)
-			return;
-
-		String soundPath = ((TrapDoor) getBlockType()).getSoundPath(getState());
-		if (soundPath != null)
-			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
-	}
-
 }

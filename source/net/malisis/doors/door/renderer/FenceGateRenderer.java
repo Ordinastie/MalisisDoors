@@ -41,7 +41,6 @@ import net.minecraft.client.renderer.RenderBlocks;
  */
 public class FenceGateRenderer extends DoorRenderer
 {
-	public static int renderId;
 	protected Shape baseLeft, baseRight;
 	protected Shape left, right;
 	protected boolean reversedOpen;

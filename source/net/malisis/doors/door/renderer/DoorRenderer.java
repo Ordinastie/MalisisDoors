@@ -27,27 +27,20 @@ package net.malisis.doors.door.renderer;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
-import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
-import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.door.DoorMouvement;
-import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 
 public class DoorRenderer extends BaseRenderer
 {
-	public static int renderId;
 	protected DoorTileEntity tileEntity;
 	protected int direction;
 	protected boolean opened;
 	protected boolean reversed;
 	protected boolean topBlock;
-	protected float width = Door.DOOR_WIDTH;
 
 	protected Shape baseShape;
 	protected Shape s;
@@ -65,8 +58,9 @@ public class DoorRenderer extends BaseRenderer
 	protected void initShape()
 	{
 		baseShape = ShapePreset.Cube();
-		baseShape.setSize(1, 1, width);
-		baseShape.scale(1, 1, 0.999F);
+		baseShape.setSize(1, 1, Door.DOOR_WIDTH);
+		baseShape.scale(1, 1, 0.995F);
+		baseShape.applyMatrix();
 	}
 
 	protected void initRenderParameters()
@@ -76,6 +70,7 @@ public class DoorRenderer extends BaseRenderer
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
 		rp.useBlockBrightness.set(false);
+		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
 	}
 
@@ -84,19 +79,17 @@ public class DoorRenderer extends BaseRenderer
 	{
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
-
+		initShape();
+		initRenderParameters();
 		blockMetadata = Door.getFullMetadata(world, x, y, z);
 		direction = blockMetadata & 3;
 		opened = (blockMetadata & Door.FLAG_OPENED) != 0;
 		reversed = (blockMetadata & Door.FLAG_REVERSED) != 0;
 		topBlock = (blockMetadata & Door.FLAG_TOPBLOCK) != 0;
 
-		//set rp
-		rp.brightness.set(world
-				.getLightBrightnessForSkyBlocks(super.tileEntity.xCoord, super.tileEntity.yCoord, super.tileEntity.zCoord, 0));
-		rp.icon.set(null);
-
 		setTileEntity();
+		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
+		rp.icon.set(null);
 		setup();
 		renderTileEntity();
 	}
@@ -122,54 +115,17 @@ public class DoorRenderer extends BaseRenderer
 
 	protected void renderTileEntity()
 	{
-		Transformation animation = null;
-		if (tileEntity.getMouvement() == DoorMouvement.SLIDING)
-		{
-			float fromX = 0, toX = 1 - width;
-			if (reversed)
-			{
-				fromX = 0;
-				toX = -1 + width;
-			}
-			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			{
-				float tmp = fromX;
-				fromX = toX;
-				toX = tmp;
-			}
-
-			animation = new Translation(fromX, 0, 0, toX, 0, 0).forTicks(tileEntity.getOpeningTime());
-		}
-		else if (tileEntity.getMouvement() == DoorMouvement.ROTATING)
-		{
-			float fromAngle = 0, toAngle = 90;
-			float hinge = 0.5F - width / 2;
-			float hingeZ = -0.5F + width / 2;
-
-			if (reversed)
-			{
-				hinge = -hinge;
-				toAngle = -90;
-			}
-
-			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			{
-				float tmp = toAngle;
-				toAngle = fromAngle;
-				fromAngle = tmp;
-			}
-
-			animation = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(tileEntity.getOpeningTime());
-		}
-
 		ar.setStartTime(tileEntity.getStartTime());
-		ar.animate(s, animation);
+		Shape tmp = new Shape(s);
+		if (tileEntity.getMovement() != null)
+			ar.animate(tmp, tileEntity.getMovement().getBottomTransformation(tileEntity));
+		drawShape(tmp, rp);
 
-		drawShape(new Shape(s), rp);
-
-		s.translate(0, 1F, 0);
+		tmp = new Shape(s).translate(0, 1F, 0);
 		blockMetadata |= Door.FLAG_TOPBLOCK;
-		drawShape(new Shape(s), rp);
+		if (tileEntity.getMovement() != null)
+			ar.animate(tmp, tileEntity.getMovement().getTopTransformation(tileEntity));
+		drawShape(tmp, rp);
 	}
 
 	@Override

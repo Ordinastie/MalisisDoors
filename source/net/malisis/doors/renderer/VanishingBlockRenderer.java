@@ -42,7 +42,6 @@ import org.lwjgl.opengl.GL14;
 
 public class VanishingBlockRenderer extends BaseRenderer
 {
-	public static int renderId;
 	public Random rand = new Random();
 
 	@Override

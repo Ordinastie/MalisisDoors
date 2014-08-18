@@ -27,7 +27,8 @@ package net.malisis.doors.door.block;
 import java.util.Random;
 
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.SlidingDoor;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -37,7 +38,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  * 
  */
-public class JailDoor extends SlidingDoor
+public class JailDoor extends Door
 {
 	public JailDoor()
 	{
@@ -46,22 +47,6 @@ public class JailDoor extends SlidingDoor
 		setStepSound(soundTypeMetal);
 		setBlockName("jail_door");
 		setBlockTextureName(MalisisDoors.modid + ":jail_door");
-	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		super.setTileEntityInformations(te);
-		te.setOpeningTime(12);
-	}
-
-	@Override
-	public String getSoundPath(DoorState state)
-	{
-		if (state == DoorState.OPENING || state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":jaildoor";
-
-		return null;
 	}
 
 	@Override
@@ -77,5 +62,13 @@ public class JailDoor extends SlidingDoor
 	public Item getItem(World world, int x, int y, int z)
 	{
 		return MalisisDoors.Items.jailDoorItem;
+	}
+
+	@Override
+	public void setTileEntityInformations(DoorTileEntity te)
+	{
+		te.setRequireRedstone(true);
+		te.setOpeningTime(12);
+		te.setMovement(DoorRegistry.getMouvement(SlidingDoor.class));
 	}
 }

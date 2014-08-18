@@ -22,44 +22,21 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door.movement;
 
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.RotatingDoor;
-import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.block.material.Material;
+import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
  * 
  */
-public class VanillaDoor extends Door
+public interface IDoorMovement
 {
-	public VanillaDoor(Material material)
-	{
-		super(material);
-		if (material == Material.wood)
-		{
-			setHardness(3.0F);
-			setStepSound(soundTypeWood);
-			setBlockName("doorWood");
-			setBlockTextureName("door_wood");
-		}
-		else
-		{
-			setHardness(5.0F);
-			setStepSound(soundTypeMetal);
-			setBlockName("doorIron");
-			setBlockTextureName("door_iron");
-		}
-	}
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox);
 
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setMovement(DoorRegistry.getMouvement(RotatingDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
-	}
+	public Transformation getTopTransformation(DoorTileEntity tileEntity);
+
+	public Transformation getBottomTransformation(DoorTileEntity tileEntity);
 }

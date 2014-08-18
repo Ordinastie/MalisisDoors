@@ -31,6 +31,7 @@ import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.block.TrapDoor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
@@ -42,13 +43,11 @@ import net.minecraft.client.renderer.RenderBlocks;
  */
 public class TrapDoorRenderer extends DoorRenderer
 {
-	public static int renderId;
-
 	@Override
 	protected void setup()
 	{
 		s = ShapePreset.Cube();
-		s.setSize(1, width, 1);
+		s.setSize(1, Door.DOOR_WIDTH, 1);
 
 		applyTexture(s);
 		rp.applyTexture.set(false);
@@ -63,7 +62,7 @@ public class TrapDoorRenderer extends DoorRenderer
 		s.rotate(angle, 0, 1, 0);
 
 		if (topBlock)
-			s.translate(0, 1 - width, 0);
+			s.translate(0, 1 - Door.DOOR_WIDTH, 0);
 
 	}
 
@@ -71,7 +70,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	public void renderTileEntity()
 	{
 		Transformation animation;
-		float f = 0.5F - width / 2;
+		float f = 0.5F - Door.DOOR_WIDTH / 2;
 		float fromAngle = 0, toAngle = 90;
 
 		if (topBlock)

@@ -1,13 +1,16 @@
 package net.malisis.doors.proxy;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
+import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.core.configuration.ConfigurationGui;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
 import net.malisis.doors.door.renderer.TrapDoorRenderer;
+import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
@@ -55,6 +58,12 @@ public class ClientProxy extends CommonProxy
 		GarageDoorRenderer gdr = BaseRenderer.create(GarageDoorRenderer.class);
 		ClientRegistry.bindTileEntitySpecialRenderer(GarageDoorTileEntity.class, gdr);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(garageDoor), gdr);
+
+		// custom doors
+		CustomDoorRenderer cdr = BaseRenderer.create(CustomDoorRenderer.class);
+		ClientRegistry.bindTileEntitySpecialRenderer(CustomDoorTileEntity.class, cdr);
+		MinecraftForgeClient.registerItemRenderer(customDoorItem, cdr);
+
 	}
 
 	@Override

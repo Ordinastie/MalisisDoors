@@ -1,6 +1,8 @@
 item.wood_sliding_door.name=Wooden Sliding Door
 item.iron_sliding_door.name=Iron Sliding Door
 item.jail_door.name=Jail Door
+item.space_door.name=Space Door
+item.space_door2.name=Space Door
 tile.player_sensor.name=Player Sensor
 tile.vanishing_block_wood.name=Wooden Vanishing Frame
 tile.vanishing_block_iron.name=Iron Vanishing Frame
@@ -10,6 +12,8 @@ tile.block_mixer.name=Block Mixer
 tile.mixed_block.name=Mixed Block
 tile.garage_door.name=Garage door
 tile.jail_door.name=Jail Door
+tile.space_door.name=Space Door
+tile.space_door2.name=Space Door
 tile.door_factory.name=Door Factory
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
@@ -34,10 +38,24 @@ config.enableVanishingGlitch.comment=Frames randomly become unstable and are tem
 config.vanishingGlitchChance=Vanishing Frames glitch frequency
 config.vanishingGlitchChance.comment=How often the frame become unstable.
 
-gui.door_factory.door_type=Door type :
-gui.door_factory.door_type_rotating=Rotating
-gui.door_factory.door_type_sliding=Sliding
+gui.door_factory.tab_properties=Properties
+gui.door_factory.tab_materials=Materials
+gui.door_factory.door_movement=Movement :
+gui.door_factory.door_movement.rotating_door=Rotating
+gui.door_factory.door_movement.sliding_door=Sliding on the side
+gui.door_factory.door_movement.sliding_up_door=Sliding up
+gui.door_factory.door_movement.split_door=Splitting up and down
+gui.door_factory.door_open_time=Opening time :
+gui.door_factory.door_require_redstone=Requires redstone :
+gui.door_factory.door_double_door=Double door :
+gui.door_factory.door_sound=Sound type :
+gui.door_factory.door_sound.vanilla_door=Vanilla door
+gui.door_factory.door_sound.glass_door=Glass door
+gui.door_factory.door_sound.jail_door=Jail door
+gui.door_factory.door_sound.space_door=Space door
+
+
 gui.door_factory.frame_type=Frame type :
 gui.door_factory.top_material=Top block material :
 gui.door_factory.bottom_material=Bottom block material :
-gui.door_factory.create_door=Create door
+gui.door_factory.create_door=Build door

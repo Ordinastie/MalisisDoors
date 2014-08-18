@@ -24,42 +24,60 @@
 
 package net.malisis.doors.door.block;
 
+import java.util.Random;
+
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.RotatingDoor;
-import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.doors.door.movement.SlidingUpDoor;
+import net.malisis.doors.door.movement.SplitDoor;
+import net.malisis.doors.door.sound.SpaceDoorSound;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  * 
  */
-public class VanillaDoor extends Door
+public class SpaceDoor extends Door
 {
-	public VanillaDoor(Material material)
+	boolean split = false;
+
+	public SpaceDoor(boolean split)
 	{
-		super(material);
-		if (material == Material.wood)
-		{
-			setHardness(3.0F);
-			setStepSound(soundTypeWood);
-			setBlockName("doorWood");
-			setBlockTextureName("door_wood");
-		}
-		else
-		{
-			setHardness(5.0F);
-			setStepSound(soundTypeMetal);
-			setBlockName("doorIron");
-			setBlockTextureName("door_iron");
-		}
+		super(Material.iron);
+		this.split = split;
+		setHardness(3.0F);
+		setStepSound(soundTypeMetal);
+		String name = split ? "space_door2" : "space_door";
+		setBlockName(name);
+		setBlockTextureName(MalisisDoors.modid + ":" + name);
+	}
+
+	@Override
+	public Item getItemDropped(int metadata, Random par2Random, int par3)
+	{
+		if ((metadata & 8) != 0)
+			return null;
+
+		return split ? MalisisDoors.Items.spaceDoorItem2 : MalisisDoors.Items.spaceDoorItem;
+	}
+
+	@Override
+	public Item getItem(World world, int x, int y, int z)
+	{
+		return split ? MalisisDoors.Items.spaceDoorItem2 : MalisisDoors.Items.spaceDoorItem;
 	}
 
 	@Override
 	public void setTileEntityInformations(DoorTileEntity te)
 	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setMovement(DoorRegistry.getMouvement(RotatingDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		te.setDoubleDoor(false);
+		te.setOpeningTime(12);
+		te.setDoubleDoor(split);
+		te.setMovement(DoorRegistry.getMouvement(split ? SplitDoor.class : SlidingUpDoor.class));
+		te.setDoorSound(DoorRegistry.getSound(SpaceDoorSound.class));
 	}
+
 }

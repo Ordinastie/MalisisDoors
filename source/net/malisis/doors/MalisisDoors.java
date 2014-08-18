@@ -92,6 +92,9 @@ public class MalisisDoors implements IMalisisMod
 		public static Block garageDoor;
 		public static Block jailDoor;
 		public static Block doorFactory;
+		public static Block customDoor;
+		public static Block spaceDoor;
+		public static Block spaceDoor2;
 	}
 
 	public static class Items
@@ -99,6 +102,9 @@ public class MalisisDoors implements IMalisisMod
 		public static Item woodSlidingDoorItem;
 		public static Item ironSlidingDoorItem;
 		public static Item jailDoorItem;
+		public static Item customDoorItem;
+		public static Item spaceDoorItem;
+		public static Item spaceDoorItem2;
 	}
 
 }

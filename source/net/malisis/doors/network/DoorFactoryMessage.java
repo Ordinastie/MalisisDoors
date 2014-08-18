@@ -25,10 +25,11 @@
 package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
-import net.malisis.doors.entity.VanishingDiamondTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -43,21 +44,30 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 	public IMessage onMessage(Packet message, MessageContext ctx)
 	{
 		World world = ctx.getServerHandler().playerEntity.worldObj;
-		TileEntity te = world.getTileEntity(message.x, message.y, message.z);
-		if (te == null || !(te instanceof VanishingDiamondTileEntity))
+		DoorFactoryTileEntity te = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, message.x, message.y, message.z);
+		if (te == null)
 			return null;
 
-		if (message.type == Packet.TYPE_DOORTYPE)
-			((DoorFactoryTileEntity) te).setDoorType(message.doorType);
+		if (message.type == Packet.TYPE_DOORINFOS)
+		{
+			te.setDoorMovement(DoorRegistry.getMovement(message.movement));
+			te.setDoorSound(DoorRegistry.getSoundId(message.sound));
+			te.setOpeningTime(message.openTime);
+			te.setRequireRedstone(message.redstone);
+			te.setDoubleDoor(message.doubleDoor);
+		}
 		else
-			((DoorFactoryTileEntity) te).createDoor();
+			te.createDoor();
 
 		return null;
 	}
 
-	public static void sendDoorType(DoorFactoryTileEntity te, int doorType)
+	public static void sendDoorInformations(DoorFactoryTileEntity te)
 	{
-		Packet packet = new Packet(Packet.TYPE_DOORTYPE, te.xCoord, te.yCoord, te.zCoord, doorType);
+		Packet packet = new Packet(Packet.TYPE_DOORINFOS, te.xCoord, te.yCoord, te.zCoord);
+		String mvt = DoorRegistry.getId(te.getDoorMovement());
+		String snd = DoorRegistry.getId(te.getDoorSound());
+		packet.setDoorInfos(mvt, snd, te.getOpeningTime(), te.requireRedstone(), te.isDoubleDoor());
 		NetworkHandler.network.sendToServer(packet);
 	}
 
@@ -69,11 +79,15 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 
 	public static class Packet implements IMessage
 	{
-		private static int TYPE_DOORTYPE = 0;
+		private static int TYPE_DOORINFOS = 0;
 		private static int TYPE_CREATEDOOR = 1;
 		private int x, y, z;
 		private int type;
-		private int doorType;
+		private String movement;
+		private String sound;
+		private int openTime;
+		private boolean redstone;
+		private boolean doubleDoor;
 
 		public Packet()
 		{}
@@ -86,13 +100,13 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			this.z = z;
 		}
 
-		public Packet(int type, int x, int y, int z, int doorType)
+		public void setDoorInfos(String movement, String sound, int openTime, boolean redstone, boolean doubleDoor)
 		{
-			this.type = type;
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.doorType = doorType;
+			this.movement = movement;
+			this.sound = sound;
+			this.openTime = openTime;
+			this.redstone = redstone;
+			this.doubleDoor = doubleDoor;
 		}
 
 		@Override
@@ -102,8 +116,18 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			y = buf.readInt();
 			z = buf.readInt();
 			type = buf.readInt();
-			if (type == TYPE_DOORTYPE)
-				this.doorType = buf.readInt();
+			if (type == TYPE_DOORINFOS)
+			{
+				movement = ByteBufUtils.readUTF8String(buf);
+				if (movement.equals(""))
+					movement = null;
+				sound = ByteBufUtils.readUTF8String(buf);
+				if (sound.equals(""))
+					sound = null;
+				openTime = buf.readInt();
+				redstone = buf.readBoolean();
+				doubleDoor = buf.readBoolean();
+			}
 
 		}
 
@@ -114,8 +138,14 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			buf.writeInt(y);
 			buf.writeInt(z);
 			buf.writeInt(type);
-			if (type == TYPE_DOORTYPE)
-				buf.writeInt(doorType);
+			if (type == TYPE_DOORINFOS)
+			{
+				ByteBufUtils.writeUTF8String(buf, movement != null ? movement : "");
+				ByteBufUtils.writeUTF8String(buf, sound != null ? sound : "");
+				buf.writeInt(openTime);
+				buf.writeBoolean(redstone);
+				buf.writeBoolean(doubleDoor);
+			}
 		}
 
 	}

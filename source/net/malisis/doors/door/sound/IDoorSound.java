@@ -22,13 +22,15 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door;
+package net.malisis.doors.door.sound;
+
+import net.malisis.doors.door.DoorState;
 
 /**
  * @author Ordinastie
  * 
  */
-public enum DoorMouvement
+public interface IDoorSound
 {
-	ROTATING, SLIDING, SLIDINGUP, SLIDINGDOWN, SLIDINGSPLIT,
+	public String getSoundPath(DoorState state);
 }

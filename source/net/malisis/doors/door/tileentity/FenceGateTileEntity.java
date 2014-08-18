@@ -24,7 +24,8 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.sound.VanillaDoorSound;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -35,6 +36,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public FenceGateTileEntity()
 	{
 		setDoubleDoor(false);
+		setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
 	}
 
 	/**
@@ -44,16 +46,5 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
-	}
-
-	@Override
-	public void playSound()
-	{
-		if (worldObj.isRemote)
-			return;
-
-		String soundPath = ((FenceGate) getBlockType()).getSoundPath(getState());
-		if (soundPath != null)
-			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
 	}
 }

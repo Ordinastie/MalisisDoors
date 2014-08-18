@@ -27,6 +27,10 @@ package net.malisis.doors.door.block;
 import java.util.Random;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.SlidingDoor;
+import net.malisis.doors.door.sound.GlassDoorSound;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -35,7 +39,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  * 
  */
-public class GlassDoor extends SlidingDoor
+public class GlassDoor extends Door
 {
 	public GlassDoor(Material material)
 	{
@@ -72,5 +76,13 @@ public class GlassDoor extends SlidingDoor
 	public Item getItem(World world, int x, int y, int z)
 	{
 		return this.blockMaterial == Material.iron ? MalisisDoors.Items.ironSlidingDoorItem : MalisisDoors.Items.woodSlidingDoorItem;
+	}
+
+	@Override
+	public void setTileEntityInformations(DoorTileEntity te)
+	{
+		te.setRequireRedstone(blockMaterial == Material.iron);
+		te.setDoorSound(DoorRegistry.getSound(GlassDoorSound.class));
+		te.setMovement(DoorRegistry.getMouvement(SlidingDoor.class));
 	}
 }

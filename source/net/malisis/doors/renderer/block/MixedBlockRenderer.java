@@ -41,7 +41,6 @@ import org.lwjgl.opengl.GL11;
 
 public class MixedBlockRenderer extends BaseRenderer
 {
-	public static int renderId;
 	private static int currentPass;
 	private int mixedBlockMetadata;
 

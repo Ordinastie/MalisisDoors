@@ -26,8 +26,8 @@ package net.malisis.doors.door.block;
 
 import net.malisis.core.renderer.MalisisIcon;
 import net.malisis.core.renderer.TextureIcon;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -228,10 +228,10 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null)
+		if (te == null || te.getMovement() == null)
 			return;
 
-		setBlockBounds(getBoundingBox(te));
+		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -239,17 +239,12 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = getBoundingBox(te);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		if ((Door.getFullMetadata(world, x, y, z) & FLAG_TOPBLOCK) == 0)
-			aabb.maxY++;
-		else
-			aabb.minY--;
 
 		return aabb.offset(x, y, z);
 	}
@@ -258,17 +253,20 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		return setBlockBounds(getBoundingBox(te).offset(x, y, z));
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		if (aabb == null)
+			return null;
+		return setBlockBounds(aabb.offset(x, y, z));
 	}
 
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 		return super.collisionRayTrace(world, x, y, z, par5Vec3, par6Vec3);
 	}
@@ -281,9 +279,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		if ((metadata & FLAG_TOPBLOCK) != 0)
 			return null;
 
-		DoorTileEntity te = new DoorTileEntity();
-		setTileEntityInformations(te);
-		return te;
+		return new DoorTileEntity();
 	}
 
 	@Override
@@ -298,19 +294,6 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	 * @param te
 	 */
 	public abstract void setTileEntityInformations(DoorTileEntity te);
-
-	/**
-	 * Gets the sound to play for the current state. Returns null if no sound is to be played
-	 * 
-	 * @param state
-	 * @return
-	 */
-	public abstract String getSoundPath(DoorState state);
-
-	/**
-	 * Gets the bounding box based on state
-	 */
-	public abstract AxisAlignedBB getBoundingBox(DoorTileEntity te);
 
 	/**
 	 * Get door tile entity at x, y, z event if the position is the top half of the door
@@ -328,10 +311,10 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		if (block instanceof Door)
 			y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
 
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (!(te instanceof DoorTileEntity))
-			return null;
-		return (DoorTileEntity) te;
+		DoorTileEntity te = TileEntityUtils.getTileEntity(DoorTileEntity.class, world, x, y, z);
+		if (te != null)
+			te.init();
+		return te;
 	}
 
 	/**

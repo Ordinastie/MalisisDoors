@@ -24,16 +24,18 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.DoorMouvement;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.block.TrapDoor;
+import net.malisis.doors.door.movement.IDoorMovement;
+import net.malisis.doors.door.sound.IDoorSound;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
@@ -41,16 +43,28 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class DoorTileEntity extends TileEntity
 {
-	private DoorMouvement mouvement = DoorMouvement.ROTATING;
+	private IDoorMovement movement;
+	private IDoorSound doorSound;
 	private int openingTime = 6;
 	private boolean doubleDoor = true;
 	private boolean requireRedstone = false;
 
-	private boolean fullMetadata = false;
+	private boolean initialized = false;
+	private int lastMetadata = -1;
 	private long startTime;
 	private int timer = 0;
 	private DoorState state = DoorState.CLOSED;
 	private boolean moving;
+
+	public void init()
+	{
+		if (!initialized)
+		{
+			Block block = getBlockType();
+			if (block instanceof Door)
+				((Door) block).setTileEntityInformations(this);
+		}
+	}
 
 	//#region Getter/Setter
 	public long getStartTime()
@@ -93,14 +107,24 @@ public class DoorTileEntity extends TileEntity
 		this.moving = moving;
 	}
 
-	public DoorMouvement getMouvement()
+	public IDoorMovement getMovement()
 	{
-		return mouvement;
+		return movement;
 	}
 
-	public void setMouvement(DoorMouvement mouvement)
+	public void setMovement(IDoorMovement movement)
 	{
-		this.mouvement = mouvement;
+		this.movement = movement;
+	}
+
+	public IDoorSound getDoorSound()
+	{
+		return doorSound;
+	}
+
+	public void setDoorSound(IDoorSound doorSound)
+	{
+		this.doorSound = doorSound;
 	}
 
 	public int getOpeningTime()
@@ -138,13 +162,18 @@ public class DoorTileEntity extends TileEntity
 		return getBlockMetadata() & 3;
 	}
 
+	public boolean isTopBlock(int x, int y, int z)
+	{
+		return x == xCoord && y == yCoord + 1 && z == zCoord;
+	}
+
 	@Override
 	public int getBlockMetadata()
 	{
-		if (!fullMetadata)
+		if (lastMetadata != blockMetadata || blockMetadata == -1)
 		{
 			blockMetadata = Door.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
-			fullMetadata = true;
+			lastMetadata = blockMetadata;
 		}
 
 		return blockMetadata;
@@ -224,10 +253,8 @@ public class DoorTileEntity extends TileEntity
 			return;
 
 		String soundPath = null;
-		if (getBlockType() instanceof Door)
-			soundPath = ((Door) getBlockType()).getSoundPath(state);
-		else if (getBlockType() instanceof TrapDoor)
-			soundPath = ((TrapDoor) getBlockType()).getSoundPath(state);
+		if (doorSound != null)
+			soundPath = doorSound.getSoundPath(state);
 		if (soundPath != null)
 			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
 	}
@@ -243,7 +270,7 @@ public class DoorTileEntity extends TileEntity
 			return null;
 
 		int dir = getDirection();
-		boolean reversed = (getBlockMetadata() & Door.FLAG_REVERSED) != 0;
+		boolean reversed = isReversed();
 		DoorTileEntity te;
 		int x = xCoord;
 		int z = zCoord;
@@ -276,6 +303,9 @@ public class DoorTileEntity extends TileEntity
 			return false;
 
 		if (getDirection() != te.getDirection()) // different direction
+			return false;
+
+		if (getMovement() != te.getMovement()) //different movement type
 			return false;
 
 		if ((getBlockMetadata() & Door.FLAG_OPENED) != (te.getBlockMetadata() & Door.FLAG_OPENED)) // different state
@@ -358,5 +388,11 @@ public class DoorTileEntity extends TileEntity
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
+	}
+
+	@Override
+	public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z)
+	{
+		return oldBlock != newBlock;
 	}
 }

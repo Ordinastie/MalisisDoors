@@ -25,7 +25,6 @@
 package net.malisis.doors.door.block;
 
 import net.malisis.core.renderer.IBaseRendering;
-import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
@@ -175,16 +174,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	}
 
 	//#end BoudingBox
-
-	public String getSoundPath(DoorState state)
-	{
-		if (state == DoorState.OPENING)
-			return "random.door_open";
-		else if (state == DoorState.CLOSED)
-			return "random.door_close";
-
-		return null;
-	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)

@@ -24,42 +24,69 @@
 
 package net.malisis.doors.door.block;
 
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.RotatingDoor;
-import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  * 
  */
-public class VanillaDoor extends Door
+public class CustomDoor extends Door
 {
-	public VanillaDoor(Material material)
+	public CustomDoor()
 	{
-		super(material);
-		if (material == Material.wood)
-		{
-			setHardness(3.0F);
-			setStepSound(soundTypeWood);
-			setBlockName("doorWood");
-			setBlockTextureName("door_wood");
-		}
-		else
-		{
-			setHardness(5.0F);
-			setStepSound(soundTypeMetal);
-			setBlockName("doorIron");
-			setBlockTextureName("door_iron");
-		}
+		super(Material.wood);
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister register)
+	{}
+
+	@Override
+	public IIcon getIcon(int side, int metadata)
+	{
+		return null;
 	}
 
 	@Override
 	public void setTileEntityInformations(DoorTileEntity te)
+	{}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setMovement(DoorRegistry.getMouvement(RotatingDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return;
+
+		((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata)
+	{
+		if ((metadata & FLAG_TOPBLOCK) != 0)
+			return null;
+
+		return new CustomDoorTileEntity();
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (!(te instanceof CustomDoorTileEntity))
+			return null;
+
+		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
 	}
 }

@@ -22,32 +22,24 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door.movement;
 
+import static net.malisis.doors.door.block.Door.*;
+import net.malisis.core.renderer.animation.transformation.Rotation;
+import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
  * 
  */
-public abstract class RotatingDoor extends Door
+public class RotatingDoor implements IDoorMovement
 {
-	public RotatingDoor(Material material)
-	{
-		super(material);
-	}
 
 	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-	}
-
-	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity te)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, boolean selBox)
 	{
 		int dir = te.getDirection();
 		boolean opened = te.isOpened();
@@ -69,18 +61,49 @@ public abstract class RotatingDoor extends Door
 		else if ((dir == DIR_SOUTH && !opened) || (dir == DIR_EAST && opened && !reversed) || (dir == DIR_WEST && opened && reversed))
 			z = 1 - DOOR_WIDTH;
 
+		if (selBox)
+		{
+			if (!topBlock)
+				Y++;
+			else
+				y--;
+		}
+
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public Transformation getTopTransformation(DoorTileEntity tileEntity)
 	{
-		if (state == DoorState.OPENING)
-			return "random.door_open";
-		else if (state == DoorState.CLOSED)
-			return "random.door_close";
+		return getTransformation(tileEntity);
+	}
 
-		return null;
+	@Override
+	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
+	{
+		return getTransformation(tileEntity);
+	}
+
+	private Transformation getTransformation(DoorTileEntity tileEntity)
+	{
+		float fromAngle = 0, toAngle = 90;
+		float hinge = 0.5F - DOOR_WIDTH / 2;
+		float hingeZ = -0.5F + DOOR_WIDTH / 2;
+
+		if (tileEntity.isReversed())
+		{
+			hinge = -hinge;
+			toAngle = -90;
+		}
+
+		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
+		{
+			float tmp = toAngle;
+			toAngle = fromAngle;
+			fromAngle = tmp;
+		}
+
+		return new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(tileEntity.getOpeningTime());
 	}
 
 }

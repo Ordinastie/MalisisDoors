@@ -34,6 +34,7 @@ import cpw.mods.fml.relauncher.Side;
 public class NetworkHandler
 {
 	public static int VANISHINGDIAMONDBLOCKCONFIG = 1;
+	public static int DOORFACTORYMESSAGE = 2;
 
 	public static SimpleNetworkWrapper network;
 
@@ -43,6 +44,7 @@ public class NetworkHandler
 
 		network.registerMessage(VanishingDiamondFrameMessage.class, VanishingDiamondFrameMessage.Packet.class, VANISHINGDIAMONDBLOCKCONFIG,
 				Side.SERVER);
+		network.registerMessage(DoorFactoryMessage.class, DoorFactoryMessage.Packet.class, DOORFACTORYMESSAGE, Side.SERVER);
 	}
 
 }

@@ -22,44 +22,26 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door.sound;
 
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.RotatingDoor;
-import net.malisis.doors.door.sound.VanillaDoorSound;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.block.material.Material;
+import net.malisis.doors.door.DoorState;
 
 /**
  * @author Ordinastie
  * 
  */
-public class VanillaDoor extends Door
+public class VanillaDoorSound implements IDoorSound
 {
-	public VanillaDoor(Material material)
-	{
-		super(material);
-		if (material == Material.wood)
-		{
-			setHardness(3.0F);
-			setStepSound(soundTypeWood);
-			setBlockName("doorWood");
-			setBlockTextureName("door_wood");
-		}
-		else
-		{
-			setHardness(5.0F);
-			setStepSound(soundTypeMetal);
-			setBlockName("doorIron");
-			setBlockTextureName("door_iron");
-		}
-	}
 
 	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
+	public String getSoundPath(DoorState state)
 	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setMovement(DoorRegistry.getMouvement(RotatingDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		if (state == DoorState.OPENING)
+			return "random.door_open";
+		else if (state == DoorState.CLOSED)
+			return "random.door_close";
+
+		return null;
 	}
+
 }

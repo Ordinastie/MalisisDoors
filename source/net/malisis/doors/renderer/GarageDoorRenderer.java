@@ -47,14 +47,13 @@ import net.minecraft.client.renderer.DestroyBlockProgress;
  */
 public class GarageDoorRenderer extends DoorRenderer
 {
-	public static int renderId;
 	private GarageDoorTileEntity tileEntity;
 
 	@Override
 	protected void initShape()
 	{
 		baseShape = ShapePreset.Cube();
-		baseShape.setSize(width, 1, 1);
+		baseShape.setSize(Door.DOOR_WIDTH, 1, 1);
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class GarageDoorRenderer extends DoorRenderer
 		{
 			enableBlending();
 			s = new Shape(baseShape);
-			s.translate(0.5F - width / 2, 0, 0);
+			s.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
 			rp.icon.set(null);
 			blockMetadata = Door.FLAG_TOPBLOCK;
 			drawShape(s, rp);
@@ -94,7 +93,7 @@ public class GarageDoorRenderer extends DoorRenderer
 		initShape();
 		s = new Shape(baseShape);
 		s.rotate(-90 * tileEntity.getDirection(), 0, 1, 0);
-		s.translate(0.5F - width / 2, 0, 0);
+		s.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
 	}
 
 	@Override
