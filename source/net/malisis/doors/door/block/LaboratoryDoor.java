@@ -29,7 +29,6 @@ import java.util.Random;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.movement.SlidingUpDoor;
-import net.malisis.doors.door.movement.SplitDoor;
 import net.malisis.doors.door.sound.SpaceDoorSound;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.material.Material;
@@ -40,19 +39,15 @@ import net.minecraft.world.World;
  * @author Ordinastie
  * 
  */
-public class SpaceDoor extends Door
+public class LaboratoryDoor extends Door
 {
-	boolean split = false;
-
-	public SpaceDoor(boolean split)
+	public LaboratoryDoor()
 	{
 		super(Material.iron);
-		this.split = split;
 		setHardness(3.0F);
 		setStepSound(soundTypeMetal);
-		String name = split ? "space_door2" : "space_door";
-		setBlockName(name);
-		setBlockTextureName(MalisisDoors.modid + ":" + name);
+		setBlockName("laboratory_door");
+		setBlockTextureName(MalisisDoors.modid + ":laboratory_door");
 	}
 
 	@Override
@@ -61,22 +56,21 @@ public class SpaceDoor extends Door
 		if ((metadata & 8) != 0)
 			return null;
 
-		return split ? MalisisDoors.Items.spaceDoorItem2 : MalisisDoors.Items.spaceDoorItem;
+		return MalisisDoors.Items.laboratoryDoorItem;
 	}
 
 	@Override
 	public Item getItem(World world, int x, int y, int z)
 	{
-		return split ? MalisisDoors.Items.spaceDoorItem2 : MalisisDoors.Items.spaceDoorItem;
+		return MalisisDoors.Items.laboratoryDoorItem;
 	}
 
 	@Override
 	public void setTileEntityInformations(DoorTileEntity te)
 	{
-		te.setDoubleDoor(false);
 		te.setOpeningTime(12);
-		te.setDoubleDoor(split);
-		te.setMovement(DoorRegistry.getMouvement(split ? SplitDoor.class : SlidingUpDoor.class));
+		te.setDoubleDoor(false);
+		te.setMovement(DoorRegistry.getMouvement(SlidingUpDoor.class));
 		te.setDoorSound(DoorRegistry.getSound(SpaceDoorSound.class));
 	}
 

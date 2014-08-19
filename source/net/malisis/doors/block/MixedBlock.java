@@ -97,7 +97,6 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		Block[] blocks = { te.block1, te.block2 };
 		int[] metadata = { te.metadata1, te.metadata2 };
 
-		float f = 0.1F;
 		ForgeDirection side = ForgeDirection.getOrientation(target.sideHit);
 
 		double fxX = x + world.rand.nextDouble();
@@ -107,16 +106,22 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		switch (side)
 		{
 			case DOWN:
+				fxY = y + getBlockBoundsMinY() - 0.1F;
+				break;
 			case UP:
-				fxY = y + side.offsetY * f;
+				fxY = y + getBlockBoundsMaxY() + 0.1F;
 				break;
 			case NORTH:
+				fxZ = z + getBlockBoundsMinZ() - 0.1F;
+				break;
 			case SOUTH:
-				fxZ = z + side.offsetZ * f;
+				fxZ = z + getBlockBoundsMaxY() + 0.1F;
 				break;
 			case EAST:
+				fxX = x + getBlockBoundsMaxX() + 0.1F;
+				break;
 			case WEST:
-				fxX = x + side.offsetX * f;
+				fxX = x + getBlockBoundsMinX() + 0.1F;
 				break;
 			default:
 				break;

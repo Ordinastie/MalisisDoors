@@ -110,7 +110,7 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	{
 		NBTTagCompound nbt = itemStack.stackTagCompound;
 		setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
-		setDoorSound(DoorRegistry.getSoundId(nbt.getString("doorSound")));
+		setDoorSound(DoorRegistry.getSound(nbt.getString("doorSound")));
 		setOpeningTime(nbt.getInteger("openingTime"));
 		setRequireRedstone(nbt.getBoolean("requireRedstone"));
 		setDoubleDoor(nbt.getBoolean("doubleDoor"));
@@ -138,6 +138,7 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
+		setDoorSound(DoorRegistry.getSound(nbt.getString("sound")));
 		setOpeningTime(nbt.getInteger("openTime"));
 		setRequireRedstone(nbt.getBoolean("redstone"));
 		setDoubleDoor(nbt.getBoolean("doubleDoor"));
@@ -158,6 +159,8 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	{
 		if (getMovement() != null)
 			nbt.setString("movement", DoorRegistry.getId(getMovement()));
+		if (getDoorSound() != null)
+			nbt.setString("sound", DoorRegistry.getId(getDoorSound()));
 		nbt.setInteger("openTime", getOpeningTime());
 		nbt.setBoolean("redstone", requireRedstone());
 		nbt.setBoolean("doubleDoor", isDoubleDoor());

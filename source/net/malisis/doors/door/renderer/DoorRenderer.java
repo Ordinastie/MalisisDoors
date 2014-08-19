@@ -79,15 +79,14 @@ public class DoorRenderer extends BaseRenderer
 	{
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
-		initShape();
-		initRenderParameters();
-		blockMetadata = Door.getFullMetadata(world, x, y, z);
-		direction = blockMetadata & 3;
-		opened = (blockMetadata & Door.FLAG_OPENED) != 0;
-		reversed = (blockMetadata & Door.FLAG_REVERSED) != 0;
-		topBlock = (blockMetadata & Door.FLAG_TOPBLOCK) != 0;
 
 		setTileEntity();
+
+		direction = tileEntity.getDirection();
+		opened = tileEntity.isOpened();
+		reversed = tileEntity.isReversed();
+		topBlock = tileEntity.isTopBlock(x, y, z);
+
 		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
 		rp.icon.set(null);
 		setup();
@@ -116,12 +115,13 @@ public class DoorRenderer extends BaseRenderer
 	protected void renderTileEntity()
 	{
 		ar.setStartTime(tileEntity.getStartTime());
-		Shape tmp = new Shape(s);
-		if (tileEntity.getMovement() != null)
-			ar.animate(tmp, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		drawShape(tmp, rp);
 
-		tmp = new Shape(s).translate(0, 1F, 0);
+		Shape tmp = new Shape(s).translate(0, 1F, 0);
+
+		if (tileEntity.getMovement() != null)
+			ar.animate(s, tileEntity.getMovement().getBottomTransformation(tileEntity));
+		drawShape(new Shape(s), rp);
+
 		blockMetadata |= Door.FLAG_TOPBLOCK;
 		if (tileEntity.getMovement() != null)
 			ar.animate(tmp, tileEntity.getMovement().getTopTransformation(tileEntity));
@@ -131,14 +131,12 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	public void renderDestroyProgress()
 	{
-		//rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
-		rp.icon.set(damagedIcons[8]);
-		rp.applyTexture.set(true);
-		s.translate(0, -.5F, 0.005F);
+		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
+
+		s.translate(0, 0.5F, 0.005F);
 		s.scale(1.011F);
 		s.applyMatrix();
-		Shape shape = new Shape(new Face[] { s.getFaces()[0], s.getFaces()[1] });
-		drawShape(shape, rp);
+		drawShape(new Shape(new Face[] { s.getFaces()[0], s.getFaces()[1] }), rp);
 	}
 
 	@Override

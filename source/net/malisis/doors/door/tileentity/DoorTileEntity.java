@@ -63,6 +63,7 @@ public class DoorTileEntity extends TileEntity
 			Block block = getBlockType();
 			if (block instanceof Door)
 				((Door) block).setTileEntityInformations(this);
+			initialized = true;
 		}
 	}
 
@@ -376,6 +377,7 @@ public class DoorTileEntity extends TileEntity
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
+		init();
 		this.readFromNBT(packet.func_148857_g());
 	}
 

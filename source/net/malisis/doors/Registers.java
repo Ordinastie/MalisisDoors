@@ -35,16 +35,17 @@ import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.block.CustomDoor;
+import net.malisis.doors.door.block.FactoryDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.GlassDoor;
 import net.malisis.doors.door.block.JailDoor;
-import net.malisis.doors.door.block.SpaceDoor;
+import net.malisis.doors.door.block.LaboratoryDoor;
 import net.malisis.doors.door.block.TrapDoor;
 import net.malisis.doors.door.block.VanillaDoor;
 import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.item.JailDoorItem;
 import net.malisis.doors.door.item.SlidingDoorItem;
-import net.malisis.doors.door.item.SpaceDoorItem;
+import net.malisis.doors.door.item.LaboratoryDoorItem;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
@@ -83,7 +84,9 @@ public class Registers
 
 		registerJailDoor();
 
-		registerSpaceDoor();
+		registerLaboratoryDoor();
+
+		registerFactoryDoor();
 
 		registerDoorFactory();
 
@@ -207,30 +210,39 @@ public class Registers
 		GameRegistry.addRecipe(new ItemStack(jailDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
 	}
 
-	private static void registerSpaceDoor()
+	private static void registerLaboratoryDoor()
 	{
 		//Block
-		spaceDoor = new SpaceDoor(false);
-		spaceDoor2 = new SpaceDoor(true);
-		GameRegistry.registerBlock(spaceDoor, spaceDoor.getUnlocalizedName().substring(5));
-		GameRegistry.registerBlock(spaceDoor2, spaceDoor2.getUnlocalizedName().substring(5));
+		laboratoryDoor = new LaboratoryDoor();
+		GameRegistry.registerBlock(laboratoryDoor, laboratoryDoor.getUnlocalizedName().substring(5));
 
 		//Item
-		spaceDoorItem = new SpaceDoorItem(false);
-		spaceDoorItem2 = new SpaceDoorItem(true);
-		GameRegistry.registerItem(spaceDoorItem, spaceDoorItem.getUnlocalizedName());
-		GameRegistry.registerItem(spaceDoorItem2, spaceDoorItem2.getUnlocalizedName());
+		laboratoryDoorItem = new LaboratoryDoorItem(false);
+		GameRegistry.registerItem(laboratoryDoorItem, laboratoryDoorItem.getUnlocalizedName());
 
 		//Recipes
-		GameRegistry.addRecipe(new ItemStack(spaceDoorItem),
-				new Object[] { "AA", "BB", "BB", 'A', Items.gold_ingot, 'B', Items.iron_ingot });
-		GameRegistry.addRecipe(new ItemStack(spaceDoorItem2),
-				new Object[] { "AA", "BB", "AA", 'A', Items.gold_ingot, 'B', Items.iron_ingot });
+		GameRegistry.addRecipe(new ItemStack(laboratoryDoorItem), new Object[] { "AA", "BB", "BB", 'A', Items.gold_ingot, 'B',
+				Items.iron_ingot });
+	}
+
+	private static void registerFactoryDoor()
+	{
+		//Block
+		factoryDoor = new FactoryDoor();
+		GameRegistry.registerBlock(factoryDoor, factoryDoor.getUnlocalizedName().substring(5));
+
+		//Item
+		facortyDoorItem = new LaboratoryDoorItem(true);
+		GameRegistry.registerItem(facortyDoorItem, facortyDoorItem.getUnlocalizedName());
+
+		//Recipes
+		GameRegistry.addRecipe(new ItemStack(facortyDoorItem), new Object[] { "AA", "BB", "AA", 'A', Items.gold_ingot, 'B',
+				Items.iron_ingot });
 	}
 
 	private static void registerDoorFactory()
 	{
-		doorFactory = (new DoorFactory()).setBlockName("door_factory");
+		doorFactory = new DoorFactory();
 		GameRegistry.registerBlock(doorFactory, doorFactory.getUnlocalizedName().substring(5));
 
 		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");

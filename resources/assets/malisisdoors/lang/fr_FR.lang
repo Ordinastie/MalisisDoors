@@ -1,6 +1,10 @@
-item.wood_sliding_door.name=Porte coulissante en bois
-item.iron_sliding_door.name=Porte coulissante en fer
+item.wood_sliding_door.name=Porte vitrée en bois
+item.iron_sliding_door.name=Porte vitrée en fer
 item.jail_door.name=Porte de prison
+item.laboratory_door.name=Porte de laboratoire
+item.factory_door.name=Porte d'usine
+item.custom_door.name=Porte personnalisée %s
+
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
 tile.vanishing_block_iron.name=Cadre de disparition en fer
@@ -10,6 +14,10 @@ tile.block_mixer.name=Mixeur de blocs
 tile.mixed_block.name=Bloc mixé
 tile.garage_door.name=Porte de garage
 tile.jail_door.name=Porte de prison
+tile.space_door.name=Space Door
+tile.space_door2.name=Space Door
+tile.door_factory.name=Assembleur de porte
+tile.custom_door.name=Porte personnalisée
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
@@ -32,3 +40,26 @@ config.enableVanishingGlitch.comment=Les cadres deviennent instables et changent
 
 config.vanishingGlitchChance=Fréquence d'instabilité des cadres de disparition
 config.vanishingGlitchChance.comment=A quelle fréquence les cadres deviennent instable.
+
+door_movement.rotating_door=Rotative
+door_movement.sliding_door=Coulissante sur le côté
+door_movement.sliding_up_door=Coulissante vers le haut
+door_movement.split_door=Coulissante vers le haut et le bas
+
+gui.door_factory.tab_properties=Propiétés
+gui.door_factory.tab_materials=Matériaux
+gui.door_factory.door_movement=Mouvement
+gui.door_factory.door_open_time=Temps d'ouverture
+gui.door_factory.door_require_redstone=Nécessite redstone
+gui.door_factory.door_double_door=Double porte
+gui.door_factory.door_sound=Type de son
+gui.door_factory.door_sound.vanilla_door=Porte originale
+gui.door_factory.door_sound.glass_door=Porte vitrée
+gui.door_factory.door_sound.jail_door=Porte de prison
+gui.door_factory.door_sound.space_door=Porte pneumatique
+
+
+gui.door_factory.frame_type=Type de cadre
+gui.door_factory.top_material=Matériau haut
+gui.door_factory.bottom_material=Matériau bas
+gui.door_factory.create_door=Fabriquer la porte

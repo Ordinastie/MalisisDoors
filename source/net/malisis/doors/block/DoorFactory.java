@@ -53,6 +53,7 @@ public class DoorFactory extends Block implements ITileEntityProvider
 	{
 		super(Material.iron);
 		setCreativeTab(MalisisDoors.tab);
+		setBlockName("door_factory");
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -25,6 +25,7 @@
 package net.malisis.doors.door.item;
 
 import java.util.HashMap;
+import java.util.List;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
@@ -45,6 +46,7 @@ import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 /**
@@ -66,6 +68,8 @@ public class CustomDoorItem extends ItemDoor
 	{
 		super(Material.wood);
 		setUnlocalizedName("custom_door");
+		this.maxStackSize = 16;
+		setCreativeTab(null);
 	}
 
 	/**
@@ -200,5 +204,34 @@ public class CustomDoorItem extends ItemDoor
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());
 		return !(block instanceof MixedBlock) && block.getRenderType() != -1;
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack itemStack)
+	{
+		String mvt = StatCollector.translateToLocal("door_movement." + itemStack.stackTagCompound.getString("movement"));
+		String name = StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name");
+
+		return String.format(name, mvt);
+	}
+
+	@Override
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedTooltip)
+	{
+		Block frame = Block.getBlockById(itemStack.stackTagCompound.getInteger("frame"));
+		int frameMetadata = itemStack.stackTagCompound.getInteger("frameMetadata");
+		ItemStack isFrame = new ItemStack(frame, 0, frameMetadata);
+
+		Block topMaterial = Block.getBlockById(itemStack.stackTagCompound.getInteger("topMaterial"));
+		int topMaterialMetadata = itemStack.stackTagCompound.getInteger("topMaterialMetadata");
+		ItemStack istopMaterial = new ItemStack(topMaterial, 0, topMaterialMetadata);
+
+		Block bottomMaterial = Block.getBlockById(itemStack.stackTagCompound.getInteger("bottomMaterial"));
+		int bottomMaterialMetadata = itemStack.stackTagCompound.getInteger("bottomMaterialMetadata");
+		ItemStack isBottomMaterial = new ItemStack(bottomMaterial, 0, bottomMaterialMetadata);
+
+		list.addAll(isFrame.getTooltip(player, advancedTooltip));
+		list.addAll(istopMaterial.getTooltip(player, advancedTooltip));
+		list.addAll(isBottomMaterial.getTooltip(player, advancedTooltip));
 	}
 }

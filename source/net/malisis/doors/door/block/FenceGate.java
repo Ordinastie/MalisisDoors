@@ -97,7 +97,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.isOpened())
 			return null;
 
 		return super.getCollisionBoundingBoxFromPool(world, x, y, z);

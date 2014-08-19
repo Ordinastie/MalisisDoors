@@ -31,6 +31,7 @@ import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -68,16 +69,17 @@ public class CustomDoorRenderer extends DoorRenderer
 	@Override
 	protected void initShape()
 	{
+		super.initShape();
 		width = 1.0F / 8.0F;
 		Shape frameBR = ShapePreset.Cube().setSize(width, 1, Door.DOOR_WIDTH);
 		Shape frameBL = new Shape(frameBR).translate(1 - width, 0, 0);
 		Shape frameB = ShapePreset.Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
-		baseFrameBottom = Shape.fromShapes(frameBR, frameBL, frameB);
+		baseFrameBottom = Shape.fromShapes(frameBR, frameBL, frameB).scale(1, 1, 0.995F);;
 
 		Shape frameTR = new Shape(frameBR);
 		Shape frameTL = new Shape(frameBL);
 		Shape frameT = new Shape(frameB).translate(0, 1 - width, 0);
-		baseFrameTop = Shape.fromShapes(frameTR, frameTL, frameT);
+		baseFrameTop = Shape.fromShapes(frameTR, frameTL, frameT).scale(1, 1, 0.995F);
 
 		baseBottomMaterial = ShapePreset.Cube().setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F)
 				.translate(width, width, Door.DOOR_WIDTH * 0.2F);
@@ -92,7 +94,6 @@ public class CustomDoorRenderer extends DoorRenderer
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
 		rp.useBlockBrightness.set(false);
-		rp.applyTexture.set(false);
 		rp.usePerVertexColor.set(true);
 		rp.interpolateUV.set(true);
 	}
@@ -100,6 +101,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
+		rp.applyTexture.set(false);
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
 			if (itemStack.stackTagCompound == null)
@@ -107,10 +109,13 @@ public class CustomDoorRenderer extends DoorRenderer
 
 			setup();
 			renderInventory();
+
 			return;
 		}
 		else
 			super.render();
+		//reset to true for destroy progress
+		rp.applyTexture.set(true);
 	}
 
 	@Override
@@ -145,6 +150,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	@Override
 	protected void setup()
 	{
+		super.setup();
 		if (renderType == TYPE_TESR_WORLD)
 			setInfos(tileEntity);
 		else
@@ -199,13 +205,18 @@ public class CustomDoorRenderer extends DoorRenderer
 		{
 			if (itemRenderType == ItemRenderType.INVENTORY)
 			{
-				bottom.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1, 0);
-				top.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1, 0);
+				bottom.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1F, 0);
+				top.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1.2F, 0);
 			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
 			{
 				bottom.rotate(90, 0, 1, 0);
 				top.rotate(90, 0, 1, 0);
+			}
+			else if (itemRenderType == ItemRenderType.ENTITY)
+			{
+				bottom.translate(-0.5F, -0.5F, -0.25F).scale(0.5F);
+				top.translate(-0.5F, -1F, -0.25F).scale(0.5F);
 			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED)
 			{
@@ -217,6 +228,8 @@ public class CustomDoorRenderer extends DoorRenderer
 
 	private int getColor(Block block)
 	{
+		if (block == Blocks.grass)
+			return 0xFFFFFF;
 		return renderType == TYPE_TESR_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
 	}
 
@@ -225,8 +238,12 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		ar.setStartTime(tileEntity.getStartTime());
 
+		enableBlending();
 		if (tileEntity.getMovement() != null)
+		{
 			ar.animate(bottom, tileEntity.getMovement().getBottomTransformation(tileEntity));
+			ar.animate(s, tileEntity.getMovement().getBottomTransformation(tileEntity));
+		}
 		drawShape(bottom, rp);
 
 		if (tileEntity.getMovement() != null)
@@ -239,7 +256,8 @@ public class CustomDoorRenderer extends DoorRenderer
 		bindTexture(TextureMap.locationBlocksTexture);
 
 		enableBlending();
-		drawShape(new Shape(s), rp);
+		drawShape(new Shape(top), rp);
+		drawShape(new Shape(bottom), rp);
 
 	}
 

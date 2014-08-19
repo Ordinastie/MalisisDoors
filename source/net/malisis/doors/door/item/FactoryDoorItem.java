@@ -36,15 +36,12 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SpaceDoorItem extends ItemDoor
+public class FactoryDoorItem extends ItemDoor
 {
-	boolean split = false;
-
-	public SpaceDoorItem(boolean split)
+	public FactoryDoorItem()
 	{
 		super(Material.iron);
-		this.split = split;
-		setUnlocalizedName(split ? "space_door2" : "space_door");
+		setUnlocalizedName("factory_door");
 		setCreativeTab(MalisisDoors.tab);
 	}
 
@@ -66,7 +63,7 @@ public class SpaceDoorItem extends ItemDoor
 		{
 			++y;
 
-			Block block = split ? MalisisDoors.Blocks.spaceDoor2 : MalisisDoors.Blocks.spaceDoor;
+			Block block = MalisisDoors.Blocks.factoryDoor;
 
 			if (player.canPlayerEdit(x, y, z, par7, itemStack) && player.canPlayerEdit(x, y + 1, z, par7, itemStack))
 			{

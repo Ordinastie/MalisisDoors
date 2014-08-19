@@ -107,7 +107,7 @@ public class DoorFactoryGui extends MalisisGui
 		for (Entry<String, IDoorMovement> entry : DoorRegistry.listMovements().entrySet())
 			listMvt.put(entry.getValue(), entry.getKey());
 		selDoorMovement = new UISelect(100, UISelect.Option.fromList(listMvt)).setPosition(0, 2, Anchor.RIGHT).register(this);
-		selDoorMovement.setLabelPattern("gui.door_factory.door_movement.%s");
+		selDoorMovement.setLabelPattern("door_movement.%s");
 
 		tfOpenTime = new UITextField(30).setPosition(-5, 14, Anchor.RIGHT).setFilter("\\d+").register(this);
 		cbRedstone = new UICheckBox().setPosition(-15, 26, Anchor.RIGHT).register(this);

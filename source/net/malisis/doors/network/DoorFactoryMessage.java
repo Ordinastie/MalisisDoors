@@ -51,7 +51,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		if (message.type == Packet.TYPE_DOORINFOS)
 		{
 			te.setDoorMovement(DoorRegistry.getMovement(message.movement));
-			te.setDoorSound(DoorRegistry.getSoundId(message.sound));
+			te.setDoorSound(DoorRegistry.getSound(message.sound));
 			te.setOpeningTime(message.openTime);
 			te.setRequireRedstone(message.redstone);
 			te.setDoubleDoor(message.doubleDoor);

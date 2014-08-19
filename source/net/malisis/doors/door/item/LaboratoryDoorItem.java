@@ -36,12 +36,12 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SplitDoorItem extends ItemDoor
+public class LaboratoryDoorItem extends ItemDoor
 {
-	public SplitDoorItem()
+	public LaboratoryDoorItem()
 	{
 		super(Material.iron);
-		setUnlocalizedName("space_door");
+		setUnlocalizedName("laboratory_door");
 		setCreativeTab(MalisisDoors.tab);
 	}
 

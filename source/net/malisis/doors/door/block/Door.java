@@ -28,11 +28,11 @@ import net.malisis.core.renderer.MalisisIcon;
 import net.malisis.core.renderer.TextureIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,7 +68,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	protected MalisisIcon iconSide;
 	protected String soundPath;
 
-	protected Door(Material material)
+	protected Door(DoorDescriptor desc)
 	{
 		super(material);
 		disableStats();

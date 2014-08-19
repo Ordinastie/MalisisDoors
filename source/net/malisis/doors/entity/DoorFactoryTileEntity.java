@@ -130,16 +130,21 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 			return;
 
 		ItemStack expected = CustomDoorItem.fromDoorFactory(this);
+		ItemStack output = outputSlot.getItemStack();
 		if (expected == null)
 			return;
-		if (outputSlot.getItemStack() != null)
+
+		if (output != null && (!ItemStack.areItemStackTagsEqual(output, expected) || output.stackSize >= output.getMaxStackSize()))
 			return;
 
 		frameSlot.addItemStackSize(-1);
 		topMaterialSlot.addItemStackSize(-1);
 		bottomMaterialSlot.addItemStackSize(-1);
 
-		outputSlot.setItemStack(expected);
+		if (output == null)
+			outputSlot.setItemStack(expected);
+		else
+			outputSlot.addItemStackSize(1);
 	}
 
 	public boolean canCreateDoor()
@@ -189,7 +194,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	{
 		super.readFromNBT(nbt);
 		doorMovement = DoorRegistry.getMovement(nbt.getString("doorMovement"));
-		doorSound = DoorRegistry.getSoundId(nbt.getString("doorSound"));
+		doorSound = DoorRegistry.getSound(nbt.getString("doorSound"));
 		openingTime = nbt.getInteger("openingTime");
 		requireRedstone = nbt.getBoolean("requireRedstone");
 		doubleDoor = nbt.getBoolean("doubleDoor");

@@ -93,8 +93,8 @@ public class MalisisDoors implements IMalisisMod
 		public static Block jailDoor;
 		public static Block doorFactory;
 		public static Block customDoor;
-		public static Block spaceDoor;
-		public static Block spaceDoor2;
+		public static Block laboratoryDoor;
+		public static Block factoryDoor;
 	}
 
 	public static class Items
@@ -103,8 +103,8 @@ public class MalisisDoors implements IMalisisMod
 		public static Item ironSlidingDoorItem;
 		public static Item jailDoorItem;
 		public static Item customDoorItem;
-		public static Item spaceDoorItem;
-		public static Item spaceDoorItem2;
+		public static Item laboratoryDoorItem;
+		public static Item facortyDoorItem;
 	}
 
 }

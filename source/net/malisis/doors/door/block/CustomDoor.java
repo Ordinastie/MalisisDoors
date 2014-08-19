@@ -24,17 +24,26 @@
 
 package net.malisis.doors.door.block;
 
+import java.util.ArrayList;
+
 import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -45,6 +54,8 @@ public class CustomDoor extends Door
 	public CustomDoor()
 	{
 		super(Material.wood);
+		setHardness(3.0F);
+		setStepSound(soundTypeWood);
 	}
 
 	@Override
@@ -65,7 +76,7 @@ public class CustomDoor extends Door
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null)
+		if (!(te instanceof CustomDoorTileEntity))
 			return;
 
 		((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
@@ -88,5 +99,111 @@ public class CustomDoor extends Door
 			return null;
 
 		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
+	}
+
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (!player.capabilities.isCreativeMode)
+		{
+			DoorTileEntity te = Door.getDoor(world, x, y, z);
+			if (!(te instanceof CustomDoorTileEntity))
+				return true;
+			dropBlockAsItem(world, x, y, z, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
+		}
+		return super.removedByPlayer(world, player, x, y, z);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		return new ArrayList<ItemStack>();
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
+	{
+		int x = target.blockX;
+		int y = target.blockY;
+		int z = target.blockZ;
+
+		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
+		if (te == null)
+			return true;
+
+		Block[] blocks = { te.getFrame(), te.getTopMaterial(), te.getBottomMaterial() };
+		int[] metadata = { te.getFrameMetadata(), te.getTopMaterialMetadata(), te.getBottomMaterialMetadata() };
+
+		ForgeDirection side = ForgeDirection.getOrientation(target.sideHit);
+
+		double fxX = x + world.rand.nextDouble();
+		double fxY = y + world.rand.nextDouble();
+		double fxZ = z + world.rand.nextDouble();
+
+		switch (side)
+		{
+			case DOWN:
+				fxY = y + getBlockBoundsMinY() - 0.1F;
+				break;
+			case UP:
+				fxY = y + getBlockBoundsMaxY() + 0.1F;
+				break;
+			case NORTH:
+				fxZ = z + getBlockBoundsMinZ() - 0.1F;
+				break;
+			case SOUTH:
+				fxZ = z + getBlockBoundsMaxY() + 0.1F;
+				break;
+			case EAST:
+				fxX = x + getBlockBoundsMaxX() + 0.1F;
+				break;
+			case WEST:
+				fxX = x + getBlockBoundsMinX() + 0.1F;
+				break;
+			default:
+				break;
+		}
+
+		int i = world.rand.nextInt(blocks.length);
+
+		EntityDiggingFX fx = new EntityDiggingFX(world, fxX, fxY, fxZ, 0.0D, 0.0D, 0.0D, blocks[i], metadata[i]);
+		fx.multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
+		effectRenderer.addEffect(fx);
+
+		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	{
+		byte nb = 4;
+		EntityDiggingFX fx;
+
+		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
+		if (te == null)
+			return true;
+
+		Block[] blocks = { te.getFrame(), te.getTopMaterial(), te.getBottomMaterial() };
+		int[] metadata = { te.getFrameMetadata(), te.getTopMaterialMetadata(), te.getBottomMaterialMetadata() };
+
+		for (int i = 0; i < nb; ++i)
+		{
+			for (int j = 0; j < nb; ++j)
+			{
+				for (int k = 0; k < nb; ++k)
+				{
+					double fxX = x + (i + 0.5D) / nb;
+					double fxY = y + (j + 0.5D) / nb;
+					double fxZ = z + (k + 0.5D) / nb;
+					int l = (i + j + k) % 2;
+					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - x - 0.5D, fxY - y - 0.5D, fxZ - z - 0.5D, blocks[l], metadata[l]);
+					effectRenderer.addEffect(fx);
+				}
+			}
+		}
+
+		return true;
 	}
 }
