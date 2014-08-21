@@ -22,56 +22,34 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door.descriptor;
 
-import java.util.Random;
-
-import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.SlidingUpDoor;
-import net.malisis.doors.door.sound.SpaceDoorSound;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.movement.RotatingDoorMovement;
+import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  * 
  */
-public class LaboratoryDoor extends Door
+public class VanillaDoor extends DoorDescriptor
 {
-	public LaboratoryDoor()
+	public VanillaDoor(Material material)
 	{
-		super(Material.iron);
-		setHardness(3.0F);
-		setStepSound(soundTypeMetal);
-		setBlockName("laboratory_door");
-		setBlockTextureName(MalisisDoors.modid + ":laboratory_door");
+		boolean wood = material == Material.wood;
+		//Block
+		setMaterial(material);
+		setHardness(wood ? 3.0F : 5.0F);
+		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
+		setName(wood ? "doorWood" : "doorIron");
+		setTextureName(wood ? "door_wood" : "door_iron");
+
+		//te
+		setRequireRedstone(!wood);
+		setMovement(DoorRegistry.getMouvement(RotatingDoorMovement.class));
+		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 	}
-
-	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
-	{
-		if ((metadata & 8) != 0)
-			return null;
-
-		return MalisisDoors.Items.laboratoryDoorItem;
-	}
-
-	@Override
-	public Item getItem(World world, int x, int y, int z)
-	{
-		return MalisisDoors.Items.laboratoryDoorItem;
-	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setOpeningTime(12);
-		te.setDoubleDoor(false);
-		te.setMovement(DoorRegistry.getMouvement(SlidingUpDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(SpaceDoorSound.class));
-	}
-
 }

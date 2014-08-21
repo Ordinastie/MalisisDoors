@@ -22,25 +22,26 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door;
+
+import java.util.Random;
 
 import net.malisis.core.renderer.MalisisIcon;
 import net.malisis.core.renderer.TextureIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -50,7 +51,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  * 
  */
-public abstract class Door extends BlockDoor implements ITileEntityProvider
+public class Door extends BlockDoor implements ITileEntityProvider
 {
 	public static final int DIR_WEST = 0;
 	public static final int DIR_NORTH = 1;
@@ -68,10 +69,23 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	protected MalisisIcon iconSide;
 	protected String soundPath;
 
-	protected Door(DoorDescriptor desc)
+	private DoorDescriptor descriptor;
+
+	public Door(DoorDescriptor desc)
 	{
-		super(material);
-		disableStats();
+		super(desc.getMaterial());
+
+		this.descriptor = desc;
+
+		setHardness(desc.getHardness());
+		setStepSound(desc.getSoundType());
+		setBlockName(desc.getName());
+		setBlockTextureName(desc.getTextureName());
+	}
+
+	public Door()
+	{
+		super(Material.wood);
 	}
 
 	// #region Icons
@@ -82,6 +96,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		String textureName = getTextureName();
 		iconTop = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_upper"));
 		iconBottom = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_lower"));
+		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (textureName.equals("door_wood") || textureName.equals("door_iron"))
 			textureName = MalisisDoors.modid + ":" + textureName;
 		iconSide = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_side"));
@@ -140,7 +155,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		if (te == null)
 			return true;
 
-		if (te.requireRedstone())
+		if (te.getDescriptor().requireRedstone())
 			return true;
 
 		te.openOrCloseDoor();
@@ -154,7 +169,10 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	public void func_150014_a(World world, int x, int y, int z, boolean opening)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.requireRedstone())
+		if (te == null)
+			return;
+
+		if (te.getDescriptor().requireRedstone())
 			return;
 
 		if (opening && te.isOpened())
@@ -215,11 +233,25 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 
 	// #end Events
 
+	@Override
+	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)
+	{
+		return descriptor.getItem();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_)
+	{
+		return descriptor.getItem();
+	}
+
 	//#region BoundingBox
 	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
 	{
 		if (aabb == null)
-			return null;
+			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+
 		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
 		return aabb;
 	}
@@ -228,7 +260,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.getMovement() == null)
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
 		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
@@ -262,15 +294,6 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		return setBlockBounds(aabb.offset(x, y, z));
 	}
 
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
-	{
-		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return null;
-		return super.collisionRayTrace(world, x, y, z, par5Vec3, par6Vec3);
-	}
-
 	//#end BoudingBox
 
 	@Override
@@ -279,7 +302,9 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		if ((metadata & FLAG_TOPBLOCK) != 0)
 			return null;
 
-		return new DoorTileEntity();
+		DoorTileEntity te = new DoorTileEntity();
+		te.setDescriptor(descriptor);
+		return te;
 	}
 
 	@Override
@@ -287,13 +312,6 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 	{
 		return -1;
 	}
-
-	/**
-	 * Sets the informations for the DoorTileEntity
-	 * 
-	 * @param te
-	 */
-	public abstract void setTileEntityInformations(DoorTileEntity te);
 
 	/**
 	 * Get door tile entity at x, y, z event if the position is the top half of the door
@@ -311,10 +329,7 @@ public abstract class Door extends BlockDoor implements ITileEntityProvider
 		if (block instanceof Door)
 			y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
 
-		DoorTileEntity te = TileEntityUtils.getTileEntity(DoorTileEntity.class, world, x, y, z);
-		if (te != null)
-			te.init();
-		return te;
+		return TileEntityUtils.getTileEntity(DoorTileEntity.class, world, x, y, z);
 	}
 
 	/**

@@ -30,7 +30,7 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 

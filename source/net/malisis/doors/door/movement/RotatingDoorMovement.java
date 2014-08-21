@@ -24,9 +24,9 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.block.Door.*;
+import static net.malisis.doors.door.Door.*;
+import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
-import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -35,14 +35,15 @@ import net.minecraft.util.AxisAlignedBB;
  * @author Ordinastie
  * 
  */
-public class SlidingUpDoor implements IDoorMovement
+public class RotatingDoorMovement implements IDoorMovement
 {
+
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, boolean selBox)
 	{
-		if (tileEntity.isOpened() && !topBlock)
-			return null;
-		int dir = tileEntity.getDirection();
+		int dir = te.getDirection();
+		boolean opened = te.isOpened();
+		boolean reversed = te.isReversed();
 
 		float x = 0;
 		float y = 0;
@@ -51,27 +52,21 @@ public class SlidingUpDoor implements IDoorMovement
 		float Y = 1;
 		float Z = 1;
 
-		if (dir == DIR_NORTH)
+		if ((dir == DIR_NORTH && !opened) || (dir == DIR_WEST && opened && !reversed) || (dir == DIR_EAST && opened && reversed))
 			Z = DOOR_WIDTH;
-		if (dir == DIR_SOUTH)
-			z = 1 - DOOR_WIDTH;
-		if (dir == DIR_WEST)
+		else if ((dir == DIR_WEST && !opened) || (dir == DIR_SOUTH && opened && !reversed) || (dir == DIR_NORTH && opened && reversed))
 			X = DOOR_WIDTH;
-		if (dir == DIR_EAST)
+		else if ((dir == DIR_EAST && !opened) || (dir == DIR_NORTH && opened && !reversed) || (dir == DIR_SOUTH && opened && reversed))
 			x = 1 - DOOR_WIDTH;
-
-		if (tileEntity.isOpened() && topBlock)
-		{
-			y += 1 - DOOR_WIDTH;
-			Y += 1 - DOOR_WIDTH;
-		}
+		else if ((dir == DIR_SOUTH && !opened) || (dir == DIR_EAST && opened && !reversed) || (dir == DIR_WEST && opened && reversed))
+			z = 1 - DOOR_WIDTH;
 
 		if (selBox)
 		{
-			if (topBlock && !tileEntity.isOpened())
-				y--;
-			else
+			if (!topBlock)
 				Y++;
+			else
+				y--;
 		}
 
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
@@ -91,15 +86,25 @@ public class SlidingUpDoor implements IDoorMovement
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
-		float fromY = 0, toY = 2 - DOOR_WIDTH;
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
+		float fromAngle = 0, toAngle = 90;
+		float hinge = 0.5F - DOOR_WIDTH / 2;
+		float hingeZ = -0.5F + DOOR_WIDTH / 2;
+
+		if (tileEntity.isReversed())
 		{
-			float tmp = fromY;
-			fromY = toY;
-			toY = tmp;
+			hinge = -hinge;
+			toAngle = -90;
 		}
 
-		return new Translation(0, fromY, 0, 0, toY, 0).forTicks(tileEntity.getOpeningTime());
+		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
+		{
+			float tmp = toAngle;
+			toAngle = fromAngle;
+			fromAngle = tmp;
+		}
+
+		return new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ)
+				.forTicks(tileEntity.getDescriptor().getOpeningTime());
 	}
 
 }

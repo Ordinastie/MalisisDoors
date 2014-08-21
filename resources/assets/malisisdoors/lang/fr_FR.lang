@@ -3,7 +3,7 @@ item.iron_sliding_door.name=Porte vitrée en fer
 item.jail_door.name=Porte de prison
 item.laboratory_door.name=Porte de laboratoire
 item.factory_door.name=Porte d'usine
-item.custom_door.name=Porte personnalisée %s
+item.custom_door.name=Porte personnalisée
 
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
@@ -14,8 +14,8 @@ tile.block_mixer.name=Mixeur de blocs
 tile.mixed_block.name=Bloc mixé
 tile.garage_door.name=Porte de garage
 tile.jail_door.name=Porte de prison
-tile.space_door.name=Space Door
-tile.space_door2.name=Space Door
+tile.laboratory_door.name=Porte de laboratoire
+tile.factory_door.name=Porte d'usine
 tile.door_factory.name=Assembleur de porte
 tile.custom_door.name=Porte personnalisée
 
@@ -46,6 +46,18 @@ door_movement.sliding_door=Coulissante sur le côté
 door_movement.sliding_up_door=Coulissante vers le haut
 door_movement.split_door=Coulissante vers le haut et le bas
 
+door_movement.rotating_door=Tournante
+door_movement.sliding_door=Coulissante sur le côté
+door_movement.sliding_up_door=Coulissante vers le haut
+door_movement.sliding_split_door=Coulissante vers le haut et le bas
+door_movement.rotating_split_door=Tournante vers le haut et le bas
+door_movement.vault_door=Coffre-fort
+door_movement.sliding_4ways=Coulissante des quatre côtés
+door_movement.rotating_4ways=Tournante des quatre côtés
+door_movement.rotate_around=Circulaire
+door_movement.rotate_slide=Tournante et coulissante
+door_movement.rotate_place=Tournante se replace
+
 gui.door_factory.tab_properties=Propiétés
 gui.door_factory.tab_materials=Matériaux
 gui.door_factory.door_movement=Mouvement
@@ -56,7 +68,7 @@ gui.door_factory.door_sound=Type de son
 gui.door_factory.door_sound.vanilla_door=Porte originale
 gui.door_factory.door_sound.glass_door=Porte vitrée
 gui.door_factory.door_sound.jail_door=Porte de prison
-gui.door_factory.door_sound.space_door=Porte pneumatique
+gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
 
 
 gui.door_factory.frame_type=Type de cadre

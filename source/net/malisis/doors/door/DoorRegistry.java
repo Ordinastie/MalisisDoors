@@ -27,15 +27,24 @@ package net.malisis.doors.door;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
-import net.malisis.doors.door.movement.RotatingDoor;
-import net.malisis.doors.door.movement.SlidingDoor;
-import net.malisis.doors.door.movement.SlidingUpDoor;
-import net.malisis.doors.door.movement.SplitDoor;
+import net.malisis.doors.door.movement.Roatating4WaysMovement;
+import net.malisis.doors.door.movement.RotateAndPlaceMovement;
+import net.malisis.doors.door.movement.RotateAndSlideMovement;
+import net.malisis.doors.door.movement.RotateAroundMovement;
+import net.malisis.doors.door.movement.RotatingDoorMovement;
+import net.malisis.doors.door.movement.RotatingSplitMovement;
+import net.malisis.doors.door.movement.Sliding4WaysMovement;
+import net.malisis.doors.door.movement.SlidingDoorMovement;
+import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
+import net.malisis.doors.door.movement.SlidingUpDoorMovement;
+import net.malisis.doors.door.movement.TrapDoorMovement;
+import net.malisis.doors.door.movement.VaultDoorMovement;
 import net.malisis.doors.door.sound.GlassDoorSound;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.door.sound.JailDoorSound;
-import net.malisis.doors.door.sound.SpaceDoorSound;
+import net.malisis.doors.door.sound.PneumaticSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
 
 /**
@@ -48,15 +57,24 @@ public class DoorRegistry
 	private static HashMap<String, IDoorSound> sounds = new HashMap<>();
 	static
 	{
-		registerMovement("rotating_door", new RotatingDoor());
-		registerMovement("sliding_door", new SlidingDoor());
-		registerMovement("sliding_up_door", new SlidingUpDoor());
-		registerMovement("split_door", new SplitDoor());
+		registerMovement("rotating_door", new RotatingDoorMovement());
+		registerMovement("sliding_door", new SlidingDoorMovement());
+		registerMovement("sliding_up_door", new SlidingUpDoorMovement());
+		registerMovement("sliding_split_door", new SlidingSplitDoorMovement());
+		registerMovement("vault_door", new VaultDoorMovement());
+		registerMovement("trap_door", new TrapDoorMovement());
+		registerMovement("fence_gate", new FenceGateMovement());
+		registerMovement("rotating_split_door", new RotatingSplitMovement());
+		registerMovement("sliding_4ways", new Sliding4WaysMovement());
+		registerMovement("rotating_4ways", new Roatating4WaysMovement());
+		registerMovement("rotate_around", new RotateAroundMovement());
+		registerMovement("rotate_slide", new RotateAndSlideMovement());
+		registerMovement("rotate_place", new RotateAndPlaceMovement());
 
 		registerSound("vanilla_door", new VanillaDoorSound());
 		registerSound("glass_door", new GlassDoorSound());
 		registerSound("jail_door", new JailDoorSound());
-		registerSound("space_door", new SpaceDoorSound());
+		registerSound("pneumatic_door", new PneumaticSound());
 	}
 
 	//#region Movements
@@ -120,7 +138,14 @@ public class DoorRegistry
 
 	public static HashMap<String, IDoorMovement> listMovements()
 	{
-		return movements;
+		HashMap<String, IDoorMovement> mvts = new HashMap<>();
+
+		for (Entry<String, IDoorMovement> entry : movements.entrySet())
+		{
+			if (!(entry.getValue() instanceof TrapDoorMovement) && !(entry.getValue() instanceof FenceGateMovement))
+				mvts.put(entry.getKey(), entry.getValue());
+		}
+		return mvts;
 	}
 
 	//#end Movements
@@ -159,7 +184,7 @@ public class DoorRegistry
 	 * @param id
 	 * @return
 	 */
-	public static IDoorSound getSoundId(String id)
+	public static IDoorSound getSound(String id)
 	{
 		return sounds.get(id);
 	}

@@ -22,26 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.sound;
+package net.malisis.doors.door.descriptor;
 
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.SlidingUpDoorMovement;
+import net.malisis.doors.door.sound.PneumaticSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  * 
  */
-public class SpaceDoorSound implements IDoorSound
+public class LaboratoryDoor extends DoorDescriptor
 {
-
-	@Override
-	public String getSoundPath(DoorState state)
+	public LaboratoryDoor()
 	{
-		if (state == DoorState.OPENING)
-			return MalisisDoors.modid + ":space_door_open";
-		else if (state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":space_door_close";
-		return null;
-	}
+		//Block
+		setMaterial(Material.iron);
+		setHardness(4.0F);
+		setSoundType(Block.soundTypeMetal);
+		setName("laboratory_door");
+		setTextureName(MalisisDoors.modid + ":laboratory_door");
 
+		//te
+		setOpeningTime(12);
+		setDoubleDoor(false);
+		setMovement(DoorRegistry.getMouvement(SlidingUpDoorMovement.class));
+		setSound(DoorRegistry.getSound(PneumaticSound.class));
+
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//recipe
+		setRecipe(new Object[] { "AA", "BB", "BB", 'A', Items.gold_ingot, 'B', Items.iron_ingot });
+	}
 }

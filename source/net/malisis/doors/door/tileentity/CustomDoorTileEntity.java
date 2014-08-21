@@ -24,7 +24,6 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.DoorRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -109,11 +108,6 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	public void onBlockPlaced(ItemStack itemStack)
 	{
 		NBTTagCompound nbt = itemStack.stackTagCompound;
-		setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
-		setDoorSound(DoorRegistry.getSound(nbt.getString("doorSound")));
-		setOpeningTime(nbt.getInteger("openingTime"));
-		setRequireRedstone(nbt.getBoolean("requireRedstone"));
-		setDoubleDoor(nbt.getBoolean("doubleDoor"));
 
 		frame = Block.getBlockById(nbt.getInteger("frame"));
 		topMaterial = Block.getBlockById(nbt.getInteger("topMaterial"));
@@ -122,26 +116,12 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		frameMetadata = nbt.getInteger("frameMetadata");
 		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
 		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
-	}
-
-	@Override
-	public void init()
-	{}
-
-	@Override
-	public void playSound()
-	{
-		super.playSound();
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
-		setDoorSound(DoorRegistry.getSound(nbt.getString("sound")));
-		setOpeningTime(nbt.getInteger("openTime"));
-		setRequireRedstone(nbt.getBoolean("redstone"));
-		setDoubleDoor(nbt.getBoolean("doubleDoor"));
+		super.readFromNBT(nbt);
 
 		frame = Block.getBlockById(nbt.getInteger("frame"));
 		topMaterial = Block.getBlockById(nbt.getInteger("topMaterial"));
@@ -150,20 +130,12 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		frameMetadata = nbt.getInteger("frameMetadata");
 		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
 		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
-
-		super.readFromNBT(nbt);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		if (getMovement() != null)
-			nbt.setString("movement", DoorRegistry.getId(getMovement()));
-		if (getDoorSound() != null)
-			nbt.setString("sound", DoorRegistry.getId(getDoorSound()));
-		nbt.setInteger("openTime", getOpeningTime());
-		nbt.setBoolean("redstone", requireRedstone());
-		nbt.setBoolean("doubleDoor", isDoubleDoor());
+		super.writeToNBT(nbt);
 
 		nbt.setInteger("frame", Block.getIdFromBlock(frame));
 		nbt.setInteger("topMaterial", Block.getIdFromBlock(topMaterial));
@@ -173,6 +145,5 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		nbt.setInteger("topMaterialMetadata", topMaterialMetadata);
 		nbt.setInteger("bottomMaterialMetadata", bottomMaterialMetadata);
 
-		super.writeToNBT(nbt);
 	}
 }

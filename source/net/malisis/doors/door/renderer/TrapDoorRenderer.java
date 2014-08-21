@@ -25,14 +25,13 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
-import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.block.TrapDoor;
+import net.malisis.doors.block.TrapDoor;
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -69,24 +68,12 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	public void renderTileEntity()
 	{
-		Transformation animation;
-		float f = 0.5F - Door.DOOR_WIDTH / 2;
-		float fromAngle = 0, toAngle = 90;
-
-		if (topBlock)
-			toAngle = -toAngle;
-
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-		{
-			float tmp = toAngle;
-			toAngle = fromAngle;
-			fromAngle = tmp;
-		}
-
-		animation = new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(tileEntity.getOpeningTime());
-
 		ar.setStartTime(tileEntity.getStartTime());
-		ar.animate(s, animation);
+
+		IDoorMovement mvt = tileEntity.getMovement();
+		Transformation transformation = topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity);
+
+		ar.animate(s, transformation);
 
 		drawShape(s, rp);
 	}

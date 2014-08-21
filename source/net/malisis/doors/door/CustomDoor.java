@@ -22,15 +22,13 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.door;
 
 import java.util.ArrayList;
 
-import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -53,7 +51,7 @@ public class CustomDoor extends Door
 {
 	public CustomDoor()
 	{
-		super(Material.wood);
+		super();
 		setHardness(3.0F);
 		setStepSound(soundTypeWood);
 	}
@@ -67,10 +65,6 @@ public class CustomDoor extends Door
 	{
 		return null;
 	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{}
 
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)

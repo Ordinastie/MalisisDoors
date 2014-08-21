@@ -71,7 +71,7 @@ public class DoorFactoryGui extends MalisisGui
 		setInventoryContainer(container);
 		tileEntity = te;
 
-		UIWindow window = new UIWindow("tile.door_factory.name", 280, 240);
+		UIWindow window = new UIWindow("tile.door_factory.name", 190, 240);
 		UIPanel propContainer = new UIPanel(180, 70).setPosition(0, 25);
 		UIPanel matContainer = new UIPanel(180, 70).setPosition(0, 25);
 

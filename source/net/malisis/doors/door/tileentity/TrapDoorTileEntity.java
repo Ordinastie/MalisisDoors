@@ -24,8 +24,7 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.doors.door.Door;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -34,15 +33,12 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class TrapDoorTileEntity extends DoorTileEntity
 {
-	public TrapDoorTileEntity()
+	@Override
+	public boolean isTopBlock(int x, int y, int z)
 	{
-		setDoubleDoor(false);
-		setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		return (getBlockMetadata() & Door.FLAG_TOPBLOCK) != 0;
 	}
 
-	/**
-	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
-	 */
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{

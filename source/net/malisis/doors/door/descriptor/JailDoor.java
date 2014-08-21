@@ -22,53 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
-
-import java.util.Random;
+package net.malisis.doors.door.descriptor;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.SlidingDoor;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.movement.SlidingDoorMovement;
+import net.malisis.doors.door.sound.JailDoorSound;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import net.minecraft.init.Blocks;
 
 /**
  * @author Ordinastie
  * 
  */
-public class JailDoor extends Door
+public class JailDoor extends DoorDescriptor
 {
 	public JailDoor()
 	{
-		super(Material.iron);
+		//Block
+		setMaterial(Material.iron);
 		setHardness(5.0F);
-		setStepSound(soundTypeMetal);
-		setBlockName("jail_door");
-		setBlockTextureName(MalisisDoors.modid + ":jail_door");
-	}
+		setSoundType(Block.soundTypeMetal);
+		setName("jail_door");
+		setTextureName(MalisisDoors.modid + ":jail_door");
 
-	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
-	{
-		if ((metadata & 8) != 0)
-			return null;
+		//TileEntity
+		setRequireRedstone(true);
+		setOpeningTime(12);
+		setMovement(DoorRegistry.getMouvement(SlidingDoorMovement.class));
+		setSound(DoorRegistry.getSound(JailDoorSound.class));
 
-		return MalisisDoors.Items.jailDoorItem;
-	}
+		//Item
+		setTab(MalisisDoors.tab);
 
-	@Override
-	public Item getItem(World world, int x, int y, int z)
-	{
-		return MalisisDoors.Items.jailDoorItem;
-	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setRequireRedstone(true);
-		te.setOpeningTime(12);
-		te.setMovement(DoorRegistry.getMouvement(SlidingDoor.class));
+		//recipe
+		setRecipe(new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
 	}
 }

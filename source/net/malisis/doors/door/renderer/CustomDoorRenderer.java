@@ -27,7 +27,7 @@ package net.malisis.doors.door.renderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -155,6 +155,9 @@ public class CustomDoorRenderer extends DoorRenderer
 			setInfos(tileEntity);
 		else
 			setInfos(itemStack.stackTagCompound);
+
+		if (frameBlock == null)
+			return;
 
 		rp.interpolateUV.set(true);
 		rp.icon.set(frameBlock.getIcon(2, frameMetadata));

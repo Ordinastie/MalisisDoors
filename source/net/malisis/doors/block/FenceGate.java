@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.block;
 
 /**
  * @author Ordinastie
@@ -30,6 +30,10 @@ package net.malisis.doors.door.block;
  */
 
 import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
@@ -45,12 +49,17 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 {
 	private int renderId = -1;
 
+	private DoorDescriptor descriptor;
+
 	public FenceGate()
 	{
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
 		setBlockName("fenceGate");
+
+		descriptor = new DoorDescriptor();
+		descriptor.setMovement(DoorRegistry.getMouvement(FenceGateMovement.class));
 	}
 
 	/**
@@ -106,7 +115,9 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)
 	{
-		return new FenceGateTileEntity();
+		FenceGateTileEntity te = new FenceGateTileEntity();
+		te.setDescriptor(descriptor);
+		return te;
 	}
 
 	/**

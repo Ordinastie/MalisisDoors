@@ -22,67 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
-
-import java.util.Random;
+package net.malisis.doors.door.descriptor;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.SlidingDoor;
+import net.malisis.doors.door.movement.SlidingDoorMovement;
 import net.malisis.doors.door.sound.GlassDoorSound;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  * 
  */
-public class GlassDoor extends Door
+public class GlassDoor extends DoorDescriptor
 {
 	public GlassDoor(Material material)
 	{
-		super(material);
-		if (material == Material.wood)
-		{
-			setHardness(2.0F);
-			setStepSound(soundTypeWood);
-			setBlockName("wood_sliding_door");
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_wood");
-		}
-		else
-		{
-			setHardness(3.0F);
-			setStepSound(soundTypeMetal);
-			setBlockName("iron_sliding_door");
-			setBlockTextureName(MalisisDoors.modid + ":sliding_door_iron");
-		}
-	}
+		boolean wood = material == Material.wood;
+		//Block
+		setMaterial(material);
+		setHardness(wood ? 2.0F : 3.0F);
+		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
+		setName(wood ? "wood_sliding_door" : "iron_sliding_door");
+		setTextureName(MalisisDoors.modid + ":" + (wood ? "sliding_door_wood" : "sliding_door_iron"));
 
-	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
-	{
-		if ((metadata & 8) != 0)
-			return null;
+		//te
+		setRequireRedstone(!wood);
+		setMovement(DoorRegistry.getMouvement(SlidingDoorMovement.class));
+		setSound(DoorRegistry.getSound(GlassDoorSound.class));
 
-		if (this.blockMaterial == Material.iron)
-			return MalisisDoors.Items.ironSlidingDoorItem;
-		else
-			return MalisisDoors.Items.woodSlidingDoorItem;
-	}
+		//Item
+		setTab(MalisisDoors.tab);
 
-	@Override
-	public Item getItem(World world, int x, int y, int z)
-	{
-		return this.blockMaterial == Material.iron ? MalisisDoors.Items.ironSlidingDoorItem : MalisisDoors.Items.woodSlidingDoorItem;
-	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setRequireRedstone(blockMaterial == Material.iron);
-		te.setDoorSound(DoorRegistry.getSound(GlassDoorSound.class));
-		te.setMovement(DoorRegistry.getMouvement(SlidingDoor.class));
+		//recipe
+		setRecipe(new Object[] { "AB", "AB", "AB", 'A', wood ? Blocks.planks : Items.iron_ingot, 'B', Blocks.glass });
 	}
 }

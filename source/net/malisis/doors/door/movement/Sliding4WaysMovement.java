@@ -24,11 +24,10 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.block.Door.*;
+import static net.malisis.doors.door.Door.*;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -36,7 +35,7 @@ import net.minecraft.util.AxisAlignedBB;
  * @author Ordinastie
  * 
  */
-public class SlidingDoor implements IDoorMovement
+public class Sliding4WaysMovement implements IDoorMovement
 {
 
 	@Override
@@ -58,7 +57,7 @@ public class SlidingDoor implements IDoorMovement
 		if (dir == DIR_NORTH)
 		{
 			Z = DOOR_WIDTH;
-			if (opened)
+			if (opened && topBlock == !reversed)
 			{
 				x += reversed ? left : right;
 				X += reversed ? left : right;
@@ -67,7 +66,7 @@ public class SlidingDoor implements IDoorMovement
 		if (dir == DIR_SOUTH)
 		{
 			z = 1 - DOOR_WIDTH;
-			if (opened)
+			if (opened && topBlock == reversed)
 			{
 				x += reversed ? right : left;
 				X += reversed ? right : left;
@@ -76,7 +75,7 @@ public class SlidingDoor implements IDoorMovement
 		if (dir == DIR_WEST)
 		{
 			X = DOOR_WIDTH;
-			if (opened)
+			if (opened && topBlock == reversed)
 			{
 				z += reversed ? right : left;
 				Z += reversed ? right : left;
@@ -85,14 +84,23 @@ public class SlidingDoor implements IDoorMovement
 		if (dir == DIR_EAST)
 		{
 			x = 1 - DOOR_WIDTH;
-			if (opened)
+			if (opened && topBlock == reversed)
 			{
 				z += reversed ? left : right;
 				Z += reversed ? left : right;
 			}
 		}
 
-		if (selBox)
+		if (opened && (topBlock == !reversed))
+		{
+			y += reversed ? left : right;
+			if (topBlock || selBox)
+				Y += reversed ? left : right;
+			else
+				Y = 0;
+		}
+
+		if (selBox && !opened)
 		{
 			if (!topBlock)
 				Y++;
@@ -106,31 +114,33 @@ public class SlidingDoor implements IDoorMovement
 	@Override
 	public Transformation getTopTransformation(DoorTileEntity tileEntity)
 	{
-		return getTransformation(tileEntity);
+		return getTransformation(tileEntity, true);
 	}
 
 	@Override
 	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
 	{
-		return getTransformation(tileEntity);
+		return getTransformation(tileEntity, false);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
-		float fromX = 0, toX = 1 - DOOR_WIDTH;
+		float dir = 1 - DOOR_WIDTH;
+		float toX = 0;
+		float toY = 0;
 		if (tileEntity.isReversed())
-		{
-			fromX = 0;
-			toX = -1 + Door.DOOR_WIDTH;
-		}
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-		{
-			float tmp = fromX;
-			fromX = toX;
-			toX = tmp;
-		}
+			dir = -dir;
 
-		return new Translation(fromX, 0, 0, toX, 0, 0).forTicks(tileEntity.getOpeningTime());
+		if (topBlock != tileEntity.isReversed())
+			toY = dir;
+		else
+			toX = dir;
+
+		Transformation transformation = new Translation(toX, toY, 0);
+		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
+			transformation.reversed(true);
+
+		return transformation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 	}
 
 }

@@ -24,8 +24,6 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.sound.VanillaDoorSound;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -33,12 +31,6 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class FenceGateTileEntity extends DoorTileEntity
 {
-	public FenceGateTileEntity()
-	{
-		setDoubleDoor(false);
-		setDoorSound(DoorRegistry.getSound(VanillaDoorSound.class));
-	}
-
 	/**
 	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
 	 */

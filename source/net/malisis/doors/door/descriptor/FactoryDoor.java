@@ -22,56 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
-
-import java.util.Random;
+package net.malisis.doors.door.descriptor;
 
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.SplitDoor;
-import net.malisis.doors.door.sound.SpaceDoorSound;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
+import net.malisis.doors.door.sound.PneumaticSound;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  * 
  */
-public class FactoryDoor extends Door
+public class FactoryDoor extends DoorDescriptor
 {
 	public FactoryDoor()
 	{
-		super(Material.iron);
-		setHardness(3.0F);
-		setStepSound(soundTypeMetal);
-		setBlockName("factory_door");
-		setBlockTextureName(MalisisDoors.modid + ":factory_door");
+		//Block
+		setMaterial(Material.iron);
+		setHardness(4.0F);
+		setSoundType(Block.soundTypeMetal);
+		setName("factory_door");
+		setTextureName(MalisisDoors.modid + ":factory_door");
+
+		//TileEntity
+		setOpeningTime(12);
+		setDoubleDoor(true);
+		setMovement(DoorRegistry.getMouvement(SlidingSplitDoorMovement.class));
+		setSound(DoorRegistry.getSound(PneumaticSound.class));
+
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//Recipe
+		setRecipe(new Object[] { "AA", "BB", "AA", 'A', Items.gold_ingot, 'B', Items.iron_ingot });
 	}
-
-	@Override
-	public Item getItemDropped(int metadata, Random par2Random, int par3)
-	{
-		if ((metadata & 8) != 0)
-			return null;
-
-		return MalisisDoors.Items.facortyDoorItem;
-	}
-
-	@Override
-	public Item getItem(World world, int x, int y, int z)
-	{
-		return MalisisDoors.Items.facortyDoorItem;
-	}
-
-	@Override
-	public void setTileEntityInformations(DoorTileEntity te)
-	{
-		te.setOpeningTime(12);
-		te.setDoubleDoor(true);
-		te.setMovement(DoorRegistry.getMouvement(SplitDoor.class));
-		te.setDoorSound(DoorRegistry.getSound(SpaceDoorSound.class));
-	}
-
 }

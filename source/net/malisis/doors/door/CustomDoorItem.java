@@ -22,30 +22,27 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.item;
+package net.malisis.doors.door;
 
 import java.util.HashMap;
 import java.util.List;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -53,7 +50,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  * 
  */
-public class CustomDoorItem extends ItemDoor
+public class CustomDoorItem extends DoorItem
 {
 	private static HashMap<Item, Block> itemsAllowed = new HashMap<>();
 	static
@@ -66,40 +63,16 @@ public class CustomDoorItem extends ItemDoor
 
 	public CustomDoorItem()
 	{
-		super(Material.wood);
+		super();
 		setUnlocalizedName("custom_door");
 		this.maxStackSize = 16;
 		setCreativeTab(null);
 	}
 
-	/**
-	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return True if something
-	 * happen and false if it don't. This is for ITEMS, not BLOCKS
-	 */
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
+	public DoorDescriptor getDescriptor(ItemStack itemStack)
 	{
-		if (side != 1)
-			return false;
-
-		++y;
-		if (!player.canPlayerEdit(x, y, z, side, itemStack) || !player.canPlayerEdit(x, y + 1, z, side, itemStack))
-			return false;
-
-		Block block = MalisisDoors.Blocks.customDoor;
-		if (!block.canPlaceBlockAt(world, x, y, z))
-			return false;
-
-		int i1 = MathHelper.floor_double((player.rotationYaw + 180.0F) * 4.0F / 360.0F - 0.5D) & 3;
-		placeDoorBlock(world, x, y, z, i1, block);
-
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null)
-			return false;
-
-		((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
-		--itemStack.stackSize;
-		return true;
+		return new DoorDescriptor(itemStack.stackTagCompound);
 	}
 
 	@Override
@@ -109,13 +82,24 @@ public class CustomDoorItem extends ItemDoor
 	}
 
 	@Override
-	public void onCreated(ItemStack itemStack, World world, EntityPlayer player)
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
 	{
-		itemStack.stackTagCompound = new NBTTagCompound();
+		boolean b = super.onItemUse(itemStack, player, world, x, y, z, side, par8, par9, par10);
+		if (b)
+		{
+			DoorTileEntity te = Door.getDoor(world, x, y + 1, z);
+			if (te instanceof CustomDoorTileEntity)
+				((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
+		}
+
+		return b;
 	}
 
 	public static ItemStack fromDoorFactory(DoorFactoryTileEntity te)
 	{
+		if (te.getDoorMovement() == null || te.getDoorSound() == null)
+			return null;
+
 		ItemStack frameItemStack = te.frameSlot.getItemStack();
 		ItemStack topMaterialItemStack = te.topMaterialSlot.getItemStack();
 		ItemStack bottomMaterialItemStack = te.bottomMaterialSlot.getItemStack();
@@ -152,13 +136,15 @@ public class CustomDoorItem extends ItemDoor
 		//NBT
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		if (te.getDoorMovement() != null)
-			nbt.setString("movement", DoorRegistry.getId(te.getDoorMovement()));
-		if (te.getDoorSound() != null)
-			nbt.setString("doorSound", DoorRegistry.getId(te.getDoorSound()));
-		nbt.setInteger("openingTime", te.getOpeningTime());
-		nbt.setBoolean("requireRedstone", te.requireRedstone());
-		nbt.setBoolean("doubleDoor", te.isDoubleDoor());
+		DoorDescriptor desc = new DoorDescriptor();
+		desc.set(MalisisDoors.Blocks.customDoor, MalisisDoors.Items.customDoorItem);
+		desc.setMovement(te.getDoorMovement());
+		desc.setSound(te.getDoorSound());
+		desc.setOpeningTime(te.getOpeningTime());
+		desc.setRequireRedstone(te.requireRedstone());
+		desc.setDoubleDoor(te.isDoubleDoor());
+
+		desc.writeNBT(nbt);
 
 		nbt.setInteger("frame", Block.getIdFromBlock(frameBlock));
 		nbt.setInteger("topMaterial", Block.getIdFromBlock(topMaterialBlock));
@@ -177,17 +163,12 @@ public class CustomDoorItem extends ItemDoor
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		if (te.getMovement() != null)
-			nbt.setString("movement", DoorRegistry.getId(te.getMovement()));
-		if (te.getDoorSound() != null)
-			nbt.setString("doorSound", DoorRegistry.getId(te.getDoorSound()));
-		nbt.setInteger("openingTime", te.getOpeningTime());
-		nbt.setBoolean("requireRedstone", te.requireRedstone());
-		nbt.setBoolean("doubleDoor", te.isDoubleDoor());
+		te.getDescriptor().writeNBT(nbt);
 
 		nbt.setInteger("frame", Block.getIdFromBlock(te.getFrame()));
 		nbt.setInteger("topMaterial", Block.getIdFromBlock(te.getTopMaterial()));
 		nbt.setInteger("bottomMaterial", Block.getIdFromBlock(te.getBottomMaterial()));
+
 		nbt.setInteger("frameMetadata", te.getFrameMetadata());
 		nbt.setInteger("topMaterialMetadata", te.getTopMaterialMetadata());
 		nbt.setInteger("bottomMaterialMetadata", te.getBottomMaterialMetadata());
@@ -207,12 +188,15 @@ public class CustomDoorItem extends ItemDoor
 	}
 
 	@Override
-	public String getItemStackDisplayName(ItemStack itemStack)
+	public String getItemStackDisplayName(ItemStack par1ItemStack)
 	{
-		String mvt = StatCollector.translateToLocal("door_movement." + itemStack.stackTagCompound.getString("movement"));
-		String name = StatCollector.translateToLocal(this.getUnlocalizedNameInefficiently(itemStack) + ".name");
+		return super.getItemStackDisplayName(par1ItemStack);
+	}
 
-		return String.format(name, mvt);
+	@Override
+	public EnumRarity getRarity(ItemStack par1ItemStack)
+	{
+		return EnumRarity.rare;
 	}
 
 	@Override
@@ -230,6 +214,8 @@ public class CustomDoorItem extends ItemDoor
 		int bottomMaterialMetadata = itemStack.stackTagCompound.getInteger("bottomMaterialMetadata");
 		ItemStack isBottomMaterial = new ItemStack(bottomMaterial, 0, bottomMaterialMetadata);
 
+		list.add(EnumChatFormatting.WHITE
+				+ StatCollector.translateToLocal("door_movement." + itemStack.stackTagCompound.getString("movement")));
 		list.addAll(isFrame.getTooltip(player, advancedTooltip));
 		list.addAll(istopMaterial.getTooltip(player, advancedTooltip));
 		list.addAll(isBottomMaterial.getTooltip(player, advancedTooltip));

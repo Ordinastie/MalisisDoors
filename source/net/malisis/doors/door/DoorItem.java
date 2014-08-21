@@ -22,9 +22,10 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.item;
+package net.malisis.doors.door;
 
-import net.malisis.doors.MalisisDoors;
+import net.malisis.core.MalisisCore;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -36,49 +37,68 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class FactoryDoorItem extends ItemDoor
+public class DoorItem extends ItemDoor
 {
-	public FactoryDoorItem()
+	private DoorDescriptor descriptor;
+
+	public DoorItem(DoorDescriptor desc)
 	{
-		super(Material.iron);
-		setUnlocalizedName("factory_door");
-		setCreativeTab(MalisisDoors.tab);
+		super(desc.getMaterial());
+
+		this.descriptor = desc;
+
+		setUnlocalizedName(desc.getName());
+		setCreativeTab(desc.getTab());
+	}
+
+	public DoorItem()
+	{
+		super(Material.wood);
+	}
+
+	public DoorDescriptor getDescriptor(ItemStack itemStack)
+	{
+		return descriptor;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		this.itemIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
+		this.itemIcon = iconRegister.registerIcon(descriptor.getTextureName());
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int par7, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
 	{
-		if (par7 != 1)
+		if (side != 1)
+			return false;
+
+		y++;
+		Block block = getDescriptor(itemStack).getBlock();
+		if (block == null)
 		{
+			MalisisCore.message("Block null");
 			return false;
 		}
-		else
-		{
-			++y;
 
-			Block block = MalisisDoors.Blocks.factoryDoor;
+		if (!player.canPlayerEdit(x, y, z, side, itemStack) || !player.canPlayerEdit(x, y + 1, z, side, itemStack))
+			return false;
 
-			if (player.canPlayerEdit(x, y, z, par7, itemStack) && player.canPlayerEdit(x, y + 1, z, par7, itemStack))
-			{
-				if (!block.canPlaceBlockAt(world, x, y, z))
-					return false;
-				else
-				{
-					int i1 = MathHelper.floor_double((player.rotationYaw + 180.0F) * 4.0F / 360.0F - 0.5D) & 3;
-					placeDoorBlock(world, x, y, z, i1, block);
-					--itemStack.stackSize;
-					return true;
-				}
-			}
-			else
-				return false;
-		}
+		if (!block.canPlaceBlockAt(world, x, y, z))
+			return false;
+
+		int i1 = MathHelper.floor_double((player.rotationYaw + 180.0F) * 4.0F / 360.0F - 0.5D) & 3;
+		placeDoorBlock(world, x, y, z, i1, block);
+		itemStack.stackSize--;
+
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return true;
+
+		te.setDescriptor(((DoorItem) itemStack.getItem()).getDescriptor(itemStack));
+
+		return true;
+
 	}
 }

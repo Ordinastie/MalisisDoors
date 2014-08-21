@@ -22,9 +22,13 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.block;
 
 import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
@@ -33,8 +37,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -46,21 +48,26 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBaseRendering
 {
-	private int renderId = -1;
-
 	public static final int DIR_SOUTH = 0;
 	public static final int DIR_NORTH = 1;
 	public static final int DIR_EAST = 2;
 	public static final int DIR_WEST = 3;
 
+	private int renderId = -1;
+
+	private DoorDescriptor descriptor;
+
 	public TrapDoor()
 	{
 		super(Material.wood);
+		disableStats();
 		setHardness(3.0F);
 		setStepSound(soundTypeWood);
 		setBlockName("trapdoor");
-		disableStats();
 		setBlockTextureName("trapdoor");
+
+		descriptor = new DoorDescriptor();
+		descriptor.setMovement(DoorRegistry.getMouvement(TrapDoorMovement.class));
 	}
 
 	/**
@@ -89,38 +96,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	}
 
 	//#region BoundingBox
-	private AxisAlignedBB getBoundingBox(DoorTileEntity te)
-	{
-		int dir = te.getDirection();
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if (!te.isOpened())
-		{
-			if ((te.getBlockMetadata() & Door.FLAG_TOPBLOCK) != 0)
-				y = 1 - Door.DOOR_WIDTH;
-			else
-				Y = Door.DOOR_WIDTH;
-		}
-		else
-		{
-			if (dir == TrapDoor.DIR_NORTH)
-				Z = Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_SOUTH)
-				z = 1 - Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_EAST)
-				x = 1 - Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_WEST)
-				X = Door.DOOR_WIDTH;
-		}
-
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
-	}
-
 	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
 	{
 		if (aabb == null)
@@ -133,10 +108,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null)
+		if (te == null || te.isMoving())
 			return;
 
-		setBlockBounds(getBoundingBox(te));
+		setBlockBounds(te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -147,7 +122,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 		if (te == null || te.isMoving())
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = getBoundingBox(te);
+		AxisAlignedBB aabb = te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -161,16 +136,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 		if (te == null || te.isMoving())
 			return null;
 
-		return setBlockBounds(getBoundingBox(te).offset(x, y, z));
-	}
-
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 par5Vec3, Vec3 par6Vec3)
-	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		AxisAlignedBB aabb = te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		if (aabb == null)
 			return null;
-		return super.collisionRayTrace(world, x, y, z, par5Vec3, par6Vec3);
+		return setBlockBounds(aabb.offset(x, y, z));
 	}
 
 	//#end BoudingBox
@@ -178,7 +147,9 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)
 	{
-		return new TrapDoorTileEntity();
+		TrapDoorTileEntity te = new TrapDoorTileEntity();
+		te.setDescriptor(descriptor);
+		return te;
 	}
 
 	/**

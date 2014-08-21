@@ -29,23 +29,22 @@ import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
+import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
+import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.door.block.CustomDoor;
-import net.malisis.doors.door.block.FactoryDoor;
-import net.malisis.doors.door.block.FenceGate;
-import net.malisis.doors.door.block.GlassDoor;
-import net.malisis.doors.door.block.JailDoor;
-import net.malisis.doors.door.block.LaboratoryDoor;
-import net.malisis.doors.door.block.TrapDoor;
-import net.malisis.doors.door.block.VanillaDoor;
-import net.malisis.doors.door.item.CustomDoorItem;
-import net.malisis.doors.door.item.JailDoorItem;
-import net.malisis.doors.door.item.SlidingDoorItem;
-import net.malisis.doors.door.item.LaboratoryDoorItem;
+import net.malisis.doors.door.CustomDoor;
+import net.malisis.doors.door.CustomDoorItem;
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.descriptor.FactoryDoor;
+import net.malisis.doors.door.descriptor.GlassDoor;
+import net.malisis.doors.door.descriptor.JailDoor;
+import net.malisis.doors.door.descriptor.LaboratoryDoor;
+import net.malisis.doors.door.descriptor.VanillaDoor;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
@@ -71,7 +70,8 @@ public class Registers
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 			registerVanillaDoors();
 
-		registerSlidingDoors();
+		registerDoors();
+
 		registerPlayerSensor();
 
 		if (MalisisDoorsSettings.enableVanishingBlocks.get())
@@ -82,12 +82,6 @@ public class Registers
 
 		registerGarageDoor();
 
-		registerJailDoor();
-
-		registerLaboratoryDoor();
-
-		registerFactoryDoor();
-
 		registerDoorFactory();
 
 		registerCustomDoor();
@@ -97,13 +91,18 @@ public class Registers
 
 	private static void registerVanillaDoors()
 	{
-		doubleDoorWood = new VanillaDoor(Material.wood);
-		doubleDoorIron = new VanillaDoor(Material.iron);
+		VanillaDoor woodDoor = new VanillaDoor(Material.wood);
+		woodDoor.set(new Door(woodDoor), Items.wooden_door);
+		MalisisCore.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", woodDoor.getBlock(), Blocks.wooden_door);
+		doubleDoorWood = woodDoor.getBlock();
+
+		VanillaDoor ironDoor = new VanillaDoor(Material.iron);
+		ironDoor.set(new Door(ironDoor), Items.iron_door);
+		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
+		doubleDoorIron = ironDoor.getBlock();
+
 		fenceGate = new FenceGate();
 		trapDoor = new TrapDoor();
-
-		MalisisCore.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", doubleDoorWood, Blocks.wooden_door);
-		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", doubleDoorIron, Blocks.iron_door);
 
 		MalisisCore.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
 		MalisisCore.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", trapDoor, Blocks.trapdoor);
@@ -112,27 +111,33 @@ public class Registers
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
 	}
 
-	private static void registerSlidingDoors()
+	private static void registerDoors()
 	{
-		// Sliding Door blocks
-		woodSlidingDoor = new GlassDoor(Material.wood);
-		ironSlidingDoor = new GlassDoor(Material.iron);
+		DoorDescriptor desc;
 
-		GameRegistry.registerBlock(woodSlidingDoor, woodSlidingDoor.getUnlocalizedName().substring(5));
-		GameRegistry.registerBlock(ironSlidingDoor, ironSlidingDoor.getUnlocalizedName().substring(5));
+		//Glass Doors
+		desc = new GlassDoor(Material.wood).register();
+		woodSlidingDoor = desc.getBlock();
+		woodSlidingDoorItem = desc.getItem();
 
-		// Sliding Door items
-		woodSlidingDoorItem = new SlidingDoorItem(Material.wood);
-		ironSlidingDoorItem = new SlidingDoorItem(Material.iron);
+		desc = new GlassDoor(Material.iron).register();
+		ironSlidingDoor = desc.getBlock();
+		ironSlidingDoorItem = desc.getItem();
 
-		GameRegistry.registerItem(woodSlidingDoorItem, woodSlidingDoorItem.getUnlocalizedName());
-		GameRegistry.registerItem(ironSlidingDoorItem, ironSlidingDoorItem.getUnlocalizedName());
+		//Jail Door
+		desc = new JailDoor().register();
+		jailDoor = desc.getBlock();
+		jailDoorItem = desc.getItem();
 
-		// Sliding Door recipes
-		GameRegistry
-				.addRecipe(new ItemStack(woodSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Blocks.planks, 'B', Blocks.glass });
-		GameRegistry.addRecipe(new ItemStack(ironSlidingDoorItem), new Object[] { "AB", "AB", "AB", 'A', Items.iron_ingot, 'B',
-				Blocks.glass });
+		//Laboratory Door
+		desc = new LaboratoryDoor().register();
+		laboratoryDoor = desc.getBlock();
+		laboratoryDoorItem = desc.getItem();
+
+		//Factory Door
+		desc = new FactoryDoor().register();
+		factoryDoor = desc.getBlock();
+		facortyDoorItem = desc.getItem();
 
 	}
 
@@ -194,50 +199,6 @@ public class Registers
 		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
 
 		GameRegistry.addRecipe(new ItemStack(garageDoor), new Object[] { "ABA", "AAA", 'A', Blocks.planks, 'B', Blocks.glass });
-	}
-
-	private static void registerJailDoor()
-	{
-		//Block
-		jailDoor = new JailDoor();
-		GameRegistry.registerBlock(jailDoor, jailDoor.getUnlocalizedName().substring(5));
-
-		//Item
-		jailDoorItem = new JailDoorItem();
-		GameRegistry.registerItem(jailDoorItem, jailDoorItem.getUnlocalizedName());
-
-		//Recipes
-		GameRegistry.addRecipe(new ItemStack(jailDoorItem), new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
-	}
-
-	private static void registerLaboratoryDoor()
-	{
-		//Block
-		laboratoryDoor = new LaboratoryDoor();
-		GameRegistry.registerBlock(laboratoryDoor, laboratoryDoor.getUnlocalizedName().substring(5));
-
-		//Item
-		laboratoryDoorItem = new LaboratoryDoorItem(false);
-		GameRegistry.registerItem(laboratoryDoorItem, laboratoryDoorItem.getUnlocalizedName());
-
-		//Recipes
-		GameRegistry.addRecipe(new ItemStack(laboratoryDoorItem), new Object[] { "AA", "BB", "BB", 'A', Items.gold_ingot, 'B',
-				Items.iron_ingot });
-	}
-
-	private static void registerFactoryDoor()
-	{
-		//Block
-		factoryDoor = new FactoryDoor();
-		GameRegistry.registerBlock(factoryDoor, factoryDoor.getUnlocalizedName().substring(5));
-
-		//Item
-		facortyDoorItem = new LaboratoryDoorItem(true);
-		GameRegistry.registerItem(facortyDoorItem, facortyDoorItem.getUnlocalizedName());
-
-		//Recipes
-		GameRegistry.addRecipe(new ItemStack(facortyDoorItem), new Object[] { "AA", "BB", "AA", 'A', Items.gold_ingot, 'B',
-				Items.iron_ingot });
 	}
 
 	private static void registerDoorFactory()

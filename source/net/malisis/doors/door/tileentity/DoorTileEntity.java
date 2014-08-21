@@ -24,10 +24,10 @@
 
 package net.malisis.doors.door.tileentity;
 
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
-import net.malisis.doors.door.sound.IDoorSound;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -43,31 +43,24 @@ import net.minecraft.world.World;
  */
 public class DoorTileEntity extends TileEntity
 {
-	private IDoorMovement movement;
-	private IDoorSound doorSound;
-	private int openingTime = 6;
-	private boolean doubleDoor = true;
-	private boolean requireRedstone = false;
-
-	private boolean initialized = false;
+	private DoorDescriptor descriptor;
 	private int lastMetadata = -1;
 	private long startTime;
 	private int timer = 0;
 	private DoorState state = DoorState.CLOSED;
 	private boolean moving;
 
-	public void init()
+	//#region Getter/Setter
+	public DoorDescriptor getDescriptor()
 	{
-		if (!initialized)
-		{
-			Block block = getBlockType();
-			if (block instanceof Door)
-				((Door) block).setTileEntityInformations(this);
-			initialized = true;
-		}
+		return descriptor;
 	}
 
-	//#region Getter/Setter
+	public void setDescriptor(DoorDescriptor descriptor)
+	{
+		this.descriptor = descriptor;
+	}
+
 	public long getStartTime()
 	{
 		return startTime;
@@ -110,52 +103,7 @@ public class DoorTileEntity extends TileEntity
 
 	public IDoorMovement getMovement()
 	{
-		return movement;
-	}
-
-	public void setMovement(IDoorMovement movement)
-	{
-		this.movement = movement;
-	}
-
-	public IDoorSound getDoorSound()
-	{
-		return doorSound;
-	}
-
-	public void setDoorSound(IDoorSound doorSound)
-	{
-		this.doorSound = doorSound;
-	}
-
-	public int getOpeningTime()
-	{
-		return openingTime;
-	}
-
-	public void setOpeningTime(int openingTime)
-	{
-		this.openingTime = openingTime;
-	}
-
-	public boolean isDoubleDoor()
-	{
-		return doubleDoor;
-	}
-
-	public void setDoubleDoor(boolean doubleDoor)
-	{
-		this.doubleDoor = doubleDoor;
-	}
-
-	public boolean requireRedstone()
-	{
-		return requireRedstone;
-	}
-
-	public void setRequireRedstone(boolean requireRedstone)
-	{
-		this.requireRedstone = requireRedstone;
+		return descriptor != null ? descriptor.getMovement() : null;
 	}
 
 	public int getDirection()
@@ -227,7 +175,7 @@ public class DoorTileEntity extends TileEntity
 
 		if (state == DoorState.CLOSING || state == DoorState.OPENING)
 		{
-			timer = moving ? openingTime - timer : 0;
+			timer = moving ? descriptor.getOpeningTime() - timer : 0;
 			startTime = worldObj.getTotalWorldTime() - timer;
 			moving = true;
 		}
@@ -254,8 +202,8 @@ public class DoorTileEntity extends TileEntity
 			return;
 
 		String soundPath = null;
-		if (doorSound != null)
-			soundPath = doorSound.getSoundPath(state);
+		if (descriptor.getSound() != null)
+			soundPath = descriptor.getSound().getSoundPath(state);
 		if (soundPath != null)
 			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
 	}
@@ -267,7 +215,7 @@ public class DoorTileEntity extends TileEntity
 	 */
 	public DoorTileEntity getDoubleDoor()
 	{
-		if (!isDoubleDoor())
+		if (!descriptor.isDoubleDoor())
 			return null;
 
 		int dir = getDirection();
@@ -344,7 +292,7 @@ public class DoorTileEntity extends TileEntity
 			return;
 
 		timer++;
-		if (startTime + openingTime < worldObj.getTotalWorldTime())
+		if (startTime + descriptor.getOpeningTime() < worldObj.getTotalWorldTime())
 		{
 			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
 			timer = 0;
@@ -356,6 +304,7 @@ public class DoorTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		descriptor = new DoorDescriptor(nbt);
 		setDoorState(DoorState.values()[nbt.getInteger("state")]);
 	}
 
@@ -363,6 +312,8 @@ public class DoorTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+		if (descriptor != null)
+			descriptor.writeNBT(nbt);
 		nbt.setInteger("state", state.ordinal());
 	}
 
@@ -377,7 +328,6 @@ public class DoorTileEntity extends TileEntity
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		init();
 		this.readFromNBT(packet.func_148857_g());
 	}
 

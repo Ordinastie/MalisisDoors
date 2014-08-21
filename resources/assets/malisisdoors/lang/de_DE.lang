@@ -3,7 +3,7 @@ item.iron_sliding_door.name=Eisen-Schiebetür
 item.jail_door.name=Gefängnistür
 item.laboratory_door.name=Space Door
 item.factory_door.name=Space Door
-item.custom_door.name=Custom %s Door
+item.custom_door.name=Custom Door
 
 tile.player_sensor.name=Spielersensor
 tile.vanishing_block_wood.name=Schwindender Holzrahmen
@@ -14,8 +14,8 @@ tile.block_mixer.name=Blockmischer
 tile.mixed_block.name=Gemischter Block
 tile.garage_door.name=Garagentor
 tile.jail_door.name=Gefängnistür
-tile.space_door.name=Space Door
-tile.space_door2.name=Space Door
+tile.laboratory_door.name=Space Door
+tile.factory_door.name=Space Door
 tile.door_factory.name=Door Factory
 tile.custom_door.name=Custom Door
  
@@ -44,7 +44,14 @@ config.vanishingGlitchChance.comment=Wie oft werden die Rahmen instabil.
 door_movement.rotating_door=Rotating
 door_movement.sliding_door=Sliding on the side
 door_movement.sliding_up_door=Sliding up
-door_movement.split_door=Sliding up and down
+door_movement.sliding_split_door=Sliding up and down
+door_movement.rotating_split_door=Rotating up and down
+door_movement.vault_door=Vault
+door_movement.sliding_4ways=Sliding four ways
+door_movement.rotating_4ways=Rotating four ways
+door_movement.rotate_around=Rotating around
+door_movement.rotate_slide=Rotating and sliding
+door_movement.rotate_place=Rotating and replacing
 
 gui.door_factory.tab_properties=Properties
 gui.door_factory.tab_materials=Materials
@@ -56,7 +63,7 @@ gui.door_factory.door_sound=Sound type :
 gui.door_factory.door_sound.vanilla_door=Vanilla door
 gui.door_factory.door_sound.glass_door=Glass door
 gui.door_factory.door_sound.jail_door=Jail door
-gui.door_factory.door_sound.space_door=Pneumatic door
+gui.door_factory.door_sound.pneumatic_door=Pneumatic door
 
 
 gui.door_factory.frame_type=Frame type :

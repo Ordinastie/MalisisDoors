@@ -25,12 +25,10 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
-import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
-import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.Door;
+import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -44,7 +42,6 @@ public class FenceGateRenderer extends DoorRenderer
 	protected Shape baseLeft, baseRight;
 	protected Shape left, right;
 	protected boolean reversedOpen;
-	protected float hingeOffset = -0.5F + 0.125F / 2;
 
 	@Override
 	protected void initShape()
@@ -70,15 +67,12 @@ public class FenceGateRenderer extends DoorRenderer
 	@Override
 	protected void setup()
 	{
-		reversedOpen = ((blockMetadata >> 1) & 1) == 1;
-
 		// work on copies
 		left = new Shape(baseLeft);
 		right = new Shape(baseRight);
 
 		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
 		{
-			reversedOpen = !reversedOpen;
 			left.rotate(90, 0, 1, 0);
 			right.rotate(90, 0, 1, 0);
 		}
@@ -96,32 +90,12 @@ public class FenceGateRenderer extends DoorRenderer
 	@Override
 	public void renderTileEntity()
 	{
-		float fromAngle = 0, toAngle = 90;
-		float hingeX = hingeOffset;
-		float hingeZ = 0;
-		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
-		{
-			hingeX = 0;
-			hingeZ = -hingeOffset;
-		}
-
-		if (!reversedOpen)
-			toAngle = -90;
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-		{
-			float tmp = fromAngle;
-			fromAngle = toAngle;
-			toAngle = tmp;
-		}
-
-		Transformation animationLeft = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ)
-				.forTicks(tileEntity.getOpeningTime());
-		Transformation animationRight = new Rotation(-fromAngle, -toAngle).aroundAxis(0, 1, 0).offset(-hingeX, 0, -hingeZ)
-				.forTicks(tileEntity.getOpeningTime());
+		IDoorMovement mvt = tileEntity.getDescriptor().getMovement();
 
 		ar.setStartTime(tileEntity.getStartTime());
-		ar.animate(left, animationLeft);
-		ar.animate(right, animationRight);
+
+		ar.animate(left, mvt.getTopTransformation(tileEntity));
+		ar.animate(right, mvt.getBottomTransformation(tileEntity));
 
 		drawShape(left, rp);
 		drawShape(right, rp);
