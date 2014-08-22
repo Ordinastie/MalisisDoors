@@ -5,7 +5,6 @@ import static net.minecraftforge.common.util.ForgeDirection.*;
 import java.util.List;
 import java.util.Random;
 
-import net.malisis.core.MalisisCore;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -216,7 +215,7 @@ public class PlayerSensor extends Block
 			{
 				if (isPowered(metadata)) //already active
 					return;
-				MalisisCore.message("Found!");
+
 				metadata |= FLAG_POWERED;
 				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
 				notifyPower(world, x, y, z);
