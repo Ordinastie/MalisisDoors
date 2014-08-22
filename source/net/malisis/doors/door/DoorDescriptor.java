@@ -130,7 +130,7 @@ public class DoorDescriptor
 
 	public String getTextureName()
 	{
-		return textureName;
+		return textureName != null ? textureName : name;
 	}
 
 	public void setTextureName(String textureName)
@@ -212,13 +212,26 @@ public class DoorDescriptor
 
 	public void readNBT(NBTTagCompound nbt)
 	{
-		block = Block.getBlockById(nbt.getInteger("block"));
-		item = Item.getItemById(nbt.getInteger("item"));
-		setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
-		setSound(DoorRegistry.getSound(nbt.getString("sound")));
-		setOpeningTime(nbt.getInteger("openingTime"));
-		setRequireRedstone(nbt.getBoolean("redstone"));
-		setDoubleDoor(nbt.getBoolean("doubleDoor"));
+		if (nbt.hasKey("name"))
+			name = nbt.getString("name");
+		if (nbt.hasKey("textureName"))
+			textureName = nbt.getString("textureName");
+		if (nbt.hasKey("hardness"))
+			hardness = nbt.getFloat("hardness");
+		if (nbt.hasKey("block"))
+			block = Block.getBlockById(nbt.getInteger("block"));
+		if (nbt.hasKey("item"))
+			item = Item.getItemById(nbt.getInteger("item"));
+		if (nbt.hasKey("movement"))
+			setMovement(DoorRegistry.getMovement(nbt.getString("movement")));
+		if (nbt.hasKey("sound"))
+			setSound(DoorRegistry.getSound(nbt.getString("sound")));
+		if (nbt.hasKey("openingTime"))
+			setOpeningTime(nbt.getInteger("openingTime"));
+		if (nbt.hasKey("redstone"))
+			setRequireRedstone(nbt.getBoolean("redstone"));
+		if (nbt.hasKey("doubleDoor"))
+			setDoubleDoor(nbt.getBoolean("doubleDoor"));
 	}
 
 	public void writeNBT(NBTTagCompound nbt)

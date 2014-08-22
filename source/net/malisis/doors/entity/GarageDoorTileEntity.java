@@ -68,6 +68,16 @@ public class GarageDoorTileEntity extends TileEntity
 		return state;
 	}
 
+	public boolean isOpened()
+	{
+		return (getBlockMetadata() & Door.FLAG_OPENED) != 0;
+	}
+
+	public boolean isReversed()
+	{
+		return (getBlockMetadata() & Door.FLAG_REVERSED) != 0;
+	}
+
 	public boolean isTopDoor()
 	{
 		return this == getTopDoor();

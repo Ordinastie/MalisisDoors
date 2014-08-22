@@ -208,7 +208,7 @@ public class Registers
 
 		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");
 
-		GameRegistry.addRecipe(new ItemStack(doorFactory), new Object[] { "ABA", "C C", "ADA", 'A', Blocks.planks, 'B', Items.iron_door,
+		GameRegistry.addRecipe(new ItemStack(doorFactory), new Object[] { "ABA", "C C", "ADA", 'A', Items.iron_ingot, 'B', Items.iron_door,
 				'C', Items.redstone, 'D', Blocks.piston });
 	}
 

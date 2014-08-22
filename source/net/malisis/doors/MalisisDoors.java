@@ -22,7 +22,7 @@ public class MalisisDoors implements IMalisisMod
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
-	public static final String version = "1.7.2-0.9.1";
+	public static final String version = "1.7.2-1.0";
 
 	public static MalisisDoors instance;
 	public static MalisisDoorsSettings settings;
@@ -60,7 +60,7 @@ public class MalisisDoors implements IMalisisMod
 	}
 
 	@EventHandler
-	public static void preInit(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		settings = new MalisisDoorsSettings(event.getSuggestedConfigurationFile());
 

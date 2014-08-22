@@ -91,11 +91,13 @@ public class FenceGateRenderer extends DoorRenderer
 	public void renderTileEntity()
 	{
 		IDoorMovement mvt = tileEntity.getDescriptor().getMovement();
+		if (mvt != null)
+		{
+			ar.setStartTime(tileEntity.getStartTime());
 
-		ar.setStartTime(tileEntity.getStartTime());
-
-		ar.animate(left, mvt.getTopTransformation(tileEntity));
-		ar.animate(right, mvt.getBottomTransformation(tileEntity));
+			ar.animate(left, mvt.getTopTransformation(tileEntity));
+			ar.animate(right, mvt.getBottomTransformation(tileEntity));
+		}
 
 		drawShape(left, rp);
 		drawShape(right, rp);

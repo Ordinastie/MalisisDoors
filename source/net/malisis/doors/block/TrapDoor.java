@@ -26,9 +26,6 @@ package net.malisis.doors.block;
 
 import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.door.Door;
-import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
@@ -55,8 +52,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 
 	private int renderId = -1;
 
-	private DoorDescriptor descriptor;
-
 	public TrapDoor()
 	{
 		super(Material.wood);
@@ -65,9 +60,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 		setStepSound(soundTypeWood);
 		setBlockName("trapdoor");
 		setBlockTextureName("trapdoor");
-
-		descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMouvement(TrapDoorMovement.class));
 	}
 
 	/**
@@ -108,10 +100,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		setBlockBounds(te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
+		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -119,10 +111,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -133,10 +125,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving())
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.getDescriptor().getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
 		if (aabb == null)
 			return null;
 		return setBlockBounds(aabb.offset(x, y, z));
@@ -147,9 +139,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)
 	{
-		TrapDoorTileEntity te = new TrapDoorTileEntity();
-		te.setDescriptor(descriptor);
-		return te;
+		return new TrapDoorTileEntity();
 	}
 
 	/**

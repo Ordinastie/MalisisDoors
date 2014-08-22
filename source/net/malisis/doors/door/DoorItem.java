@@ -48,6 +48,7 @@ public class DoorItem extends ItemDoor
 		this.descriptor = desc;
 
 		setUnlocalizedName(desc.getName());
+		setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 	}
 

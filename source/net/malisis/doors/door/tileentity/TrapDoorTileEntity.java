@@ -25,6 +25,9 @@
 package net.malisis.doors.door.tileentity;
 
 import net.malisis.doors.door.Door;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -33,6 +36,13 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class TrapDoorTileEntity extends DoorTileEntity
 {
+	public TrapDoorTileEntity()
+	{
+		DoorDescriptor descriptor = new DoorDescriptor();
+		descriptor.setMovement(DoorRegistry.getMouvement(TrapDoorMovement.class));
+		setDescriptor(descriptor);
+	}
+
 	@Override
 	public boolean isTopBlock(int x, int y, int z)
 	{

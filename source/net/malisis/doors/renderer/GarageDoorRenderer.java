@@ -27,6 +27,9 @@ package net.malisis.doors.renderer;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
@@ -35,9 +38,9 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 
@@ -45,15 +48,28 @@ import net.minecraft.client.renderer.DestroyBlockProgress;
  * @author Ordinastie
  * 
  */
-public class GarageDoorRenderer extends DoorRenderer
+public class GarageDoorRenderer extends BaseRenderer
 {
 	private GarageDoorTileEntity tileEntity;
+	protected int direction;
+	protected boolean opened;
+	protected boolean reversed;
+	protected boolean topBlock;
 
-	@Override
-	protected void initShape()
+	protected Shape baseShape;
+	protected Shape s;
+	protected RenderParameters rp;
+	protected AnimationRenderer ar = new AnimationRenderer(this);
+
+	public GarageDoorRenderer()
 	{
-		baseShape = ShapePreset.Cube();
-		baseShape.setSize(Door.DOOR_WIDTH, 1, 1);
+		rp = new RenderParameters();
+		rp.renderAllFaces.set(true);
+		rp.calculateAOColor.set(false);
+		rp.useBlockBounds.set(false);
+		rp.useBlockBrightness.set(false);
+		rp.calculateBrightness.set(false);
+		rp.interpolateUV.set(false);
 	}
 
 	@Override
@@ -62,7 +78,7 @@ public class GarageDoorRenderer extends DoorRenderer
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
 			enableBlending();
-			s = new Shape(baseShape);
+			s = ShapePreset.Cube().setSize(Door.DOOR_WIDTH, 1, 1);
 			s.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
 			rp.icon.set(null);
 			blockMetadata = Door.FLAG_TOPBLOCK;
@@ -70,40 +86,31 @@ public class GarageDoorRenderer extends DoorRenderer
 			return;
 		}
 
-		GarageDoorTileEntity te = (GarageDoorTileEntity) world.getTileEntity(x, y, z);
-		if (te == null || !te.isTopDoor())
+		tileEntity = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
+		if (tileEntity == null || !tileEntity.isTopDoor())
 		{
 			getBlockDamage = false;
 			return;
 		}
 
 		getBlockDamage = true;
-		super.render();
-	}
 
-	@Override
-	protected void setTileEntity()
-	{
-		tileEntity = (GarageDoorTileEntity) world.getTileEntity(x, y, z);
-	}
+		direction = tileEntity.getDirection();
+		opened = tileEntity.isOpened();
+		reversed = tileEntity.isReversed();
 
-	@Override
-	protected void setup()
-	{
-		initShape();
-		s = new Shape(baseShape);
-		s.rotate(-90 * tileEntity.getDirection(), 0, 1, 0);
-		s.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
-	}
-
-	@Override
-	protected void renderTileEntity()
-	{
-
-		if (!tileEntity.isTopDoor())
-			return;
+		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
+		rp.icon.set(null);
 
 		enableBlending();
+		renderTileEntity();
+	}
+
+	protected void renderTileEntity()
+	{
+		s = ShapePreset.Cube().setSize(Door.DOOR_WIDTH, 1, 1);
+		s.rotate(-90 * tileEntity.getDirection(), 0, 1, 0);
+		s.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
 
 		int t = GarageDoorTileEntity.maxOpenTime;
 		//set the start timer

@@ -68,12 +68,14 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	public void renderTileEntity()
 	{
-		ar.setStartTime(tileEntity.getStartTime());
-
 		IDoorMovement mvt = tileEntity.getMovement();
-		Transformation transformation = topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity);
+		if (mvt != null)
+		{
+			ar.setStartTime(tileEntity.getStartTime());
 
-		ar.animate(s, transformation);
+			Transformation transformation = topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity);
+			ar.animate(s, transformation);
+		}
 
 		drawShape(s, rp);
 	}

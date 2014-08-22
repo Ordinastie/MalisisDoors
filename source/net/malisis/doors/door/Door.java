@@ -88,6 +88,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		super(Material.wood);
 	}
 
+	public DoorDescriptor getDescriptor()
+	{
+		return descriptor;
+	}
+
 	// #region Icons
 	@SideOnly(Side.CLIENT)
 	@Override

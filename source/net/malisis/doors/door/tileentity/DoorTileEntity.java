@@ -53,6 +53,14 @@ public class DoorTileEntity extends TileEntity
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
 	{
+		if (descriptor.getMovement() == null)
+		{
+			if (getBlockType() == null)
+				return descriptor;
+
+			if (getBlockType() instanceof Door)
+				descriptor = ((Door) getBlockType()).getDescriptor();
+		}
 		return descriptor;
 	}
 
@@ -103,7 +111,7 @@ public class DoorTileEntity extends TileEntity
 
 	public IDoorMovement getMovement()
 	{
-		return descriptor != null ? descriptor.getMovement() : null;
+		return getDescriptor() != null ? getDescriptor().getMovement() : null;
 	}
 
 	public int getDirection()
@@ -304,7 +312,8 @@ public class DoorTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		descriptor = new DoorDescriptor(nbt);
+		if (descriptor == null)
+			descriptor = new DoorDescriptor(nbt);
 		setDoorState(DoorState.values()[nbt.getInteger("state")]);
 	}
 
