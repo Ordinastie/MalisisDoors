@@ -154,8 +154,8 @@ public class Registers
 
 	private static void registerVanishingBlock()
 	{
-		vanishingBlock = (new VanishingBlock()).setBlockName("vanishing_block");
-		vanishingDiamondBlock = (new VanishingDiamondBlock()).setBlockName("vanishing_block_diamond");
+		vanishingBlock = new VanishingBlock();
+		vanishingDiamondBlock = new VanishingDiamondBlock();
 
 		GameRegistry.registerBlock(vanishingBlock, VanishingBlockItem.class, vanishingBlock.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(vanishingDiamondBlock, vanishingDiamondBlock.getUnlocalizedName().substring(5));
@@ -177,8 +177,8 @@ public class Registers
 
 	private static void registerMixedBlock()
 	{
-		blockMixer = (new BlockMixer()).setBlockName("block_mixer");
-		mixedBlock = (new MixedBlock()).setBlockName("mixed_block");
+		blockMixer = new BlockMixer();
+		mixedBlock = new MixedBlock();
 
 		GameRegistry.registerBlock(blockMixer, blockMixer.getUnlocalizedName().substring(5));
 		GameRegistry.registerBlock(mixedBlock, MixedBlockBlockItem.class, mixedBlock.getUnlocalizedName().substring(5));

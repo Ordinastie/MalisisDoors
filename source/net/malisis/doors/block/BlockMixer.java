@@ -51,6 +51,8 @@ public class BlockMixer extends Block implements ITileEntityProvider
 	{
 		super(Material.iron);
 		setCreativeTab(MalisisDoors.tab);
+		setHardness(3.0F);
+		setBlockName("block_mixer");
 	}
 
 	@SideOnly(Side.CLIENT)

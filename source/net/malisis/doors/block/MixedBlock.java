@@ -54,6 +54,7 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	{
 		super(Material.rock);
 		setHardness(0.7F);
+		setBlockName("mixed_block");
 	}
 
 	@Override

@@ -73,6 +73,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 	public VanishingBlock()
 	{
 		super(Material.wood);
+		setBlockName("vanishing_block");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(0.5F);
 	}
