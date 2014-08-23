@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -194,7 +195,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if ((metadata & FLAG_TOPBLOCK) == 0)
 		{
 			boolean flag = false;
-
+			ItemStack itemStack = getDoorItemStack(world, x, y, z);
 			if (world.getBlock(x, y + 1, z) != this)
 			{
 				world.setBlockToAir(x, y, z);
@@ -212,8 +213,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 			if (flag)
 			{
-				if (!world.isRemote)
-					dropBlockAsItem(world, x, y, z, metadata, 0);
+				if (!world.isRemote && itemStack != null)
+					dropBlockAsItem(world, x, y, z, itemStack);
 			}
 			else
 			{
@@ -237,6 +238,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 
 	// #end Events
+
+	protected ItemStack getDoorItemStack(IBlockAccess world, int x, int y, int z)
+	{
+		return new ItemStack(descriptor.getItem(), 1);
+	}
 
 	@Override
 	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_)

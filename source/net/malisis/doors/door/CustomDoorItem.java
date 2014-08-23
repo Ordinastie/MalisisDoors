@@ -163,7 +163,8 @@ public class CustomDoorItem extends DoorItem
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		te.getDescriptor().writeNBT(nbt);
+		if (te.getDescriptor() != null)
+			te.getDescriptor().writeNBT(nbt);
 
 		nbt.setInteger("frame", Block.getIdFromBlock(te.getFrame()));
 		nbt.setInteger("topMaterial", Block.getIdFromBlock(te.getTopMaterial()));

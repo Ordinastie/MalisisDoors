@@ -53,7 +53,7 @@ public class DoorTileEntity extends TileEntity
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
 	{
-		if (descriptor.getMovement() == null)
+		if (descriptor == null || descriptor.getMovement() == null)
 		{
 			if (getBlockType() == null)
 				return descriptor;

@@ -38,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
@@ -103,9 +104,19 @@ public class CustomDoor extends Door
 			DoorTileEntity te = Door.getDoor(world, x, y, z);
 			if (!(te instanceof CustomDoorTileEntity))
 				return true;
-			dropBlockAsItem(world, x, y, z, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
+			if (!te.isTopBlock(x, y, z))
+				dropBlockAsItem(world, x, y, z, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
 		}
 		return super.removedByPlayer(world, player, x, y, z);
+	}
+
+	@Override
+	protected ItemStack getDoorItemStack(IBlockAccess world, int x, int y, int z)
+	{
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (!(te instanceof CustomDoorTileEntity))
+			return null;
+		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
 	}
 
 	@Override
