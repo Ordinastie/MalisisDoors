@@ -57,7 +57,7 @@ public class Sliding4WaysMovement implements IDoorMovement
 		if (dir == DIR_NORTH)
 		{
 			Z = DOOR_WIDTH;
-			if (opened && topBlock == !reversed)
+			if (opened && topBlock == reversed)
 			{
 				x += reversed ? left : right;
 				X += reversed ? left : right;
