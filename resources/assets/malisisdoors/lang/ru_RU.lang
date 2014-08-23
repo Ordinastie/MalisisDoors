@@ -1,6 +1,10 @@
 item.wood_sliding_door.name=Деревянные раздвижные двери
 item.iron_sliding_door.name=Железные раздвижные двери
 item.jail_door.name=Тюремная дверь
+item.laboratory_door.name=Лабораторная дверь
+item.factory_door.name=Заводская дверь
+item.custom_door.name=Дверь на заказ
+
 tile.player_sensor.name=Сенсор игрока
 tile.vanishing_block_wood.name=Деревянная рамка-транслятор
 tile.vanishing_block_iron.name=Железная рамка-транслятор
@@ -10,6 +14,10 @@ tile.block_mixer.name=Смешиватель блоков
 tile.mixed_block.name=Микс-Блок
 tile.garage_door.name=Гаражные ворота
 tile.jail_door.name=Тюремная дверь
+tile.laboratory_door.name=Лабораторная дверь
+tile.factory_door.name=Фабричная дверь
+tile.door_factory.name=Дверная фабрика
+tile.custom_door.name=Дверь на заказ
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда> для управления настройками мода
 
@@ -29,6 +37,41 @@ config.enableVanishingBlocks=Включить использование рам�
 
 config.enableVanishingGlitch=Включает "мерцающий" эффект рамок-трансляторов
 config.enableVanishingGlitch.comment=Блоки в рамках-трансляторах периодически становятся нестабильными и на время выпадают из своего измерения.
- 
+
 config.vanishingGlitchChance=Частота эффекта "мерцания" рамок-трансляторов
 config.vanishingGlitchChance.comment=Как часто блоки в рамках-трансляторах будут нестабильны.
+
+door_movement.rotating_door=Обычное открывание
+door_movement.sliding_door=Сдвиг в сторону
+door_movement.sliding_up_door=Сдвиг вверх
+door_movement.split_door=Сдвиг вверх и вниз
+
+door_movement.rotating_door=Обычное открывание
+door_movement.sliding_door=Сдвиг в сторону
+door_movement.sliding_up_door=Сдвиг вверх
+door_movement.sliding_split_door=Сдвиг вверх и вниз
+door_movement.rotating_split_door=Вращение вверх и вниз
+door_movement.vault_door=Дверь Убежища
+door_movement.sliding_4ways=4-сторонний сдвиг
+door_movement.rotating_4ways=4-стороннее вращение
+door_movement.rotate_around=Прислонно-поворотное
+door_movement.rotate_slide=Прислонно-сдвижное
+door_movement.rotate_place=Прислонно-выдвижное
+
+gui.door_factory.tab_properties=Свойства
+gui.door_factory.tab_materials=Материалы
+gui.door_factory.door_movement=Движение
+gui.door_factory.door_open_time=Время открытия
+gui.door_factory.door_require_redstone=Требуется сигнал красного камня
+gui.door_factory.door_double_door=Двойная дверь
+gui.door_factory.door_sound=Тип звука
+gui.door_factory.door_sound.vanilla_door="Ванильная" дверь
+gui.door_factory.door_sound.glass_door=Стеклянная дверь
+gui.door_factory.door_sound.jail_door=Тюремная дверь
+gui.door_factory.door_sound.pneumatic_door=Пневматическая дверь
+
+
+gui.door_factory.frame_type=Материал дверной рамы
+gui.door_factory.top_material=Материал верхней части
+gui.door_factory.bottom_material=Материал нижней части
+gui.door_factory.create_door=Изготовить дверь

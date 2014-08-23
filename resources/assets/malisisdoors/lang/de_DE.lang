@@ -1,10 +1,10 @@
 item.wood_sliding_door.name=Holz-Schiebetür
 item.iron_sliding_door.name=Eisen-Schiebetür
 item.jail_door.name=Gefängnistür
-item.laboratory_door.name=Space Door
-item.factory_door.name=Space Door
-item.custom_door.name=Custom Door
-
+item.laboratory_door.name=Labortür
+item.factory_door.name=Fabriktür
+item.custom_door.name=Eigene Tür
+ 
 tile.player_sensor.name=Spielersensor
 tile.vanishing_block_wood.name=Schwindender Holzrahmen
 tile.vanishing_block_iron.name=Schwindender Eisenrahmen
@@ -14,10 +14,10 @@ tile.block_mixer.name=Blockmischer
 tile.mixed_block.name=Gemischter Block
 tile.garage_door.name=Garagentor
 tile.jail_door.name=Gefängnistür
-tile.laboratory_door.name=Space Door
-tile.factory_door.name=Space Door
-tile.door_factory.name=Door Factory
-tile.custom_door.name=Custom Door
+tile.laboratory_door.name=Labortür
+tile.factory_door.name=Fabriktür
+tile.door_factory.name=Türfabrik
+tile.custom_door.name=Eigene Tür
  
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
@@ -40,33 +40,34 @@ config.enableVanishingGlitch.comment=Rahmen werden kurzzeitig instabil und falle
  
 config.vanishingGlitchChance=Häufigkeit des Wackelns von verschw. Rahmen
 config.vanishingGlitchChance.comment=Wie oft werden die Rahmen instabil.
+ 
+door_movement.rotating_door=Aufschwingend
+door_movement.sliding_door=Auflgeitend
+door_movement.sliding_up_door=Aufgleitend (hoch)
+door_movement.sliding_split_door=Aufgleitend (hoch und runter)
+door_movement.rotating_split_door=Aufklappend
+door_movement.vault_door=Tresor
+door_movement.sliding_4ways=Aufgleitend (4 Richtungen)
+door_movement.rotating_4ways=Aufklappend (4 Richtungen)
+door_movement.rotate_around=
+door_movement.rotate_slide=Aufklappen und -gleiten
+door_movement.rotate_place=Aufklappen und Ersetzen
+ 
+gui.door_factory.tab_properties=Eigenschaften
+gui.door_factory.tab_materials=Materialien
+gui.door_factory.door_movement=Bewegung
+gui.door_factory.door_open_time=Öffnungszeit
+gui.door_factory.door_require_redstone=Benötigt Redstone
+gui.door_factory.door_double_door=Doppeltür
+gui.door_factory.door_sound=Geräusch
+gui.door_factory.door_sound.vanilla_door=Vanilla-Tür
+gui.door_factory.door_sound.glass_door=Glasstür
+gui.door_factory.door_sound.jail_door=Gefängnistür
+gui.door_factory.door_sound.pneumatic_door=Pneumatiktür
+ 
+ 
+gui.door_factory.frame_type=Rahmenart
+gui.door_factory.top_material=Material oben
+gui.door_factory.bottom_material=Material unten
+gui.door_factory.create_door=Tür bauen
 
-door_movement.rotating_door=Rotating
-door_movement.sliding_door=Sliding on the side
-door_movement.sliding_up_door=Sliding up
-door_movement.sliding_split_door=Sliding up and down
-door_movement.rotating_split_door=Rotating up and down
-door_movement.vault_door=Vault
-door_movement.sliding_4ways=Sliding four ways
-door_movement.rotating_4ways=Rotating four ways
-door_movement.rotate_around=Rotating around
-door_movement.rotate_slide=Rotating and sliding
-door_movement.rotate_place=Rotating and replacing
-
-gui.door_factory.tab_properties=Properties
-gui.door_factory.tab_materials=Materials
-gui.door_factory.door_movement=Movement :
-gui.door_factory.door_open_time=Opening time :
-gui.door_factory.door_require_redstone=Requires redstone :
-gui.door_factory.door_double_door=Double door :
-gui.door_factory.door_sound=Sound type :
-gui.door_factory.door_sound.vanilla_door=Vanilla door
-gui.door_factory.door_sound.glass_door=Glass door
-gui.door_factory.door_sound.jail_door=Jail door
-gui.door_factory.door_sound.pneumatic_door=Pneumatic door
-
-
-gui.door_factory.frame_type=Frame type :
-gui.door_factory.top_material=Top block material :
-gui.door_factory.bottom_material=Bottom block material :
-gui.door_factory.create_door=Build door
