@@ -41,6 +41,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -168,6 +170,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		return inventory;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public MalisisGui getGui(MalisisInventoryContainer container)
 	{

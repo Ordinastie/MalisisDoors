@@ -91,9 +91,9 @@ public class PlayerSensor extends Block
 		else if (dir == NORTH)
 			setBlockBounds(f, f, 1 - f, 1 - f, 2 * f, 1);
 		else if (dir == DOWN)
-			setBlockBounds(f, 1 - f / 2, 0.5F - f / 2, 1 - f, 1, 0.5F + f / 2);
+			setBlockBounds(0.5F - f, 1 - f / 2, 0.5F - f, 0.5F + f, 1, 0.5F + f);
 		else if (dir == UP)
-			setBlockBounds(f, 0, 0.5F - f / 2, 1 - f, f / 2, 0.5F + f / 2);
+			setBlockBounds(0.5F - f, 0, 0.5F - f, 0.5F + f, f / 2, 0.5F + f);
 	}
 
 	@Override
@@ -245,15 +245,7 @@ public class PlayerSensor extends Block
 		world.notifyBlocksOfNeighborChange(x, y, z, this);
 
 		ForgeDirection dir = getDirection(world, x, y, z);
-
 		world.notifyBlocksOfNeighborChange(x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ, this);
-		if (dir == UP || dir == DOWN)
-		{
-			world.notifyBlocksOfNeighborChange(x - 1, y - dir.offsetY, z, this);
-			world.notifyBlocksOfNeighborChange(x + 1, y - dir.offsetY, z, this);
-			world.notifyBlocksOfNeighborChange(x, y - dir.offsetY, z - 1, this);
-			world.notifyBlocksOfNeighborChange(x, y - dir.offsetY, z + 1, this);
-		}
 	}
 
 	/**
