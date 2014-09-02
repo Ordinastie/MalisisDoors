@@ -59,6 +59,6 @@ public class ShojiDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe(new Object[] { "AB", "AB", "AB", 'A', Items.paper, 'B', Blocks.glass });
+		setRecipe(new Object[] { "AB", "AB", "AB", 'A', Blocks.planks, 'B', Items.paper });
 	}
 }
