@@ -116,22 +116,18 @@ public class CustomDoorItem extends DoorItem
 		if (topMaterialBlock == null)
 			topMaterialBlock = Block.getBlockFromItem(topMaterialItemStack.getItem());
 
-		int topMaterialMetadata;
+		int topMaterialMetadata = topMaterialItemStack.getItemDamage();
 		if (topMaterialItemStack.getItem() instanceof ItemBlock)
 			topMaterialMetadata = ((ItemBlock) topMaterialItemStack.getItem()).getMetadata(topMaterialItemStack.getItemDamage());
-		else
-			topMaterialMetadata = topMaterialItemStack.getItemDamage();
 
 		//bottom material
 		Block bottomMaterialBlock = itemsAllowed.get(bottomMaterialItemStack.getItem());
 		if (bottomMaterialBlock == null)
 			bottomMaterialBlock = Block.getBlockFromItem(bottomMaterialItemStack.getItem());
 
-		int bottomMaterialMetadata;
+		int bottomMaterialMetadata = bottomMaterialItemStack.getItemDamage();
 		if (bottomMaterialItemStack.getItem() instanceof ItemBlock)
 			bottomMaterialMetadata = ((ItemBlock) bottomMaterialItemStack.getItem()).getMetadata(bottomMaterialItemStack.getItemDamage());
-		else
-			bottomMaterialMetadata = bottomMaterialItemStack.getItemDamage();
 
 		//NBT
 		NBTTagCompound nbt = new NBTTagCompound();

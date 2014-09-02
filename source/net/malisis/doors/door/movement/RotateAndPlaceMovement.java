@@ -63,6 +63,30 @@ public class RotateAndPlaceMovement implements IDoorMovement
 		else if ((dir == DIR_SOUTH && !opened) || (dir == DIR_EAST && opened && !reversed) || (dir == DIR_WEST && opened && reversed))
 			z = 1 - DOOR_WIDTH;
 
+		if (opened)
+		{
+			if (dir == DIR_NORTH)
+			{
+				z -= 0.5F;
+				Z -= 0.5F;
+			}
+			else if (dir == DIR_SOUTH)
+			{
+				z += 0.5F;
+				Z += 0.5F;
+			}
+			else if (dir == DIR_EAST)
+			{
+				x += 0.5F;
+				X += 0.5F;
+			}
+			else if (dir == DIR_WEST)
+			{
+				x -= 0.5F;
+				X -= 0.5F;
+			}
+		}
+
 		if (selBox)
 		{
 			if (!topBlock)

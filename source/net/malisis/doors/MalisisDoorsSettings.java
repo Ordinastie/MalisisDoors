@@ -39,7 +39,9 @@ public class MalisisDoorsSettings extends Settings
 	@ConfigurationSetting
 	public static Setting<Boolean> enableMixedBlocks = new BooleanSetting("config.enableMixedBlocks", true);
 	@ConfigurationSetting
-	public static Setting<Boolean> simpleMixedBlockRendering = new BooleanSetting("config.simpleMixedBlockRendering", true);
+	public static Setting<Boolean> enhancedMixedBlockPlacement = new BooleanSetting("config.enhancedMixedBlockPlacement", true);
+	@ConfigurationSetting
+	public static Setting<Boolean> simpleMixedBlockRendering = new BooleanSetting("config.simpleMixedBlockRendering", false);
 	@ConfigurationSetting
 	public static Setting<Boolean> enableVanishingBlocks = new BooleanSetting("config.enableVanishingBlocks", true);
 	@ConfigurationSetting
@@ -59,5 +61,7 @@ public class MalisisDoorsSettings extends Settings
 		simpleMixedBlockRendering.setComment("config.simpleMixedBlockRendering.comment1", "config.simpleMixedBlockRendering.comment2");
 		enableVanishingGlitch.setComment("config.enableVanishingGlitch.comment");
 		vanishingGlitchChance.setComment("config.vanishingGlitchChance.comment");
+		enhancedMixedBlockPlacement
+				.setComment("config.enhancedMixedBlockPlacement.comment1", "config.enhancedMixedBlockPlacement.comment2");
 	}
 }

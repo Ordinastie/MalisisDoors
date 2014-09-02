@@ -24,92 +24,114 @@
 
 package net.malisis.doors.renderer.block;
 
+import java.util.List;
+
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.Vertex;
-import net.malisis.core.renderer.preset.FacePreset;
 import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
 public class MixedBlockRenderer extends BaseRenderer
 {
-	private static int currentPass;
 	private int mixedBlockMetadata;
+	private MixedBlockTileEntity tileEntity;
+	private RenderParameters rp;
+	private Block block1;
+	private Block block2;
+	private int metadata1;
+	private int metadata2;
+
+	private boolean setup()
+	{
+		if (renderType == TYPE_ITEM_INVENTORY)
+		{
+			if (!itemStack.hasTagCompound())
+				return false;
+			block1 = Block.getBlockById(itemStack.getTagCompound().getInteger("block1"));
+			block2 = Block.getBlockById(itemStack.getTagCompound().getInteger("block2"));
+
+			metadata1 = itemStack.getTagCompound().getInteger("metadata1");
+			metadata2 = itemStack.getTagCompound().getInteger("metadata2");
+
+			mixedBlockMetadata = 3;
+		}
+		else if (renderType == TYPE_ISBRH_WORLD)
+		{
+			tileEntity = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+			if (tileEntity == null)
+				return false;
+
+			block1 = tileEntity.block1;
+			block2 = tileEntity.block2;
+
+			metadata1 = tileEntity.metadata1;
+			metadata2 = tileEntity.metadata2;
+
+			mixedBlockMetadata = blockMetadata;
+		}
+
+		if (block1 == null || block2 == null)
+			return false;
+
+		return true;
+	}
 
 	@Override
 	public void render()
 	{
+		if (!setup())
+			return;
+
+		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
+		{
+			renderSimple();
+			return;
+		}
+
 		if (renderType == TYPE_ITEM_INVENTORY)
-			renderItem();
-		else if (renderType == TYPE_ISBRH_WORLD)
-			renderWorld();
+		{
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
+			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+			enableBlending();
+		}
+
+		set(block1, metadata1);
+		drawPass(true);
+		set(block2, metadata2);
+		drawPass(false);
 	}
 
-	private void renderItem()
+	private void setColor()
 	{
-		if (!itemStack.hasTagCompound())
-			return;
-
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		enableBlending();
-
-		Block b1 = Block.getBlockById(itemStack.getTagCompound().getInteger("block1"));
-		Block b2 = Block.getBlockById(itemStack.getTagCompound().getInteger("block2"));
-
-		int metadata1 = itemStack.getTagCompound().getInteger("metadata1");
-		int metadata2 = itemStack.getTagCompound().getInteger("metadata2");
-
-		mixedBlockMetadata = 3;
-
-		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
+		int color = renderType == TYPE_ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
+		rp.colorMultiplier.set(0xFFFFFF);
+		if (block instanceof BlockGrass)
 		{
-			renderSimple(b1, metadata1, b2, metadata2);
+			RenderParameters rpGrass = new RenderParameters();
+			rpGrass.colorMultiplier.set(color);
+			rpGrass.usePerVertexAlpha.set(true);
+			rpGrass.useBlockBounds.set(false);
+			shape.setParameters("Top", rpGrass, true);
 		}
 		else
-		{
-			set(b1, metadata1);
-			drawPass(0);
-			set(b2, metadata2);
-			drawPass(1);
-		}
-
+			rp.colorMultiplier.set(color);
 	}
 
-	private void renderWorld()
-	{
-		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		if (te == null)
-			return;
-
-		mixedBlockMetadata = blockMetadata;
-		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
-			renderSimple(te.block1, te.metadata1, te.block2, te.metadata2);
-		else
-		{
-			if (currentPass == 0)
-			{
-				set(te.block1, te.metadata1);
-			}
-			else
-			{
-				GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
-				set(te.block2, te.metadata2);
-			}
-			if (block instanceof Block)
-				drawPass(currentPass);
-		}
-	}
-
-	private void renderSimple(Block block1, int metadata1, Block block2, int metadata2)
+	private void renderSimple()
 	{
 		boolean reversed = false;
 		float width = 1;
@@ -118,102 +140,110 @@ public class MixedBlockRenderer extends BaseRenderer
 		float offsetX = 0;
 		float offestY = 0;
 		float offsetZ = 0;
+		ForgeDirection dir = ForgeDirection.getOrientation(mixedBlockMetadata);
 
-		if (mixedBlockMetadata == 0 || mixedBlockMetadata == 1)
+		if (dir == ForgeDirection.DOWN || dir == ForgeDirection.UP)
 		{
 			height = 0.5F;
 			offestY = 0.5F;
-			if (mixedBlockMetadata == 1)
+			if (dir == ForgeDirection.UP)
 				reversed = true;
 		}
-		if (mixedBlockMetadata == 4 || mixedBlockMetadata == 5)
+		if (dir == ForgeDirection.WEST || dir == ForgeDirection.EAST)
 		{
 			width = 0.5F;
 			offsetX = 0.5F;
-			if (mixedBlockMetadata == 5)
+			if (dir == ForgeDirection.EAST)
 				reversed = true;
 		}
-		if (mixedBlockMetadata == 2 || mixedBlockMetadata == 3)
+		if (dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH)
 		{
 			depth = 0.5F;
 			offsetZ = 0.5F;
-			if (mixedBlockMetadata == 3)
+			if (dir == ForgeDirection.SOUTH)
 				reversed = true;
 		}
 
-		if (renderType == TYPE_ISBRH_WORLD)
-		{
-			//MalisisCore.message("%s and %s", face1, face2);
-		}
+		Shape baseShape = ShapePreset.Cube();
+		baseShape.setSize(width, height, depth);
 
-		Shape shape = ShapePreset.Cube();
-		shape.setSize(width, height, depth);
-
-		RenderParameters rp = new RenderParameters();
-		rp.renderAllFaces.set(true);
+		rp = new RenderParameters();
+		rp.useBlockBounds.set(false);
 
 		Block b = reversed ? block2 : block1;
 		int m = reversed ? metadata2 : metadata1;
-		if (b instanceof Block && b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
-		{
-			set(b, m);
-			drawShape(shape, rp);
-		}
+		set(b, m);
+		shape = new Shape(baseShape);
+		setColor();
+		drawShape(shape, rp);
 
 		b = reversed ? block1 : block2;
 		m = reversed ? metadata1 : metadata2;
-		if (b instanceof Block && b.canRenderInPass(currentPass) || renderType == TYPE_ITEM_INVENTORY)
-		{
-			shape.translate(offsetX, offestY, offsetZ);
-			set(b, m);
-			drawShape(shape, rp);
-		}
+		set(b, m);
+		shape = new Shape(baseShape);
+		shape.translate(offsetX, offestY, offsetZ);
+
+		setColor();
+		drawShape(shape, rp);
 	}
 
-	private void drawPass(int pass)
+	private void drawPass(boolean firstBlock)
 	{
-		RenderParameters rp = new RenderParameters();
+		shape = ShapePreset.Cube();
+		ForgeDirection dir = ForgeDirection.getOrientation(mixedBlockMetadata);
+		if (firstBlock)
+			dir = dir.getOpposite();
+
+		if (shouldShadeFace(firstBlock))
+		{
+			List<Vertex> vertexes = shape.getVertexes(dir);
+			for (Vertex v : vertexes)
+				v.setAlpha(0);
+		}
+
+		if (firstBlock && renderType == TYPE_ISBRH_WORLD)
+			shape.shrink(shape.getFace(dir), 0.999F);
+
+		shape.removeFace(shape.getFace(dir));
+
+		rp = new RenderParameters();
 		rp.usePerVertexAlpha.set(true);
 		rp.useBlockBounds.set(false);
-		Shape cube = ShapePreset.Cube();
-		int color = renderType == TYPE_ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
-		ForgeDirection dir = ForgeDirection.getOrientation(mixedBlockMetadata);
 
-		String name = dir.name().toLowerCase();
-		if (dir == ForgeDirection.UP)
-			name = "top";
-		if (dir == ForgeDirection.DOWN)
-			name = "bottom";
+		setColor();
 
-		if (block instanceof BlockGrass)
-		{
-			RenderParameters rpGrass = new RenderParameters();
-			rpGrass.colorMultiplier.set(color);
-			rpGrass.usePerVertexAlpha.set(true);
-			rpGrass.useBlockBounds.set(false);
-			cube.setParameters(FacePreset.Top(), rpGrass, true);
-		}
-		else
-			rp.colorMultiplier.set(color);
-
-		if (pass == 1)
-		{
-			for (Face f : cube.getFaces())
-			{
-				for (Vertex v : f.getVertexes())
-				{
-					if (v.name().toLowerCase().contains(name))
-						v.setAlpha(0);
-				}
-			}
-		}
-
-		drawShape(cube, rp);
+		drawShape(shape, rp);
 	}
 
-	public static void setRenderPass(int pass)
+	protected boolean shouldShadeFace(Boolean firstBlock)
 	{
-		currentPass = pass;
+		Block[] shaded = new Block[] { Blocks.glass, Blocks.leaves, Blocks.leaves2 };
+		if (block.canRenderInPass(1))
+			return true;
+		Block other = firstBlock ? block2 : block1;
+		if (other.canRenderInPass(1))
+			return true;
+		if (ArrayUtils.contains(shaded, block) || ArrayUtils.contains(shaded, other))
+			return true;
+
+		return !firstBlock;
 	}
 
+	@Override
+	protected boolean shouldRenderFace(Face face)
+	{
+		if (renderType != TYPE_ISBRH_WORLD || world == null || block == null)
+			return true;
+		if (shapeParams != null && shapeParams.renderAllFaces.get())
+			return true;
+		if (renderBlocks != null && renderBlocks.renderAllFaces == true)
+			return true;
+		RenderParameters p = face.getParameters();
+		if (p.direction.get() == null)
+			return true;
+
+		boolean b = MalisisDoors.Blocks.mixedBlock.shouldSideBeRendered(world, x + p.direction.get().offsetX,
+				y + p.direction.get().offsetY, z + p.direction.get().offsetZ, p.direction.get().ordinal());
+		return b;
+	}
 }

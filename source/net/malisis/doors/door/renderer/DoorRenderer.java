@@ -114,6 +114,7 @@ public class DoorRenderer extends BaseRenderer
 
 	protected void renderTileEntity()
 	{
+		enableBlending();
 		ar.setStartTime(tileEntity.getStartTime());
 
 		Shape tmp = new Shape(s).translate(0, 1F, 0);

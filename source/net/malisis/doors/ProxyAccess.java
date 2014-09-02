@@ -24,7 +24,7 @@
 
 package net.malisis.doors;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 
 import lombok.Delegate;
 import net.malisis.core.MalisisCore;
@@ -41,7 +41,7 @@ import net.minecraft.world.storage.WorldInfo;
 
 public class ProxyAccess
 {
-	private static HashMap<IBlockAccess, IBlockAccess> cache = new HashMap<>();
+	private static WeakHashMap<IBlockAccess, IBlockAccess> cache = new WeakHashMap();
 	private static World tmpCache;
 	private static boolean worldInstanciationFailed = false;
 
@@ -249,6 +249,12 @@ public class ProxyAccess
 		@Override
 		public void calculateInitialWeatherBody()
 		{}
+
+		@Override
+		protected int func_152379_p()
+		{
+			return 0;
+		}
 
 	}
 }

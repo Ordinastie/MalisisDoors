@@ -6,8 +6,14 @@ import net.malisis.core.client.gui.component.UISlot;
 import net.malisis.core.client.gui.component.container.UIPlayerInventory;
 import net.malisis.core.client.gui.component.container.UIWindow;
 import net.malisis.core.client.gui.component.decoration.UIProgressBar;
+import net.malisis.core.client.gui.component.interaction.UICheckBox;
+import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.BlockMixerTileEntity;
+
+import com.google.common.eventbus.Subscribe;
 
 public class BlockMixerGui extends MalisisGui
 {
@@ -15,6 +21,7 @@ public class BlockMixerGui extends MalisisGui
 
 	private UIProgressBar progressBar;
 	private UIProgressBar progressBarReversed;
+	private UICheckBox cbRender;
 
 	public BlockMixerGui(BlockMixerTileEntity tileEntity, MalisisInventoryContainer container)
 	{
@@ -23,12 +30,15 @@ public class BlockMixerGui extends MalisisGui
 
 		UIWindow window = new UIWindow("tile.block_mixer.name", 176, 166);
 
-		UISlot firstInputSlot = new UISlot(tileEntity.firstInput).setPosition(-60, 34, Anchor.CENTER);
-		UISlot secondInputSlot = new UISlot(tileEntity.secondInput).setPosition(60, 34, Anchor.CENTER);
-		UISlot outputSlot = new UISlot(tileEntity.output).setPosition(0, 34, Anchor.CENTER);
+		UISlot firstInputSlot = new UISlot(tileEntity.firstInput).setPosition(-60, 20, Anchor.CENTER);
+		UISlot secondInputSlot = new UISlot(tileEntity.secondInput).setPosition(60, 20, Anchor.CENTER);
+		UISlot outputSlot = new UISlot(tileEntity.output).setPosition(0, 20, Anchor.CENTER);
 
-		progressBar = new UIProgressBar().setPosition(-30, 35, Anchor.CENTER);
-		progressBarReversed = new UIProgressBar().setPosition(30, 35, Anchor.CENTER).setReversed();
+		progressBar = new UIProgressBar().setPosition(-30, 21, Anchor.CENTER);
+		progressBarReversed = new UIProgressBar().setPosition(30, 21, Anchor.CENTER).setReversed();
+
+		cbRender = new UICheckBox("gui.block_mixer.simple_rendering").setPosition(0, 50, Anchor.CENTER).register(this);
+		cbRender.setTooltip("gui.block_mixer.simple_rendering_tooltip");
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
 
@@ -38,6 +48,8 @@ public class BlockMixerGui extends MalisisGui
 
 		window.add(progressBar);
 		window.add(progressBarReversed);
+
+		window.add(cbRender);
 
 		window.add(playerInv);
 
@@ -49,6 +61,15 @@ public class BlockMixerGui extends MalisisGui
 	{
 		progressBar.setProgress(tileEntity.getMixTimer());
 		progressBarReversed.setProgress(tileEntity.getMixTimer());
+
+		cbRender.setChecked(MalisisDoorsSettings.simpleMixedBlockRendering.get());
+	}
+
+	@Subscribe
+	public void onCheck(ComponentEvent.ValueChanged<UICheckBox, Boolean> event)
+	{
+		MalisisDoorsSettings.simpleMixedBlockRendering.set(event.getNewValue());
+		MalisisDoors.settings.save();
 	}
 
 }

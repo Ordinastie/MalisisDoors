@@ -24,6 +24,7 @@
 
 package net.malisis.doors.item;
 
+import java.util.HashMap;
 import java.util.List;
 
 import net.malisis.doors.MalisisDoors;
@@ -31,6 +32,9 @@ import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,6 +42,15 @@ import net.minecraft.world.World;
 
 public class MixedBlockBlockItem extends ItemBlock
 {
+	private static HashMap<Item, Block> itemsAllowed = new HashMap<>();
+	static
+	{
+		itemsAllowed.put(Items.flint_and_steel, Blocks.fire);
+		itemsAllowed.put(Items.ender_pearl, Blocks.portal);
+		itemsAllowed.put(Items.water_bucket, Blocks.water);
+		itemsAllowed.put(Items.lava_bucket, Blocks.lava);
+	}
+
 	public MixedBlockBlockItem(Block block)
 	{
 		super(block);
@@ -51,21 +64,31 @@ public class MixedBlockBlockItem extends ItemBlock
 
 	public static ItemStack fromItemStacks(ItemStack is1, ItemStack is2)
 	{
-		Block block1 = Block.getBlockFromItem(is1.getItem());
-		Block block2 = Block.getBlockFromItem(is2.getItem());
-		if (!canBeMixed(block1, false) || !canBeMixed(block2, true))
+		if (!canBeMixed(is1) || !canBeMixed(is2))
 			return null;
 
-		int metadata1 = ((ItemBlock) is1.getItem()).getMetadata(is1.getItemDamage());
-		int metadata2;
+		//Blocks
+		Block block1 = itemsAllowed.get(is1.getItem());
+		if (block1 == null)
+			block1 = Block.getBlockFromItem(is1.getItem());
+		Block block2 = itemsAllowed.get(is2.getItem());
+		if (block2 == null)
+			block2 = Block.getBlockFromItem(is2.getItem());
+
+		//metadatas
+		int metadata1 = is1.getItemDamage();
+		if (is1.getItem() instanceof ItemBlock)
+			metadata1 = ((ItemBlock) is1.getItem()).getMetadata(is1.getItemDamage());
+
+		int metadata2 = is2.getItemDamage();
 		if (is2.getItem() instanceof ItemBlock)
 			metadata2 = ((ItemBlock) is2.getItem()).getMetadata(is2.getItemDamage());
-		else
-			metadata2 = is2.getItemDamage();
 
+		//last check
 		if (block1 == block2 && metadata1 == metadata2)
 			return null;
 
+		//nbt
 		ItemStack itemStack = new ItemStack(MalisisDoors.Blocks.mixedBlock, 1);
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("block1", Block.getIdFromBlock(block1));
@@ -76,9 +99,13 @@ public class MixedBlockBlockItem extends ItemBlock
 		return itemStack;
 	}
 
-	public static boolean canBeMixed(Block block, boolean second)
+	public static boolean canBeMixed(ItemStack itemStack)
 	{
-		return !(block instanceof MixedBlock) && (second || block.isOpaqueCube()) && block.getRenderType() != -1;
+		if (itemsAllowed.get(itemStack.getItem()) != null)
+			return true;
+
+		Block block = Block.getBlockFromItem(itemStack.getItem());
+		return !(block instanceof MixedBlock) && block.getRenderType() != -1;
 	}
 
 	public static ItemStack fromTileEntity(MixedBlockTileEntity te)

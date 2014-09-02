@@ -27,26 +27,31 @@ package net.malisis.doors.block;
 import java.util.ArrayList;
 
 import net.malisis.core.renderer.IBaseRendering;
+import net.malisis.core.util.EntityUtils;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
-import net.malisis.doors.renderer.block.MixedBlockRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockBreakable;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class MixedBlock extends BlockContainer implements IBaseRendering
+public class MixedBlock extends Block implements IBaseRendering, ITileEntityProvider
 {
 	private int renderType = -1;
 
@@ -74,6 +79,16 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 			return;
 
 		((MixedBlockTileEntity) world.getTileEntity(x, y, z)).set(itemStack);
+
+		if (MalisisDoorsSettings.enhancedMixedBlockPlacement.get())
+		{
+			ForgeDirection dir = EntityUtils.getEntityFacing(player, true);
+			if (!player.isSneaking())
+				dir = dir.getOpposite();
+			world.setBlockMetadataWithNotify(x, y, z, dir.ordinal(), 3);
+		}
+		else
+			world.notifyBlockChange(x, y, z, this);
 	}
 
 	@Override
@@ -81,6 +96,32 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	{
 		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
 		return MixedBlockBlockItem.fromTileEntity(te);
+	}
+
+	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	{
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		if (te == null || te.block1 == null || te.block2 == null)
+			return getLightValue();
+
+		return Math.max(te.block1.getLightValue(), te.block2.getLightValue());
+	}
+
+	@Override
+	public boolean canProvidePower()
+	{
+		return true;
+	}
+
+	@Override
+	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
+	{
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		if (te == null)
+			return 0;
+
+		return te.block1 == Blocks.redstone_block || te.block2 == Blocks.redstone_block ? 15 : 0;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -92,7 +133,7 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		int z = target.blockZ;
 
 		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		if (te == null)
+		if (te == null || te.block1 == null || te.block2 == null)
 			return true;
 
 		Block[] blocks = { te.block1, te.block2 };
@@ -145,7 +186,7 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		EntityDiggingFX fx;
 
 		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		if (te == null)
+		if (te == null || te.block1 == null || te.block2 == null)
 			return true;
 
 		Block[] blocks = { te.block1, te.block2 };
@@ -176,6 +217,7 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 		return new MixedBlockTileEntity();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{
@@ -219,9 +261,12 @@ public class MixedBlock extends BlockContainer implements IBaseRendering
 	}
 
 	@Override
-	public boolean canRenderInPass(int pass)
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		MixedBlockRenderer.setRenderPass(pass);
-		return true;
+		Block block = world.getBlock(x, y, z);
+		if (block instanceof MixedBlock || block instanceof BlockBreakable)
+			return false;
+
+		return super.shouldSideBeRendered(world, x, y, z, side);
 	}
 }

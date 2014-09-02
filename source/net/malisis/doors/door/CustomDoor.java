@@ -96,6 +96,7 @@ public class CustomDoor extends Door
 		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{

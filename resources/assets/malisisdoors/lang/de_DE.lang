@@ -71,3 +71,5 @@ gui.door_factory.top_material=Material oben
 gui.door_factory.bottom_material=Material unten
 gui.door_factory.create_door=Tür bauen
 
+gui.block_mixer.simple_rendering=Einfaches zeichnen rendern
+gui.block_mixer.simple_rendering_tooltip=Blöcke benötigen ein Chunk-Update um den Effekt zu sehen.

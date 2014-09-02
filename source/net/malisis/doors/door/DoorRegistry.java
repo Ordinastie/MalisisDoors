@@ -45,6 +45,7 @@ import net.malisis.doors.door.sound.GlassDoorSound;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.door.sound.JailDoorSound;
 import net.malisis.doors.door.sound.PneumaticSound;
+import net.malisis.doors.door.sound.ShojiDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
 
 /**
@@ -75,6 +76,7 @@ public class DoorRegistry
 		registerSound("glass_door", new GlassDoorSound());
 		registerSound("jail_door", new JailDoorSound());
 		registerSound("pneumatic_door", new PneumaticSound());
+		registerSound("shoji_door", new ShojiDoorSound());
 	}
 
 	//#region Movements

@@ -95,6 +95,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block customDoor;
 		public static Block laboratoryDoor;
 		public static Block factoryDoor;
+		public static Block shojiDoor;
 	}
 
 	public static class Items
@@ -105,6 +106,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Item customDoorItem;
 		public static Item laboratoryDoorItem;
 		public static Item facortyDoorItem;
+		public static Item shojiDoorItem;
 	}
 
 }

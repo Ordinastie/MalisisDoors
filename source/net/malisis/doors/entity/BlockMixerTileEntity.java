@@ -7,7 +7,6 @@ import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.inventory.MalisisSlot;
 import net.malisis.doors.gui.BlockMixerGui;
 import net.malisis.doors.item.MixedBlockBlockItem;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,9 +24,10 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 
 	public BlockMixerTileEntity()
 	{
-		firstInput = new MixerSlot(0, MixerSlot.FIRST);
-		secondInput = new MixerSlot(1, MixerSlot.SECOND);
-		output = new MixerSlot(2, MixerSlot.OUTPUT);
+		firstInput = new MixerSlot(0);
+		secondInput = new MixerSlot(1);
+		output = new MixerSlot(2);
+		output.setOutputSlot(true);
 		inventory = new MalisisInventory(this, new MalisisSlot[] { firstInput, secondInput, output });
 	}
 
@@ -111,25 +111,18 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 
 	public class MixerSlot extends MalisisSlot
 	{
-		public static final int FIRST = 0;
-		public static final int SECOND = 2;
-		public static final int OUTPUT = 3;
-
-		int slotType;
-
-		public MixerSlot(int index, int type)
+		public MixerSlot(int index)
 		{
 			super(index);
-			slotType = type;
 		}
 
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
-			if (slotType == OUTPUT)
+			if (isOutputSlot)
 				return false;
-			Block block = Block.getBlockFromItem(itemStack.getItem());
-			return MixedBlockBlockItem.canBeMixed(block, slotType == SECOND);
+
+			return MixedBlockBlockItem.canBeMixed(itemStack);
 		}
 	}
 }
