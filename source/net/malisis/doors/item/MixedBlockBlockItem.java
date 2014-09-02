@@ -45,7 +45,6 @@ public class MixedBlockBlockItem extends ItemBlock
 	private static HashMap<Item, Block> itemsAllowed = new HashMap<>();
 	static
 	{
-		itemsAllowed.put(Items.flint_and_steel, Blocks.fire);
 		itemsAllowed.put(Items.ender_pearl, Blocks.portal);
 		itemsAllowed.put(Items.water_bucket, Blocks.water);
 		itemsAllowed.put(Items.lava_bucket, Blocks.lava);
