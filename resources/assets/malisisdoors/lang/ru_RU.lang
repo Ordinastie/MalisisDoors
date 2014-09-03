@@ -4,6 +4,7 @@ item.jail_door.name=Тюремная дверь
 item.laboratory_door.name=Лабораторная дверь
 item.factory_door.name=Заводская дверь
 item.custom_door.name=Дверь на заказ
+item.shoji_door.name=Дверь Сёдзи
 
 tile.player_sensor.name=Сенсор игрока
 tile.vanishing_block_wood.name=Деревянная рамка-транслятор
@@ -18,6 +19,7 @@ tile.laboratory_door.name=Лабораторная дверь
 tile.factory_door.name=Фабричная дверь
 tile.door_factory.name=Дверная фабрика
 tile.custom_door.name=Дверь на заказ
+tile.shoji_door.name=Дверь Сёдзи
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда> для управления настройками мода
 
@@ -40,6 +42,10 @@ config.enableVanishingGlitch.comment=Блоки в рамках-транслят
 
 config.vanishingGlitchChance=Частота эффекта "мерцания" рамок-трансляторов
 config.vanishingGlitchChance.comment=Как часто блоки в рамках-трансляторах будут нестабильны.
+
+config.enhancedMixedBlockPlacement=Использовать продвинутую систему размещения микс-блоков
+config.enhancedMixedBlockPlacement.comment1=Позволяет разместить основу блока в точке взгляда, а не на стороне какого-либо ранее размещённого блока.
+config.enhancedMixedBlockPlacement.comment2=Используйте SHIFT чтобы изменить размещение блока.
 
 door_movement.rotating_door=Обычное открывание
 door_movement.sliding_door=Сдвиг в сторону
@@ -69,9 +75,13 @@ gui.door_factory.door_sound.vanilla_door="Ванильная" дверь
 gui.door_factory.door_sound.glass_door=Стеклянная дверь
 gui.door_factory.door_sound.jail_door=Тюремная дверь
 gui.door_factory.door_sound.pneumatic_door=Пневматическая дверь
+gui.door_factory.door_sound.shoji_door=Дверь Сёдзи
 
 
 gui.door_factory.frame_type=Материал дверной рамы
 gui.door_factory.top_material=Материал верхней части
 gui.door_factory.bottom_material=Материал нижней части
 gui.door_factory.create_door=Изготовить дверь
+
+gui.block_mixer.simple_rendering=Упрощённый рендеринг
+gui.block_mixer.simple_rendering_tooltip=Потребуется обновление чанка, чтобы изменения проявились.
