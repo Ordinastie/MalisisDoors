@@ -172,7 +172,7 @@ public class Registers
 				Items.iron_ingot, 'C', Items.ender_pearl });
 		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 2), new Object[] { "ABA", "BCB", "ABA", 'A', Items.redstone, 'B',
 				Items.gold_ingot, 'C', Items.ender_pearl });
-		GameRegistry.addRecipe(new ItemStack(vanishingDiamondBlock, 4, 3), new Object[] { "ABA", "BCB", "ABA", 'A', Items.redstone, 'B',
+		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 3), new Object[] { "ABA", "BCB", "ABA", 'A', Items.redstone, 'B',
 				Items.diamond, 'C', Items.ender_pearl });
 
 		GameRegistry.registerTileEntity(VanishingTileEntity.class, "vanishingTileEntity");

@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.renderer.block;
+package net.malisis.doors.renderer;
 
 import java.util.List;
 
@@ -48,11 +48,34 @@ public class MixedBlockRenderer extends BaseRenderer
 {
 	private int mixedBlockMetadata;
 	private MixedBlockTileEntity tileEntity;
-	private RenderParameters rp;
+	private Shape[][] shapes;
 	private Block block1;
 	private Block block2;
 	private int metadata1;
 	private int metadata2;
+
+	@Override
+	protected void initParameters()
+	{
+		rp = new RenderParameters();
+		rp.useBlockBounds.set(false);
+		rp.usePerVertexAlpha.set(true);
+	}
+
+	@Override
+	protected void initShapes()
+	{
+		super.initShapes();
+
+		shapes = new Shape[][] { new Shape[6], new Shape[6] };
+		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		{
+			Shape s0 = ShapePreset.Cube();
+			Shape s1 = ShapePreset.Cube();
+			shapes[0][dir.ordinal()] = s0.removeFace(s0.getFace(dir)).storeState();
+			shapes[1][dir.ordinal()] = s1.shrink(dir, 0.999F).removeFace(s1.getFace(dir)).storeState();
+		}
+	}
 
 	private boolean setup()
 	{
@@ -118,14 +141,11 @@ public class MixedBlockRenderer extends BaseRenderer
 	private void setColor()
 	{
 		int color = renderType == TYPE_ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
-		rp.colorMultiplier.set(0xFFFFFF);
 		if (block instanceof BlockGrass)
 		{
-			RenderParameters rpGrass = new RenderParameters();
-			rpGrass.colorMultiplier.set(color);
-			rpGrass.usePerVertexAlpha.set(true);
-			rpGrass.useBlockBounds.set(false);
-			shape.setParameters("Top", rpGrass, true);
+			rp.colorMultiplier.set(color);
+			shape.setParameters("Top", rp, true);
+			rp.colorMultiplier.reset();
 		}
 		else
 			rp.colorMultiplier.set(color);
@@ -164,35 +184,30 @@ public class MixedBlockRenderer extends BaseRenderer
 				reversed = true;
 		}
 
-		Shape baseShape = ShapePreset.Cube();
-		baseShape.setSize(width, height, depth);
-
-		rp = new RenderParameters();
-		rp.useBlockBounds.set(false);
-
 		Block b = reversed ? block2 : block1;
 		int m = reversed ? metadata2 : metadata1;
 		set(b, m);
-		shape = new Shape(baseShape);
 		setColor();
+
+		shape.resetState().setSize(width, height, depth);
 		drawShape(shape, rp);
 
 		b = reversed ? block1 : block2;
 		m = reversed ? metadata1 : metadata2;
 		set(b, m);
-		shape = new Shape(baseShape);
-		shape.translate(offsetX, offestY, offsetZ);
-
 		setColor();
+		shape.resetState().setSize(width, height, depth).translate(offsetX, offestY, offsetZ);
 		drawShape(shape, rp);
 	}
 
 	private void drawPass(boolean firstBlock)
 	{
-		shape = ShapePreset.Cube();
 		ForgeDirection dir = ForgeDirection.getOrientation(mixedBlockMetadata);
 		if (firstBlock)
 			dir = dir.getOpposite();
+
+		shape = shapes[firstBlock && renderType == TYPE_ISBRH_WORLD ? 1 : 0][dir.ordinal()];
+		shape.resetState();
 
 		if (shouldShadeFace(firstBlock))
 		{
@@ -201,17 +216,7 @@ public class MixedBlockRenderer extends BaseRenderer
 				v.setAlpha(0);
 		}
 
-		if (firstBlock && renderType == TYPE_ISBRH_WORLD)
-			shape.shrink(shape.getFace(dir), 0.999F);
-
-		shape.removeFace(shape.getFace(dir));
-
-		rp = new RenderParameters();
-		rp.usePerVertexAlpha.set(true);
-		rp.useBlockBounds.set(false);
-
 		setColor();
-
 		drawShape(shape, rp);
 	}
 
@@ -234,7 +239,7 @@ public class MixedBlockRenderer extends BaseRenderer
 	{
 		if (renderType != TYPE_ISBRH_WORLD || world == null || block == null)
 			return true;
-		if (shapeParams != null && shapeParams.renderAllFaces.get())
+		if (rp != null && rp.renderAllFaces.get())
 			return true;
 		if (renderBlocks != null && renderBlocks.renderAllFaces == true)
 			return true;

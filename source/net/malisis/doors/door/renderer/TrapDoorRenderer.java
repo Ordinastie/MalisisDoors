@@ -25,9 +25,6 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
-import net.malisis.core.renderer.animation.transformation.Transformation;
-import net.malisis.core.renderer.element.Face;
-import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.door.Door;
@@ -43,14 +40,18 @@ import net.minecraft.client.renderer.RenderBlocks;
 public class TrapDoorRenderer extends DoorRenderer
 {
 	@Override
-	protected void setup()
+	protected void initShapes()
 	{
-		s = ShapePreset.Cube();
-		s.setSize(1, Door.DOOR_WIDTH, 1);
+		shape = ShapePreset.Cube();
+		shape.setSize(1, Door.DOOR_WIDTH, 1);
+		shape.interpolateUV();
+		shape.storeState();
+	}
 
-		applyTexture(s);
-		rp.applyTexture.set(false);
-
+	@Override
+	protected void setup(boolean topBlock)
+	{
+		shape.resetState();
 		float angle = 0;
 		if (direction == TrapDoor.DIR_NORTH)
 			angle = 180;
@@ -58,35 +59,35 @@ public class TrapDoorRenderer extends DoorRenderer
 			angle = 90;
 		else if (direction == TrapDoor.DIR_WEST)
 			angle = 270;
-		s.rotate(angle, 0, 1, 0);
+		shape.rotate(angle, 0, 1, 0);
 
 		if (topBlock)
-			s.translate(0, 1 - Door.DOOR_WIDTH, 0);
+			shape.translate(0, 1 - Door.DOOR_WIDTH, 0);
 
 	}
 
 	@Override
 	public void renderTileEntity()
 	{
+		setup(topBlock);
+		ar.setStartTime(tileEntity.getStartTime());
+
 		IDoorMovement mvt = tileEntity.getMovement();
 		if (mvt != null)
-		{
-			ar.setStartTime(tileEntity.getStartTime());
+			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
 
-			Transformation transformation = topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity);
-			ar.animate(s, transformation);
-		}
-
-		drawShape(s, rp);
+		drawShape(shape, rp);
 	}
 
 	@Override
 	public void renderDestroyProgress()
 	{
+		setup(topBlock);
+		IDoorMovement mvt = tileEntity.getMovement();
+		if (mvt != null)
+			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
 		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
-		rp.applyTexture.set(true);
-		s = new Shape(new Face[] { s.getFaces()[4].setStandardUV(), s.getFaces()[5].setStandardUV() });
-		drawShape(s, rp);
+		drawShape(shape, rp);
 	}
 
 	@Override

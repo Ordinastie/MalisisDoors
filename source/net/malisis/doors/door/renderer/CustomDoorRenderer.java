@@ -24,8 +24,9 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
+import net.malisis.core.renderer.preset.FacePreset;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
@@ -41,18 +42,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class CustomDoorRenderer extends DoorRenderer
 {
-	private Shape baseFrameBottom;
-	private Shape baseFrameTop;
-	private Shape baseTopMaterial;
-	private Shape baseBottomMaterial;
-
-	private Shape frameBottom;
-	private Shape frameTop;
-	private Shape topMaterial;
-	private Shape bottomMaterial;
-
-	private Shape bottom;
 	private Shape top;
+	private Shape bottom;
 
 	private Block frameBlock;
 	private Block topMaterialBlock;
@@ -67,55 +58,44 @@ public class CustomDoorRenderer extends DoorRenderer
 	private float width;
 
 	@Override
-	protected void initShape()
+	protected void initShapes()
 	{
-		super.initShape();
 		width = 1.0F / 8.0F;
-		Shape frameBR = ShapePreset.Cube().setSize(width, 1, Door.DOOR_WIDTH);
-		Shape frameBL = new Shape(frameBR).translate(1 - width, 0, 0);
-		Shape frameB = ShapePreset.Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
-		baseFrameBottom = Shape.fromShapes(frameBR, frameBL, frameB).scale(1, 1, 0.995F);;
+		Shape frameR = ShapePreset.Cube().setSize(width, 1, Door.DOOR_WIDTH);
+		Shape frameL = new Shape(frameR).translate(1 - width, 0, 0);
+		Shape frame = ShapePreset.Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
+		frame.removeFace(frame.getFace("east")).removeFace(frame.getFace("west"));
+		frame = Shape.fromShapes(frameR, frameL, frame).scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
+		frame.interpolateUV();
+		Shape mat = new Shape(new Face[] { FacePreset.South(), FacePreset.North(), FacePreset.Top() });
+		mat.setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F).translate(width, width, Door.DOOR_WIDTH * 0.2F);
+		mat.applyMatrix();
 
-		Shape frameTR = new Shape(frameBR);
-		Shape frameTL = new Shape(frameBL);
-		Shape frameT = new Shape(frameB).translate(0, 1 - width, 0);
-		baseFrameTop = Shape.fromShapes(frameTR, frameTL, frameT).scale(1, 1, 0.995F);
+		bottom = new Shape();
+		bottom.addFaces(frame.getFaces(), "frame");
+		bottom.addFaces(mat.getFaces(), "material");
+		bottom.storeState();
 
-		baseBottomMaterial = ShapePreset.Cube().setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F)
-				.translate(width, width, Door.DOOR_WIDTH * 0.2F);
-		baseTopMaterial = new Shape(baseBottomMaterial).translate(0, -width, 0);
-	}
+		top = new Shape(bottom).rotate(180, 0, 0, 1);
+		top.storeState();
 
-	@Override
-	protected void initRenderParameters()
-	{
-		rp = new RenderParameters();
-		rp.renderAllFaces.set(true);
-		rp.calculateAOColor.set(false);
-		rp.useBlockBounds.set(false);
-		rp.useBlockBrightness.set(false);
-		rp.usePerVertexColor.set(true);
-		rp.interpolateUV.set(true);
 	}
 
 	@Override
 	public void render()
 	{
-		rp.applyTexture.set(false);
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
 			if (itemStack.stackTagCompound == null)
 				return;
-
-			setup();
 			renderInventory();
-
 			return;
 		}
 		else
+		{
+			//initShape();
 			super.render();
-		//reset to true for destroy progress
-		rp.applyTexture.set(true);
+		}
 	}
 
 	@Override
@@ -148,9 +128,12 @@ public class CustomDoorRenderer extends DoorRenderer
 	}
 
 	@Override
-	protected void setup()
+	protected void setup(boolean topBlock)
 	{
-		super.setup();
+		shape = topBlock ? top : bottom;
+
+		shape.resetState();
+
 		if (renderType == TYPE_TESR_WORLD)
 			setInfos(tileEntity);
 		else
@@ -159,73 +142,35 @@ public class CustomDoorRenderer extends DoorRenderer
 		if (frameBlock == null)
 			return;
 
-		rp.interpolateUV.set(true);
 		rp.icon.set(frameBlock.getIcon(2, frameMetadata));
+		rp.colorMultiplier.set(getColor(frameBlock));
+		shape.setParameters("frame", rp, true);
 
-		frameBottom = new Shape(baseFrameBottom);
-		applyTexture(frameBottom, rp);
-		frameBottom.setColor(getColor(frameBlock));
+		Block block = topBlock ? topMaterialBlock : bottomMaterialBlock;
+		int meta = topBlock ? topMaterialMetadata : bottomMaterialMetadata;
+		rp.icon.set(block.getIcon(2, meta));
+		rp.colorMultiplier.set(getColor(block));
+		shape.setParameters("material", rp, true);
 
-		frameTop = new Shape(baseFrameTop);
-		applyTexture(frameTop, rp);
-		frameTop.setColor(getColor(frameBlock));
-
-		rp.interpolateUV.set(false);
-		rp.icon.set(topMaterialBlock.getIcon(2, topMaterialMetadata));
-
-		topMaterial = new Shape(baseTopMaterial);
-		applyTexture(topMaterial, rp);
-		topMaterial.setColor(getColor(topMaterialBlock));
-
-		rp.icon.set(bottomMaterialBlock.getIcon(2, bottomMaterialMetadata));
-
-		bottomMaterial = new Shape(baseBottomMaterial);
-		applyTexture(bottomMaterial, rp);
-		bottomMaterial.setColor(getColor(bottomMaterialBlock));
-
-		bottom = Shape.fromShapes(frameBottom, bottomMaterial);
-		top = Shape.fromShapes(frameTop, topMaterial).translate(0, 1, 0);
+		//reset the values to default as rp is used for the whole shape 
+		rp.icon.reset();
+		rp.colorMultiplier.reset();
 
 		if (renderType == TYPE_TESR_WORLD)
-		{
-			if (direction == Door.DIR_SOUTH)
-			{
-				bottom.rotate(180, 0, 1, 0);
-				top.rotate(180, 0, 1, 0);
-			}
-			if (direction == Door.DIR_EAST)
-			{
-				bottom.rotate(-90, 0, 1, 0);
-				top.rotate(-90, 0, 1, 0);
-			}
-			if (direction == Door.DIR_WEST)
-			{
-				bottom.rotate(90, 0, 1, 0);
-				top.rotate(90, 0, 1, 0);
-			}
-		}
+			super.setup(topBlock);
 		else
 		{
 			if (itemRenderType == ItemRenderType.INVENTORY)
-			{
-				bottom.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1F, 0);
-				top.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1.2F, 0);
-			}
+				shape.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1F, 0);
 			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
-			{
-				bottom.rotate(90, 0, 1, 0);
-				top.rotate(90, 0, 1, 0);
-			}
+				shape.rotate(90, 0, 1, 0);
 			else if (itemRenderType == ItemRenderType.ENTITY)
-			{
-				bottom.translate(-0.5F, -0.5F, -0.25F).scale(0.5F);
-				top.translate(-0.5F, -1F, -0.25F).scale(0.5F);
-			}
+				shape.translate(-0.5F, -0.5F, -0.25F).scale(0.5F);
 			else if (itemRenderType == ItemRenderType.EQUIPPED)
-			{
-				bottom.rotate(180, 0, 1, 0);
-				top.rotate(180, 0, 1, 0);
-			}
+				shape.rotate(180, 0, 1, 0);
+
+			if (topBlock)
+				shape.translate(0, 1, 0);
 		}
 	}
 
@@ -236,31 +181,16 @@ public class CustomDoorRenderer extends DoorRenderer
 		return renderType == TYPE_TESR_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
 	}
 
-	@Override
-	protected void renderTileEntity()
-	{
-		ar.setStartTime(tileEntity.getStartTime());
-
-		enableBlending();
-		if (tileEntity.getMovement() != null)
-		{
-			ar.animate(bottom, tileEntity.getMovement().getBottomTransformation(tileEntity));
-			ar.animate(s, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		}
-		drawShape(bottom, rp);
-
-		if (tileEntity.getMovement() != null)
-			ar.animate(top, tileEntity.getMovement().getTopTransformation(tileEntity));
-		drawShape(top, rp);
-	}
-
 	private void renderInventory()
 	{
 		bindTexture(TextureMap.locationBlocksTexture);
-
 		enableBlending();
-		drawShape(new Shape(top), rp);
-		drawShape(new Shape(bottom), rp);
+
+		setup(false);
+		drawShape(shape, rp);
+
+		setup(true);
+		drawShape(shape, rp);
 
 	}
 

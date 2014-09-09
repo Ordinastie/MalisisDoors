@@ -59,38 +59,21 @@ public class FenceGateMovement implements IDoorMovement
 
 	public Transformation getTransformation(DoorTileEntity tileEntity, boolean left)
 	{
-		float hingeOffset = -0.5F + 0.125F / 2;
 		boolean reversedOpen = ((tileEntity.getBlockMetadata() >> 1) & 1) == 1;
 		int direction = tileEntity.getDirection();
 
-		float fromAngle = 0, toAngle = 90;
-		float hingeX = hingeOffset;
-		float hingeZ = 0;
+		float angle = 90;
 		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
-		{
-			reversedOpen = !reversedOpen;
-			hingeX = 0;
-			hingeZ = -hingeOffset;
-		}
-
+			angle = -angle;
 		if (!reversedOpen)
-			toAngle = -90;
+			angle = -angle;
+		if (left)
+			angle = -angle;
+
+		Transformation transformation = new Rotation(angle).aroundAxis(0, 1, 0).offset(-0.5F + 0.125F / 2, 0, 0);
 		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-		{
-			float tmp = fromAngle;
-			fromAngle = toAngle;
-			toAngle = tmp;
-		}
+			transformation.reversed(true);
 
-		if (!left)
-		{
-			hingeX = -hingeX;
-			hingeZ = -hingeZ;
-			fromAngle = -fromAngle;
-			toAngle = -toAngle;
-		}
-
-		return new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ)
-				.forTicks(tileEntity.getDescriptor().getOpeningTime());
+		return transformation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 	}
 }

@@ -42,28 +42,26 @@ public class DoorRenderer extends BaseRenderer
 	protected boolean reversed;
 	protected boolean topBlock;
 
-	protected Shape baseShape;
-	protected Shape s;
+	protected Shape shape;
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer(this);
 
 	public DoorRenderer()
 	{
-		initShape();
-		initRenderParameters();
-
 		getBlockDamage = true;
 	}
 
-	protected void initShape()
+	@Override
+	protected void initShapes()
 	{
-		baseShape = ShapePreset.Cube();
-		baseShape.setSize(1, 1, Door.DOOR_WIDTH);
-		baseShape.scale(1, 1, 0.995F);
-		baseShape.applyMatrix();
+		shape = ShapePreset.Cube();
+		shape.setSize(1, 1, Door.DOOR_WIDTH);
+		shape.scale(1, 1, 0.995F);
+		shape.storeState();
 	}
 
-	protected void initRenderParameters()
+	@Override
+	protected void initParameters()
 	{
 		rp = new RenderParameters();
 		rp.renderAllFaces.set(true);
@@ -89,7 +87,7 @@ public class DoorRenderer extends BaseRenderer
 
 		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
 		rp.icon.set(null);
-		setup();
+
 		renderTileEntity();
 	}
 
@@ -98,18 +96,19 @@ public class DoorRenderer extends BaseRenderer
 		this.tileEntity = (DoorTileEntity) super.tileEntity;
 	}
 
-	protected void setup()
+	protected void setup(boolean topBlock)
 	{
 		//set shape
-		s = new Shape(baseShape);
-
+		shape.resetState();
 		if (direction == Door.DIR_SOUTH)
-			s.rotate(180, 0, 1, 0);
+			shape.rotate(180, 0, 1, 0);
 		if (direction == Door.DIR_EAST)
-			s.rotate(-90, 0, 1, 0);
+			shape.rotate(-90, 0, 1, 0);
 		if (direction == Door.DIR_WEST)
-			s.rotate(90, 0, 1, 0);
+			shape.rotate(90, 0, 1, 0);
 
+		if (topBlock)
+			shape.translate(0, 1, 0);
 	}
 
 	protected void renderTileEntity()
@@ -117,16 +116,16 @@ public class DoorRenderer extends BaseRenderer
 		enableBlending();
 		ar.setStartTime(tileEntity.getStartTime());
 
-		Shape tmp = new Shape(s).translate(0, 1F, 0);
-
+		setup(false);
 		if (tileEntity.getMovement() != null)
-			ar.animate(s, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		drawShape(new Shape(s), rp);
+			ar.animate(shape, tileEntity.getMovement().getBottomTransformation(tileEntity));
+		drawShape(shape, rp);
 
 		blockMetadata |= Door.FLAG_TOPBLOCK;
+		setup(true);
 		if (tileEntity.getMovement() != null)
-			ar.animate(tmp, tileEntity.getMovement().getTopTransformation(tileEntity));
-		drawShape(tmp, rp);
+			ar.animate(shape, tileEntity.getMovement().getTopTransformation(tileEntity));
+		drawShape(shape, rp);
 	}
 
 	@Override
@@ -134,10 +133,13 @@ public class DoorRenderer extends BaseRenderer
 	{
 		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
 
-		s.translate(0, 0.5F, 0.005F);
-		s.scale(1.011F);
-		s.applyMatrix();
-		drawShape(new Shape(new Face[] { s.getFaces()[0], s.getFaces()[1] }), rp);
+		setup(false);
+		if (tileEntity.getMovement() != null)
+			ar.animate(shape, tileEntity.getMovement().getBottomTransformation(tileEntity));
+		shape.translate(0, 0.5F, 0.005F);
+		shape.scale(1.011F);
+		shape.applyMatrix();
+		drawShape(new Shape(new Face[] { shape.getFaces()[0], shape.getFaces()[1] }), rp);
 	}
 
 	@Override
