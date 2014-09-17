@@ -27,7 +27,6 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
-import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.entity.VanishingTileEntity;
@@ -55,7 +54,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  * 
  */
-public class VanishingBlock extends BlockContainer implements IBaseRendering
+public class VanishingBlock extends BlockContainer
 {
 	public static final int typeWoodFrame = 0;
 	public static final int typeIronFrame = 1;
@@ -67,7 +66,7 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 
 	private static IIcon[] icons = new IIcon[4];
 
-	private int renderType = -1;
+	public static int renderId = -1;
 	public int renderPass = -1;
 
 	public VanishingBlock()
@@ -335,18 +334,6 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 	}
 
 	@Override
-	public void setRenderId(int id)
-	{
-		renderType = id;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return renderType;
-	}
-
-	@Override
 	public boolean isOpaqueCube()
 	{
 		return false;
@@ -375,6 +362,12 @@ public class VanishingBlock extends BlockContainer implements IBaseRendering
 	public int getRenderBlockPass()
 	{
 		return 1;
+	}
+
+	@Override
+	public int getRenderType()
+	{
+		return renderId;
 	}
 
 }

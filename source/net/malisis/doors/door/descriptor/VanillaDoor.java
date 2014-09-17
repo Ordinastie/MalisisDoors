@@ -49,7 +49,7 @@ public class VanillaDoor extends DoorDescriptor
 
 		//te
 		setRequireRedstone(!wood);
-		setMovement(DoorRegistry.getMouvement(RotatingDoorMovement.class));
+		setMovement(DoorRegistry.getMovement(RotatingDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 	}
 }

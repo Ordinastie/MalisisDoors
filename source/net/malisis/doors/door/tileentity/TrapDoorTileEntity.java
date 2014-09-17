@@ -39,7 +39,7 @@ public class TrapDoorTileEntity extends DoorTileEntity
 	public TrapDoorTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMouvement(TrapDoorMovement.class));
+		descriptor.setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
 		setDescriptor(descriptor);
 	}
 

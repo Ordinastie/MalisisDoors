@@ -52,7 +52,7 @@ public class GlassDoor extends DoorDescriptor
 
 		//te
 		setRequireRedstone(!wood);
-		setMovement(DoorRegistry.getMouvement(SlidingDoorMovement.class));
+		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
 		setSound(DoorRegistry.getSound(GlassDoorSound.class));
 
 		//Item

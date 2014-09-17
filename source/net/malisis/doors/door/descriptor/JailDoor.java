@@ -51,7 +51,7 @@ public class JailDoor extends DoorDescriptor
 		//TileEntity
 		setRequireRedstone(true);
 		setOpeningTime(12);
-		setMovement(DoorRegistry.getMouvement(SlidingDoorMovement.class));
+		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
 		setSound(DoorRegistry.getSound(JailDoorSound.class));
 
 		//Item

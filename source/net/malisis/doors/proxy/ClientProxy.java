@@ -2,10 +2,11 @@ package net.malisis.doors.proxy;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
-import net.malisis.core.configuration.ConfigurationGui;
-import net.malisis.core.renderer.BaseRenderer;
-import net.malisis.core.renderer.IBaseRendering;
-import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.FenceGate;
+import net.malisis.doors.block.MixedBlock;
+import net.malisis.doors.block.TrapDoor;
+import net.malisis.doors.block.VanishingBlock;
+import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
@@ -20,10 +21,6 @@ import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.MixedBlockRenderer;
 import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
@@ -31,50 +28,33 @@ public class ClientProxy extends CommonProxy
 	public void initRenderers()
 	{
 		// doors
-		ClientRegistry.bindTileEntitySpecialRenderer(DoorTileEntity.class, BaseRenderer.create(DoorRenderer.class));
+		new DoorRenderer().registerFor(DoorTileEntity.class);
 
 		// fence gate
-		FenceGateRenderer fenceGateRenderer = BaseRenderer.create(FenceGateRenderer.class, (IBaseRendering) fenceGate);
-		RenderingRegistry.registerBlockHandler(fenceGateRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(FenceGateTileEntity.class, fenceGateRenderer);
+		FenceGateRenderer fgr = new FenceGateRenderer();
+		fgr.registerFor(FenceGate.class, FenceGateTileEntity.class);
 
 		// trapdoor
-		TrapDoorRenderer trapDoorRenderer = BaseRenderer.create(TrapDoorRenderer.class, (IBaseRendering) trapDoor);
-		RenderingRegistry.registerBlockHandler(trapDoorRenderer);
-		ClientRegistry.bindTileEntitySpecialRenderer(TrapDoorTileEntity.class, trapDoorRenderer);
+		TrapDoorRenderer tdr = new TrapDoorRenderer();
+		tdr.registerFor(TrapDoor.class, TrapDoorTileEntity.class);
 
 		// mixed blocks
-		MixedBlockRenderer mbr = BaseRenderer.create(MixedBlockRenderer.class, (IBaseRendering) mixedBlock);
-		RenderingRegistry.registerBlockHandler(mbr);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(mixedBlock), mbr);
+		MixedBlockRenderer mbr = new MixedBlockRenderer();
+		mbr.registerFor(MixedBlock.class);
+		mbr.registerFor(Item.getItemFromBlock(mixedBlock));
 
 		// vanishing blocks
-		VanishingBlockRenderer vbr = BaseRenderer.create(VanishingBlockRenderer.class, (IBaseRendering) vanishingBlock,
-				(IBaseRendering) vanishingDiamondBlock);
-		RenderingRegistry.registerBlockHandler(vbr);
-		ClientRegistry.bindTileEntitySpecialRenderer(VanishingTileEntity.class, vbr);
+		VanishingBlockRenderer vbr = new VanishingBlockRenderer();
+		vbr.registerFor(VanishingBlock.class, VanishingDiamondBlock.class, VanishingTileEntity.class);
 
 		// garage door
-		GarageDoorRenderer gdr = BaseRenderer.create(GarageDoorRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(GarageDoorTileEntity.class, gdr);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(garageDoor), gdr);
+		GarageDoorRenderer gdr = new GarageDoorRenderer();
+		gdr.registerFor(GarageDoorTileEntity.class);
+		gdr.registerFor(Item.getItemFromBlock(garageDoor));
 
 		// custom doors
-		CustomDoorRenderer cdr = BaseRenderer.create(CustomDoorRenderer.class);
-		ClientRegistry.bindTileEntitySpecialRenderer(CustomDoorTileEntity.class, cdr);
-		MinecraftForgeClient.registerItemRenderer(customDoorItem, cdr);
-
-	}
-
-	@Override
-	public void initSounds()
-	{
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@Override
-	public void openConfigurationGui()
-	{
-		(new ConfigurationGui(MalisisDoors.settings)).display();
+		CustomDoorRenderer cdr = new CustomDoorRenderer();
+		cdr.registerFor(CustomDoorTileEntity.class);
+		cdr.registerFor(customDoorItem);
 	}
 }

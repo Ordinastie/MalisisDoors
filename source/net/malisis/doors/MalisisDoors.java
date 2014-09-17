@@ -67,7 +67,6 @@ public class MalisisDoors implements IMalisisMod
 		Registers.init();
 
 		proxy.initRenderers();
-		proxy.initSounds();
 	}
 
 	@EventHandler

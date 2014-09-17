@@ -29,7 +29,6 @@ package net.malisis.doors.block;
  *
  */
 
-import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
@@ -42,9 +41,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IBaseRendering
+public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 {
-	private int renderId = -1;
+	public static int renderId = -1;
 
 	public FenceGate()
 	{
@@ -117,12 +116,6 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IB
 	public int getRenderType()
 	{
 		return renderId;
-	}
-
-	@Override
-	public void setRenderId(int id)
-	{
-		renderId = id;
 	}
 
 }

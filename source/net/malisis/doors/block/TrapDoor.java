@@ -24,7 +24,6 @@
 
 package net.malisis.doors.block;
 
-import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
@@ -43,14 +42,14 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  * 
  */
-public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBaseRendering
+public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 {
 	public static final int DIR_SOUTH = 0;
 	public static final int DIR_NORTH = 1;
 	public static final int DIR_EAST = 2;
 	public static final int DIR_WEST = 3;
 
-	private int renderId = -1;
+	public static int renderId = -1;
 
 	public TrapDoor()
 	{
@@ -150,11 +149,4 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBas
 	{
 		return renderId;
 	}
-
-	@Override
-	public void setRenderId(int id)
-	{
-		renderId = id;
-	}
-
 }

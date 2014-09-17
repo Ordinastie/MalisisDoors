@@ -51,7 +51,7 @@ public class LaboratoryDoor extends DoorDescriptor
 		//te
 		setOpeningTime(12);
 		setDoubleDoor(false);
-		setMovement(DoorRegistry.getMouvement(SlidingUpDoorMovement.class));
+		setMovement(DoorRegistry.getMovement(SlidingUpDoorMovement.class));
 		setSound(DoorRegistry.getSound(PneumaticSound.class));
 
 		//Item

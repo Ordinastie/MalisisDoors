@@ -27,7 +27,6 @@ package net.malisis.doors.door;
 import java.util.Random;
 
 import net.malisis.core.renderer.MalisisIcon;
-import net.malisis.core.renderer.TextureIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
@@ -36,7 +35,7 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -100,12 +99,12 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public void registerBlockIcons(IIconRegister register)
 	{
 		String textureName = getTextureName();
-		iconTop = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_upper"));
-		iconBottom = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_lower"));
+		iconTop = new MalisisIcon(textureName + "_upper").register((TextureMap) register);
+		iconBottom = new MalisisIcon(textureName + "_lower").register((TextureMap) register);
 		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (textureName.equals("door_wood") || textureName.equals("door_iron"))
 			textureName = MalisisDoors.modid + ":" + textureName;
-		iconSide = new TextureIcon((TextureAtlasSprite) register.registerIcon(textureName + "_side"));
+		iconSide = new MalisisIcon(textureName + "_side").register((TextureMap) register);
 	}
 
 	@SideOnly(Side.CLIENT)

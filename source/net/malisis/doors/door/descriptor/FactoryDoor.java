@@ -51,7 +51,7 @@ public class FactoryDoor extends DoorDescriptor
 		//TileEntity
 		setOpeningTime(12);
 		setDoubleDoor(true);
-		setMovement(DoorRegistry.getMouvement(SlidingSplitDoorMovement.class));
+		setMovement(DoorRegistry.getMovement(SlidingSplitDoorMovement.class));
 		setSound(DoorRegistry.getSound(PneumaticSound.class));
 
 		//Item

@@ -37,7 +37,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public FenceGateTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMouvement(FenceGateMovement.class));
+		descriptor.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
 		setDescriptor(descriptor);
 	}
 

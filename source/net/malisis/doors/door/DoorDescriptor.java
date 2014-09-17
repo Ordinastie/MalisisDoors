@@ -68,7 +68,7 @@ public class DoorDescriptor
 
 	public DoorDescriptor()
 	{
-		movement = DoorRegistry.getMouvement(RotatingDoorMovement.class);
+		movement = DoorRegistry.getMovement(RotatingDoorMovement.class);
 		sound = DoorRegistry.getSound(VanillaDoorSound.class);
 	}
 

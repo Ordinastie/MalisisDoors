@@ -86,7 +86,7 @@ public class DoorRegistry
 	 * @param clazz
 	 * @return
 	 */
-	public static IDoorMovement getMouvement(Class<? extends IDoorMovement> clazz)
+	public static IDoorMovement getMovement(Class<? extends IDoorMovement> clazz)
 	{
 		for (IDoorMovement mvt : movements.values())
 			if (mvt.getClass().equals(clazz))

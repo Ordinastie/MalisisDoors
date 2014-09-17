@@ -26,7 +26,6 @@ package net.malisis.doors.block;
 
 import java.util.ArrayList;
 
-import net.malisis.core.renderer.IBaseRendering;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoorsSettings;
@@ -51,9 +50,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class MixedBlock extends Block implements IBaseRendering, ITileEntityProvider
+public class MixedBlock extends Block implements ITileEntityProvider
 {
-	private int renderType = -1;
+	public static int renderId = -1;
 
 	public MixedBlock()
 	{
@@ -242,15 +241,9 @@ public class MixedBlock extends Block implements IBaseRendering, ITileEntityProv
 	}
 
 	@Override
-	public void setRenderId(int id)
-	{
-		renderType = id;
-	}
-
-	@Override
 	public int getRenderType()
 	{
-		return renderType;
+		return renderId;
 	}
 
 	@Override
