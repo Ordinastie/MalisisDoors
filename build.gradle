@@ -1,0 +1,84 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'forge'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = "1.7.10-1.1.2"
+group = "net.malisis.malisisdoors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "malisisdoors"
+libsDirName = "../releases"
+
+sourceSets
+{
+	main
+	{
+		java { srcDirs = ["$projectDir/source"] }
+		resources { srcDirs = ["$projectDir/resources"] }
+	}
+}
+
+dependencies
+{
+	compile 'org.projectlombok:lombok:1.12.6'
+	compile files("../MalisisCore/releases/malisiscore-1.7.10-0.9.4-dev.jar")
+	
+}
+
+// because the normal output has been made to be obfuscated
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+    classifier = 'dev'
+}
+
+
+artifacts {
+    archives deobfJar
+}
+
+minecraft {
+	version = "1.7.10-10.13.0.1208"
+	if(file("../../run").exists())
+	{
+		runDir = "../../run/assets"
+	}
+	else
+	{
+		runDir = "assets"
+	}
+	
+	replace "@VERSION@", project.version
+    replaceIn "MalisisDoors.java"
+}
+
+processResources
+{
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
