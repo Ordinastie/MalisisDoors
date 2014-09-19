@@ -63,7 +63,7 @@ minecraft {
 		runDir = "assets"
 	}
 	
-	replace "@VERSION@", project.version
+	replace '${version}', project.version
     replaceIn "MalisisDoors.java"
 }
 
