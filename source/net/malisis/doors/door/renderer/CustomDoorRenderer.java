@@ -67,6 +67,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		frame.removeFace(frame.getFace("east")).removeFace(frame.getFace("west"));
 		frame = Shape.fromShapes(frameR, frameL, frame).scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
 		frame.interpolateUV();
+		frame.applyMatrix();
 		Shape mat = new Shape(new Face[] { FacePreset.South(), FacePreset.North(), FacePreset.Top() });
 		mat.setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F).translate(width, width, Door.DOOR_WIDTH * 0.2F);
 		mat.applyMatrix();
@@ -93,7 +94,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		}
 		else
 		{
-			//initShape();
+			//initShapes();
 			super.render();
 		}
 	}

@@ -41,6 +41,7 @@ import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UISelect;
 import net.malisis.core.client.gui.component.interaction.UISelect.Option;
+import net.malisis.core.client.gui.component.interaction.UITab;
 import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
@@ -60,11 +61,14 @@ import com.google.common.eventbus.Subscribe;
 public class DoorFactoryGui extends MalisisGui
 {
 	private DoorFactoryTileEntity tileEntity;
+	private UITab firstTab;
 	private UISelect selDoorMovement;
 	private UITextField tfOpenTime;
 	private UICheckBox cbRedstone;
 	private UICheckBox cbDoubleDoor;
 	private UISelect selDoorSound;
+
+	private static boolean firstTabActive = true;
 
 	public DoorFactoryGui(DoorFactoryTileEntity te, MalisisInventoryContainer container)
 	{
@@ -72,12 +76,14 @@ public class DoorFactoryGui extends MalisisGui
 		tileEntity = te;
 
 		UIWindow window = new UIWindow("tile.door_factory.name", 190, 240);
-		UIPanel propContainer = new UIPanel(180, 70).setPosition(0, 25);
-		UIPanel matContainer = new UIPanel(180, 70).setPosition(0, 25);
+		UIPanel propContainer = new UIPanel(180, 80);
+		UIPanel matContainer = new UIPanel(180, 80);
 
 		UITabGroup tabGroup = new UITabGroup().setPosition(0, 13);
-		tabGroup.addTab("gui.door_factory.tab_properties", propContainer);
-		tabGroup.addTab("gui.door_factory.tab_materials", matContainer);
+		firstTab = tabGroup.addTab("gui.door_factory.tab_properties", propContainer).register(this);
+		UITab tab2 = tabGroup.addTab("gui.door_factory.tab_materials", matContainer).register(this);
+
+		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
 
 		setPropertiesContainer(propContainer);
 		setMaterialsContainer(matContainer);
@@ -189,6 +195,13 @@ public class DoorFactoryGui extends MalisisGui
 	public void onCreateDoor(UIButton.ClickedEvent event)
 	{
 		DoorFactoryMessage.sendCreateDoor(tileEntity);
+	}
+
+	@Subscribe
+	public void onTabActivation(ComponentEvent.ActiveStateChanged<UITab> event)
+	{
+		if (event.getState())
+			firstTabActive = event.getComponent() == firstTab;
 	}
 
 }
