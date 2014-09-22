@@ -199,6 +199,9 @@ public class CustomDoorItem extends DoorItem
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedTooltip)
 	{
+		if (itemStack.stackTagCompound == null)
+			return;
+
 		Block frame = Block.getBlockById(itemStack.stackTagCompound.getInteger("frame"));
 		int frameMetadata = itemStack.stackTagCompound.getInteger("frameMetadata");
 		ItemStack isFrame = new ItemStack(frame, 0, frameMetadata);

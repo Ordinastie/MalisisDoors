@@ -122,6 +122,8 @@ public class MixedBlockBlockItem extends ItemBlock
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedTooltip)
 	{
+		if (itemStack.stackTagCompound == null)
+			return;
 		Block block1 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block1"));
 		int metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
 		ItemStack is1 = new ItemStack(block1, 0, metadata1);
