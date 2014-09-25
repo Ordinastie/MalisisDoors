@@ -13,13 +13,15 @@ tile.vanishing_block_gold.name=Gold Vanishing Frame
 tile.vanishing_block_diamond.name=Diamond Vanishing Frame
 tile.block_mixer.name=Block Mixer
 tile.mixed_block.name=Mixed Block
-tile.garage_door.name=Garage door
+tile.garage_door.name=Garage Door
 tile.jail_door.name=Jail Door
 tile.laboratory_door.name=Laboratory Door
 tile.factory_door.name=Factory Door
 tile.door_factory.name=Door Factory
 tile.custom_door.name=Custom Door
 tile.shoji_door.name=Shōji Door
+tile.wood_sliding_door.name=Wooden Glass Door
+tile.iron_sliding_door.name=Iron Glass Door
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
