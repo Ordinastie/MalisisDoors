@@ -26,7 +26,7 @@ package net.malisis.doors.door;
 
 import java.util.Random;
 
-import net.malisis.core.renderer.MalisisIcon;
+import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
