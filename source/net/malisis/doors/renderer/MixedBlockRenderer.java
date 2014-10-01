@@ -143,14 +143,16 @@ public class MixedBlockRenderer extends BaseRenderer
 	private void setColor()
 	{
 		int color = renderType == TYPE_ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
+		rp.colorMultiplier.set(color);
+		shape.setParameters("Top", rp, true);
 		if (block instanceof BlockGrass)
 		{
 			rp.colorMultiplier.set(color);
 			shape.setParameters("Top", rp, true);
-			rp.colorMultiplier.reset();
+			rp.colorMultiplier.set(0xFFFFFF);
 		}
-		else
-			rp.colorMultiplier.set(color);
+		//else
+
 	}
 
 	private void renderSimple()
