@@ -25,6 +25,9 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.element.Face;
+import net.malisis.core.renderer.preset.FacePreset;
 import net.malisis.core.renderer.preset.ShapePreset;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.door.Door;
@@ -32,6 +35,7 @@ import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
@@ -39,6 +43,8 @@ import net.minecraft.client.renderer.RenderBlocks;
  */
 public class TrapDoorRenderer extends DoorRenderer
 {
+	RenderParameters rpTop;
+
 	@Override
 	protected void initShapes()
 	{
@@ -46,11 +52,14 @@ public class TrapDoorRenderer extends DoorRenderer
 		shape.setSize(1, Door.DOOR_WIDTH, 1);
 		shape.interpolateUV();
 		shape.storeState();
+
+		shape.getFace(ForgeDirection.UP).getParameters().calculateAOColor.set(true);
 	}
 
 	@Override
 	protected void setup(boolean topBlock)
 	{
+		initParameters();
 		shape.resetState();
 		float angle = 0;
 		if (direction == TrapDoor.DIR_NORTH)
@@ -63,7 +72,6 @@ public class TrapDoorRenderer extends DoorRenderer
 
 		if (topBlock)
 			shape.translate(0, 1 - Door.DOOR_WIDTH, 0);
-
 	}
 
 	@Override
@@ -75,6 +83,10 @@ public class TrapDoorRenderer extends DoorRenderer
 		IDoorMovement mvt = tileEntity.getMovement();
 		if (mvt != null)
 			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
+
+		Face f = shape.getFace(ForgeDirection.UP);
+		shape.applyMatrix();
+		f.getParameters().aoMatrix.set(FacePreset.calculateAoMatrix(f, ForgeDirection.UP));
 
 		drawShape(shape, rp);
 	}

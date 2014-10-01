@@ -122,6 +122,7 @@ public class DoorRenderer extends BaseRenderer
 		drawShape(shape, rp);
 
 		blockMetadata |= Door.FLAG_TOPBLOCK;
+		y++;
 		setup(true);
 		if (tileEntity.getMovement() != null)
 			ar.animate(shape, tileEntity.getMovement().getTopTransformation(tileEntity));

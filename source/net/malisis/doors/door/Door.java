@@ -144,6 +144,12 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		}
 	}
 
+	@Override
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		return getIcon(side, Door.getFullMetadata(world, x, y, z));
+	}
+
 	// #end
 
 	// #region Events
