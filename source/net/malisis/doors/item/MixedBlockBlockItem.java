@@ -132,8 +132,10 @@ public class MixedBlockBlockItem extends ItemBlock
 		int metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
 		ItemStack is2 = new ItemStack(block2, 0, metadata2);
 
-		list.addAll(is1.getTooltip(player, advancedTooltip));
-		list.addAll(is2.getTooltip(player, advancedTooltip));
+		if (block1 != Blocks.air)
+			list.addAll(is1.getTooltip(player, advancedTooltip));
+		if (block2 != Blocks.air)
+			list.addAll(is2.getTooltip(player, advancedTooltip));
 
 	}
 }
