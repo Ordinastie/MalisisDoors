@@ -123,6 +123,7 @@ public class GarageDoorRenderer extends BaseRenderer
 		for (GarageDoorTileEntity te : doors)
 		{
 			blockMetadata = te.blockMetadata;
+			y = te.yCoord;
 			int delta = tileEntity.yCoord - te.yCoord;
 			int delta2 = doors.size() - (delta + 1);
 
