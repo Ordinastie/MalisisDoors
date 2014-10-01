@@ -48,6 +48,7 @@ public class MixedBlockRenderer extends BaseRenderer
 {
 	private int mixedBlockMetadata;
 	private MixedBlockTileEntity tileEntity;
+	private Shape simpleShape;
 	private Shape[][] shapes;
 	private Block block1;
 	private Block block2;
@@ -60,12 +61,13 @@ public class MixedBlockRenderer extends BaseRenderer
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
 		rp.usePerVertexAlpha.set(true);
+		rp.useWorldSensitiveIcon.set(false);
 	}
 
 	@Override
 	protected void initShapes()
 	{
-		super.initShapes();
+		simpleShape = ShapePreset.Cube();
 
 		shapes = new Shape[][] { new Shape[6], new Shape[6] };
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -118,18 +120,18 @@ public class MixedBlockRenderer extends BaseRenderer
 		if (!setup())
 			return;
 
-		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
-		{
-			renderSimple();
-			return;
-		}
-
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
 			GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			enableBlending();
+		}
+
+		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
+		{
+			renderSimple();
+			return;
 		}
 
 		set(block1, metadata1);
@@ -189,15 +191,15 @@ public class MixedBlockRenderer extends BaseRenderer
 		set(b, m);
 		setColor();
 
-		shape.resetState().setSize(width, height, depth);
-		drawShape(shape, rp);
+		simpleShape.resetState().setSize(width, height, depth);
+		drawShape(simpleShape, rp);
 
 		b = reversed ? block1 : block2;
 		m = reversed ? metadata1 : metadata2;
 		set(b, m);
 		setColor();
-		shape.resetState().setSize(width, height, depth).translate(offsetX, offestY, offsetZ);
-		drawShape(shape, rp);
+		simpleShape.resetState().setSize(width, height, depth).translate(offsetX, offestY, offsetZ);
+		drawShape(simpleShape, rp);
 	}
 
 	private void drawPass(boolean firstBlock)
