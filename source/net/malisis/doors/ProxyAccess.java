@@ -26,7 +26,7 @@ package net.malisis.doors;
 
 import java.util.WeakHashMap;
 
-import lombok.Delegate;
+import lombok.experimental.Delegate;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.minecraft.block.Block;

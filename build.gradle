@@ -20,7 +20,7 @@ apply plugin: 'forge'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = "1.7.10-1.1.4"
-group = "net.malisis.malisisdoors" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
 
@@ -36,8 +36,7 @@ sourceSets
 dependencies
 {
 	compile 'org.projectlombok:lombok:1.12.6'
-	compile files("../MalisisCore/releases/malisiscore-1.7.10-0.9.7-dev.jar")
-	
+	compile 'net.malisis.malisiscore:malisiscore:1.7.10-0.9.7:dev'	
 }
 
 // because the normal output has been made to be obfuscated
@@ -81,4 +80,83 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+uploadArchives() 
+{
+	//dependsOn reobf
+	
+	if (project.mavenUrl != null) 
+	{
+		repositories 
+		{
+			logger.info('Publishing to files server')
+			mavenDeployer 
+			{
+				repository(url: project.mavenUrl) 
+				{
+					authentication(userName: project.mavenUser, password: project.mavenPassword)
+				}
+				
+				addFilter('deobf') 
+				{
+					artifact, file -> artifact.attributes['classifier'] == 'dev'
+				}				
+				pom('deobf').version = project.version
+				
+				addFilter('universal') 
+				{
+					artifact, file -> artifact.attributes['classifier'] == null
+				}
+				pom('universal').version = project.version
+				
+				pom 
+				{
+					groupId = project.group
+					version = project.version
+					artifactId = project.archivesBaseName
+					project 
+					{
+						name project.archivesBaseName
+						packaging 'jar'
+						description 'Animations for doors, new ones, mixed blocks and vanishing blocks.'
+						url 'https://github.com/Ordinastie/MalisisDoors'
+						scm 
+						{
+							url 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
+							connection 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
+							developerConnection 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
+						}
+						issueManagement 
+						{
+							system 'github'
+							url 'https://github.com/Ordinastie/MalisisDoors/issues'
+						}
+						licenses 
+						{
+							license 
+							{
+								name 'MIT'
+								url 'http://opensource.org/licenses/MIT'
+								distribution 'repo'
+							}
+						}
+						developers 
+						{
+							developer 
+							{
+								id 'Ordinastie'
+								name 'Ordinastie'
+								roles { role 'developer' }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	else 
+	{
+		logger.log(LogLevel.ERROR, 'No upload url (project.mavenUrl) defined!');
+	}
 }
