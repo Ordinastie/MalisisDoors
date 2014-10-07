@@ -10,6 +10,7 @@ import net.malisis.doors.item.MixedBlockBlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -98,6 +99,12 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 
 	@Override
 	public MalisisInventory getInventory(Object... data)
+	{
+		return inventory;
+	}
+
+	@Override
+	public MalisisInventory getInventory(ForgeDirection side, Object... data)
 	{
 		return inventory;
 	}

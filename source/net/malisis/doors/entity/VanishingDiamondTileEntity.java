@@ -156,6 +156,12 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 		return this.inventory;
 	}
 
+	@Override
+	public MalisisInventory getInventory(ForgeDirection side, Object... data)
+	{
+		return inventory;
+	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public MalisisGui getGui(MalisisInventoryContainer container)
