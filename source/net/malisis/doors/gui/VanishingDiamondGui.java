@@ -49,7 +49,7 @@ import com.google.common.eventbus.Subscribe;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class VanishingDiamondGui extends MalisisGui
 {
@@ -102,7 +102,7 @@ public class VanishingDiamondGui extends MalisisGui
 		cont.add(new UILabel("Duration").setPosition(0, 0, Anchor.CENTER));
 		cont.add(duration);
 
-		UIInventory inv = new UIInventory(container.getContainerInventory());
+		UIInventory inv = new UIInventory(container.getInventory(1));
 		inv.setPosition(0, 40, Anchor.CENTER);
 		cont.add(new UILabel("Block").setPosition(0, 30, Anchor.CENTER));
 		cont.add(inv);

@@ -50,7 +50,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class VanishingDiamondTileEntity extends VanishingTileEntity implements IInventoryProvider
 {
@@ -151,7 +151,7 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 	}
 
 	@Override
-	public MalisisInventory getInventory()
+	public MalisisInventory getInventory(Object... data)
 	{
 		return this.inventory;
 	}

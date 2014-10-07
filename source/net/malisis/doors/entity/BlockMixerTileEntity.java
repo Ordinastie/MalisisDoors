@@ -97,7 +97,7 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 	}
 
 	@Override
-	public MalisisInventory getInventory()
+	public MalisisInventory getInventory(Object... data)
 	{
 		return inventory;
 	}

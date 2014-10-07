@@ -46,7 +46,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvider
 {
@@ -165,7 +165,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	}
 
 	@Override
-	public MalisisInventory getInventory()
+	public MalisisInventory getInventory(Object... data)
 	{
 		return inventory;
 	}
