@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -46,13 +48,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class CustomDoor extends Door
 {
 	public CustomDoor()
 	{
-		super();
+		super(Material.wood);
 		setHardness(3.0F);
 		setStepSound(soundTypeWood);
 	}
@@ -172,6 +174,8 @@ public class CustomDoor extends Door
 		}
 
 		int i = world.rand.nextInt(blocks.length);
+		if (blocks[i] == null)
+			blocks[i] = Blocks.planks;
 
 		EntityDiggingFX fx = new EntityDiggingFX(world, fxX, fxY, fxZ, 0.0D, 0.0D, 0.0D, blocks[i], metadata[i]);
 		fx.multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
@@ -204,6 +208,8 @@ public class CustomDoor extends Door
 					double fxY = y + (j + 0.5D) / nb;
 					double fxZ = z + (k + 0.5D) / nb;
 					int l = (i + j + k) % 2;
+					if (blocks[l] == null)
+						blocks[l] = Blocks.planks;
 					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - x - 0.5D, fxY - y - 0.5D, fxZ - z - 0.5D, blocks[l], metadata[l]);
 					effectRenderer.addEffect(fx);
 				}

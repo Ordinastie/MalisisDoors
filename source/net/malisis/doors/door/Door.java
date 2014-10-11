@@ -49,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class Door extends BlockDoor implements ITileEntityProvider
 {
@@ -83,9 +83,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		setBlockTextureName(desc.getTextureName());
 	}
 
-	public Door()
+	public Door(Material material)
 	{
-		super(Material.wood);
+		super(material);
 	}
 
 	public DoorDescriptor getDescriptor()
@@ -331,7 +331,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 	/**
 	 * Get door tile entity at x, y, z event if the position is the top half of the door
-	 * 
+	 *
 	 * @param world
 	 * @param x
 	 * @param y
@@ -350,7 +350,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 	/**
 	 * Get the full metadata for the door
-	 * 
+	 *
 	 * @param world
 	 * @param x
 	 * @param y
