@@ -4,5 +4,7 @@
 	"jaildoor": {"category": "master","sounds": [{"name": "jaildoor","stream": false}]},
 	"space_door_open": {"category": "master","sounds": [{"name": "space_door_open","stream": false}]},	
 	"space_door_close": {"category": "master","sounds": [{"name": "space_door_close","stream": false}]},	
-	"shoji_door": {"category": "master","sounds": [{"name": "shoji","stream": false}]}
+	"shoji_door": {"category": "master","sounds": [{"name": "shoji","stream": false}]},
+	"rustyhatch_open": {"category": "master","sounds": [{"name": "rustyhatch_open","stream": false}]},
+	"rustyhatch_close": {"category": "master","sounds": [{"name": "rustyhatch_close","stream": false}]}
 }

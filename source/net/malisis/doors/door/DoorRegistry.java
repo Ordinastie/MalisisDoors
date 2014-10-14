@@ -35,6 +35,7 @@ import net.malisis.doors.door.movement.RotateAndSlideMovement;
 import net.malisis.doors.door.movement.RotateAroundMovement;
 import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.movement.RotatingSplitMovement;
+import net.malisis.doors.door.movement.RustyHatchMovement;
 import net.malisis.doors.door.movement.Sliding4WaysMovement;
 import net.malisis.doors.door.movement.SlidingDoorMovement;
 import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
@@ -45,12 +46,13 @@ import net.malisis.doors.door.sound.GlassDoorSound;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.door.sound.JailDoorSound;
 import net.malisis.doors.door.sound.PneumaticSound;
+import net.malisis.doors.door.sound.RustyHatchSound;
 import net.malisis.doors.door.sound.ShojiDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorRegistry
 {
@@ -71,18 +73,21 @@ public class DoorRegistry
 		registerMovement("rotate_around", new RotateAroundMovement());
 		registerMovement("rotate_slide", new RotateAndSlideMovement());
 		registerMovement("rotate_place", new RotateAndPlaceMovement());
+		registerMovement("rusty_hatch", new RustyHatchMovement());
 
 		registerSound("vanilla_door", new VanillaDoorSound());
 		registerSound("glass_door", new GlassDoorSound());
 		registerSound("jail_door", new JailDoorSound());
 		registerSound("pneumatic_door", new PneumaticSound());
 		registerSound("shoji_door", new ShojiDoorSound());
+		registerSound("rusty_hatch", new RustyHatchSound());
+
 	}
 
 	//#region Movements
 	/**
 	 * Gets the movement register for the class
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -97,7 +102,7 @@ public class DoorRegistry
 
 	/**
 	 * Registers a new movement type
-	 * 
+	 *
 	 * @param movement
 	 */
 	public static void registerMovement(String id, IDoorMovement movement)
@@ -109,7 +114,7 @@ public class DoorRegistry
 
 	/**
 	 * Gets the movement associated to an id in the registry
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -120,7 +125,7 @@ public class DoorRegistry
 
 	/**
 	 * Gets the id associated to a movement in the registry
-	 * 
+	 *
 	 * @param movement
 	 * @return
 	 */
@@ -155,7 +160,7 @@ public class DoorRegistry
 	//#region Sounds
 	/**
 	 * Gets the movement register for the class
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -170,7 +175,7 @@ public class DoorRegistry
 
 	/**
 	 * Registers a new Sound type
-	 * 
+	 *
 	 * @param Sound
 	 */
 	public static void registerSound(String id, IDoorSound Sound)
@@ -182,7 +187,7 @@ public class DoorRegistry
 
 	/**
 	 * Gets the Sound associated to an id in the registry
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -193,7 +198,7 @@ public class DoorRegistry
 
 	/**
 	 * Gets the id associated to a Sound in the registry
-	 * 
+	 *
 	 * @param Sound
 	 * @return
 	 */
