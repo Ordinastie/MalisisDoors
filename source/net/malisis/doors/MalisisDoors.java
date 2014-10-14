@@ -95,6 +95,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block laboratoryDoor;
 		public static Block factoryDoor;
 		public static Block shojiDoor;
+		public static Block rustyHatch;
 	}
 
 	public static class Items

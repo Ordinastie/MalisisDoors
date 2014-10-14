@@ -33,6 +33,7 @@ import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
+import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
@@ -54,6 +55,7 @@ import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.MixedBlockTileEntity;
+import net.malisis.doors.entity.RustyHatchTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
@@ -86,6 +88,8 @@ public class Registers
 		registerDoorFactory();
 
 		registerCustomDoor();
+
+		registerRustyHatch();
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 	}
@@ -226,5 +230,14 @@ public class Registers
 		GameRegistry.registerItem(customDoorItem, customDoorItem.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(CustomDoorTileEntity.class, "customDoorTileEntity");
+	}
+
+	private static void registerRustyHatch()
+	{
+		rustyHatch = new RustyHatch();
+		GameRegistry.registerBlock(rustyHatch, rustyHatch.getUnlocalizedName().substring(5));
+
+		GameRegistry.registerTileEntity(RustyHatchTileEntity.class, "rustyHatchTileEntity");
+
 	}
 }
