@@ -39,7 +39,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorDescriptor
 {
@@ -74,7 +74,13 @@ public class DoorDescriptor
 
 	public DoorDescriptor(NBTTagCompound nbt)
 	{
-		readNBT(nbt);
+		if (nbt != null)
+			readNBT(nbt);
+		else
+		{
+			movement = DoorRegistry.getMovement(RotatingDoorMovement.class);
+			sound = DoorRegistry.getSound(VanillaDoorSound.class);
+		}
 	}
 
 	//#region Getters/Setters
