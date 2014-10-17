@@ -4,6 +4,9 @@ item.jail_door.name=Gefängnistür
 item.laboratory_door.name=Labortür
 item.factory_door.name=Fabriktür
 item.custom_door.name=Eigene Tür
+item.shoji_door.name=Shoji-Schiebetür
+item.rusty_hatch.name=Rostige Luke
+item.rusty_handle.name=Rostiger Griff
  
 tile.player_sensor.name=Spielersensor
 tile.vanishing_block_wood.name=Schwindender Holzrahmen
@@ -18,6 +21,10 @@ tile.laboratory_door.name=Labortür
 tile.factory_door.name=Fabriktür
 tile.door_factory.name=Türfabrik
 tile.custom_door.name=Eigene Tür
+tile.shoji_door.name=Shoji-Schiebetür
+tile.wood_sliding_door.name=Holz-Schiebetür
+tile.iron_sliding_door.name=Eisen-Schiebetür
+tile.rusty_hatch.name=Rostige Luke
  
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
@@ -64,7 +71,8 @@ gui.door_factory.door_sound.vanilla_door=Vanilla-Tür
 gui.door_factory.door_sound.glass_door=Glasstür
 gui.door_factory.door_sound.jail_door=Gefängnistür
 gui.door_factory.door_sound.pneumatic_door=Pneumatiktür
- 
+gui.door_factory.door_sound.shoji_door=Shoji-Schiebetür
+
  
 gui.door_factory.frame_type=Rahmenart
 gui.door_factory.top_material=Material oben

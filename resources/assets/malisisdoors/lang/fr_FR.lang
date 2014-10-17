@@ -5,6 +5,8 @@ item.laboratory_door.name=Porte de laboratoire
 item.factory_door.name=Porte d'usine
 item.custom_door.name=Porte personnalisée
 item.shoji_door.name=Porte Shōji
+item.rusty_hatch.name=Trappe Rouillée
+item.rusty_handle.name=Poignée Rouillée
 
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
@@ -20,6 +22,7 @@ tile.factory_door.name=Porte d'usine
 tile.door_factory.name=Assembleur de porte
 tile.custom_door.name=Porte personnalisée
 tile.shoji_door.name=Porte Shōji
+tile.rusty_hatch.name=Trappe Rouillée
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 

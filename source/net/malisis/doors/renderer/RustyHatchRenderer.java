@@ -33,6 +33,7 @@ import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.entity.RustyHatchTileEntity;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -149,7 +150,25 @@ public class RustyHatchRenderer extends BaseRenderer
 
 	private void renderItem()
 	{
+		bindTexture(TextureMap.locationBlocksTexture);
+		handle.resetState();
+		handle.scale(1.5F);
+		switch (itemRenderType)
+		{
+			case INVENTORY:
+				handle.translate(0.20F, 0, 0.15F).rotate(90, 0, 0, 1);
+				break;
+			case EQUIPPED:
+				handle.translate(-0.5F, -.75F, 0).rotate(100, 0, 0, 1);
+				break;
+			case EQUIPPED_FIRST_PERSON:
+				handle.translate(0, -0.1F, -0.2F).rotate(90, 0, 0, 1);
+			default:
+				break;
+		}
 
+		rp.icon.set(((RustyHatch) MalisisDoors.Blocks.rustyHatch).getHandleIcon());
+		drawShape(handle, rp);
 	}
 
 	private void setup(Shape s)

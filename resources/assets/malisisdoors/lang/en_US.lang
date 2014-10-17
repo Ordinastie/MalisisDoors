@@ -5,6 +5,8 @@ item.laboratory_door.name=Laboratory Door
 item.factory_door.name=Factory Door
 item.custom_door.name=Custom Door
 item.shoji_door.name=Shōji Door
+item.rusty_hatch.name=Rusty Hatch
+item.rusty_handle.name=Rusty Handle
 
 tile.player_sensor.name=Player Sensor
 tile.vanishing_block_wood.name=Wooden Vanishing Frame
@@ -22,6 +24,7 @@ tile.custom_door.name=Custom Door
 tile.shoji_door.name=Shōji Door
 tile.wood_sliding_door.name=Wooden Glass Door
 tile.iron_sliding_door.name=Iron Glass Door
+tile.rusty_hatch.name=Rusty Hatch
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 

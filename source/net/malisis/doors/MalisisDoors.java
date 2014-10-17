@@ -107,6 +107,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Item laboratoryDoorItem;
 		public static Item facortyDoorItem;
 		public static Item shojiDoorItem;
+		public static Item rustyHandle;
 	}
 
 }

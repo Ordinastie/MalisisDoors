@@ -63,5 +63,6 @@ public class ClientProxy extends CommonProxy
 		//rusty hatch
 		RustyHatchRenderer rhr = new RustyHatchRenderer();
 		rhr.registerFor(RustyHatch.class, RustyHatchTileEntity.class);
+		rhr.registerFor(rustyHandle);
 	}
 }
