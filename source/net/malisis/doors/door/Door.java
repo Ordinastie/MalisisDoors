@@ -133,7 +133,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 				return icon;
 			case 2:
 				icon = topBlock ? iconTop : iconBottom;
-				icon.flip(reversed, false);
+				icon.flip(!reversed, false);
 				return icon;
 			case 3:
 				icon = topBlock ? iconTop : iconBottom;
