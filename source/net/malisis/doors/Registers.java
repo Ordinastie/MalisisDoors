@@ -61,6 +61,7 @@ import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.item.VanishingBlockItem;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -237,7 +238,12 @@ public class Registers
 		rustyHatch = new RustyHatch();
 		GameRegistry.registerBlock(rustyHatch, rustyHatch.getUnlocalizedName().substring(5));
 
-		rustyHandle = new Item().setUnlocalizedName("rustyHandle").setCreativeTab(MalisisDoors.tab);
+		rustyHandle = new Item()
+		{
+			@Override
+			public void registerIcons(IIconRegister register)
+			{};
+		}.setUnlocalizedName("rustyHandle").setCreativeTab(MalisisDoors.tab);
 		GameRegistry.registerItem(rustyHandle, rustyHandle.getUnlocalizedName());
 
 		GameRegistry.registerTileEntity(RustyHatchTileEntity.class, "rustyHatchTileEntity");
