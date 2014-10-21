@@ -149,7 +149,8 @@ public class DoorRegistry
 
 		for (Entry<String, IDoorMovement> entry : movements.entrySet())
 		{
-			if (!(entry.getValue() instanceof TrapDoorMovement) && !(entry.getValue() instanceof FenceGateMovement))
+			if (!(entry.getValue() instanceof TrapDoorMovement) && !(entry.getValue() instanceof FenceGateMovement)
+					&& !(entry.getValue() instanceof RustyHatchMovement))
 				mvts.put(entry.getKey(), entry.getValue());
 		}
 		return mvts;
@@ -218,7 +219,14 @@ public class DoorRegistry
 
 	public static HashMap<String, IDoorSound> listSounds()
 	{
-		return sounds;
+		HashMap<String, IDoorSound> snds = new HashMap<>();
+
+		for (Entry<String, IDoorSound> entry : sounds.entrySet())
+		{
+			if (!(entry.getValue() instanceof RustyHatchSound))
+				snds.put(entry.getKey(), entry.getValue());
+		}
+		return snds;
 	}
 	//#end Sounds
 }
