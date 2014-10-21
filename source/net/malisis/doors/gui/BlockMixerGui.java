@@ -7,7 +7,6 @@ import net.malisis.core.client.gui.component.container.UIPlayerInventory;
 import net.malisis.core.client.gui.component.container.UIWindow;
 import net.malisis.core.client.gui.component.decoration.UIProgressBar;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
-import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
@@ -66,9 +65,9 @@ public class BlockMixerGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onCheck(ComponentEvent.ValueChanged<UICheckBox, Boolean> event)
+	public void onCheck(UICheckBox.CheckEvent event)
 	{
-		MalisisDoorsSettings.simpleMixedBlockRendering.set(event.getNewValue());
+		MalisisDoorsSettings.simpleMixedBlockRendering.set(event.isChecked());
 		MalisisDoors.settings.save();
 	}
 
