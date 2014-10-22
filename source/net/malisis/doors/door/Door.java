@@ -119,16 +119,16 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		{
 			case 0:
 			case 1:
-				icon = iconSide.clone();
+				icon = iconSide.copy();
 				icon.clip(0, 0, 3, 16);
 				icon.setRotation(1);
 				return icon;
 			case 4:
-				icon = iconSide.clone();
+				icon = iconSide.copy();
 				icon.clip(topBlock ? 3 : 9, 0, 3, 16);
 				return icon;
 			case 5:
-				icon = iconSide.clone();
+				icon = iconSide.copy();
 				icon.clip(topBlock ? 6 : 12, 0, 3, 16);
 				return icon;
 			case 2:

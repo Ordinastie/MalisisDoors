@@ -28,15 +28,18 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import net.malisis.core.client.gui.Anchor;
+import net.malisis.core.client.gui.GuiTexture;
 import net.malisis.core.client.gui.MalisisGui;
 import net.malisis.core.client.gui.component.UIComponent;
 import net.malisis.core.client.gui.component.UISlot;
 import net.malisis.core.client.gui.component.container.UIContainer;
-import net.malisis.core.client.gui.component.container.UIPanel;
 import net.malisis.core.client.gui.component.container.UIPlayerInventory;
 import net.malisis.core.client.gui.component.container.UITabGroup;
+import net.malisis.core.client.gui.component.container.UITabGroup.Position;
 import net.malisis.core.client.gui.component.container.UIWindow;
+import net.malisis.core.client.gui.component.decoration.UIImage;
 import net.malisis.core.client.gui.component.decoration.UILabel;
+import net.malisis.core.client.gui.component.decoration.UITooltip;
 import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UISelect;
@@ -46,20 +49,28 @@ import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.network.DoorFactoryMessage;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 import com.google.common.eventbus.Subscribe;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorFactoryGui extends MalisisGui
 {
+	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorFactoryTabIcons.png");
+	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 64);
+	public static IIcon propIcon = tabTexture.getIcon(0, 0, 64, 64);
+	public static IIcon matIcon = tabTexture.getIcon(64, 0, 64, 64);
+
 	private DoorFactoryTileEntity tileEntity;
 	private UITab firstTab;
 	private UISelect selDoorMovement;
@@ -75,61 +86,68 @@ public class DoorFactoryGui extends MalisisGui
 		setInventoryContainer(container);
 		tileEntity = te;
 
-		UIWindow window = new UIWindow("tile.door_factory.name", 190, 240);
-		UIPanel propContainer = new UIPanel(180, 80);
-		UIPanel matContainer = new UIPanel(180, 80);
+		UIWindow window = new UIWindow(this, "tile.door_factory.name", UIPlayerInventory.INVENTORY_WIDTH + 10, 240);
 
-		UITabGroup tabGroup = new UITabGroup().setPosition(0, 13);
-		firstTab = tabGroup.addTab("gui.door_factory.tab_properties", propContainer).register(this);
-		UITab tab2 = tabGroup.addTab("gui.door_factory.tab_materials", matContainer).register(this);
+		UIContainer propContainer = getPropertiesContainer();
+		UIContainer matContainer = getMaterialsContainer();
+
+		UITabGroup tabGroup = new UITabGroup(this, Position.LEFT).setPosition(0, 10);
+
+		int a = 16;
+		firstTab = new UITab(this, new UIImage(this, tabTexture, propIcon).setSize(a, a)).setTooltip(
+				new UITooltip(this, "gui.door_factory.tab_properties")).register(this);
+		UITab tab2 = new UITab(this, new UIImage(this, tabTexture, matIcon).setSize(a, a)).setTooltip(
+				new UITooltip(this, "gui.door_factory.tab_materials")).register(this);
+		tabGroup.addTab(firstTab, propContainer);
+		tabGroup.addTab(tab2, matContainer);
 
 		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
+		tabGroup.attachTo(window, false);
 
-		setPropertiesContainer(propContainer);
-		setMaterialsContainer(matContainer);
+		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door", 80).setPosition(0, 90, Anchor.CENTER).register(this);
+		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 112, Anchor.CENTER);
 
-		UIButton btnCreate = new UIButton("gui.door_factory.create_door", 80).setPosition(50, 100).register(this);
-		UISlot outputSlot = new UISlot(tileEntity.outputSlot).setPosition(81, 122);
-
-		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
+		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 
 		window.add(playerInv);
 
-		window.add(tabGroup);
 		window.add(propContainer);
 		window.add(matContainer);
 
 		window.add(btnCreate);
 		window.add(outputSlot);
 
+		addToScreen(tabGroup);
 		addToScreen(window);
 
 		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
 	}
 
-	private void setPropertiesContainer(UIContainer propContainer)
+	private UIContainer<UIContainer> getPropertiesContainer()
 	{
+		UIContainer propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
+
 		HashMap<IDoorMovement, String> listMvt = new HashMap<>();
 		for (Entry<String, IDoorMovement> entry : DoorRegistry.listMovements().entrySet())
 			listMvt.put(entry.getValue(), entry.getKey());
-		selDoorMovement = new UISelect(100, UISelect.Option.fromList(listMvt)).setPosition(0, 2, Anchor.RIGHT).register(this);
+		selDoorMovement = new UISelect(this, 100, UISelect.Option.fromList(listMvt)).setPosition(0, 2, Anchor.RIGHT).register(this);
 		selDoorMovement.setLabelPattern("door_movement.%s");
 
-		tfOpenTime = new UITextField(30).setPosition(-5, 14, Anchor.RIGHT).setFilter("\\d+").register(this);
-		cbRedstone = new UICheckBox().setPosition(-15, 26, Anchor.RIGHT).register(this);
-		cbDoubleDoor = new UICheckBox().setPosition(-15, 38, Anchor.RIGHT).register(this);
+		tfOpenTime = new UITextField(this, 30).setPosition(-5, 14, Anchor.RIGHT).setFilter("\\d+").register(this);
+		cbRedstone = new UICheckBox(this).setPosition(-15, 26, Anchor.RIGHT).register(this);
+		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
 
 		HashMap<IDoorSound, String> listSounds = new HashMap<>();
 		for (Entry<String, IDoorSound> entry : DoorRegistry.listSounds().entrySet())
 			listSounds.put(entry.getValue(), entry.getKey());
-		selDoorSound = new UISelect(100, UISelect.Option.fromList(listSounds)).setPosition(0, 50, Anchor.RIGHT).register(this);
+		selDoorSound = new UISelect(this, 100, UISelect.Option.fromList(listSounds)).setPosition(0, 50, Anchor.RIGHT).register(this);
 		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s");
 
-		propContainer.add(new UILabel("gui.door_factory.door_movement").setPosition(0, 4));
-		propContainer.add(new UILabel("gui.door_factory.door_open_time").setPosition(0, 16));
-		propContainer.add(new UILabel("gui.door_factory.door_require_redstone").setPosition(0, 28));
-		propContainer.add(new UILabel("gui.door_factory.door_double_door").setPosition(0, 40));
-		propContainer.add(new UILabel("gui.door_factory.door_sound").setPosition(0, 52));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, 16));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_require_redstone").setPosition(0, 28));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 40));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, 52));
 
 		propContainer.add(selDoorMovement);
 		propContainer.add(tfOpenTime);
@@ -137,21 +155,27 @@ public class DoorFactoryGui extends MalisisGui
 		propContainer.add(cbDoubleDoor);
 		propContainer.add(selDoorSound);
 
+		return propContainer;
+
 	}
 
-	private void setMaterialsContainer(UIContainer matContainer)
+	private UIContainer getMaterialsContainer()
 	{
-		UISlot frameSlot = new UISlot(tileEntity.frameSlot).setPosition(-10, 4, Anchor.RIGHT);
-		UISlot topMaterialSlot = new UISlot(tileEntity.topMaterialSlot).setPosition(-10, 24, Anchor.RIGHT);
-		UISlot bottomMaterialSlot = new UISlot(tileEntity.bottomMaterialSlot).setPosition(-10, 44, Anchor.RIGHT);
+		UIContainer matContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
-		matContainer.add(new UILabel("gui.door_factory.frame_type").setPosition(0, 9));
-		matContainer.add(new UILabel("gui.door_factory.top_material").setPosition(0, 29));
-		matContainer.add(new UILabel("gui.door_factory.bottom_material").setPosition(0, 49));
+		UISlot frameSlot = new UISlot(this, tileEntity.frameSlot).setPosition(-10, 4, Anchor.RIGHT);
+		UISlot topMaterialSlot = new UISlot(this, tileEntity.topMaterialSlot).setPosition(-10, 22, Anchor.RIGHT);
+		UISlot bottomMaterialSlot = new UISlot(this, tileEntity.bottomMaterialSlot).setPosition(-10, 40, Anchor.RIGHT);
+
+		matContainer.add(new UILabel(this, "gui.door_factory.frame_type").setPosition(0, 9));
+		matContainer.add(new UILabel(this, "gui.door_factory.top_material").setPosition(0, 27));
+		matContainer.add(new UILabel(this, "gui.door_factory.bottom_material").setPosition(0, 45));
 
 		matContainer.add(frameSlot);
 		matContainer.add(topMaterialSlot);
 		matContainer.add(bottomMaterialSlot);
+
+		return matContainer;
 	}
 
 	@Override
@@ -192,7 +216,7 @@ public class DoorFactoryGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onCreateDoor(UIButton.ClickedEvent event)
+	public void onCreateDoor(UIButton.ClickEvent event)
 	{
 		DoorFactoryMessage.sendCreateDoor(tileEntity);
 	}

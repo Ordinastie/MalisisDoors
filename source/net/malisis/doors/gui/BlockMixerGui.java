@@ -6,6 +6,7 @@ import net.malisis.core.client.gui.component.UISlot;
 import net.malisis.core.client.gui.component.container.UIPlayerInventory;
 import net.malisis.core.client.gui.component.container.UIWindow;
 import net.malisis.core.client.gui.component.decoration.UIProgressBar;
+import net.malisis.core.client.gui.component.decoration.UITooltip;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.doors.MalisisDoors;
@@ -27,19 +28,19 @@ public class BlockMixerGui extends MalisisGui
 		setInventoryContainer(container);
 		this.tileEntity = tileEntity;
 
-		UIWindow window = new UIWindow("tile.block_mixer.name", 176, 166);
+		UIWindow window = new UIWindow(this, "tile.block_mixer.name", 176, 166);
 
-		UISlot firstInputSlot = new UISlot(tileEntity.firstInput).setPosition(-60, 20, Anchor.CENTER);
-		UISlot secondInputSlot = new UISlot(tileEntity.secondInput).setPosition(60, 20, Anchor.CENTER);
-		UISlot outputSlot = new UISlot(tileEntity.output).setPosition(0, 20, Anchor.CENTER);
+		UISlot firstInputSlot = new UISlot(this, tileEntity.firstInput).setPosition(-60, 20, Anchor.CENTER);
+		UISlot secondInputSlot = new UISlot(this, tileEntity.secondInput).setPosition(60, 20, Anchor.CENTER);
+		UISlot outputSlot = new UISlot(this, tileEntity.output).setPosition(0, 20, Anchor.CENTER);
 
-		progressBar = new UIProgressBar().setPosition(-30, 21, Anchor.CENTER);
-		progressBarReversed = new UIProgressBar().setPosition(30, 21, Anchor.CENTER).setReversed();
+		progressBar = new UIProgressBar(this).setPosition(-30, 21, Anchor.CENTER);
+		progressBarReversed = new UIProgressBar(this).setPosition(30, 21, Anchor.CENTER).setReversed();
 
-		cbRender = new UICheckBox("gui.block_mixer.simple_rendering").setPosition(0, 50, Anchor.CENTER).register(this);
-		cbRender.setTooltip("gui.block_mixer.simple_rendering_tooltip");
+		cbRender = new UICheckBox(this, "gui.block_mixer.simple_rendering").setPosition(0, 50, Anchor.CENTER).register(this);
+		cbRender.setTooltip(new UITooltip(this, "gui.block_mixer.simple_rendering_tooltip"));
 
-		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
+		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 
 		window.add(firstInputSlot);
 		window.add(secondInputSlot);

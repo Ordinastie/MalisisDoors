@@ -63,27 +63,27 @@ public class VanishingDiamondGui extends MalisisGui
 		setInventoryContainer(container);
 		this.tileEntity = te;
 
-		UIWindow window = new UIWindow("tile.vanishing_block_diamond.name", 200, 220);
+		UIWindow window = new UIWindow(this, "tile.vanishing_block_diamond.name", 200, 220);
 
-		window.add(new UILabel("Direction").setPosition(0, 20));
-		window.add(new UILabel("Delay").setPosition(55, 20));
-		window.add(new UILabel("Inversed").setPosition(90, 20));
+		window.add(new UILabel(this, "Direction").setPosition(0, 20));
+		window.add(new UILabel(this, "Delay").setPosition(55, 20));
+		window.add(new UILabel(this, "Inversed").setPosition(90, 20));
 
 		int i = 0;
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
 			DirectionState state = te.getDirectionState(dir);
 			int y = i * 14 + 30;
-			UICheckBox cb = new UICheckBox(dir.name());
+			UICheckBox cb = new UICheckBox(this, dir.name());
 			cb.setPosition(2, y).setChecked(state.shouldPropagate).register(this);
 
-			UIContainer cbCont = new UIContainer(70, 12);
+			UIContainer cbCont = new UIContainer(this, 70, 12);
 			cbCont.setPosition(55, y);
 
-			UITextField textField = new UITextField(27, "" + state.delay).setPosition(0, 0).setDisabled(!state.shouldPropagate)
+			UITextField textField = new UITextField(this, 27, "" + state.delay).setPosition(0, 0).setDisabled(!state.shouldPropagate)
 					.setFilter("\\d+").register(this);
 
-			UICheckBox invCb = new UICheckBox().setPosition(50, 0).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
+			UICheckBox invCb = new UICheckBox(this).setPosition(50, 0).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
 					.register(this);
 			cbCont.add(textField);
 			cbCont.add(invCb);
@@ -96,20 +96,20 @@ public class VanishingDiamondGui extends MalisisGui
 			i++;
 		}
 
-		UIContainer cont = (UIContainer) new UIContainer(50, 60).setPosition(0, 40, Anchor.RIGHT);
+		UIContainer cont = new UIContainer<UIContainer>(this, 50, 60).setPosition(0, 40, Anchor.RIGHT);
 
-		duration = new UITextField(30).setPosition(0, 10, Anchor.CENTER).setFilter("\\d+").register(this);
-		cont.add(new UILabel("Duration").setPosition(0, 0, Anchor.CENTER));
+		duration = new UITextField(this, 30).setPosition(0, 10, Anchor.CENTER).setFilter("\\d+").register(this);
+		cont.add(new UILabel(this, "Duration").setPosition(0, 0, Anchor.CENTER));
 		cont.add(duration);
 
-		UIInventory inv = new UIInventory(container.getInventory(1));
+		UIInventory inv = new UIInventory(this, container.getInventory(1));
 		inv.setPosition(0, 40, Anchor.CENTER);
-		cont.add(new UILabel("Block").setPosition(0, 30, Anchor.CENTER));
+		cont.add(new UILabel(this, "Block").setPosition(0, 30, Anchor.CENTER));
 		cont.add(inv);
 
 		window.add(cont);
 
-		UIPlayerInventory playerInv = new UIPlayerInventory(container.getPlayerInventory());
+		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 		window.add(playerInv);
 
 		addToScreen(window);
