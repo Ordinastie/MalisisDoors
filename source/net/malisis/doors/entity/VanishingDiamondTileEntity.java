@@ -151,15 +151,15 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 	}
 
 	@Override
-	public MalisisInventory getInventory(Object... data)
+	public MalisisInventory[] getInventories(Object... data)
 	{
-		return this.inventory;
+		return new MalisisInventory[] { inventory };
 	}
 
 	@Override
-	public MalisisInventory getInventory(ForgeDirection side, Object... data)
+	public MalisisInventory[] getInventories(ForgeDirection side, Object... data)
 	{
-		return inventory;
+		return getInventories(data);
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -24,6 +24,9 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.inventory.IInventoryProvider;
+import net.malisis.core.inventory.MalisisInventory;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.block.Block;
@@ -43,7 +46,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorFactory extends Block implements ITileEntityProvider
 {
@@ -95,11 +98,12 @@ public class DoorFactory extends Block implements ITileEntityProvider
 		if (world.isRemote)
 			return true;
 
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity == null || player.isSneaking())
+		if (player.isSneaking())
 			return false;
 
-		((DoorFactoryTileEntity) tileEntity).getInventory().open((EntityPlayerMP) player);
+		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		MalisisInventory.open((EntityPlayerMP) player, te);
+
 		return true;
 	}
 

@@ -24,7 +24,10 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.inventory.IInventoryProvider;
+import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.util.EntityUtils;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.minecraft.block.Block;
@@ -93,11 +96,11 @@ public class BlockMixer extends Block implements ITileEntityProvider
 		if (world.isRemote)
 			return true;
 
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity == null || player.isSneaking())
+		if (player.isSneaking())
 			return false;
 
-		((BlockMixerTileEntity) tileEntity).getInventory().open((EntityPlayerMP) player);
+		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		MalisisInventory.open((EntityPlayerMP) player, te);
 		return true;
 	}
 

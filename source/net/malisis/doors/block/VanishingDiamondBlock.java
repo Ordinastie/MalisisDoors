@@ -26,6 +26,9 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import net.malisis.core.inventory.IInventoryProvider;
+import net.malisis.core.inventory.MalisisInventory;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.minecraft.creativetab.CreativeTabs;
@@ -37,7 +40,7 @@ import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class VanishingDiamondBlock extends VanishingBlock
 {
@@ -76,16 +79,16 @@ public class VanishingDiamondBlock extends VanishingBlock
 	{}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
 	{
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if ((te.getBlockMetadata() & 3) == typeDiamondFrame)
-		{
-			if (!world.isRemote)
-				((VanishingDiamondTileEntity) te).getInventory().open((EntityPlayerMP) p);
-
+		if (world.isRemote)
 			return true;
-		}
+
+		if (player.isSneaking())
+			return false;
+
+		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		MalisisInventory.open((EntityPlayerMP) player, te);
 
 		return false;
 	}
