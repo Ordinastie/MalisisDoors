@@ -21,14 +21,14 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 	private int mixTotalTime = 100;
 	public MixerSlot firstInput;
 	public MixerSlot secondInput;
-	public MixerSlot output;
+	public MalisisSlot output;
 
 	public BlockMixerTileEntity()
 	{
 		firstInput = new MixerSlot(0);
 		secondInput = new MixerSlot(1);
-		output = new MixerSlot(2);
-		output.setOutputSlot(true);
+		output = new MalisisSlot(2);
+		output.setOutputSlot();
 		inventory = new MalisisInventory(this, new MalisisSlot[] { firstInput, secondInput, output });
 	}
 
@@ -66,13 +66,9 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 		if (mixTimer > mixTotalTime)
 		{
 			mixTimer = 0;
-			firstInput.addItemStackSize(-1);
-			secondInput.addItemStackSize(-1);
-
-			if (outputItemStack == null)
-				output.setItemStack(expected);
-			else
-				output.addItemStackSize(1);
+			firstInput.extract(1);
+			secondInput.extract(1);
+			output.insert(expected);
 		}
 	}
 
@@ -126,9 +122,6 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
-			if (isOutputSlot)
-				return false;
-
 			return MixedBlockBlockItem.canBeMixed(itemStack);
 		}
 	}
