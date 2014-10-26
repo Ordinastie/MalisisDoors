@@ -4,7 +4,7 @@ item.jail_door.name=Porte de prison
 item.laboratory_door.name=Porte de laboratoire
 item.factory_door.name=Porte d'usine
 item.custom_door.name=Porte personnalisée
-item.shoji_door.name=Porte Shōji
+item.shoji_door.name=Porte Shoji
 item.rusty_hatch.name=Trappe Rouillée
 item.rusty_handle.name=Poignée Rouillée
 
@@ -21,7 +21,7 @@ tile.laboratory_door.name=Porte de laboratoire
 tile.factory_door.name=Porte d'usine
 tile.door_factory.name=Assembleur de porte
 tile.custom_door.name=Porte personnalisée
-tile.shoji_door.name=Porte Shōji
+tile.shoji_door.name=Porte Shoji
 tile.rusty_hatch.name=Trappe Rouillée
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
@@ -73,7 +73,7 @@ gui.door_factory.door_sound.vanilla_door=Porte originale
 gui.door_factory.door_sound.glass_door=Porte vitrée
 gui.door_factory.door_sound.jail_door=Porte de prison
 gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
-gui.door_factory.door_sound.shoji_door=Porte Shōji
+gui.door_factory.door_sound.shoji_door=Porte Shoji
 
 
 gui.door_factory.frame_type=Type de cadre

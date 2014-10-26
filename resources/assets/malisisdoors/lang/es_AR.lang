@@ -4,7 +4,7 @@ item.jail_door.name=Puerta de Celda
 item.laboratory_door.name=Puerta de Laboratorio
 item.factory_door.name=Puerta de Fábrica
 item.custom_door.name=Puerta Personalizada
-item.shoji_door.name=Puerta Shōji
+item.shoji_door.name=Puerta Shoji
 
 tile.player_sensor.name=Detector de Jugador
 tile.vanishing_block_wood.name=Marco Fantasma de Madera
@@ -19,7 +19,7 @@ tile.laboratory_door.name=Puerta de Laboratorio
 tile.factory_door.name=Puerta de Fábrica
 tile.door_factory.name=Puerta de Fábrica
 tile.custom_door.name=Puerta Personalizada
-tile.shoji_door.name=Puerta Shōji
+tile.shoji_door.name=Puerta Shoji
 
 malisisdoors.command.usage=Use /malisisdoors command con el argumento config o version
 
