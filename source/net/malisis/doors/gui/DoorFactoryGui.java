@@ -47,6 +47,8 @@ import net.malisis.core.client.gui.component.interaction.UISelect.Option;
 import net.malisis.core.client.gui.component.interaction.UITab;
 import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent;
+import net.malisis.core.client.gui.event.component.StateChangeEvent;
+import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateChange;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -191,7 +193,7 @@ public class DoorFactoryGui extends MalisisGui
 	@Subscribe
 	public void onGuiChangeEvent(ComponentEvent<UIComponent> event)
 	{
-		if (event instanceof ComponentEvent.StateChanged)
+		if (event instanceof StateChangeEvent)
 			return;
 
 		Option opt = selDoorMovement.getSelectedOption();
@@ -222,7 +224,7 @@ public class DoorFactoryGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onTabActivation(ComponentEvent.ActiveStateChanged<UITab> event)
+	public void onTabActivation(ActiveStateChange<UITab> event)
 	{
 		if (event.getState())
 			firstTabActive = event.getComponent() == firstTab;

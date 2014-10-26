@@ -118,7 +118,7 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onChecked(ComponentEvent.ValueChanged<UICheckBox, Boolean> event)
+	public void onChecked(ComponentEvent.ValueChange<UICheckBox, Boolean> event)
 	{
 		for (Entry<ForgeDirection, UIComponent[]> entry : configs.entrySet())
 		{
@@ -133,7 +133,7 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onTextChanged(ComponentEvent.ValueChanged<UITextField, String> event)
+	public void onTextChanged(ComponentEvent.ValueChange<UITextField, String> event)
 	{
 		updateConfig();
 	}
