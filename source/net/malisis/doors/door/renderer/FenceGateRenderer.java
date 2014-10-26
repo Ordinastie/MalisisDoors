@@ -26,7 +26,7 @@ package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.door.Door;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
@@ -34,7 +34,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class FenceGateRenderer extends DoorRenderer
 {
@@ -44,9 +44,9 @@ public class FenceGateRenderer extends DoorRenderer
 		float w = 0.125F; // fence depth and hinge width
 		float w2 = 0.1875F; //
 
-		Shape hinge = ShapePreset.Cube().setSize(w, 0.6875F, w).translate(0, 0.3125F, 0.5F - w / 2);
-		Shape gateH = ShapePreset.Cube().setSize(w, w2 * 3, w).translate(0.5F - w, 0.375F, 0.5F - w / 2);
-		Shape gateBottom = ShapePreset.Cube().setSize(2 * w, w2, w).translate(w, 0.375F, 0.5F - w / 2);
+		Shape hinge = new Cube().setSize(w, 0.6875F, w).translate(0, 0.3125F, 0.5F - w / 2);
+		Shape gateH = new Cube().setSize(w, w2 * 3, w).translate(0.5F - w, 0.375F, 0.5F - w / 2);
+		Shape gateBottom = new Cube().setSize(2 * w, w2, w).translate(w, 0.375F, 0.5F - w / 2);
 		Shape gateTop = new Shape(gateBottom).translate(0, 2 * w2, 0);
 
 		shape = Shape.fromShapes(hinge, gateH, gateBottom, gateTop);

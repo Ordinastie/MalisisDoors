@@ -24,10 +24,11 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.preset.FacePreset;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.face.NorthFace;
+import net.malisis.core.renderer.element.face.SouthFace;
+import net.malisis.core.renderer.element.face.TopFace;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.Block;
@@ -38,7 +39,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class CustomDoorRenderer extends DoorRenderer
 {
@@ -61,14 +62,14 @@ public class CustomDoorRenderer extends DoorRenderer
 	protected void initShapes()
 	{
 		width = 1.0F / 8.0F;
-		Shape frameR = ShapePreset.Cube().setSize(width, 1, Door.DOOR_WIDTH);
+		Shape frameR = new Cube().setSize(width, 1, Door.DOOR_WIDTH);
 		Shape frameL = new Shape(frameR).translate(1 - width, 0, 0);
-		Shape frame = ShapePreset.Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
+		Shape frame = new Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
 		frame.removeFace(frame.getFace("east")).removeFace(frame.getFace("west"));
 		frame = Shape.fromShapes(frameR, frameL, frame).scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
 		frame.interpolateUV();
 		frame.applyMatrix();
-		Shape mat = new Shape(new Face[] { FacePreset.South(), FacePreset.North(), FacePreset.Top() });
+		Shape mat = new Shape(new SouthFace(), new NorthFace(), new TopFace());
 		mat.setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F).translate(width, width, Door.DOOR_WIDTH * 0.2F);
 		mat.applyMatrix();
 
@@ -153,7 +154,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		rp.colorMultiplier.set(getColor(block));
 		shape.setParameters("material", rp, true);
 
-		//reset the values to default as rp is used for the whole shape 
+		//reset the values to default as rp is used for the whole shape
 		rp.icon.reset();
 		rp.colorMultiplier.reset();
 

@@ -29,7 +29,7 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
@@ -54,7 +54,7 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	protected void initShapes()
 	{
-		shape = ShapePreset.Cube();
+		shape = new Cube();
 		shape.setSize(1, 1, Door.DOOR_WIDTH);
 		shape.scale(1, 1, 0.995F);
 		shape.storeState();

@@ -31,7 +31,7 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.Vertex;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
@@ -67,13 +67,13 @@ public class MixedBlockRenderer extends BaseRenderer
 	@Override
 	protected void initShapes()
 	{
-		simpleShape = ShapePreset.Cube();
+		simpleShape = new Cube();
 
 		shapes = new Shape[][] { new Shape[6], new Shape[6] };
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			Shape s0 = ShapePreset.Cube();
-			Shape s1 = ShapePreset.Cube();
+			Shape s0 = new Cube();
+			Shape s1 = new Cube();
 			shapes[0][dir.ordinal()] = s0.removeFace(s0.getFace(dir)).storeState();
 			shapes[1][dir.ordinal()] = s1.shrink(dir, 0.999F).removeFace(s1.getFace(dir)).storeState();
 		}
@@ -95,6 +95,7 @@ public class MixedBlockRenderer extends BaseRenderer
 		}
 		else if (renderType == TYPE_ISBRH_WORLD)
 		{
+			initShapes();
 			tileEntity = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
 			if (tileEntity == null)
 				return false;

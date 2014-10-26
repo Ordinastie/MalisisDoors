@@ -27,6 +27,7 @@ package net.malisis.doors.renderer;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
+import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.MultiBlock;
@@ -92,7 +93,9 @@ public class RustyHatchRenderer extends BaseRenderer
 		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
 
 		if (renderType == TYPE_ISBRH_WORLD)
+		{
 			renderBlock();
+		}
 		else if (renderType == TYPE_TESR_WORLD)
 			renderTileEntity();
 	}
@@ -115,6 +118,11 @@ public class RustyHatchRenderer extends BaseRenderer
 		{
 			frame.resetState();
 			setup(frame);
+			for (Face f : frame.getFaces())
+			{
+				System.err.println(f.toString());
+			}
+
 			rp.icon.set(Blocks.anvil.getIcon(1, 0));
 			drawShape(frame, rp);
 		}

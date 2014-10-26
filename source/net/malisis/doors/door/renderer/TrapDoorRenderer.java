@@ -27,8 +27,7 @@ package net.malisis.doors.door.renderer;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Face;
-import net.malisis.core.renderer.preset.FacePreset;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
@@ -39,7 +38,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class TrapDoorRenderer extends DoorRenderer
 {
@@ -48,7 +47,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	protected void initShapes()
 	{
-		shape = ShapePreset.Cube();
+		shape = new Cube();
 		shape.setSize(1, Door.DOOR_WIDTH, 1);
 		shape.interpolateUV();
 		shape.storeState();
@@ -86,7 +85,7 @@ public class TrapDoorRenderer extends DoorRenderer
 
 		Face f = shape.getFace(ForgeDirection.UP);
 		shape.applyMatrix();
-		f.getParameters().aoMatrix.set(FacePreset.calculateAoMatrix(f, ForgeDirection.UP));
+		f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
 
 		drawShape(shape, rp);
 	}

@@ -29,7 +29,7 @@ import java.util.Random;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.preset.ShapePreset;
+import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.block.VanishingBlock;
@@ -53,7 +53,7 @@ public class VanishingBlockRenderer extends BaseRenderer
 		{
 			RenderParameters rp = new RenderParameters();
 			rp.useBlockBounds.set(false);
-			drawShape(ShapePreset.Cube(), rp);
+			drawShape(new Cube(), rp);
 		}
 		else if (renderType == TYPE_ISBRH_WORLD)
 		{
@@ -76,14 +76,14 @@ public class VanishingBlockRenderer extends BaseRenderer
 				{
 
 					tessellatorShift();
-					drawShape(ShapePreset.Cube());
+					drawShape(new Cube());
 				}
 
 				renderBlocks.renderAllFaces = false;
 				renderBlocks.blockAccess = world;
 			}
 			else if (((VanishingBlock) block).renderPass == 0)
-				drawShape(ShapePreset.Cube());
+				drawShape(new Cube());
 		}
 	}
 
@@ -115,7 +115,7 @@ public class VanishingBlockRenderer extends BaseRenderer
 		rp.useBlockBounds.set(false);
 		rp.interpolateUV.set(false);
 
-		Shape shape = ShapePreset.Cube();
+		Shape shape = new Cube();
 		// randomize position for vibrations
 		if (!te.inTransition && !te.powered)
 		{
