@@ -44,10 +44,14 @@ public class FenceGateRenderer extends DoorRenderer
 		float w = 0.125F; // fence depth and hinge width
 		float w2 = 0.1875F; //
 
-		Shape hinge = new Cube().setSize(w, 0.6875F, w).translate(0, 0.3125F, 0.5F - w / 2);
-		Shape gateH = new Cube().setSize(w, w2 * 3, w).translate(0.5F - w, 0.375F, 0.5F - w / 2);
-		Shape gateBottom = new Cube().setSize(2 * w, w2, w).translate(w, 0.375F, 0.5F - w / 2);
-		Shape gateTop = new Shape(gateBottom).translate(0, 2 * w2, 0);
+		Shape hinge = new Cube().setSize(w, 0.6875F, w);
+		hinge.translate(0, 0.3125F, 0.5F - w / 2);
+		Shape gateH = new Cube().setSize(w, w2 * 3, w);
+		gateH.translate(0.5F - w, 0.375F, 0.5F - w / 2);
+		Shape gateBottom = new Cube().setSize(2 * w, w2, w);
+		gateBottom.translate(w, 0.375F, 0.5F - w / 2);
+		Shape gateTop = new Shape(gateBottom);
+		gateTop.translate(0, 2 * w2, 0);
 
 		shape = Shape.fromShapes(hinge, gateH, gateBottom, gateTop);
 		shape.applyMatrix();

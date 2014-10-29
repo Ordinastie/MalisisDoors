@@ -63,10 +63,13 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		width = 1.0F / 8.0F;
 		Shape frameR = new Cube().setSize(width, 1, Door.DOOR_WIDTH);
-		Shape frameL = new Shape(frameR).translate(1 - width, 0, 0);
-		Shape frame = new Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH).translate(width, 0, 0);
+		Shape frameL = new Shape(frameR);
+		frameL.translate(1 - width, 0, 0);
+		Shape frame = new Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH);
+		frame.translate(width, 0, 0);
 		frame.removeFace(frame.getFace("east")).removeFace(frame.getFace("west"));
-		frame = Shape.fromShapes(frameR, frameL, frame).scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
+		frame = Shape.fromShapes(frameR, frameL, frame);
+		frame.scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
 		frame.interpolateUV();
 		frame.applyMatrix();
 		Shape mat = new Shape(new SouthFace(), new NorthFace(), new TopFace());
@@ -78,7 +81,8 @@ public class CustomDoorRenderer extends DoorRenderer
 		bottom.addFaces(mat.getFaces(), "material");
 		bottom.storeState();
 
-		top = new Shape(bottom).rotate(180, 0, 0, 1);
+		top = new Shape(bottom);
+		top.rotate(180, 0, 0, 1);
 		top.storeState();
 
 	}
@@ -163,11 +167,18 @@ public class CustomDoorRenderer extends DoorRenderer
 		else
 		{
 			if (itemRenderType == ItemRenderType.INVENTORY)
-				shape.rotate(45, 0, 1, 0).scale(0.9F, 0.8F, 1).translate(0, -1F, 0);
+			{
+				shape.rotate(45, 0, 1, 0);
+				shape.scale(0.9F, 0.8F, 1);
+				shape.translate(0, -1F, 0);
+			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
 				shape.rotate(90, 0, 1, 0);
 			else if (itemRenderType == ItemRenderType.ENTITY)
-				shape.translate(-0.5F, -0.5F, -0.25F).scale(0.5F);
+			{
+				shape.translate(-0.5F, -0.5F, -0.25F);
+				shape.scale(0.5F);
+			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED)
 				shape.rotate(180, 0, 1, 0);
 

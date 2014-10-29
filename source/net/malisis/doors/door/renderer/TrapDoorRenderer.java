@@ -52,7 +52,7 @@ public class TrapDoorRenderer extends DoorRenderer
 		shape.interpolateUV();
 		shape.storeState();
 
-		shape.getFace(ForgeDirection.UP).getParameters().calculateAOColor.set(true);
+		shape.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class TrapDoorRenderer extends DoorRenderer
 		if (mvt != null)
 			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
 
-		Face f = shape.getFace(ForgeDirection.UP);
+		Face f = shape.getFace(Face.nameFromDirection(ForgeDirection.UP));
 		shape.applyMatrix();
 		f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
 

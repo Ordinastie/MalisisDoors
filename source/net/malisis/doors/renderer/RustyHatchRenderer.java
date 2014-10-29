@@ -120,7 +120,7 @@ public class RustyHatchRenderer extends BaseRenderer
 			setup(frame);
 			for (Face f : frame.getFaces())
 			{
-				System.err.println(f.toString());
+				//System.err.println(f.toString());
 			}
 
 			rp.icon.set(Blocks.anvil.getIcon(1, 0));
@@ -164,13 +164,16 @@ public class RustyHatchRenderer extends BaseRenderer
 		switch (itemRenderType)
 		{
 			case INVENTORY:
-				handle.translate(0.20F, 0, 0.15F).rotate(90, 0, 0, 1);
+				handle.translate(0.20F, 0, 0.15F);
+				handle.rotate(90, 0, 0, 1);
 				break;
 			case EQUIPPED:
-				handle.translate(-0.5F, -.75F, 0).rotate(100, 0, 0, 1);
+				handle.translate(-0.5F, -.75F, 0);
+				handle.rotate(100, 0, 0, 1);
 				break;
 			case EQUIPPED_FIRST_PERSON:
-				handle.translate(0, -0.1F, -0.2F).rotate(90, 0, 0, 1);
+				handle.translate(0, -0.1F, -0.2F);
+				handle.rotate(90, 0, 0, 1);
 			default:
 				break;
 		}

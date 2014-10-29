@@ -29,8 +29,8 @@ import java.util.List;
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.element.Face;
+import net.malisis.core.renderer.element.MergedVertex;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.element.Vertex;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -74,8 +74,10 @@ public class MixedBlockRenderer extends BaseRenderer
 		{
 			Shape s0 = new Cube();
 			Shape s1 = new Cube();
-			shapes[0][dir.ordinal()] = s0.removeFace(s0.getFace(dir)).storeState();
-			shapes[1][dir.ordinal()] = s1.shrink(dir, 0.999F).removeFace(s1.getFace(dir)).storeState();
+			s0.enableMergedVertexes();
+			s1.enableMergedVertexes();
+			shapes[0][dir.ordinal()] = s0.removeFace(s0.getFace(Face.nameFromDirection(dir))).storeState();
+			shapes[1][dir.ordinal()] = s1.shrink(dir, 0.999F).removeFace(s1.getFace(Face.nameFromDirection(dir))).storeState();
 		}
 	}
 
@@ -118,6 +120,7 @@ public class MixedBlockRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
+		initShapes();
 		if (!setup())
 			return;
 
@@ -216,8 +219,8 @@ public class MixedBlockRenderer extends BaseRenderer
 
 		if (shouldShadeFace(firstBlock))
 		{
-			List<Vertex> vertexes = shape.getVertexes(dir);
-			for (Vertex v : vertexes)
+			List<MergedVertex> vertexes = shape.getMergedVertexes(dir);
+			for (MergedVertex v : vertexes)
 				v.setAlpha(0);
 		}
 
