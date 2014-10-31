@@ -25,15 +25,18 @@
 package net.malisis.doors.door.movement;
 
 import static net.malisis.doors.door.Door.*;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class SlidingSplitDoorMovement implements IDoorMovement
 {
@@ -78,31 +81,25 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
-	@Override
-	public Transformation getTopTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, true);
-	}
-
-	@Override
-	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, false);
-	}
-
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean top)
 	{
-		float fromY = 0, toY = 1 - DOOR_WIDTH;
-		if (!top)
-			toY = -1.1F;
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-		{
-			float tmp = fromY;
-			fromY = toY;
-			toY = tmp;
-		}
+		Translation translation = new Translation(0, 0, 0, 0, top ? 1 - DOOR_WIDTH : -1.1F, 0);
+		translation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
+		translation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 
-		return new Translation(0, fromY, 0, 0, toY, 0).forTicks(tileEntity.getDescriptor().getOpeningTime());
+		return translation;
+	}
+
+	@Override
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	{
+		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
+				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+	}
+
+	public boolean isSpecial()
+	{
+		return false;
 	}
 
 }

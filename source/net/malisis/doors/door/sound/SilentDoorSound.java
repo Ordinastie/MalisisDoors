@@ -22,23 +22,20 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.movement;
+package net.malisis.doors.door.sound;
 
-import net.malisis.core.renderer.RenderParameters;
-import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.malisis.doors.door.DoorState;
 
 /**
  * @author Ordinastie
  *
  */
-public interface IDoorMovement
+public class SilentDoorSound implements IDoorSound
 {
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox);
+	@Override
+	public String getSoundPath(DoorState state)
+	{
+		return null;
+	}
 
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
-
-	public abstract boolean isSpecial();
 }

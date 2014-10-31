@@ -25,21 +25,26 @@
 package net.malisis.doors.door.movement;
 
 import static net.malisis.doors.door.Door.*;
+
+import java.util.List;
+
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.animation.transformation.Translation;
+import net.malisis.core.renderer.element.MergedVertex;
+import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
  *
  */
-public class VaultDoorMovement implements IDoorMovement
+public class CurtainMovement implements IDoorMovement
 {
 
 	@Override
@@ -61,50 +66,49 @@ public class VaultDoorMovement implements IDoorMovement
 		if (dir == DIR_NORTH)
 		{
 			Z = DOOR_WIDTH;
-			if (opened && topBlock == reversed)
+			if (opened)
 			{
-				x += reversed ? left : right;
-				X += reversed ? left : right;
+				if (reversed)
+					X += left;
+				else
+					x += right;
 			}
 		}
 		if (dir == DIR_SOUTH)
 		{
 			z = 1 - DOOR_WIDTH;
-			if (opened && topBlock == reversed)
+			if (opened)
 			{
-				x += reversed ? right : left;
-				X += reversed ? right : left;
+				if (reversed)
+					x += right;
+				else
+					X += left;
 			}
 		}
 		if (dir == DIR_WEST)
 		{
 			X = DOOR_WIDTH;
-			if (opened && topBlock == reversed)
+			if (opened)
 			{
-				z += reversed ? right : left;
-				Z += reversed ? right : left;
+				if (reversed)
+					z += right;
+				else
+					Z += left;
 			}
 		}
 		if (dir == DIR_EAST)
 		{
 			x = 1 - DOOR_WIDTH;
-			if (opened && topBlock == reversed)
+			if (opened)
 			{
-				z += reversed ? left : right;
-				Z += reversed ? left : right;
+				if (reversed)
+					Z += left;
+				else
+					z += right;
 			}
 		}
 
-		if (opened && (topBlock == !reversed))
-		{
-			y += reversed ? left : right;
-			if (topBlock || selBox)
-				Y += reversed ? left : right;
-			else
-				Y = 0;
-		}
-
-		if (selBox && !opened)
+		if (selBox)
 		{
 			if (!topBlock)
 				Y++;
@@ -115,35 +119,43 @@ public class VaultDoorMovement implements IDoorMovement
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
-	{
-		float angle = -90;
-		float hinge = -0.5F + Door.DOOR_WIDTH / 2;
-		float offsetX = hinge;
-		float offsetY = hinge;
-
-		if (topBlock)
-			offsetY = 1 - offsetY;
-
-		if (!tileEntity.isReversed())
-			offsetX = -offsetX;
-
-		Rotation rotation = new Rotation(angle).aroundAxis(0, 0, 1).offset(offsetX, offsetY, 0);
-		rotation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
-		rotation.forTicks(tileEntity.getDescriptor().getOpeningTime());
-
-		return rotation;
-	}
-
 	@Override
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
-				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+		float x = 1 - Door.DOOR_WIDTH;
+		String dir = "west";
+		ForgeDirection fd = ForgeDirection.WEST;
+		if (tileEntity.isReversed())
+		{
+			x = -1 + Door.DOOR_WIDTH;
+			dir = "east";
+			fd = ForgeDirection.EAST;
+		}
+
+		Translation translation = new Translation(x, 0, 0);
+		translation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
+		translation.forTicks(tileEntity.getDescriptor().getOpeningTime());
+
+		Shape top = model.getShape("top");
+		Shape bottom = model.getShape("bottom");
+
+		top.enableMergedVertexes();
+		bottom.enableMergedVertexes();
+
+		List<MergedVertex> vertexes = top.getMergedVertexes("bottom", dir);
+		vertexes.addAll(bottom.getMergedVertexes(fd));
+
+		Animation[] anims = new Animation[vertexes.size()];
+		int i = 0;
+		for (MergedVertex mv : vertexes)
+			anims[i++] = new Animation(mv, translation);
+
+		return anims;
 	}
 
+	@Override
 	public boolean isSpecial()
 	{
-		return false;
+		return true;
 	}
 }

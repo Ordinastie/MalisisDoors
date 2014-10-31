@@ -7,6 +7,7 @@ item.custom_door.name=Eigene Tür
 item.shoji_door.name=Shoji-Schiebetür
 item.rusty_hatch.name=Rostige Luke
 item.rusty_handle.name=Rostiger Griff
+item.curtain.name=Gardine
  
 tile.player_sensor.name=Spielersensor
 tile.vanishing_block_wood.name=Schwindender Holzrahmen
@@ -25,6 +26,7 @@ tile.shoji_door.name=Shoji-Schiebetür
 tile.wood_sliding_door.name=Holz-Schiebetür
 tile.iron_sliding_door.name=Eisen-Schiebetür
 tile.rusty_hatch.name=Rostige Luke
+tile.curtain.name=Gardine
  
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
@@ -67,6 +69,7 @@ gui.door_factory.door_open_time=Öffnungszeit
 gui.door_factory.door_require_redstone=Benötigt Redstone
 gui.door_factory.door_double_door=Doppeltür
 gui.door_factory.door_sound=Geräusch
+gui.door_factory.door_sound.silent_door=Lautlos
 gui.door_factory.door_sound.vanilla_door=Vanilla-Tür
 gui.door_factory.door_sound.glass_door=Glasstür
 gui.door_factory.door_sound.jail_door=Gefängnistür

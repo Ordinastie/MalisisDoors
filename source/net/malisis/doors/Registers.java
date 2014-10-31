@@ -41,6 +41,7 @@ import net.malisis.doors.door.CustomDoor;
 import net.malisis.doors.door.CustomDoorItem;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.descriptor.Curtain;
 import net.malisis.doors.door.descriptor.FactoryDoor;
 import net.malisis.doors.door.descriptor.GlassDoor;
 import net.malisis.doors.door.descriptor.JailDoor;
@@ -146,9 +147,15 @@ public class Registers
 		factoryDoor = desc.getBlock();
 		facortyDoorItem = desc.getItem();
 
+		//Shoji Door
 		desc = new ShojiDoor().register();
 		shojiDoor = desc.getBlock();
 		shojiDoorItem = desc.getItem();
+
+		//Curtains
+		desc = new Curtain().register();
+		curtains = desc.getBlock();
+		curtainsItem = desc.getItem();
 
 	}
 

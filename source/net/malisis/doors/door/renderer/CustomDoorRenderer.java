@@ -25,10 +25,12 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.renderer.element.Shape;
+import net.malisis.core.renderer.element.face.BottomFace;
 import net.malisis.core.renderer.element.face.NorthFace;
 import net.malisis.core.renderer.element.face.SouthFace;
 import net.malisis.core.renderer.element.face.TopFace;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.Block;
@@ -43,9 +45,6 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class CustomDoorRenderer extends DoorRenderer
 {
-	private Shape top;
-	private Shape bottom;
-
 	private Block frameBlock;
 	private Block topMaterialBlock;
 	private Block bottomMaterialBlock;
@@ -62,29 +61,65 @@ public class CustomDoorRenderer extends DoorRenderer
 	protected void initShapes()
 	{
 		width = 1.0F / 8.0F;
+		/**
+		 * BOTTOM
+		 */
+		//frame right
 		Shape frameR = new Cube().setSize(width, 1, Door.DOOR_WIDTH);
+		//frame left
 		Shape frameL = new Shape(frameR);
 		frameL.translate(1 - width, 0, 0);
-		Shape frame = new Cube().setSize(1 - 2 * width, width, Door.DOOR_WIDTH);
-		frame.translate(width, 0, 0);
-		frame.removeFace(frame.getFace("east")).removeFace(frame.getFace("west"));
-		frame = Shape.fromShapes(frameR, frameL, frame);
-		frame.scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slided in walls
-		frame.interpolateUV();
+		//frame horizontal
+		Shape frameH = new Shape(new NorthFace(), new SouthFace(), new TopFace(), new BottomFace());
+		frameH.setSize(1 - 2 * width, width, Door.DOOR_WIDTH);
+		frameH.translate(width, 0, 0);
+
+		//full bottom frame
+		Shape frame = Shape.fromShapes(frameR, frameL, frameH);
+		frame.scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slid in walls
 		frame.applyMatrix();
+
+		//bottom material
 		Shape mat = new Shape(new SouthFace(), new NorthFace(), new TopFace());
 		mat.setSize(1 - 2 * width, 1 - width, Door.DOOR_WIDTH * 0.6F).translate(width, width, Door.DOOR_WIDTH * 0.2F);
 		mat.applyMatrix();
 
-		bottom = new Shape();
+		Shape bottom = new Shape();
 		bottom.addFaces(frame.getFaces(), "frame");
 		bottom.addFaces(mat.getFaces(), "material");
+		bottom.interpolateUV();
 		bottom.storeState();
 
-		top = new Shape(bottom);
-		top.rotate(180, 0, 0, 1);
+		/**
+		 * TOP
+		 */
+		frameR = new Shape(frameR);
+		frameL = new Shape(frameL);
+		frameH = new Shape(frameH);
+		frameH.translate(0, 1 - width, 0);
+
+		//full top frame
+		frame = Shape.fromShapes(frameR, frameL, frameH);
+		frame.scale(1, 1, 0.995F); //scale frame to prevent z-fighting when slid in walls
+		frame.applyMatrix();
+
+		//top material
+		mat = new Shape(mat);
+		mat.translate(0, -width, 0);
+		mat.applyMatrix();
+
+		Shape top = new Shape();
+		top.addFaces(frame.getFaces(), "frame");
+		top.addFaces(mat.getFaces(), "material");
+		top.translate(0, 1, 0);
+		top.interpolateUV();
 		top.storeState();
 
+		//store top and bottom inside a model
+		model = new MalisisModel();
+		model.addShape("bottom", bottom);
+		model.addShape("top", top);
+		model.storeState();
 	}
 
 	@Override
@@ -99,7 +134,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		}
 		else
 		{
-			//initShapes();
+			initShapes();
 			super.render();
 		}
 	}
@@ -134,11 +169,9 @@ public class CustomDoorRenderer extends DoorRenderer
 	}
 
 	@Override
-	protected void setup(boolean topBlock)
+	protected void setup()
 	{
-		shape = topBlock ? top : bottom;
-
-		shape.resetState();
+		model.resetState();
 
 		if (renderType == TYPE_TESR_WORLD)
 			setInfos(tileEntity);
@@ -148,43 +181,47 @@ public class CustomDoorRenderer extends DoorRenderer
 		if (frameBlock == null)
 			return;
 
+		setupParams(true);
+		setupParams(false);
+
+		if (renderType == TYPE_TESR_WORLD)
+			super.setup();
+		else
+		{
+			if (itemRenderType == ItemRenderType.INVENTORY)
+			{
+				model.rotate(45, 0, 1, 0, 0, 0, 0);
+				model.scale(0.9F, 0.8F, 1);
+				model.translate(0, -1F, 0);
+			}
+			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
+				model.rotate(90, 0, 1, 0, 0, 0, 0);
+			else if (itemRenderType == ItemRenderType.ENTITY)
+			{
+				model.translate(-0.5F, -0.5F, -0.25F);
+				model.scale(0.5F, 0.5F, 0.5F);
+			}
+			else if (itemRenderType == ItemRenderType.EQUIPPED)
+				model.rotate(180, 0, 1, 0, 0, 0, 0);
+		}
+	}
+
+	private void setupParams(boolean topBlock)
+	{
+		Shape s = model.getShape(topBlock ? "top" : "bottom");
 		rp.icon.set(frameBlock.getIcon(2, frameMetadata));
 		rp.colorMultiplier.set(getColor(frameBlock));
-		shape.setParameters("frame", rp, true);
+		s.setParameters("frame", rp, true);
 
 		Block block = topBlock ? topMaterialBlock : bottomMaterialBlock;
 		int meta = topBlock ? topMaterialMetadata : bottomMaterialMetadata;
 		rp.icon.set(block.getIcon(2, meta));
 		rp.colorMultiplier.set(getColor(block));
-		shape.setParameters("material", rp, true);
+		s.setParameters("material", rp, true);
 
 		//reset the values to default as rp is used for the whole shape
 		rp.icon.reset();
 		rp.colorMultiplier.reset();
-
-		if (renderType == TYPE_TESR_WORLD)
-			super.setup(topBlock);
-		else
-		{
-			if (itemRenderType == ItemRenderType.INVENTORY)
-			{
-				shape.rotate(45, 0, 1, 0);
-				shape.scale(0.9F, 0.8F, 1);
-				shape.translate(0, -1F, 0);
-			}
-			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
-				shape.rotate(90, 0, 1, 0);
-			else if (itemRenderType == ItemRenderType.ENTITY)
-			{
-				shape.translate(-0.5F, -0.5F, -0.25F);
-				shape.scale(0.5F);
-			}
-			else if (itemRenderType == ItemRenderType.EQUIPPED)
-				shape.rotate(180, 0, 1, 0);
-
-			if (topBlock)
-				shape.translate(0, 1, 0);
-		}
 	}
 
 	private int getColor(Block block)
@@ -199,12 +236,9 @@ public class CustomDoorRenderer extends DoorRenderer
 		bindTexture(TextureMap.locationBlocksTexture);
 		enableBlending();
 
-		setup(false);
-		drawShape(shape, rp);
+		setup();
 
-		setup(true);
-		drawShape(shape, rp);
-
+		model.render(this, rp);
 	}
 
 	@Override

@@ -26,10 +26,11 @@ package net.malisis.doors.door.renderer;
 
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
-import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
@@ -37,6 +38,7 @@ import net.minecraft.client.renderer.DestroyBlockProgress;
 public class DoorRenderer extends BaseRenderer
 {
 	protected DoorTileEntity tileEntity;
+	protected MalisisModel model;
 	protected int direction;
 	protected boolean opened;
 	protected boolean reversed;
@@ -54,10 +56,18 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	protected void initShapes()
 	{
-		shape = new Cube();
-		shape.setSize(1, 1, Door.DOOR_WIDTH);
-		shape.scale(1, 1, 0.995F);
-		shape.storeState();
+		Shape bottom = new Cube();
+		bottom.setSize(1, 1, Door.DOOR_WIDTH);
+		bottom.scale(1, 1, 0.995F);
+		Shape top = new Shape(bottom);
+		top.translate(0, 1, 0);
+
+		shape = bottom;
+		model = new MalisisModel();
+		model.addShape("bottom", bottom);
+		model.addShape("top", top);
+
+		model.storeState();
 	}
 
 	@Override
@@ -77,7 +87,7 @@ public class DoorRenderer extends BaseRenderer
 	{
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
-
+		initShapes();
 		setTileEntity();
 
 		direction = tileEntity.getDirection();
@@ -96,19 +106,15 @@ public class DoorRenderer extends BaseRenderer
 		this.tileEntity = (DoorTileEntity) super.tileEntity;
 	}
 
-	protected void setup(boolean topBlock)
+	protected void setup()
 	{
-		//set shape
-		shape.resetState();
+		model.resetState();
 		if (direction == Door.DIR_SOUTH)
-			shape.rotate(180, 0, 1, 0);
+			model.rotate(180, 0, 1, 0, 0, 0, 0);
 		if (direction == Door.DIR_EAST)
-			shape.rotate(-90, 0, 1, 0);
+			model.rotate(-90, 0, 1, 0, 0, 0, 0);
 		if (direction == Door.DIR_WEST)
-			shape.rotate(90, 0, 1, 0);
-
-		if (topBlock)
-			shape.translate(0, 1, 0);
+			model.rotate(90, 0, 1, 0, 0, 0, 0);
 	}
 
 	protected void renderTileEntity()
@@ -116,31 +122,20 @@ public class DoorRenderer extends BaseRenderer
 		enableBlending();
 		ar.setStartTime(tileEntity.getStartTime());
 
-		setup(false);
+		setup();
 		if (tileEntity.getMovement() != null)
-			ar.animate(shape, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		drawShape(shape, rp);
+		{
+			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			ar.animate(anims);
+		}
+
+		//model.render(this, rp);
+		drawShape(model.getShape("bottom"), rp);
 
 		blockMetadata |= Door.FLAG_TOPBLOCK;
 		y++;
-		setup(true);
-		if (tileEntity.getMovement() != null)
-			ar.animate(shape, tileEntity.getMovement().getTopTransformation(tileEntity));
-		drawShape(shape, rp);
-	}
-
-	@Override
-	public void renderDestroyProgress()
-	{
-		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
-
-		setup(false);
-		if (tileEntity.getMovement() != null)
-			ar.animate(shape, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		shape.translate(0, 0.5F, 0.005F);
-		shape.scale(1.011F);
-		shape.applyMatrix();
-		drawShape(new Shape(new Face[] { shape.getFaces()[0], shape.getFaces()[1] }), rp);
+		drawShape(model.getShape("top"), rp);
+		y--;
 	}
 
 	@Override

@@ -25,15 +25,18 @@
 package net.malisis.doors.door.movement;
 
 import static net.malisis.doors.door.Door.*;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class Roatating4WaysMovement implements IDoorMovement
 {
@@ -97,18 +100,6 @@ public class Roatating4WaysMovement implements IDoorMovement
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
-	@Override
-	public Transformation getTopTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, true);
-	}
-
-	@Override
-	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, false);
-	}
-
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
 		float angle = 90;
@@ -121,7 +112,7 @@ public class Roatating4WaysMovement implements IDoorMovement
 		if (topBlock)
 		{
 			angle = -angle;
-			hingeY = -hingeY;
+			hingeY = 1 - hingeY;
 		}
 
 		if (tileEntity.isReversed())
@@ -130,19 +121,30 @@ public class Roatating4WaysMovement implements IDoorMovement
 		if (topBlock != tileEntity.isReversed())
 		{
 			axisX = 1;
-
 		}
 		else
 		{
-
 			axisY = 1;
 		}
 
-		Transformation transformation = new Rotation(angle).aroundAxis(axisX, axisY, 0).offset(hingeX, hingeY, hingeZ);;
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			transformation.reversed(true);
+		Rotation rotation = new Rotation(angle);
+		rotation.aroundAxis(axisX, axisY, 0).offset(hingeX, hingeY, hingeZ);;
+		rotation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
+		rotation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 
-		return transformation.forTicks(tileEntity.getDescriptor().getOpeningTime());
+		return rotation;
+	}
+
+	@Override
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	{
+		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
+				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+	}
+
+	public boolean isSpecial()
+	{
+		return false;
 	}
 
 }

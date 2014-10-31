@@ -27,6 +27,7 @@ package net.malisis.doors.door;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.malisis.doors.door.movement.CurtainMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.movement.Roatating4WaysMovement;
@@ -48,6 +49,7 @@ import net.malisis.doors.door.sound.JailDoorSound;
 import net.malisis.doors.door.sound.PneumaticSound;
 import net.malisis.doors.door.sound.RustyHatchSound;
 import net.malisis.doors.door.sound.ShojiDoorSound;
+import net.malisis.doors.door.sound.SilentDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
 
 /**
@@ -74,7 +76,9 @@ public class DoorRegistry
 		registerMovement("rotate_slide", new RotateAndSlideMovement());
 		registerMovement("rotate_place", new RotateAndPlaceMovement());
 		registerMovement("rusty_hatch", new RustyHatchMovement());
+		registerMovement("curtain", new CurtainMovement());
 
+		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new VanillaDoorSound());
 		registerSound("glass_door", new GlassDoorSound());
 		registerSound("jail_door", new JailDoorSound());
@@ -149,8 +153,7 @@ public class DoorRegistry
 
 		for (Entry<String, IDoorMovement> entry : movements.entrySet())
 		{
-			if (!(entry.getValue() instanceof TrapDoorMovement) && !(entry.getValue() instanceof FenceGateMovement)
-					&& !(entry.getValue() instanceof RustyHatchMovement))
+			if (!entry.getValue().isSpecial())
 				mvts.put(entry.getKey(), entry.getValue());
 		}
 		return mvts;

@@ -25,17 +25,20 @@
 package net.malisis.doors.door.movement;
 
 import static net.malisis.doors.door.Door.*;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class RotateAndSlideMovement implements IDoorMovement
 {
@@ -74,18 +77,6 @@ public class RotateAndSlideMovement implements IDoorMovement
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
-	@Override
-	public Transformation getTopTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity);
-	}
-
-	@Override
-	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity);
-	}
-
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
 		int ot = tileEntity.getDescriptor().getOpeningTime() / 2;
@@ -105,9 +96,19 @@ public class RotateAndSlideMovement implements IDoorMovement
 		Transformation translation = new Translation(tr, 0, 0).forTicks(ot);
 
 		Transformation transformation = new ChainedTransformation(rotation, translation);
-		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			transformation.reversed(true);
+		transformation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 
 		return transformation;
+	}
+
+	@Override
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	{
+		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+	}
+
+	public boolean isSpecial()
+	{
+		return false;
 	}
 }

@@ -24,8 +24,11 @@
 
 package net.malisis.doors.door.movement;
 
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
@@ -34,7 +37,7 @@ import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class TrapDoorMovement implements IDoorMovement
 {
@@ -71,24 +74,12 @@ public class TrapDoorMovement implements IDoorMovement
 		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
 	}
 
-	@Override
-	public Transformation getTopTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, true);
-	}
-
-	@Override
-	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
-	{
-		return getTransformation(tileEntity, false);
-	}
-
-	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
+	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
 		float f = 0.5F - Door.DOOR_WIDTH / 2;
 		float fromAngle = 0, toAngle = 90;
 
-		if (topBlock)
+		if (tileEntity.isTopBlock(0, 0, 0))
 			toAngle = -toAngle;
 
 		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
@@ -99,6 +90,18 @@ public class TrapDoorMovement implements IDoorMovement
 		}
 
 		return new Rotation(fromAngle, toAngle).aroundAxis(1, 0, 0).offset(0, -f, f).forTicks(tileEntity.getDescriptor().getOpeningTime());
+	}
+
+	@Override
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	{
+		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+	}
+
+	@Override
+	public boolean isSpecial()
+	{
+		return true;
 	}
 
 }

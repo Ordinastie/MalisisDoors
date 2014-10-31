@@ -24,8 +24,12 @@
 
 package net.malisis.doors.door.movement;
 
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.entity.RustyHatchTileEntity;
@@ -90,18 +94,6 @@ public class RustyHatchMovement implements IDoorMovement
 		return aabb;
 	}
 
-	@Override
-	public Transformation getTopTransformation(DoorTileEntity tileEntity)
-	{
-		return getHandleTransformation(tileEntity);
-	}
-
-	@Override
-	public Transformation getBottomTransformation(DoorTileEntity tileEntity)
-	{
-		return getDoorTransformation(tileEntity);
-	}
-
 	private Transformation getDoorTransformation(DoorTileEntity tileEntity)
 	{
 		float f = -0.5F + 0.125F;
@@ -116,26 +108,40 @@ public class RustyHatchMovement implements IDoorMovement
 		}
 
 		int t = tileEntity.getDescriptor().getOpeningTime() / 2;
-		Rotation r = new Rotation(toAngle).aroundAxis(0, 0, 1).offset(offX, offY, 0).movement(Transformation.SINUSOIDAL);
+		Rotation rotation = new Rotation(toAngle).aroundAxis(0, 0, 1).offset(offX, offY, 0).movement(Transformation.SINUSOIDAL);
 
 		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			r.reversed(true);
+			rotation.reversed(true);
 		else
-			r.delay(t);
+			rotation.delay(t);
+		rotation.forTicks(t);
 
-		return r.forTicks(t);
+		return rotation;
 	}
 
 	private Transformation getHandleTransformation(DoorTileEntity tileEntity)
 	{
-		float fromAngle = 0, toAngle = 400;
-
 		int t = tileEntity.getDescriptor().getOpeningTime() / 2;
-		Transformation r = new Rotation(fromAngle, toAngle).aroundAxis(0, 1, 0).offset(0.5F, 0, 0.5F).movement(Transformation.SINUSOIDAL);
+		Rotation rotation = new Rotation(400).aroundAxis(0, 1, 0).offset(0.5F, 0, 0.5F).movement(Transformation.SINUSOIDAL);
 		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
-			r.delay(t).reversed(true);
+			rotation.delay(t).reversed(true);
+		rotation.forTicks(t);
 
-		return r.forTicks(t);
+		return rotation;
+	}
+
+	@Override
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	{
+		Transformation transform = new ParallelTransformation(getDoorTransformation(tileEntity), getHandleTransformation(tileEntity));
+		return new Animation[] { new Animation(model.getShape("door"), getDoorTransformation(tileEntity)),
+				new Animation(model.getShape("handle"), transform) };
+	}
+
+	@Override
+	public boolean isSpecial()
+	{
+		return true;
 	}
 
 }

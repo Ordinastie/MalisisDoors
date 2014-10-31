@@ -25,11 +25,12 @@
 package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.Door;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
 
 /**
@@ -53,44 +54,44 @@ public class FenceGateRenderer extends DoorRenderer
 		Shape gateTop = new Shape(gateBottom);
 		gateTop.translate(0, 2 * w2, 0);
 
-		shape = Shape.fromShapes(hinge, gateH, gateBottom, gateTop);
-		shape.applyMatrix();
-		shape.interpolateUV();
-		shape.storeState();
+		Shape right = Shape.fromShapes(hinge, gateH, gateBottom, gateTop);
+		right.applyMatrix();
+		right.interpolateUV();
+
+		Shape left = new Shape(right);
+		left.rotate(180, 0, 1, 0);
+
+		model = new MalisisModel();
+		model.addShape("right", right);
+		model.addShape("left", left);
+
+		model.storeState();
 	}
 
 	@Override
-	protected void setup(boolean leftPart)
+	protected void setup()
 	{
-		shape.resetState();
-
+		model.resetState();
 		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
-			shape.rotate(90, 0, 1, 0);
-
-		if (leftPart)
-			shape.scale(-1, 1, -1);
+			model.rotate(90, 0, 1, 0, 0, 0, 0);
 	}
 
 	@Override
-	public void renderDestroyProgress()
+	protected void renderTileEntity()
 	{
-		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
-		setup(false);
-		if (tileEntity.getMovement() != null)
-			ar.animate(shape, tileEntity.getMovement().getBottomTransformation(tileEntity));
-		drawShape(shape, rp);
+		ar.setStartTime(tileEntity.getStartTime());
 
-		setup(true);
-		if (tileEntity.getMovement() != null)
-			ar.animate(shape, tileEntity.getMovement().getTopTransformation(tileEntity));
-		drawShape(shape, rp);
-	}
+		initShapes();
 
-	@Override
-	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
-	{
-		return dbp.getPartialBlockX() == x && (dbp.getPartialBlockY() == y || dbp.getPartialBlockY() == y + 1)
-				&& dbp.getPartialBlockZ() == z;
+		setup();
+
+		if (tileEntity.getMovement() != null)
+		{
+			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			ar.animate(anims);
+		}
+
+		model.render(this, rp);
 	}
 
 	@Override

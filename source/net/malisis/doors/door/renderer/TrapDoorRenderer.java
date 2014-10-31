@@ -26,11 +26,13 @@ package net.malisis.doors.door.renderer;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Face;
+import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.door.Door;
-import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -47,19 +49,23 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	protected void initShapes()
 	{
-		shape = new Cube();
-		shape.setSize(1, Door.DOOR_WIDTH, 1);
-		shape.interpolateUV();
-		shape.storeState();
+		Shape s = new Cube();
+		s.setSize(1, Door.DOOR_WIDTH, 1);
+		s.interpolateUV();
 
-		shape.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
+		model = new MalisisModel();
+		model.addShape("shape", s);
+
+		model.storeState();
+
+		s.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
 	}
 
 	@Override
-	protected void setup(boolean topBlock)
+	protected void setup()
 	{
-		initParameters();
-		shape.resetState();
+		model.resetState();
+
 		float angle = 0;
 		if (direction == TrapDoor.DIR_NORTH)
 			angle = 180;
@@ -67,38 +73,30 @@ public class TrapDoorRenderer extends DoorRenderer
 			angle = 90;
 		else if (direction == TrapDoor.DIR_WEST)
 			angle = 270;
-		shape.rotate(angle, 0, 1, 0);
+		model.rotate(angle, 0, 1, 0, 0, 0, 0);
 
 		if (topBlock)
-			shape.translate(0, 1 - Door.DOOR_WIDTH, 0);
+			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
 	}
 
 	@Override
 	public void renderTileEntity()
 	{
-		setup(topBlock);
 		ar.setStartTime(tileEntity.getStartTime());
 
-		IDoorMovement mvt = tileEntity.getMovement();
-		if (mvt != null)
-			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
+		setup();
 
-		Face f = shape.getFace(Face.nameFromDirection(ForgeDirection.UP));
-		shape.applyMatrix();
-		f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
+		if (tileEntity.getMovement() != null)
+		{
+			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			ar.animate(anims);
+		}
 
-		drawShape(shape, rp);
-	}
+		//				Face f = shape.getFace(Face.nameFromDirection(ForgeDirection.UP));
+		//				shape.applyMatrix();
+		//				f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
 
-	@Override
-	public void renderDestroyProgress()
-	{
-		setup(topBlock);
-		IDoorMovement mvt = tileEntity.getMovement();
-		if (mvt != null)
-			ar.animate(shape, topBlock ? mvt.getTopTransformation(tileEntity) : mvt.getBottomTransformation(tileEntity));
-		rp.icon.set(damagedIcons[destroyBlockProgress.getPartialBlockDamage()]);
-		drawShape(shape, rp);
+		model.render(this, rp);
 	}
 
 	@Override

@@ -96,6 +96,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block factoryDoor;
 		public static Block shojiDoor;
 		public static Block rustyHatch;
+		public static Block curtains;
 	}
 
 	public static class Items
@@ -108,6 +109,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Item facortyDoorItem;
 		public static Item shojiDoorItem;
 		public static Item rustyHandle;
+		public static Item curtainsItem;
 	}
 
 }

@@ -22,23 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.movement;
+package net.malisis.doors.door.descriptor;
 
-import net.malisis.core.renderer.RenderParameters;
-import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.movement.CurtainMovement;
+import net.malisis.doors.door.sound.SilentDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 
 /**
  * @author Ordinastie
  *
  */
-public interface IDoorMovement
+public class Curtain extends DoorDescriptor
 {
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox);
+	public Curtain()
+	{
+		//Block
+		setMaterial(Material.cloth);
+		setHardness(2.0F);
+		setSoundType(Block.soundTypeCloth);
+		setName("curtain");
+		setTextureName(MalisisDoors.modid + ":curtain");
 
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
+		//TileEntity
+		setOpeningTime(6);
+		setDoubleDoor(true);
+		setMovement(DoorRegistry.getMovement(CurtainMovement.class));
+		setSound(DoorRegistry.getSound(SilentDoorSound.class));
 
-	public abstract boolean isSpecial();
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//Recipe
+		setRecipe(new Object[] { "AA", "AA", "AA", 'A', Blocks.wool });
+	}
+
 }
