@@ -92,7 +92,6 @@ public class RustyHatch extends Block implements ITileEntityProvider
 
 		ForgeDirection dir = ForgeDirection.getOrientation(side).getOpposite();
 		return world.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ).isSideSolid(world, x, y, z, dir);
-
 	}
 
 	@Override
@@ -112,7 +111,8 @@ public class RustyHatch extends Block implements ITileEntityProvider
 		MultiBlock mb = new MultiBlock(world, x, y, z);
 		mb.setDirection(side);
 		mb.setBounds(aabb);
-		mb.placeBlocks();
+		if (!mb.placeBlocks())
+			itemStack.stackSize++;
 	}
 
 	@Override
