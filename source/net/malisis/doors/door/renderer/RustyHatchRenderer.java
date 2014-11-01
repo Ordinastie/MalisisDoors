@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.renderer;
+package net.malisis.doors.door.renderer;
 
 import net.malisis.core.renderer.BaseRenderer;
 import net.malisis.core.renderer.RenderParameters;
@@ -34,6 +34,7 @@ import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.entity.RustyHatchTileEntity;
+import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -58,6 +59,11 @@ public class RustyHatchRenderer extends BaseRenderer
 
 	private boolean topBlock;
 	private ForgeDirection direction;
+
+	public RustyHatchRenderer()
+	{
+		getBlockDamage = true;
+	}
 
 	@Override
 	protected void initShapes()
@@ -128,6 +134,7 @@ public class RustyHatchRenderer extends BaseRenderer
 	{
 		if (!MultiBlock.isOrigin(world, x, y, z))
 			return;
+
 		tileEntity = (RustyHatchTileEntity) super.tileEntity;
 
 		hatch.resetState();
@@ -188,6 +195,14 @@ public class RustyHatchRenderer extends BaseRenderer
 			s.rotate(90, 0, 1, 0);
 		else if (direction == ForgeDirection.WEST)
 			s.rotate(180, 0, 1, 0);
+	}
+
+	@Override
+	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
+	{
+		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
+		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
+				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
 	}
 
 	@Override

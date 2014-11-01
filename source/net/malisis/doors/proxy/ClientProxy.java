@@ -11,6 +11,7 @@ import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
+import net.malisis.doors.door.renderer.RustyHatchRenderer;
 import net.malisis.doors.door.renderer.TrapDoorRenderer;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
@@ -21,7 +22,6 @@ import net.malisis.doors.entity.RustyHatchTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.MixedBlockRenderer;
-import net.malisis.doors.renderer.RustyHatchRenderer;
 import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.item.Item;
 
