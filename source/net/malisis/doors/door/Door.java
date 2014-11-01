@@ -26,6 +26,7 @@ package net.malisis.doors.door;
 
 import java.util.Random;
 
+import net.malisis.core.renderer.icon.ClippedIcon;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -66,7 +67,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 	protected MalisisIcon iconTop;
 	protected MalisisIcon iconBottom;
-	protected MalisisIcon iconSide;
+	protected MalisisIcon[] iconTopSides;
+	protected MalisisIcon[] iconBottomSides;
 	protected String soundPath;
 
 	private DoorDescriptor descriptor;
@@ -104,7 +106,20 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (textureName.equals("door_wood") || textureName.equals("door_iron"))
 			textureName = MalisisDoors.modid + ":" + textureName;
-		iconSide = new MalisisIcon(textureName + "_side").register((TextureMap) register);
+
+		MalisisIcon side = new MalisisIcon(textureName + "_side").register((TextureMap) register);
+		float w = 3F / 16F;
+		iconTopSides = new MalisisIcon[6];
+		iconTopSides[0] = new ClippedIcon(side, 0, 0, w, 1);
+		iconTopSides[1] = iconTopSides[0];
+		iconTopSides[4] = new ClippedIcon(side, w, 0, w, 1);
+		iconTopSides[5] = new ClippedIcon(side, 2 * w, 0, w, 1);
+
+		iconBottomSides = new MalisisIcon[6];
+		iconBottomSides[0] = iconTopSides[0];
+		iconBottomSides[1] = iconTopSides[0];
+		iconBottomSides[4] = new ClippedIcon(side, 3 * w, 0, w, 1);
+		iconBottomSides[5] = new ClippedIcon(side, 4 * w, 0, w, 1);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -119,22 +134,10 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		{
 			case 0:
 			case 1:
-				icon = iconSide.copy();
-				icon.clip(0, 0, 3, 16);
-				icon.setRotation(1);
-				return icon;
 			case 4:
-				icon = iconSide.copy();
-				icon.clip(topBlock ? 3 : 9, 0, 3, 16);
-				return icon;
 			case 5:
-				icon = iconSide.copy();
-				icon.clip(topBlock ? 6 : 12, 0, 3, 16);
-				return icon;
+				return topBlock ? iconTopSides[side] : iconBottomSides[side];
 			case 2:
-				icon = topBlock ? iconTop : iconBottom;
-				icon.flip(!reversed, false);
-				return icon;
 			case 3:
 				icon = topBlock ? iconTop : iconBottom;
 				icon.flip(!reversed, false);
