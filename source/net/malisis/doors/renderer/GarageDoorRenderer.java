@@ -57,15 +57,11 @@ public class GarageDoorRenderer extends BaseRenderer
 	protected AnimationRenderer ar = new AnimationRenderer(this);
 
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		shape = new Cube().setSize(Door.DOOR_WIDTH, 1, 1);
 		shape.storeState();
-	}
 
-	@Override
-	protected void initParameters()
-	{
 		rp = new RenderParameters();
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);

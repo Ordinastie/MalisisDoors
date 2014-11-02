@@ -56,16 +56,7 @@ public class MixedBlockRenderer extends BaseRenderer
 	private int metadata2;
 
 	@Override
-	protected void initParameters()
-	{
-		rp = new RenderParameters();
-		rp.useBlockBounds.set(false);
-		rp.usePerVertexAlpha.set(true);
-		rp.useWorldSensitiveIcon.set(false);
-	}
-
-	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		simpleShape = new Cube();
 
@@ -79,6 +70,11 @@ public class MixedBlockRenderer extends BaseRenderer
 			shapes[0][dir.ordinal()] = s0.removeFace(s0.getFace(Face.nameFromDirection(dir))).storeState();
 			shapes[1][dir.ordinal()] = s1.shrink(dir, 0.999F).removeFace(s1.getFace(Face.nameFromDirection(dir))).storeState();
 		}
+
+		rp = new RenderParameters();
+		rp.useBlockBounds.set(false);
+		rp.usePerVertexAlpha.set(true);
+		rp.useWorldSensitiveIcon.set(false);
 	}
 
 	private boolean setup()
@@ -97,7 +93,6 @@ public class MixedBlockRenderer extends BaseRenderer
 		}
 		else if (renderType == TYPE_ISBRH_WORLD)
 		{
-			initShapes();
 			tileEntity = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
 			if (tileEntity == null)
 				return false;
@@ -120,7 +115,6 @@ public class MixedBlockRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
-		initShapes();
 		if (!setup())
 			return;
 

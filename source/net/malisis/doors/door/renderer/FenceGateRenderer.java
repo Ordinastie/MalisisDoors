@@ -40,7 +40,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 public class FenceGateRenderer extends DoorRenderer
 {
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		float w = 0.125F; // fence depth and hinge width
 		float w2 = 0.1875F; //
@@ -66,6 +66,8 @@ public class FenceGateRenderer extends DoorRenderer
 		model.addShape("left", left);
 
 		model.storeState();
+
+		initParams();
 	}
 
 	@Override
@@ -80,8 +82,6 @@ public class FenceGateRenderer extends DoorRenderer
 	protected void renderTileEntity()
 	{
 		ar.setStartTime(tileEntity.getStartTime());
-
-		initShapes();
 
 		setup();
 

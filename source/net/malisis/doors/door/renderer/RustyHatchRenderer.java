@@ -66,7 +66,7 @@ public class RustyHatchRenderer extends BaseRenderer
 	}
 
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		rl = new ResourceLocation(MalisisDoors.modid, "models/rustyhatch.obj");
 		model = MalisisModel.load(rl);
@@ -74,11 +74,7 @@ public class RustyHatchRenderer extends BaseRenderer
 		hatch = model.getShape("door");
 		handle = model.getShape("handle");
 		ladder = model.getShape("ladder");
-	}
 
-	@Override
-	protected void initParameters()
-	{
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
 	}

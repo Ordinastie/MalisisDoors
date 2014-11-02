@@ -47,7 +47,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	RenderParameters rpTop;
 
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		Shape s = new Cube();
 		s.setSize(1, Door.DOOR_WIDTH, 1);
@@ -59,6 +59,8 @@ public class TrapDoorRenderer extends DoorRenderer
 		model.storeState();
 
 		s.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
+
+		initParams();
 	}
 
 	@Override

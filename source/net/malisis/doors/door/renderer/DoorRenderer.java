@@ -54,7 +54,7 @@ public class DoorRenderer extends BaseRenderer
 	}
 
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		Shape bottom = new Cube();
 		bottom.setSize(1, 1, Door.DOOR_WIDTH);
@@ -68,10 +68,11 @@ public class DoorRenderer extends BaseRenderer
 		model.addShape("top", top);
 
 		model.storeState();
+
+		initParams();
 	}
 
-	@Override
-	protected void initParameters()
+	protected void initParams()
 	{
 		rp = new RenderParameters();
 		rp.renderAllFaces.set(true);
@@ -87,7 +88,7 @@ public class DoorRenderer extends BaseRenderer
 	{
 		if (renderType == TYPE_ISBRH_WORLD)
 			return;
-		initShapes();
+
 		setTileEntity();
 
 		direction = tileEntity.getDirection();

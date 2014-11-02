@@ -58,7 +58,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	private float width;
 
 	@Override
-	protected void initShapes()
+	protected void initialize()
 	{
 		width = 1.0F / 8.0F;
 		/**
@@ -120,6 +120,8 @@ public class CustomDoorRenderer extends DoorRenderer
 		model.addShape("bottom", bottom);
 		model.addShape("top", top);
 		model.storeState();
+
+		initParams();
 	}
 
 	@Override
@@ -132,11 +134,8 @@ public class CustomDoorRenderer extends DoorRenderer
 			renderInventory();
 			return;
 		}
-		else
-		{
-			initShapes();
-			super.render();
-		}
+
+		super.render();
 	}
 
 	@Override
@@ -191,7 +190,7 @@ public class CustomDoorRenderer extends DoorRenderer
 			if (itemRenderType == ItemRenderType.INVENTORY)
 			{
 				model.rotate(45, 0, 1, 0, 0, 0, 0);
-				model.scale(0.9F, 0.8F, 1);
+				model.scale(0.9F, 0.8F, 1, 0, 0, 0);
 				model.translate(0, -1F, 0);
 			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
@@ -199,7 +198,7 @@ public class CustomDoorRenderer extends DoorRenderer
 			else if (itemRenderType == ItemRenderType.ENTITY)
 			{
 				model.translate(-0.5F, -0.5F, -0.25F);
-				model.scale(0.5F, 0.5F, 0.5F);
+				model.scale(0.5F, 0.5F, 0.5F, 0, 0, 0);
 			}
 			else if (itemRenderType == ItemRenderType.EQUIPPED)
 				model.rotate(180, 0, 1, 0, 0, 0, 0);
