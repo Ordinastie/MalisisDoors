@@ -35,7 +35,7 @@ import net.malisis.core.client.gui.component.UISlot;
 import net.malisis.core.client.gui.component.container.UIContainer;
 import net.malisis.core.client.gui.component.container.UIPlayerInventory;
 import net.malisis.core.client.gui.component.container.UITabGroup;
-import net.malisis.core.client.gui.component.container.UITabGroup.Position;
+import net.malisis.core.client.gui.component.container.UITabGroup.TabPosition;
 import net.malisis.core.client.gui.component.container.UIWindow;
 import net.malisis.core.client.gui.component.decoration.UIImage;
 import net.malisis.core.client.gui.component.decoration.UILabel;
@@ -93,7 +93,7 @@ public class DoorFactoryGui extends MalisisGui
 		UIContainer propContainer = getPropertiesContainer();
 		UIContainer matContainer = getMaterialsContainer();
 
-		UITabGroup tabGroup = new UITabGroup(this, Position.LEFT).setPosition(0, 10);
+		UITabGroup tabGroup = new UITabGroup(this, TabPosition.LEFT).setPosition(0, 10);
 
 		int a = 16;
 		firstTab = new UITab(this, new UIImage(this, tabTexture, propIcon).setSize(a, a)).setTooltip(
