@@ -33,7 +33,7 @@ import net.minecraft.block.material.Material;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class VanillaDoor extends DoorDescriptor
 {
@@ -41,6 +41,7 @@ public class VanillaDoor extends DoorDescriptor
 	{
 		boolean wood = material == Material.wood;
 		//Block
+		setOpeningTime(6);
 		setMaterial(material);
 		setHardness(wood ? 3.0F : 5.0F);
 		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);

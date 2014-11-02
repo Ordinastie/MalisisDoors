@@ -111,6 +111,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		float w = 3F / 16F;
 		iconTopSides = new MalisisIcon[6];
 		iconTopSides[0] = new ClippedIcon(side, 0, 0, w, 1);
+		iconTopSides[0].setRotation(1);
 		iconTopSides[1] = iconTopSides[0];
 		iconTopSides[4] = new ClippedIcon(side, w, 0, w, 1);
 		iconTopSides[5] = new ClippedIcon(side, 2 * w, 0, w, 1);
