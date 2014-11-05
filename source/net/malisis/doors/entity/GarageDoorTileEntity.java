@@ -27,6 +27,7 @@ package net.malisis.doors.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
@@ -40,7 +41,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class GarageDoorTileEntity extends TileEntity
 {
@@ -97,18 +98,16 @@ public class GarageDoorTileEntity extends TileEntity
 
 	public GarageDoorTileEntity getGarageDoor(ForgeDirection dir)
 	{
-		TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, getWorldObj(), xCoord + dir.offsetX, yCoord
+				+ dir.offsetY, zCoord + dir.offsetZ);
 		if (te == null)
 			return null;
-		if (!(te instanceof GarageDoorTileEntity))
+		if (te.getDirection() != getDirection())
 			return null;
-		GarageDoorTileEntity door = (GarageDoorTileEntity) te;
-		if (door.getDirection() != getDirection())
-			return null;
-		if (door.removed)
+		if (te.removed)
 			return null;
 
-		return (GarageDoorTileEntity) te;
+		return te;
 	}
 
 	public GarageDoorTileEntity findTopBlock()

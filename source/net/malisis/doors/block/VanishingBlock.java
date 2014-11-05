@@ -27,6 +27,7 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.entity.VanishingTileEntity;
@@ -52,7 +53,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class VanishingBlock extends BlockContainer
 {
@@ -114,7 +115,9 @@ public class VanishingBlock extends BlockContainer
 		if (isPowered(world, x, y, z) == powered) // same power state?
 			return;
 
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (te == null)
+			return;
 		te.setPowerState(powered);
 
 		if (powered)
@@ -136,7 +139,10 @@ public class VanishingBlock extends BlockContainer
 		if ((source.getBlockMetadata() & 3) == typeWoodFrame)
 			return true;
 
-		VanishingTileEntity dest = (VanishingTileEntity) world.getTileEntity(x, y, z);
+		VanishingTileEntity dest = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (dest == null)
+			return false;
+
 		if (source.copiedBlock == null || dest.copiedBlock == null)
 			return true;
 
@@ -155,7 +161,7 @@ public class VanishingBlock extends BlockContainer
 	 */
 	public void propagateState(World world, int x, int y, int z)
 	{
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
 			if (shouldPropagate(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, te))
@@ -171,8 +177,8 @@ public class VanishingBlock extends BlockContainer
 		if (is == null)
 			return false;
 
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if (te.copiedBlock != null)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (te == null || te.copiedBlock != null)
 			return false;
 
 		if (!te.setBlock(is, p, side, hitX, hitY, hitZ))
@@ -232,7 +238,7 @@ public class VanishingBlock extends BlockContainer
 			return null;
 		else
 		{
-			VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+			VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
 			if (te == null || te.copiedBlock == null)
 				return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
 			else
@@ -245,7 +251,8 @@ public class VanishingBlock extends BlockContainer
 	{
 		if ((world.getBlockMetadata(x, y, z) & (flagPowered | flagInTransition)) != 0)
 			return;
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
 		if (te == null || te.copiedBlock == null)
 		{
 			super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
@@ -262,7 +269,7 @@ public class VanishingBlock extends BlockContainer
 			setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 		else
 		{
-			VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+			VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
 			if (te == null || te.copiedBlock == null)
 				setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 			else
@@ -273,8 +280,8 @@ public class VanishingBlock extends BlockContainer
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if (te.powered || te.inTransition)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (te == null || te.powered || te.inTransition)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 		else
 		{
@@ -289,8 +296,8 @@ public class VanishingBlock extends BlockContainer
 	@Override
 	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 src, Vec3 dest)
 	{
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if (te.powered || te.inTransition)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (te == null || te.powered || te.inTransition)
 		{
 			setBlockBounds(0, 0, 0, 0, 0, 0);
 			return super.collisionRayTrace(world, x, y, z, src, dest);

@@ -26,7 +26,6 @@ package net.malisis.doors.block;
 
 import net.malisis.core.inventory.IInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
-import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.BlockMixerTileEntity;
@@ -37,7 +36,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -107,28 +105,10 @@ public class BlockMixer extends Block implements ITileEntityProvider
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
-		dropItems(world, x, y, z);
+		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		for (MalisisInventory inventory : provider.getInventories())
+			inventory.breakInventory(world, x, y, z);
 		super.breakBlock(world, x, y, z, block, metadata);
-	}
-
-	private void dropItems(World world, int x, int y, int z)
-	{
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (!(tileEntity instanceof IInventory))
-			return;
-
-		IInventory inventory = (IInventory) tileEntity;
-
-		for (int i = 0; i < inventory.getSizeInventory(); i++)
-		{
-			ItemStack itemStack = inventory.getStackInSlot(i);
-
-			if (itemStack != null && itemStack.stackSize > 0)
-			{
-				EntityUtils.spawnEjectedItem(world, x, y, z, itemStack);
-				itemStack.stackSize = 0;
-			}
-		}
 	}
 
 	@Override

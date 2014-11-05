@@ -77,7 +77,10 @@ public class MixedBlock extends Block implements ITileEntityProvider
 		if (!(itemStack.getItem() instanceof MixedBlockBlockItem))
 			return;
 
-		((MixedBlockTileEntity) world.getTileEntity(x, y, z)).set(itemStack);
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		if (te == null)
+			return;
+		te.set(itemStack);
 
 		if (MalisisDoorsSettings.enhancedMixedBlockPlacement.get())
 		{
@@ -93,7 +96,9 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
 	{
-		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		if (te == null)
+			return null;
 		return MixedBlockBlockItem.fromTileEntity(te);
 	}
 
@@ -102,7 +107,7 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	{
 		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
 		if (te == null || te.block1 == null || te.block2 == null)
-			return getLightValue();
+			return 0;
 
 		return Math.max(te.block1.getLightValue(), te.block2.getLightValue());
 	}
@@ -222,8 +227,9 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	{
 		if (!player.capabilities.isCreativeMode)
 		{
-			MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-			dropBlockAsItem(world, x, y, z, MixedBlockBlockItem.fromTileEntity(te));
+			MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+			if (te != null)
+				dropBlockAsItem(world, x, y, z, MixedBlockBlockItem.fromTileEntity(te));
 		}
 		return super.removedByPlayer(world, player, x, y, z);
 	}

@@ -59,7 +59,10 @@ public class VanishingDiamondBlock extends VanishingBlock
 		if (isPowered(world, x, y, z) == powered) // same power state?
 			return;
 
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		if (te == null)
+			return;
+
 		te.setPowerState(powered);
 
 		if (powered)

@@ -108,6 +108,15 @@ public class DoorFactory extends Block implements ITileEntityProvider
 	}
 
 	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+	{
+		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		for (MalisisInventory inventory : provider.getInventories())
+			inventory.breakInventory(world, x, y, z);
+		super.breakBlock(world, x, y, z, block, metadata);
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World var1, int var2)
 	{
 		return new DoorFactoryTileEntity();

@@ -24,6 +24,7 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.Door;
 import net.malisis.doors.entity.GarageDoorTileEntity;
@@ -46,7 +47,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class GarageDoor extends Block implements ITileEntityProvider
 {
@@ -94,10 +95,9 @@ public class GarageDoor extends Block implements ITileEntityProvider
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 		setBlockBoundsBasedOnState(world, x, y, z);
 
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te == null)
-			return;
-		((GarageDoorTileEntity) te).add();
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
+		if (te != null)
+			te.add();
 	}
 
 	@Override
@@ -105,11 +105,9 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	{
 		if ((world.isBlockIndirectlyGettingPowered(x, y, z) || block.canProvidePower()) && block != this)
 		{
-			TileEntity te = world.getTileEntity(x, y, z);
+			GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
 			if (te != null)
-			{
-				((GarageDoorTileEntity) te).changeState();
-			}
+				te.changeState();
 		}
 
 	}
@@ -117,11 +115,9 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te == null || !(te instanceof GarageDoorTileEntity))
-			return;
-
-		((GarageDoorTileEntity) te).remove();
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
+		if (te != null)
+			te.remove();
 
 		world.removeTileEntity(x, y, z);
 	}
