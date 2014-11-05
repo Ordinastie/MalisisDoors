@@ -39,13 +39,14 @@ import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorTileEntity extends TileEntity
 {
 	private DoorDescriptor descriptor;
 	private int lastMetadata = -1;
 	private long startTime;
+	private long startNanoTime;
 	private int timer = 0;
 	private DoorState state = DoorState.CLOSED;
 	private boolean moving;
@@ -77,6 +78,11 @@ public class DoorTileEntity extends TileEntity
 	public void setStartTime(long startTime)
 	{
 		this.startTime = startTime;
+	}
+
+	public long getStartNanoTime()
+	{
+		return startNanoTime;
 	}
 
 	public int getTimer()
@@ -169,7 +175,7 @@ public class DoorTileEntity extends TileEntity
 
 	/**
 	 * Change the current state of this DoorTileEntity
-	 * 
+	 *
 	 * @param newSate
 	 */
 	public void setDoorState(DoorState newState)
@@ -185,6 +191,7 @@ public class DoorTileEntity extends TileEntity
 		{
 			timer = moving ? descriptor.getOpeningTime() - timer : 0;
 			startTime = worldObj.getTotalWorldTime() - timer;
+			startNanoTime = System.nanoTime();
 			moving = true;
 		}
 		else
@@ -218,7 +225,7 @@ public class DoorTileEntity extends TileEntity
 
 	/**
 	 * Find the corresponding double door for this DoorTileEntity
-	 * 
+	 *
 	 * @return
 	 */
 	public DoorTileEntity getDoubleDoor()
@@ -250,7 +257,7 @@ public class DoorTileEntity extends TileEntity
 
 	/**
 	 * Is the DoorTileEntity passed a matching matching double door to this DoorTileEntity
-	 * 
+	 *
 	 * @param te
 	 * @return
 	 */

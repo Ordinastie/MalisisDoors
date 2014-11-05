@@ -54,7 +54,7 @@ public class GarageDoorRenderer extends BaseRenderer
 	protected boolean reversed;
 	protected boolean topBlock;
 
-	protected AnimationRenderer ar = new AnimationRenderer(this);
+	protected AnimationRenderer ar = new AnimationRenderer();
 
 	@Override
 	protected void initialize()
@@ -112,7 +112,7 @@ public class GarageDoorRenderer extends BaseRenderer
 
 		int t = GarageDoorTileEntity.maxOpenTime;
 		//set the start timer
-		ar.setStartTime(tileEntity.startTime);
+		ar.setStartTime(tileEntity.getStartNanoTime());
 
 		//create door list from childs + top
 		Set<GarageDoorTileEntity> doors = new HashSet<>(tileEntity.getChildDoors());

@@ -51,8 +51,8 @@ public class GarageDoorTileEntity extends TileEntity
 	protected GarageDoorTileEntity topDoor;
 	protected Set<GarageDoorTileEntity> childDoors = new HashSet<>();
 	protected DoorState state = DoorState.CLOSED;
-	public boolean draw = false;
-	public long startTime;
+	protected long startTime;
+	protected long startNanoTime;
 
 	public GarageDoorTileEntity()
 	{
@@ -67,6 +67,11 @@ public class GarageDoorTileEntity extends TileEntity
 	public DoorState getState()
 	{
 		return state;
+	}
+
+	public long getStartNanoTime()
+	{
+		return startNanoTime;
 	}
 
 	public boolean isOpened()
@@ -172,6 +177,7 @@ public class GarageDoorTileEntity extends TileEntity
 			return;
 
 		startTime = worldObj.getTotalWorldTime();
+		startNanoTime = System.nanoTime();
 		if (state == DoorState.CLOSED)
 			setState(DoorState.OPENING);
 		else if (state == DoorState.OPENED)

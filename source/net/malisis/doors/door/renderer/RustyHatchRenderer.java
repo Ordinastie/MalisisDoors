@@ -54,7 +54,7 @@ public class RustyHatchRenderer extends BaseRenderer
 	private Shape hatch;
 	private Shape handle;
 	private Shape ladder;
-	private AnimationRenderer ar = new AnimationRenderer(this);
+	private AnimationRenderer ar = new AnimationRenderer();
 	private RustyHatchTileEntity tileEntity;
 
 	private boolean topBlock;
@@ -138,7 +138,7 @@ public class RustyHatchRenderer extends BaseRenderer
 		setup(hatch);
 		setup(handle);
 
-		ar.setStartTime(tileEntity.getStartTime());
+		ar.setStartTime(tileEntity.getStartNanoTime());
 
 		if (tileEntity.getMovement() != null)
 		{

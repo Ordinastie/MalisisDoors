@@ -82,9 +82,9 @@ public class TrapDoorRenderer extends DoorRenderer
 	}
 
 	@Override
-	public void renderTileEntity()
+	protected void renderTileEntity()
 	{
-		ar.setStartTime(tileEntity.getStartTime());
+		ar.setStartTime(tileEntity.getStartNanoTime());
 
 		setup();
 
@@ -94,9 +94,10 @@ public class TrapDoorRenderer extends DoorRenderer
 			ar.animate(anims);
 		}
 
-		//				Face f = shape.getFace(Face.nameFromDirection(ForgeDirection.UP));
-		//				shape.applyMatrix();
-		//				f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
+		Shape s = model.getShape("shape");
+		Face f = s.getFace(Face.nameFromDirection(ForgeDirection.UP));
+		s.applyMatrix();
+		f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
 
 		model.render(this, rp);
 	}

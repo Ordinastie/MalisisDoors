@@ -81,7 +81,7 @@ public class FenceGateRenderer extends DoorRenderer
 	@Override
 	protected void renderTileEntity()
 	{
-		ar.setStartTime(tileEntity.getStartTime());
+		ar.setStartTime(tileEntity.getStartNanoTime());
 
 		setup();
 

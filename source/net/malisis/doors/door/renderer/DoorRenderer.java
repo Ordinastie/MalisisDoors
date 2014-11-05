@@ -46,7 +46,7 @@ public class DoorRenderer extends BaseRenderer
 
 	protected Shape shape;
 	protected RenderParameters rp;
-	protected AnimationRenderer ar = new AnimationRenderer(this);
+	protected AnimationRenderer ar = new AnimationRenderer();
 
 	public DoorRenderer()
 	{
@@ -121,7 +121,7 @@ public class DoorRenderer extends BaseRenderer
 	protected void renderTileEntity()
 	{
 		enableBlending();
-		ar.setStartTime(tileEntity.getStartTime());
+		ar.setStartTime(tileEntity.getStartNanoTime());
 
 		setup();
 		if (tileEntity.getMovement() != null)
