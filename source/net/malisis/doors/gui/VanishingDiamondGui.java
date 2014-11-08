@@ -80,8 +80,8 @@ public class VanishingDiamondGui extends MalisisGui
 			UIContainer cbCont = new UIContainer(this, 70, 12);
 			cbCont.setPosition(55, y);
 
-			UITextField textField = new UITextField(this, 27, "" + state.delay).setPosition(0, 0).setDisabled(!state.shouldPropagate)
-					.setFilter("\\d+").register(this);
+			UITextField textField = new UITextField(this, "" + state.delay).setPosition(27, 0).setPosition(0, 0)
+					.setDisabled(!state.shouldPropagate).register(this);
 
 			UICheckBox invCb = new UICheckBox(this).setPosition(50, 0).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
 					.register(this);
@@ -98,7 +98,7 @@ public class VanishingDiamondGui extends MalisisGui
 
 		UIContainer cont = new UIContainer<UIContainer>(this, 50, 60).setPosition(0, 40, Anchor.RIGHT);
 
-		duration = new UITextField(this, 30).setPosition(0, 10, Anchor.CENTER).setFilter("\\d+").register(this);
+		duration = new UITextField(this, null).setSize(30, 0).setPosition(0, 10, Anchor.CENTER).register(this);
 		cont.add(new UILabel(this, "Duration").setPosition(0, 0, Anchor.CENTER));
 		cont.add(duration);
 

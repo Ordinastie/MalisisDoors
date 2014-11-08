@@ -135,7 +135,7 @@ public class DoorFactoryGui extends MalisisGui
 		selDoorMovement = new UISelect(this, 100, UISelect.Option.fromList(listMvt)).setPosition(0, 2, Anchor.RIGHT).register(this);
 		selDoorMovement.setLabelPattern("door_movement.%s");
 
-		tfOpenTime = new UITextField(this, 30).setPosition(-5, 14, Anchor.RIGHT).setFilter("\\d+").register(this);
+		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
 		cbRedstone = new UICheckBox(this).setPosition(-15, 26, Anchor.RIGHT).register(this);
 		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
 
