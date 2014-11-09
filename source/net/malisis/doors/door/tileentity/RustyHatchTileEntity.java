@@ -22,16 +22,15 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.entity;
+package net.malisis.doors.door.tileentity;
 
 import net.malisis.core.util.MultiBlock;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.RustyHatchMovement;
 import net.malisis.doors.door.sound.RustyHatchSound;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;

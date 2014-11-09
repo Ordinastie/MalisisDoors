@@ -32,7 +32,7 @@ import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.malisis.doors.entity.RustyHatchTileEntity;
+import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 

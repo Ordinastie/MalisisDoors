@@ -29,9 +29,9 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.doors.block.TrapDoor;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.block.TrapDoor;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 

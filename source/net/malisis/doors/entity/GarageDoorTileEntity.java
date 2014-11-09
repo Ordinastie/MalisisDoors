@@ -29,8 +29,8 @@ import java.util.Set;
 
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.block.GarageDoor;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;

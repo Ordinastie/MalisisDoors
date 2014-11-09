@@ -37,8 +37,8 @@ import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.TileEntityUtils;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 

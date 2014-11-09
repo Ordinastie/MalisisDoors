@@ -29,18 +29,19 @@ import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
-import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
-import net.malisis.doors.block.RustyHatch;
-import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.door.CustomDoor;
 import net.malisis.doors.door.CustomDoorItem;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.CustomDoor;
+import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.block.RustyHatch;
+import net.malisis.doors.door.block.TrapDoor;
 import net.malisis.doors.door.descriptor.Curtain;
 import net.malisis.doors.door.descriptor.FactoryDoor;
 import net.malisis.doors.door.descriptor.GlassDoor;
@@ -48,15 +49,16 @@ import net.malisis.doors.door.descriptor.JailDoor;
 import net.malisis.doors.door.descriptor.LaboratoryDoor;
 import net.malisis.doors.door.descriptor.ShojiDoor;
 import net.malisis.doors.door.descriptor.VanillaDoor;
+import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
+import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.MixedBlockTileEntity;
-import net.malisis.doors.entity.RustyHatchTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
@@ -93,6 +95,8 @@ public class Registers
 		registerCustomDoor();
 
 		registerRustyHatch();
+
+		registerCarriageDoor();
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 	}
@@ -257,6 +261,16 @@ public class Registers
 
 		GameRegistry.addRecipe(new ItemStack(rustyHandle), "AAA", " A ", 'A', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(rustyHatch), "A ", "AB", "A ", 'A', Items.iron_ingot, 'B', rustyHandle);
+
+	}
+
+	private static void registerCarriageDoor()
+	{
+		carriageDoor = new CarriageDoor();
+		GameRegistry.registerBlock(carriageDoor, carriageDoor.getUnlocalizedName().substring(5));
+
+		GameRegistry.registerTileEntity(CarriageDoorTileEntity.class, "carriageDoorTileEntity");
+		GameRegistry.addRecipe(new ItemStack(carriageDoor), "AAA", "ABA", "ABA", 'A', Blocks.quartz_block, 'B', Blocks.planks);
 
 	}
 }

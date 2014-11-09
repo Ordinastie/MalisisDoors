@@ -22,9 +22,8 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block;
+package net.malisis.doors.door.block;
 
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;

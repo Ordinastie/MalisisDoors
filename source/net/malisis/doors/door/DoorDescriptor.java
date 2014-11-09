@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door;
 
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.sound.IDoorSound;

@@ -25,6 +25,7 @@
 package net.malisis.doors.door;
 
 import net.malisis.core.MalisisCore;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

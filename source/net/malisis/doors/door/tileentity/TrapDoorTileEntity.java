@@ -24,9 +24,9 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.minecraft.util.AxisAlignedBB;
 

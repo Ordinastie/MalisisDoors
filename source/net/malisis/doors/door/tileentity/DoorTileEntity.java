@@ -24,9 +24,9 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;

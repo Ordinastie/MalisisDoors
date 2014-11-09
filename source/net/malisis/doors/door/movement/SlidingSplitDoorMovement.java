@@ -24,7 +24,7 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.Door.*;
+import static net.malisis.doors.door.block.Door.*;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Transformation;

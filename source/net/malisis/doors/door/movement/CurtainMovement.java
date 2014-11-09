@@ -24,7 +24,7 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.Door.*;
+import static net.malisis.doors.door.block.Door.*;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.MergedVertex;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;

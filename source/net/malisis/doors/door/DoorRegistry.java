@@ -27,6 +27,7 @@ package net.malisis.doors.door;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.movement.CurtainMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
@@ -43,6 +44,7 @@ import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
 import net.malisis.doors.door.movement.SlidingUpDoorMovement;
 import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.malisis.doors.door.movement.VaultDoorMovement;
+import net.malisis.doors.door.sound.CarriageDoorSound;
 import net.malisis.doors.door.sound.GlassDoorSound;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.door.sound.JailDoorSound;
@@ -77,6 +79,7 @@ public class DoorRegistry
 		registerMovement("rotate_place", new RotateAndPlaceMovement());
 		registerMovement("rusty_hatch", new RustyHatchMovement());
 		registerMovement("curtain", new CurtainMovement());
+		registerMovement("carriageDoor", new CarriageDoorMovement());
 
 		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new VanillaDoorSound());
@@ -85,7 +88,7 @@ public class DoorRegistry
 		registerSound("pneumatic_door", new PneumaticSound());
 		registerSound("shoji_door", new ShojiDoorSound());
 		registerSound("rusty_hatch", new RustyHatchSound());
-
+		registerSound("carriage_door", new CarriageDoorSound());
 	}
 
 	//#region Movements

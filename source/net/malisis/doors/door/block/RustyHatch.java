@@ -22,14 +22,13 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.block;
+package net.malisis.doors.door.block;
 
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.malisis.doors.entity.RustyHatchTileEntity;
+import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
