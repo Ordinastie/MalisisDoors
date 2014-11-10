@@ -65,7 +65,7 @@ public class CarriageDoorRenderer extends BaseRenderer
 	protected void initialize()
 	{
 		rl = new ResourceLocation(MalisisDoors.modid, "models/carriagedoor.obj");
-		model = MalisisModel.load(rl);
+		model = new MalisisModel(rl);
 		frame = model.getShape("Frame");
 		doorLeft = model.getShape("Left");
 		doorRight = model.getShape("Right");
@@ -87,6 +87,8 @@ public class CarriageDoorRenderer extends BaseRenderer
 
 		if (renderType == TYPE_ISBRH_WORLD)
 		{
+			initialize();
+			setup();
 			getBlockDamage = true;
 			renderBlock();
 		}

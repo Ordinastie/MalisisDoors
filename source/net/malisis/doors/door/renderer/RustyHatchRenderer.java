@@ -69,7 +69,7 @@ public class RustyHatchRenderer extends BaseRenderer
 	protected void initialize()
 	{
 		rl = new ResourceLocation(MalisisDoors.modid, "models/rustyhatch.obj");
-		model = MalisisModel.load(rl);
+		model = new MalisisModel(rl);
 		frame = model.getShape("frame");
 		hatch = model.getShape("door");
 		handle = model.getShape("handle");
