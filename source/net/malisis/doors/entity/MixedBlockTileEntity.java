@@ -1,6 +1,7 @@
 package net.malisis.doors.entity;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBreakable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -21,6 +22,11 @@ public class MixedBlockTileEntity extends TileEntity
 		block2 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block2"));
 		metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
 		metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
+	}
+
+	public boolean isOpaque()
+	{
+		return !(block1 instanceof BlockBreakable || block2 instanceof BlockBreakable);
 	}
 
 	@Override

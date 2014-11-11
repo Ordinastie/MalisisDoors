@@ -262,10 +262,21 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
 	{
-		Block block = world.getBlock(x, y, z);
-		if (block instanceof MixedBlock || block instanceof BlockBreakable)
-			return false;
+		if (world.isAirBlock(x, y, z))
+			return true;
+		ForgeDirection op = ForgeDirection.getOrientation(side).getOpposite();
+		MixedBlockTileEntity current = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x + op.offsetX, y + op.offsetY, z
+				+ op.offsetZ);
 
-		return super.shouldSideBeRendered(world, x, y, z, side);
+		return !isOpaque(world, x, y, z) && current.isOpaque();
+	}
+
+	public static boolean isOpaque(IBlockAccess world, int x, int y, int z)
+	{
+		Block block = world.getBlock(x, y, z);
+		if (block instanceof BlockBreakable)
+			return true;
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		return te != null && te.isOpaque();
 	}
 }
