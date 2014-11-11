@@ -109,6 +109,8 @@ public class RustyHatchRenderer extends BaseRenderer
 		{
 			if (!tileEntity.shouldLadder(x, y, z)/* || y == tileEntity.getMultiBlock().getY()*/)
 				return;
+			if (ladder == null)
+				return;
 
 			ladder.resetState();
 			ladder.translate(direction.getOpposite().offsetX, topBlock ? -1 : 0, direction.getOpposite().offsetZ);
@@ -119,6 +121,8 @@ public class RustyHatchRenderer extends BaseRenderer
 		}
 		else
 		{
+			if (frame == null)
+				return;
 			frame.resetState();
 			setup(frame);
 			rp.icon.set(Blocks.furnace.getIcon(1, 0));
@@ -129,6 +133,8 @@ public class RustyHatchRenderer extends BaseRenderer
 	private void renderTileEntity()
 	{
 		if (!MultiBlock.isOrigin(world, x, y, z))
+			return;
+		if (hatch == null || handle == null)
 			return;
 
 		tileEntity = (RustyHatchTileEntity) super.tileEntity;
