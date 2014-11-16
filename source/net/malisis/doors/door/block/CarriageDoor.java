@@ -28,8 +28,8 @@ import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -60,6 +60,7 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	{
 		super(Material.wood);
 		setHardness(5.0F);
+		setResistance(10.0F);
 		setStepSound(soundTypeStone);
 		setBlockName("carriage_door");
 		setCreativeTab(MalisisDoors.tab);
@@ -138,11 +139,11 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, ((CarriageDoorTileEntity) te).isLeftFrame(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isLeftFrame(x, y, z), BoundingBoxType.RAYTRACE);
 		if (aabb == null)
 			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 		aabb.offset(-x, -y, -z);
@@ -153,11 +154,11 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, true);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.SELECTION);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -167,11 +168,11 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, ((CarriageDoorTileEntity) te).isLeftFrame(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isLeftFrame(x, y, z), BoundingBoxType.COLLISION);
 		if (aabb == null)
 			return null;
 

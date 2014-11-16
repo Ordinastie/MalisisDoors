@@ -34,12 +34,12 @@ import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.door.CustomDoorItem;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.block.TrapDoor;
 import net.malisis.doors.door.descriptor.Curtain;
@@ -49,10 +49,13 @@ import net.malisis.doors.door.descriptor.JailDoor;
 import net.malisis.doors.door.descriptor.LaboratoryDoor;
 import net.malisis.doors.door.descriptor.ShojiDoor;
 import net.malisis.doors.door.descriptor.VanillaDoor;
+import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.item.ForcefieldItem;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
+import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.malisis.doors.entity.BlockMixerTileEntity;
@@ -97,6 +100,8 @@ public class Registers
 		registerRustyHatch();
 
 		registerCarriageDoor();
+
+		registerForcefieldDoor();
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 	}
@@ -149,7 +154,7 @@ public class Registers
 		//Factory Door
 		desc = new FactoryDoor().register();
 		factoryDoor = desc.getBlock();
-		facortyDoorItem = desc.getItem();
+		factoryDoorItem = desc.getItem();
 
 		//Shoji Door
 		desc = new ShojiDoor().register();
@@ -269,8 +274,23 @@ public class Registers
 		carriageDoor = new CarriageDoor();
 		GameRegistry.registerBlock(carriageDoor, carriageDoor.getUnlocalizedName().substring(5));
 
+		carriageDoorItem = Item.getItemFromBlock(carriageDoor);
+
 		GameRegistry.registerTileEntity(CarriageDoorTileEntity.class, "carriageDoorTileEntity");
 		GameRegistry.addRecipe(new ItemStack(carriageDoor), "AAA", "ABA", "ABA", 'A', Blocks.quartz_block, 'B', Blocks.planks);
 
+	}
+
+	private static void registerForcefieldDoor()
+	{
+		forcefieldDoor = new ForcefieldDoor();
+		GameRegistry.registerBlock(forcefieldDoor, forcefieldDoor.getUnlocalizedName().substring(5));
+
+		forcefieldItem = new ForcefieldItem();
+		GameRegistry.registerItem(forcefieldItem, forcefieldItem.getUnlocalizedName());
+
+		GameRegistry.registerTileEntity(ForcefieldTileEntity.class, "forcefieldTileEntity");
+		GameRegistry.addRecipe(new ItemStack(forcefieldItem), "ABA", "CDC", "AEA", 'A', Items.diamond, 'B', Blocks.obsidian, 'C',
+				Items.repeater, 'D', Items.ender_eye, 'E', Items.comparator);
 	}
 }

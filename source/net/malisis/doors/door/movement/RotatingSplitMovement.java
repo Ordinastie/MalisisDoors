@@ -30,6 +30,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -42,7 +43,7 @@ public class RotatingSplitMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
 		int dir = tileEntity.getDirection();
 		boolean opened = tileEntity.isOpened();
@@ -70,10 +71,10 @@ public class RotatingSplitMovement implements IDoorMovement
 			if (topBlock)
 				y = 1 - DOOR_WIDTH;
 			else
-				Y = selBox ? DOOR_WIDTH : 0;
+				Y = type == BoundingBoxType.SELECTION ? DOOR_WIDTH : 0;
 		}
 
-		if (selBox && !opened)
+		if (type == BoundingBoxType.SELECTION && !opened)
 		{
 			if (!topBlock)
 				Y++;
@@ -110,6 +111,7 @@ public class RotatingSplitMovement implements IDoorMovement
 				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
 	}
 
+	@Override
 	public boolean isSpecial()
 	{
 		return false;

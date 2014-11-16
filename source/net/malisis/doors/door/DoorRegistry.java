@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.movement.CurtainMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
+import net.malisis.doors.door.movement.ForcefieldMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.movement.Roatating4WaysMovement;
 import net.malisis.doors.door.movement.RotateAndPlaceMovement;
@@ -80,6 +81,7 @@ public class DoorRegistry
 		registerMovement("rusty_hatch", new RustyHatchMovement());
 		registerMovement("curtain", new CurtainMovement());
 		registerMovement("carriageDoor", new CarriageDoorMovement());
+		registerMovement("forcefieldDoor", new ForcefieldMovement());
 
 		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new VanillaDoorSound());

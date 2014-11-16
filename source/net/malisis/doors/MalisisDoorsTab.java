@@ -30,13 +30,13 @@ import net.minecraft.item.Item;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class MalisisDoorsTab extends CreativeTabs
 {
 	public MalisisDoorsTab()
 	{
-		super("Malisis' Doors");
+		super(MalisisDoors.modid);
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -42,7 +43,7 @@ public class RotateAroundMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
 	{
 		int dir = te.getDirection();
 		boolean opened = te.isOpened();
@@ -64,7 +65,7 @@ public class RotateAroundMovement implements IDoorMovement
 		else if ((dir == DIR_SOUTH && !opened) || (dir == DIR_EAST && opened && !reversed) || (dir == DIR_WEST && opened && reversed))
 			z = 1 - DOOR_WIDTH;
 
-		if (selBox)
+		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
 				Y++;
@@ -93,6 +94,7 @@ public class RotateAroundMovement implements IDoorMovement
 		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
 	}
 
+	@Override
 	public boolean isSpecial()
 	{
 		return false;

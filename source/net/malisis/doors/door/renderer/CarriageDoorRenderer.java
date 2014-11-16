@@ -87,8 +87,6 @@ public class CarriageDoorRenderer extends BaseRenderer
 
 		if (renderType == TYPE_ISBRH_WORLD)
 		{
-			initialize();
-			setup();
 			getBlockDamage = true;
 			renderBlock();
 		}

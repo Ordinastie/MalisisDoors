@@ -56,6 +56,8 @@ public class RustyHatchTileEntity extends DoorTileEntity implements MultiBlock.I
 
 	private int getOriginMetadata()
 	{
+		if (getWorldObj() == null || multiBlock == null)
+			return 0;
 		return getWorldObj().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
 	}
 

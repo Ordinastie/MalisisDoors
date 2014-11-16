@@ -34,6 +34,7 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.MergedVertex;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
@@ -48,7 +49,7 @@ public class CurtainMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
 		int dir = tileEntity.getDirection();
 		boolean opened = tileEntity.isOpened();
@@ -108,7 +109,7 @@ public class CurtainMovement implements IDoorMovement
 			}
 		}
 
-		if (selBox)
+		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
 				Y++;

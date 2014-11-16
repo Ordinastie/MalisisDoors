@@ -27,6 +27,7 @@ package net.malisis.doors.door.movement;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -36,7 +37,7 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public interface IDoorMovement
 {
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox);
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type);
 
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
 

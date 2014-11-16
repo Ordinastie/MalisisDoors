@@ -3,6 +3,7 @@ package net.malisis.doors;
 import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.configuration.Settings;
+import net.malisis.doors.door.item.ForcefieldItem;
 import net.malisis.doors.network.NetworkHandler;
 import net.malisis.doors.proxy.CommonProxy;
 import net.minecraft.block.Block;
@@ -98,6 +99,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Block rustyHatch;
 		public static Block curtains;
 		public static Block carriageDoor;
+		public static Block forcefieldDoor;
 	}
 
 	public static class Items
@@ -107,11 +109,12 @@ public class MalisisDoors implements IMalisisMod
 		public static Item jailDoorItem;
 		public static Item customDoorItem;
 		public static Item laboratoryDoorItem;
-		public static Item facortyDoorItem;
+		public static Item factoryDoorItem;
 		public static Item shojiDoorItem;
 		public static Item rustyHandle;
 		public static Item curtainsItem;
-		public static Block carriageDoorItem;
+		public static Item carriageDoorItem;
+		public static ForcefieldItem forcefieldItem;
 	}
 
 }

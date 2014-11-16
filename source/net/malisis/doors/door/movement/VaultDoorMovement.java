@@ -30,6 +30,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
@@ -43,7 +44,7 @@ public class VaultDoorMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
 		int dir = tileEntity.getDirection();
 		boolean opened = tileEntity.isOpened();
@@ -98,13 +99,13 @@ public class VaultDoorMovement implements IDoorMovement
 		if (opened && (topBlock == !reversed))
 		{
 			y += reversed ? left : right;
-			if (topBlock || selBox)
+			if (topBlock || type == BoundingBoxType.SELECTION)
 				Y += reversed ? left : right;
 			else
 				Y = 0;
 		}
 
-		if (selBox && !opened)
+		if (type == BoundingBoxType.SELECTION && !opened)
 		{
 			if (!topBlock)
 				Y++;
@@ -142,6 +143,7 @@ public class VaultDoorMovement implements IDoorMovement
 				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
 	}
 
+	@Override
 	public boolean isSpecial()
 	{
 		return false;

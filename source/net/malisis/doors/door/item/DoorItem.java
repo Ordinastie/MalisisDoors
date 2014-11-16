@@ -22,9 +22,10 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door;
+package net.malisis.doors.door.item;
 
 import net.malisis.core.MalisisCore;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;

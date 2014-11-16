@@ -8,6 +8,8 @@ item.shoji_door.name=Porte Shoji
 item.rusty_hatch.name=Trappe Rouillée
 item.rusty_handle.name=Poignée Rouillée
 item.curtain.name=Rideau
+item.carriage_door.name=Porte cochère
+item.forcefielditem.name=Controleur de champs de force
 
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
@@ -25,6 +27,8 @@ tile.custom_door.name=Porte personnalisée
 tile.shoji_door.name=Porte Shoji
 tile.rusty_hatch.name=Trappe Rouillée
 tile.curtain.name=Rideau
+tile.carriage_door.name=Carriage Door
+tile.forcefieldDoor.name=Champs de force
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 

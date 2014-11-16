@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door.block;
 
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
@@ -39,7 +40,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 {
@@ -101,7 +102,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
+		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -112,7 +113,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -126,7 +127,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
 		if (aabb == null)
 			return null;
 		return setBlockBounds(aabb.offset(x, y, z));

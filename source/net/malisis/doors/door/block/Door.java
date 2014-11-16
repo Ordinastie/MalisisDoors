@@ -30,6 +30,7 @@ import net.malisis.core.renderer.icon.ClippedIcon;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
@@ -284,7 +285,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false));
+		//may be called for other than RAYTRACE
+		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -295,7 +297,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -309,7 +311,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
 		if (aabb == null)
 			return null;
 		return setBlockBounds(aabb.offset(x, y, z));

@@ -29,6 +29,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
@@ -43,8 +44,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class CarriageDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean left, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean left, BoundingBoxType type)
 	{
+		if (!(tileEntity instanceof CarriageDoorTileEntity))
+			return null;
+
 		float f = Door.DOOR_WIDTH;
 		AxisAlignedBB aabb = ((CarriageDoorTileEntity) tileEntity).getMultiBlock().getWorldBounds();
 		ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getDirection());
@@ -59,7 +63,7 @@ public class CarriageDoorMovement implements IDoorMovement
 		if (dir == ForgeDirection.WEST)
 			aabb.minX = aabb.maxX - f;
 
-		if (tileEntity.getState() != DoorState.CLOSED && !selBox)
+		if (tileEntity.getState() != DoorState.CLOSED && type != BoundingBoxType.SELECTION)
 		{
 
 			if ((dir == ForgeDirection.NORTH && left) || (dir == ForgeDirection.SOUTH && !left))

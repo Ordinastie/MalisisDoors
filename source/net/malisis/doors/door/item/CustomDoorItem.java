@@ -22,13 +22,14 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door;
+package net.malisis.doors.door.item;
 
 import java.util.HashMap;
 import java.util.List;
 
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;

@@ -26,7 +26,7 @@ package net.malisis.doors.door.block;
 
 import java.util.ArrayList;
 
-import net.malisis.doors.door.CustomDoorItem;
+import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;

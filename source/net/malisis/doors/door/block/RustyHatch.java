@@ -27,7 +27,7 @@ package net.malisis.doors.door.block;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -147,11 +147,11 @@ public class RustyHatch extends Block implements ITileEntityProvider
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false).offset(-x, -y, -z);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE).offset(-x, -y, -z);
 		//MalisisCore.message(aabb);
 		setBlockBounds(aabb);
 	}
@@ -160,11 +160,11 @@ public class RustyHatch extends Block implements ITileEntityProvider
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), true);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
 		if (aabb == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -174,11 +174,11 @@ public class RustyHatch extends Block implements ITileEntityProvider
 	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), false);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
 		if (aabb == null)
 			return null;
 

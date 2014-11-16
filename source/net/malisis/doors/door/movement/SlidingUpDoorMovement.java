@@ -30,6 +30,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -41,7 +42,7 @@ import net.minecraft.util.AxisAlignedBB;
 public class SlidingUpDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, boolean selBox)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
 		if (tileEntity.isOpened() && !topBlock)
 			return null;
@@ -69,7 +70,7 @@ public class SlidingUpDoorMovement implements IDoorMovement
 			Y += 1 - DOOR_WIDTH;
 		}
 
-		if (selBox)
+		if (type == BoundingBoxType.SELECTION)
 		{
 			if (topBlock && !tileEntity.isOpened())
 				y--;
@@ -95,6 +96,7 @@ public class SlidingUpDoorMovement implements IDoorMovement
 		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
 	}
 
+	@Override
 	public boolean isSpecial()
 	{
 		return false;
