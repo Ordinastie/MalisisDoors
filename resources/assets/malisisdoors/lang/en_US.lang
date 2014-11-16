@@ -33,6 +33,7 @@ tile.rusty_hatch.name=Rusty Hatch
 tile.curtain.name=Curtain
 tile.carriage_door.name=Carriage Door
 tile.forcefieldDoor.name=Forcefield
+tile.rustyLadder.name=Rusty Ladder
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 

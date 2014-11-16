@@ -82,6 +82,33 @@ public class RustyHatchRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
+		if (block == MalisisDoors.Blocks.rustyLadder)
+		{
+			ladder.resetState();
+
+			ForgeDirection dir = ForgeDirection.getOrientation(blockMetadata);
+			switch (dir)
+			{
+				case NORTH:
+					ladder.rotate(-90, 0, 1, 0);
+					break;
+				case SOUTH:
+					ladder.rotate(90, 0, 1, 0);
+					break;
+				case EAST:
+					ladder.rotate(180, 0, 1, 0);
+					break;
+				case WEST:
+				default:
+					break;
+			}
+
+			ladder.translate(-1, 0, 0);
+
+			drawShape(ladder, rp);
+			return;
+		}
+
 		if (renderType == TYPE_ITEM_INVENTORY)
 		{
 			renderItem();
@@ -182,7 +209,7 @@ public class RustyHatchRenderer extends BaseRenderer
 				break;
 		}
 
-		rp.icon.set(((RustyHatch) MalisisDoors.Blocks.rustyHatch).getHandleIcon());
+		rp.icon.set(MalisisDoors.Blocks.rustyHatch.getHandleIcon());
 		drawShape(handle, rp);
 	}
 

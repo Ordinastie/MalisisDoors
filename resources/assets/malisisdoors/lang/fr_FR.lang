@@ -29,6 +29,7 @@ tile.rusty_hatch.name=Trappe Rouillée
 tile.curtain.name=Rideau
 tile.carriage_door.name=Carriage Door
 tile.forcefieldDoor.name=Champs de force
+tile.rustyLadder.name=Echelle rouillée
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 

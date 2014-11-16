@@ -31,6 +31,7 @@ tile.rusty_hatch.name=Rostige Luke
 tile.curtain.name=Gardine
 tile.carriage_door.name=Wagentor
 tile.forcefieldDoor.name=Forcefield
+tile.rustyLadder.name=Rostige Leiter
  
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  

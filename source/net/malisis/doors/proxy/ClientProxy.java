@@ -3,6 +3,7 @@ package net.malisis.doors.proxy;
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 import net.malisis.doors.block.MixedBlock;
+import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.block.CarriageDoor;
@@ -27,6 +28,7 @@ import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.MixedBlockRenderer;
+import net.malisis.doors.renderer.RustyLadderRenderer;
 import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.item.Item;
 
@@ -69,6 +71,11 @@ public class ClientProxy extends CommonProxy
 		RustyHatchRenderer rhr = new RustyHatchRenderer();
 		rhr.registerFor(RustyHatch.class, RustyHatchTileEntity.class);
 		rhr.registerFor(rustyHandle);
+
+		//rusty ladder
+		RustyLadderRenderer rlr = new RustyLadderRenderer();
+		rlr.registerFor(RustyLadder.class);
+		rlr.registerFor(Item.getItemFromBlock(rustyLadder));
 
 		//carriage doors
 		CarriageDoorRenderer cardr = new CarriageDoorRenderer();

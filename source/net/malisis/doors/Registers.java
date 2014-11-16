@@ -32,6 +32,7 @@ import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
+import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.DoorDescriptor;
@@ -267,6 +268,9 @@ public class Registers
 		GameRegistry.addRecipe(new ItemStack(rustyHandle), "AAA", " A ", 'A', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(rustyHatch), "A ", "AB", "A ", 'A', Items.iron_ingot, 'B', rustyHandle);
 
+		rustyLadder = new RustyLadder();
+		GameRegistry.registerBlock(rustyLadder, rustyLadder.getUnlocalizedName().substring(5));
+		GameRegistry.addRecipe(new ItemStack(rustyLadder), "AAA", 'A', Items.iron_ingot);
 	}
 
 	private static void registerCarriageDoor()
