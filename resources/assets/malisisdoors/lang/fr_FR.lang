@@ -9,7 +9,7 @@ item.rusty_hatch.name=Trappe Rouillée
 item.rusty_handle.name=Poignée Rouillée
 item.curtain.name=Rideau
 item.carriage_door.name=Porte cochère
-item.forcefielditem.name=Controleur de champs de force
+item.forcefieldItem.name=Contrôleur de champs de force
 
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois

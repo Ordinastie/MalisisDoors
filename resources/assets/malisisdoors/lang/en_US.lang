@@ -11,7 +11,7 @@ item.rusty_hatch.name=Rusty Hatch
 item.rusty_handle.name=Rusty Handle
 item.curtain.name=Curtain
 item.carriage_door.name=Carriage Door
-item.forcefielditem.name=Forcefield Controller
+item.forcefieldItem.name=Forcefield Controller
 
 tile.player_sensor.name=Player Sensor
 tile.vanishing_block_wood.name=Wooden Vanishing Frame
