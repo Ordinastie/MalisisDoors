@@ -7,7 +7,7 @@ buildscript {
         }
         maven {
             name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            url = "https://oss.sonatype.org/content/repositories/public/"
         }
     }
     dependencies {
@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = "1.7.10-1.2.1"
+version = "1.7.10-1.3.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
@@ -36,7 +36,7 @@ sourceSets
 dependencies
 {
 	compile 'org.projectlombok:lombok:1.12.6'
-	compile 'net.malisis:malisiscore:1.7.10-0.9.9:dev'	
+	compile 'net.malisis:malisiscore:1.7.10-0.10.2:dev'	
 }
 
 // because the normal output has been made to be obfuscated
@@ -52,13 +52,11 @@ artifacts {
 }
 
 minecraft {
-	version = "1.7.10-10.13.0.1208"
-	if(file("../../run").exists())
-	{
+	version = "1.7.10-10.13.2.1232"
+	if(file("../../run").exists()) 	{
 		runDir = "../../run/assets"
 	}
-	else
-	{
+	else {
 		runDir = "assets"
 	}
 	
