@@ -178,6 +178,7 @@ public class GarageDoorTileEntity extends TileEntity
 
 		startTime = worldObj.getTotalWorldTime();
 		startNanoTime = System.nanoTime();
+
 		if (state == DoorState.CLOSED)
 			setState(DoorState.OPENING);
 		else if (state == DoorState.OPENED)
@@ -249,14 +250,16 @@ public class GarageDoorTileEntity extends TileEntity
 		super.writeToNBT(tag);
 		tag.setInteger("state", state.ordinal());
 		tag.setLong("startTime", startTime);
+		tag.setLong("startNanoTIme", startNanoTime);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		state = DoorState.values()[tag.getInteger("state")];
+		setState(DoorState.values()[tag.getInteger("state")]);
 		startTime = tag.getLong("startTime");
+		startNanoTime = tag.getLong("startNanoTIme");
 	}
 
 	@Override
