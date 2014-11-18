@@ -129,7 +129,7 @@ public class RustyHatch extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{
 		MultiBlock.destroy(world, x, y, z);
 		world.setBlockToAir(x, y, z);

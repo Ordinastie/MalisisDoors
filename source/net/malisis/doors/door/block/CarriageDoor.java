@@ -121,7 +121,7 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{
 		MultiBlock.destroy(world, x, y, z);
 		world.setBlockToAir(x, y, z);
@@ -156,7 +156,7 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	{
 		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+			return AxisAlignedBB.getBoundingBox(1, 1, 1, 1, 1, 1);
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.SELECTION);
 		if (aabb == null)

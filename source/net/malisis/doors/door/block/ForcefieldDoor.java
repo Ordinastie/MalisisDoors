@@ -115,6 +115,7 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 	{
 		if (aabb == null)
 			return null;
+
 		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
 		return aabb;
 	}
@@ -123,12 +124,18 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
+		if (te == null || te.getMovement() == null)
+		{
+			setBlockBounds(AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1));
+			return;
+		}
+		if (te.isMoving())
 			return;
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.RAYTRACE);
 		if (aabb == null)
 			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+		//aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
 		aabb.offset(-x, -y, -z);
 		setBlockBounds(aabb);
 	}
@@ -138,7 +145,9 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
+		if (te == null || te.getMovement() == null)
+			return AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+		if (te.isMoving())
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.SELECTION);
@@ -152,7 +161,9 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
+		if (te == null || te.getMovement() == null)
+			return AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+		if (te.isMoving())
 			return null;
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.COLLISION);
@@ -163,7 +174,7 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
 	{
 		MultiBlock.destroy(world, x, y, z);
 		world.setBlockToAir(x, y, z);
