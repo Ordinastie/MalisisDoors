@@ -35,7 +35,7 @@ sourceSets
 
 dependencies
 {
-	compile 'org.projectlombok:lombok:1.12.6'
+	compile 'org.projectlombok:lombok:1.14.8'
 	compile 'net.malisis:malisiscore:1.7.10-0.10.2:dev'	
 }
 
