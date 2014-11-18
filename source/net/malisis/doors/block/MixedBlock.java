@@ -264,6 +264,11 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	{
 		if (world.isAirBlock(x, y, z))
 			return true;
+
+		Block block = world.getBlock(x, y, z);
+		if (block != this && !(block instanceof BlockBreakable))
+			return !block.isOpaqueCube();
+
 		ForgeDirection op = ForgeDirection.getOrientation(side).getOpposite();
 		MixedBlockTileEntity current = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x + op.offsetX, y + op.offsetY, z
 				+ op.offsetZ);
@@ -276,6 +281,7 @@ public class MixedBlock extends Block implements ITileEntityProvider
 		Block block = world.getBlock(x, y, z);
 		if (block instanceof BlockBreakable)
 			return true;
+
 		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
 		return te != null && te.isOpaque();
 	}
