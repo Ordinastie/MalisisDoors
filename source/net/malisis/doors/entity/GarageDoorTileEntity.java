@@ -257,7 +257,7 @@ public class GarageDoorTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		setState(DoorState.values()[tag.getInteger("state")]);
+		state = DoorState.values()[tag.getInteger("state")];
 		startTime = tag.getLong("startTime");
 		startNanoTime = tag.getLong("startNanoTIme");
 	}
