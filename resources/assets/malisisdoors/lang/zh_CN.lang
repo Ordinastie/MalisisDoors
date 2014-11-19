@@ -1,10 +1,17 @@
-item.wood_sliding_door.name=木质玻璃门
-item.iron_sliding_door.name=铁质玻璃门
+itemGroup.malisisdoors=Malisis'Doors
+
+item.wood_sliding_door.name=木框玻璃门
+item.iron_sliding_door.name=铁框玻璃门
 item.jail_door.name=监狱门
 item.laboratory_door.name=实验室门
 item.factory_door.name=工厂门
 item.custom_door.name=自定义门
 item.shoji_door.name=障子门
+item.rustyHatch.name=生锈舱门
+item.rustyHandle.name=生锈闸阀
+item.curtain.name=幕布
+item.carriage_door.name=宅门
+item.forcefieldItem.name=力场控制器
 
 tile.player_sensor.name=玩家感应器
 tile.vanishing_block_wood.name=消失的木框架
@@ -20,12 +27,17 @@ tile.factory_door.name=工厂门
 tile.door_factory.name=制门工厂
 tile.custom_door.name=自定义门
 tile.shoji_door.name=障子门
-tile.wood_sliding_door.name=木质玻璃门
-tile.iron_sliding_door.name=铁质玻璃门
+tile.wood_sliding_door.name=木框玻璃门
+tile.iron_sliding_door.name=铁框玻璃门
+tile.rustyHatch.name=生锈舱门
+tile.curtain.name=幕布
+tile.carriage_door.name=宅门
+tile.forcefieldDoor.name=力场
+tile.rustyLadder.name=生锈梯子
 
-malisisdoors.command.usage=使用 /malisisdoors <command> command代表设置名或版本
+malisisdoors.command.usage=使用 /malisisdoors <command> , command参数代表设置名或版本
 
-config.title=MalisisDoors的配置
+config.title=MalisisDoors模组配置
 
 config.modifyVanillaDoors=启用原版门的修改
 config.modifyVanillaDoors.comment1=启用门,栅栏门和陷阱门的动画.
@@ -68,11 +80,13 @@ gui.door_factory.door_open_time=打开时间
 gui.door_factory.door_require_redstone=需要红石
 gui.door_factory.door_double_door=双门
 gui.door_factory.door_sound=音效类型
+gui.door_factory.door_sound.silent_door=静音
 gui.door_factory.door_sound.vanilla_door=原版门
 gui.door_factory.door_sound.glass_door=玻璃门
 gui.door_factory.door_sound.jail_door=监狱门
 gui.door_factory.door_sound.pneumatic_door=气动门
 gui.door_factory.door_sound.shoji_door=障子门
+gui.door_factory.door_sound.carriage_door=宅门
 
 
 gui.door_factory.frame_type=框架类型
