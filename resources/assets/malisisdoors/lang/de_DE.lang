@@ -80,7 +80,7 @@ gui.door_factory.door_sound.glass_door=Glasstür
 gui.door_factory.door_sound.jail_door=Gefängnistür
 gui.door_factory.door_sound.pneumatic_door=Pneumatiktür
 gui.door_factory.door_sound.shoji_door=Shoji-Schiebetür
-
+gui.door_factory.door_sound.carriage_door=Wagentor
  
 gui.door_factory.frame_type=Rahmenart
 gui.door_factory.top_material=Material oben

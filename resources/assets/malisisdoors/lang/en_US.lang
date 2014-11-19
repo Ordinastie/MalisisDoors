@@ -86,7 +86,7 @@ gui.door_factory.door_sound.glass_door=Glass door
 gui.door_factory.door_sound.jail_door=Jail door
 gui.door_factory.door_sound.pneumatic_door=Pneumatic door
 gui.door_factory.door_sound.shoji_door=Shoji door
-gui.door_factory.door_sound.carriage_door_door=Carriage door
+gui.door_factory.door_sound.carriage_door=Carriage door
 
 
 gui.door_factory.frame_type=Frame type
