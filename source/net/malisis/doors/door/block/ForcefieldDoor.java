@@ -57,7 +57,7 @@ public class ForcefieldDoor extends Block implements ITileEntityProvider
 
 	public ForcefieldDoor()
 	{
-		super(Material.circuits);
+		super(Material.anvil);
 		setResistance(60000000);
 		setBlockUnbreakable();
 		setStepSound(soundTypePiston);
