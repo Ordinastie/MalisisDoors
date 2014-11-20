@@ -27,6 +27,7 @@ package net.malisis.doors.door.movement;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
@@ -48,9 +49,12 @@ public class ForcefieldMovement implements IDoorMovement
 
 		if (type == BoundingBoxType.COLLISION && tileEntity.getState() == DoorState.OPENED)
 			return null;
+		MultiBlock mb = ((ForcefieldTileEntity) tileEntity).getMultiBlock();
+		if (mb == null)
+			return null;
 
 		float f = 0.5F /*- Door.DOOR_WIDTH / 2*/;
-		AxisAlignedBB aabb = ((ForcefieldTileEntity) tileEntity).getMultiBlock().getWorldBounds();
+		AxisAlignedBB aabb = mb.getWorldBounds();
 		if (aabb.minY == aabb.maxY - 1)
 		{
 			aabb.minY += f;
