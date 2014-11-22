@@ -87,13 +87,10 @@ public class VanishingDiamondBlock extends VanishingBlock
 		if (world.isRemote)
 			return true;
 
-		if (player.isSneaking())
-			return false;
-
 		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
 		MalisisInventory.open((EntityPlayerMP) player, te);
 
-		return false;
+		return true;
 	}
 
 	@Override

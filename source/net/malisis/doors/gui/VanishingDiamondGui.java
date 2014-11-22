@@ -80,7 +80,7 @@ public class VanishingDiamondGui extends MalisisGui
 			UIContainer cbCont = new UIContainer(this, 70, 12);
 			cbCont.setPosition(55, y);
 
-			UITextField textField = new UITextField(this, "" + state.delay).setPosition(27, 0).setPosition(0, 0)
+			UITextField textField = new UITextField(this, "" + state.delay).setSize(27, 0).setPosition(0, 0)
 					.setDisabled(!state.shouldPropagate).register(this);
 
 			UICheckBox invCb = new UICheckBox(this).setPosition(50, 0).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
@@ -118,14 +118,14 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onChecked(ComponentEvent.ValueChange<UICheckBox, Boolean> event)
+	public void onChecked(UICheckBox.CheckEvent event)
 	{
 		for (Entry<ForgeDirection, UIComponent[]> entry : configs.entrySet())
 		{
 			if (entry.getValue()[0] == event.getComponent())
 			{
-				entry.getValue()[1].setDisabled(!event.getNewValue()); // Textfield
-				entry.getValue()[2].setDisabled(!event.getNewValue()); // Checkbox
+				entry.getValue()[1].setDisabled(!event.isChecked()); // Textfield
+				entry.getValue()[2].setDisabled(!event.isChecked()); // Checkbox
 			}
 		}
 
