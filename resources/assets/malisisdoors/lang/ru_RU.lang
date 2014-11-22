@@ -5,6 +5,11 @@ item.laboratory_door.name=Лабораторная дверь
 item.factory_door.name=Фабричная дверь
 item.custom_door.name=Пользовательская дверь
 item.shoji_door.name=Дверь Сёдзи
+item.rustyHatch.name=Ржавый люк 2х2
+item.rustyHandle.name=Ржавый вентиль
+item.curtain.name=Занавеска
+item.carriage_door.name=Дворцовые ворота 4х5
+item.forcefieldItem.name=Контроллер силового поля
 
 tile.player_sensor.name=Датчик игрока
 tile.vanishing_block_wood.name=Деревянная рамка исчезновения
@@ -22,6 +27,11 @@ tile.custom_door.name=Пользовательская дверь
 tile.shoji_door.name=Дверь Сёдзи
 tile.wood_sliding_door.name=Деревянная стеклянная дверь
 tile.iron_sliding_door.name=Железная стеклянная дверь
+tile.rustyHatch.name=Ржавый люк 2х2
+tile.curtain.name=Занавеска
+tile.carriage_door.name=Дворцовые ворота 4х5
+tile.forcefieldDoor.name=Силовое поле
+tile.rustyLadder.name=Ржавая лестница
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда>, где "команда" - это "config" или "version"
 
