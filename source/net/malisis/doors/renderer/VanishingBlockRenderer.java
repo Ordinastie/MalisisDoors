@@ -26,8 +26,9 @@ package net.malisis.doors.renderer;
 
 import java.util.Random;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.doors.MalisisDoorsSettings;
@@ -40,22 +41,22 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
-public class VanishingBlockRenderer extends BaseRenderer
+public class VanishingBlockRenderer extends MalisisRenderer
 {
 	public Random rand = new Random();
 
 	@Override
 	public void render()
 	{
-		if (renderType == TYPE_TESR_WORLD)
+		if (renderType == RenderType.TESR_WORLD)
 			renderVanishingTileEntity();
-		else if (renderType == TYPE_ISBRH_INVENTORY)
+		else if (renderType == RenderType.ISBRH_INVENTORY)
 		{
 			RenderParameters rp = new RenderParameters();
 			rp.useBlockBounds.set(false);
 			drawShape(new Cube(), rp);
 		}
-		else if (renderType == TYPE_ISBRH_WORLD)
+		else if (renderType == RenderType.ISBRH_WORLD)
 		{
 			VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
 

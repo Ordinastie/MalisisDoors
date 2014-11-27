@@ -27,8 +27,9 @@ package net.malisis.doors.renderer;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
@@ -46,7 +47,7 @@ import net.minecraft.client.renderer.DestroyBlockProgress;
  * @author Ordinastie
  *
  */
-public class GarageDoorRenderer extends BaseRenderer
+public class GarageDoorRenderer extends MalisisRenderer
 {
 	private GarageDoorTileEntity tileEntity;
 	protected int direction;
@@ -75,7 +76,7 @@ public class GarageDoorRenderer extends BaseRenderer
 	public void render()
 	{
 
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			enableBlending();
 

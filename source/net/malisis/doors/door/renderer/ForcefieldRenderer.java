@@ -24,7 +24,8 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
@@ -33,7 +34,6 @@ import net.malisis.core.renderer.element.face.NorthFace;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
@@ -45,7 +45,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class ForcefieldRenderer extends BaseRenderer
+public class ForcefieldRenderer extends MalisisRenderer
 {
 	protected static ResourceLocation[] rl;
 	protected MalisisModel model;

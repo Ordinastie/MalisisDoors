@@ -26,8 +26,9 @@ package net.malisis.doors.renderer;
 
 import java.util.List;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.MergedVertex;
 import net.malisis.core.renderer.element.Shape;
@@ -44,7 +45,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 
-public class MixedBlockRenderer extends BaseRenderer
+public class MixedBlockRenderer extends MalisisRenderer
 {
 	private int mixedBlockMetadata;
 	private MixedBlockTileEntity tileEntity;
@@ -79,7 +80,7 @@ public class MixedBlockRenderer extends BaseRenderer
 
 	private boolean setup()
 	{
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			if (!itemStack.hasTagCompound())
 				return false;
@@ -91,7 +92,7 @@ public class MixedBlockRenderer extends BaseRenderer
 
 			mixedBlockMetadata = 3;
 		}
-		else if (renderType == TYPE_ISBRH_WORLD)
+		else if (renderType == RenderType.ISBRH_WORLD)
 		{
 			tileEntity = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
 			if (tileEntity == null)
@@ -118,7 +119,7 @@ public class MixedBlockRenderer extends BaseRenderer
 		if (!setup())
 			return;
 
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			GL11.glAlphaFunc(GL11.GL_GREATER, 0.0F);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
@@ -140,7 +141,7 @@ public class MixedBlockRenderer extends BaseRenderer
 
 	private void setColor()
 	{
-		int color = renderType == TYPE_ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
+		int color = renderType == RenderType.ISBRH_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
 		rp.colorMultiplier.set(color);
 		shape.setParameters("Top", rp, true);
 		if (block instanceof BlockGrass)
@@ -208,7 +209,7 @@ public class MixedBlockRenderer extends BaseRenderer
 		if (firstBlock)
 			dir = dir.getOpposite();
 
-		shape = shapes[firstBlock && renderType == TYPE_ISBRH_WORLD ? 1 : 0][dir.ordinal()];
+		shape = shapes[firstBlock && renderType == RenderType.ISBRH_WORLD ? 1 : 0][dir.ordinal()];
 		shape.resetState();
 
 		if (shouldShadeFace(firstBlock))
@@ -239,7 +240,7 @@ public class MixedBlockRenderer extends BaseRenderer
 	@Override
 	protected boolean shouldRenderFace(Face face)
 	{
-		if (renderType != TYPE_ISBRH_WORLD || world == null || block == null)
+		if (renderType != RenderType.ISBRH_WORLD || world == null || block == null)
 			return true;
 		if (rp != null && rp.renderAllFaces.get())
 			return true;

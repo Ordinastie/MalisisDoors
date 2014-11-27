@@ -24,10 +24,10 @@
 
 package net.malisis.doors.door.block;
 
+import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.BoundingBoxType;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;

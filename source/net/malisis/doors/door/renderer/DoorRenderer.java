@@ -24,8 +24,9 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
@@ -35,7 +36,7 @@ import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 
-public class DoorRenderer extends BaseRenderer
+public class DoorRenderer extends MalisisRenderer
 {
 	protected DoorTileEntity tileEntity;
 	protected MalisisModel model;
@@ -86,7 +87,7 @@ public class DoorRenderer extends BaseRenderer
 	@Override
 	public void render()
 	{
-		if (renderType == TYPE_ISBRH_WORLD)
+		if (renderType == RenderType.ISBRH_WORLD)
 			return;
 
 		setTileEntity();

@@ -24,8 +24,9 @@
 
 package net.malisis.doors.renderer;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
@@ -36,7 +37,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author Ordinastie
  *
  */
-public class RustyLadderRenderer extends BaseRenderer
+public class RustyLadderRenderer extends MalisisRenderer
 {
 	private Shape ladder;
 
@@ -73,7 +74,7 @@ public class RustyLadderRenderer extends BaseRenderer
 				break;
 		}
 
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			if (itemRenderType == ItemRenderType.INVENTORY)
 			{

@@ -24,8 +24,9 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
@@ -46,7 +47,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class RustyHatchRenderer extends BaseRenderer
+public class RustyHatchRenderer extends MalisisRenderer
 {
 	private ResourceLocation rl;
 	private MalisisModel model;
@@ -109,7 +110,7 @@ public class RustyHatchRenderer extends BaseRenderer
 			return;
 		}
 
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			renderItem();
 			return;
@@ -121,12 +122,12 @@ public class RustyHatchRenderer extends BaseRenderer
 		topBlock = tileEntity.isTopBlock(x, y, z);
 		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
 
-		if (renderType == TYPE_ISBRH_WORLD)
+		if (renderType == RenderType.ISBRH_WORLD)
 		{
 			getBlockDamage = true;
 			renderBlock();
 		}
-		else if (renderType == TYPE_TESR_WORLD)
+		else if (renderType == RenderType.TESR_WORLD)
 			renderTileEntity();
 	}
 

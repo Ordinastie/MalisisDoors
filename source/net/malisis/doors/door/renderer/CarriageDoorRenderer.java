@@ -24,8 +24,9 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.renderer.BaseRenderer;
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
@@ -44,7 +45,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class CarriageDoorRenderer extends BaseRenderer
+public class CarriageDoorRenderer extends MalisisRenderer
 {
 	private ResourceLocation rl;
 	private MalisisModel model;
@@ -85,12 +86,12 @@ public class CarriageDoorRenderer extends BaseRenderer
 		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
 		setup();
 
-		if (renderType == TYPE_ISBRH_WORLD)
+		if (renderType == RenderType.ISBRH_INVENTORY)
 		{
 			getBlockDamage = true;
 			renderBlock();
 		}
-		else if (renderType == TYPE_TESR_WORLD)
+		else if (renderType == RenderType.TESR_WORLD)
 			renderTileEntity();
 	}
 

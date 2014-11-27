@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door.renderer;
 
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.face.BottomFace;
 import net.malisis.core.renderer.element.face.NorthFace;
@@ -127,7 +128,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-		if (renderType == TYPE_ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			if (itemStack.stackTagCompound == null)
 				return;
@@ -172,7 +173,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		model.resetState();
 
-		if (renderType == TYPE_TESR_WORLD)
+		if (renderType == RenderType.TESR_WORLD)
 			setInfos(tileEntity);
 		else
 			setInfos(itemStack.stackTagCompound);
@@ -183,7 +184,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		setupParams(true);
 		setupParams(false);
 
-		if (renderType == TYPE_TESR_WORLD)
+		if (renderType == RenderType.TESR_WORLD)
 			super.setup();
 		else
 		{
@@ -227,7 +228,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		if (block == Blocks.grass)
 			return 0xFFFFFF;
-		return renderType == TYPE_TESR_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
+		return renderType == RenderType.TESR_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
 	}
 
 	private void renderInventory()
