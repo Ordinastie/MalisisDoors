@@ -95,7 +95,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 
 		model.resetState();
 
-		ar.setStartTime(tileEntity.getStartNanoTime());
+		//ar.setStartTime(tileEntity.getStartNanoTime());
 		if (tileEntity.getMovement() == null)
 			return;
 
@@ -133,8 +133,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 
 	private void setTextureMatrix()
 	{
-		long elapsed = ar.getElapsedTime() / 10000000;
-		elapsed /= 5;
+		long elapsed = ar.getElapsedTime() / 50;
 		int n = (int) (elapsed % 50);
 
 		bindTexture(rl[n]);
