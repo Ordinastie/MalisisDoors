@@ -26,6 +26,7 @@ package net.malisis.doors.block;
 
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
@@ -94,45 +95,37 @@ public class GarageDoor extends Block implements ITileEntityProvider
 
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 		setBlockBoundsBasedOnState(world, x, y, z);
-
-		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
-		if (te != null)
-			te.add();
 	}
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		if ((world.isBlockIndirectlyGettingPowered(x, y, z) || block.canProvidePower()) && block != this)
-		{
-			GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
-			if (te != null)
-				te.changeState();
-		}
-
-	}
-
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
-	{
 		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
-		if (te != null)
-			te.remove();
+		if (te == null)
+			return;
 
-		world.removeTileEntity(x, y, z);
+		boolean powered = te.isPowered();
+		if ((powered || block.canProvidePower()) && block != this)
+			te.setPowered(powered);
 	}
 
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		int metadata = world.getBlockMetadata(x, y, z);
-		float w = Door.DOOR_WIDTH / 2;
-		if ((metadata & Door.FLAG_OPENED) != 0)
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
+		if (te == null)
+			setBlockBounds(0, 0, 0, 1, 1, 1);
+		else if (te.getState() != DoorState.CLOSED)
 			setBlockBounds(0, 0, 0, 0, 0, 0);
-		else if (isEastOrWest(metadata))
-			setBlockBounds(0.5F - w, 0, 0, 0.5F + w, 1, 1);
 		else
-			setBlockBounds(0, 0, 0.5F - w, 1, 1, 0.5F + w);
+		{
+			float w = Door.DOOR_WIDTH / 2;
+
+			if (isEastOrWest(te.getBlockMetadata()))
+				setBlockBounds(0.5F - w, 0, 0, 0.5F + w, 1, 1);
+			else
+				setBlockBounds(0, 0, 0.5F - w, 1, 1, 0.5F + w);
+		}
 	}
 
 	@Override

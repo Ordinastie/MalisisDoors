@@ -54,6 +54,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 	protected boolean opened;
 	protected boolean reversed;
 	protected boolean topBlock;
+	protected Set<GarageDoorTileEntity> childDoors = new HashSet<>();
 
 	protected AnimationRenderer ar = new AnimationRenderer();
 
@@ -70,6 +71,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 		rp.useBlockBrightness.set(false);
 		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
+		rp.useWorldSensitiveIcon.set(false);
 	}
 
 	@Override
@@ -110,25 +112,27 @@ public class GarageDoorRenderer extends MalisisRenderer
 
 	protected void renderTileEntity()
 	{
-
 		int t = GarageDoorTileEntity.maxOpenTime;
 		//set the start timer
-		ar.setStartTime(tileEntity.getStartNanoTime());
+		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		//create door list from childs + top
-		Set<GarageDoorTileEntity> doors = new HashSet<>(tileEntity.getChildDoors());
-		doors.add(tileEntity);
-
-		for (GarageDoorTileEntity te : doors)
+		childDoors.clear();
+		tileEntity.addChildDoors(childDoors);
+		for (GarageDoorTileEntity te : childDoors)
 		{
 			shape.resetState();
 			shape.rotate(-90 * tileEntity.getDirection(), 0, 1, 0);
 			shape.translate(0.5F - Door.DOOR_WIDTH / 2, 0, 0);
 
-			blockMetadata = te.blockMetadata;
 			y = te.yCoord;
 			int delta = tileEntity.yCoord - te.yCoord;
-			int delta2 = doors.size() - (delta + 1);
+			int delta2 = childDoors.size() - (delta + 1);
+
+			if (delta == 0)
+				blockMetadata |= Door.FLAG_TOPBLOCK;
+			else
+				blockMetadata &= ~Door.FLAG_TOPBLOCK;
 
 			Transformation verticalAnim = new Translation(0, -delta, 0, 0, 0, 0).forTicks(t * delta, 0);
 			//@formatter:off
@@ -168,7 +172,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 		if (dbp.getPartialBlockX() == x && dbp.getPartialBlockY() == y && dbp.getPartialBlockZ() == z)
 			return true;
 
-		for (GarageDoorTileEntity te : tileEntity.getChildDoors())
+		for (GarageDoorTileEntity te : childDoors)
 		{
 			if (dbp.getPartialBlockX() == te.xCoord && dbp.getPartialBlockY() == te.yCoord && dbp.getPartialBlockZ() == te.zCoord)
 				return true;
