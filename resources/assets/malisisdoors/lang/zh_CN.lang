@@ -8,7 +8,7 @@ item.factory_door.name=工厂门
 item.custom_door.name=自定义门
 item.shoji_door.name=障子门
 item.rustyHatch.name=生锈舱门
-item.rustyHandle.name=生锈闸阀
+item.rustyHandle.name=生锈手轮
 item.curtain.name=幕布
 item.carriage_door.name=宅门
 item.forcefieldItem.name=力场控制器
@@ -33,9 +33,9 @@ tile.rustyHatch.name=生锈舱门
 tile.curtain.name=幕布
 tile.carriage_door.name=宅门
 tile.forcefieldDoor.name=力场
-tile.rustyLadder.name=生锈梯子
+tile.rustyLadder.name=生锈铁梯
 
-malisisdoors.command.usage=使用 /malisisdoors <command> , command参数代表设置名或版本
+malisisdoors.command.usage=使用指令/malisisdoors <command>需在command处键入配置名或版本
 
 config.title=MalisisDoors模组配置
 
@@ -72,6 +72,7 @@ door_movement.rotating_4ways=四向旋转
 door_movement.rotate_around=自由旋转
 door_movement.rotate_slide=旋转和滑动
 door_movement.rotate_place=旋转和替换
+door_movement.vanishing_door=消失
 
 gui.door_factory.tab_properties=属性
 gui.door_factory.tab_materials=材料
