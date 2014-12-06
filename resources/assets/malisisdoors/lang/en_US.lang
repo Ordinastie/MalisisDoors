@@ -72,6 +72,7 @@ door_movement.rotating_4ways=Rotating four ways
 door_movement.rotate_around=Rotating around
 door_movement.rotate_slide=Rotating and sliding
 door_movement.rotate_place=Rotating and replacing
+door_movement.vanishing_door=Vanishing
 
 gui.door_factory.tab_properties=Properties
 gui.door_factory.tab_materials=Materials

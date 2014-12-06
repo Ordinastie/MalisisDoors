@@ -128,6 +128,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
+		initialize();
 		if (renderType == RenderType.ITEM_INVENTORY)
 		{
 			if (itemStack.stackTagCompound == null)
@@ -208,6 +209,9 @@ public class CustomDoorRenderer extends DoorRenderer
 
 	private void setupParams(boolean topBlock)
 	{
+		//reset alpha before so it doesn't bleed to the shapes
+		rp.alpha.reset();
+
 		Shape s = model.getShape(topBlock ? "top" : "bottom");
 		rp.icon.set(frameBlock.getIcon(2, frameMetadata));
 		rp.colorMultiplier.set(getColor(frameBlock));

@@ -66,6 +66,7 @@ door_movement.rotating_4ways=Aufklappend (4 Richtungen)
 door_movement.rotate_around=
 door_movement.rotate_slide=Aufklappen und -gleiten
 door_movement.rotate_place=Aufklappen und Ersetzen
+door_movement.vanishing_door=Schwindend
  
 gui.door_factory.tab_properties=Eigenschaften
 gui.door_factory.tab_materials=Materialien

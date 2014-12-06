@@ -68,6 +68,7 @@ door_movement.rotating_4ways=Tournante des quatre côtés
 door_movement.rotate_around=Circulaire
 door_movement.rotate_slide=Tournante et coulissante
 door_movement.rotate_place=Tournante se replace
+door_movement.vanishing_door=Disparaissante
 
 gui.door_factory.tab_properties=Propiétés
 gui.door_factory.tab_materials=Matériaux
