@@ -86,7 +86,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
 		setup();
 
-		if (renderType == RenderType.ISBRH_INVENTORY)
+		if (renderType == RenderType.ISBRH_WORLD)
 		{
 			getBlockDamage = true;
 			renderBlock();

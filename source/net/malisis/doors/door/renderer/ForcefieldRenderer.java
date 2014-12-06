@@ -83,7 +83,6 @@ public class ForcefieldRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		initialize();
 		tileEntity = MultiBlock.getOriginProvider(ForcefieldTileEntity.class, world, x, y, z);
 		if (tileEntity == null || tileEntity.isOpened() || !MultiBlock.isOrigin(world, x, y, z))
 			return;
