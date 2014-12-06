@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door.tileentity;
 
+import net.malisis.core.util.Timer;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
@@ -43,13 +44,11 @@ import net.minecraft.world.World;
  */
 public class DoorTileEntity extends TileEntity
 {
-	private DoorDescriptor descriptor;
-	private int lastMetadata = -1;
-	private long startTime;
-	private long startNanoTime;
-	private int timer = 0;
-	private DoorState state = DoorState.CLOSED;
-	private boolean moving;
+	protected DoorDescriptor descriptor;
+	protected int lastMetadata = -1;
+	protected Timer timer = new Timer();
+	protected DoorState state = DoorState.CLOSED;
+	protected boolean moving;
 
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
@@ -70,29 +69,9 @@ public class DoorTileEntity extends TileEntity
 		this.descriptor = descriptor;
 	}
 
-	public long getStartTime()
-	{
-		return startTime;
-	}
-
-	public void setStartTime(long startTime)
-	{
-		this.startTime = startTime;
-	}
-
-	public long getStartNanoTime()
-	{
-		return startNanoTime;
-	}
-
-	public int getTimer()
+	public Timer getTimer()
 	{
 		return timer;
-	}
-
-	public void setTimer(int timer)
-	{
-		this.timer = timer;
 	}
 
 	public DoorState getState()
@@ -118,6 +97,11 @@ public class DoorTileEntity extends TileEntity
 	public IDoorMovement getMovement()
 	{
 		return getDescriptor() != null ? getDescriptor().getMovement() : null;
+	}
+
+	public int getOpeningTime()
+	{
+		return getDescriptor() != null ? getDescriptor().getOpeningTime() : 6;
 	}
 
 	public int getDirection()
@@ -189,10 +173,17 @@ public class DoorTileEntity extends TileEntity
 
 		if (state == DoorState.CLOSING || state == DoorState.OPENING)
 		{
-			timer = moving ? descriptor.getOpeningTime() - timer : 0;
-			startTime = worldObj.getTotalWorldTime() - timer;
-			startNanoTime = System.nanoTime();
-			moving = true;
+			if (moving)
+			{
+				long s = timer.elapsedTime() - Timer.tickToTime(getOpeningTime());
+				timer.setRelativeStart(s);
+			}
+			else
+			{
+				timer.start();
+				moving = true;
+			}
+
 		}
 		else
 		{
@@ -306,12 +297,8 @@ public class DoorTileEntity extends TileEntity
 		if (!moving)
 			return;
 
-		timer++;
-		if (startTime + descriptor.getOpeningTime() < worldObj.getTotalWorldTime())
-		{
+		if (timer.elapsedTick() > descriptor.getOpeningTime())
 			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
-			timer = 0;
-		}
 	}
 
 	//#region NBT/Network

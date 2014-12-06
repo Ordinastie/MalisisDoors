@@ -84,7 +84,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	protected void renderTileEntity()
 	{
-		ar.setStartTime(tileEntity.getStartNanoTime());
+		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();
 

@@ -103,7 +103,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 	private void renderTileEntity()
 	{
-		ar.setStartTime(tileEntity.getStartNanoTime());
+		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		if (tileEntity.getMovement() != null)
 		{

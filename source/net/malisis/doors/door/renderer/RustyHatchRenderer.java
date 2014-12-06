@@ -172,7 +172,7 @@ public class RustyHatchRenderer extends MalisisRenderer
 		setup(hatch);
 		setup(handle);
 
-		ar.setStartTime(tileEntity.getStartNanoTime());
+		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		if (tileEntity.getMovement() != null)
 		{

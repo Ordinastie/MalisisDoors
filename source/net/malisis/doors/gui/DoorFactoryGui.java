@@ -106,7 +106,8 @@ public class DoorFactoryGui extends MalisisGui
 		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
 		tabGroup.attachTo(window, false);
 
-		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door", 80).setPosition(0, 90, Anchor.CENTER).register(this);
+		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 90, Anchor.CENTER)
+				.register(this);
 		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 112, Anchor.CENTER);
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
