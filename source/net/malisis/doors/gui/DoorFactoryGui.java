@@ -43,11 +43,9 @@ import net.malisis.core.client.gui.component.decoration.UITooltip;
 import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UISelect;
-import net.malisis.core.client.gui.component.interaction.UISelect.Option;
 import net.malisis.core.client.gui.component.interaction.UITab;
 import net.malisis.core.client.gui.component.interaction.UITextField;
-import net.malisis.core.client.gui.event.ComponentEvent;
-import net.malisis.core.client.gui.event.component.StateChangeEvent;
+import net.malisis.core.client.gui.event.ComponentEvent.ValueChange;
 import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateChange;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.util.TileEntityUtils;
@@ -192,30 +190,48 @@ public class DoorFactoryGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onGuiChangeEvent(ComponentEvent<UIComponent> event)
+	public void onCheckedEvent(UICheckBox.CheckEvent event)
 	{
-		if (event instanceof StateChangeEvent)
+		if (event.getComponent() == cbRedstone)
+			tileEntity.setRequireRedstone(event.isChecked());
+		else
+			tileEntity.setDoubleDoor(event.isChecked());
+
+		DoorFactoryMessage.sendDoorInformations(tileEntity);
+	}
+
+	@Subscribe
+	public void onSelectEvent(UISelect.SelectEvent event)
+	{
+		if (event.getOption() == null)
 			return;
 
-		Option opt = selDoorMovement.getSelectedOption();
-		if (opt != null)
-			tileEntity.setDoorMovement((IDoorMovement) opt.getKey());
+		if (event.getComponent() == selDoorMovement)
+			tileEntity.setDoorMovement((IDoorMovement) event.getOption().getKey());
+		else
+			tileEntity.setDoorSound((IDoorSound) event.getOption().getKey());
+
+		DoorFactoryMessage.sendDoorInformations(tileEntity);
+	}
+
+	@Subscribe
+	public void onGuiChangeEvent(ValueChange<UIComponent, Object> event)
+	{
+		if (event.getComponent() != tfOpenTime)
+			return;
+
 		try
 		{
+			//parse the value of the textfield
 			tileEntity.setOpeningTime(Integer.parseInt(tfOpenTime.getText()));
+			DoorFactoryMessage.sendDoorInformations(tileEntity);
 		}
 		catch (NumberFormatException e)
 		{
+			//parsing failed, replace the value of the textfield by the value already in the TE
 			tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		}
-		tileEntity.setRequireRedstone(cbRedstone.isChecked());
-		tileEntity.setDoubleDoor(cbDoubleDoor.isChecked());
 
-		opt = selDoorSound.getSelectedOption();
-		if (opt != null)
-			tileEntity.setDoorSound((IDoorSound) opt.getKey());
-
-		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
 
 	@Subscribe
