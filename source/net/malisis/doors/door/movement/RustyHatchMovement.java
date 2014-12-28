@@ -31,6 +31,7 @@ import net.malisis.core.renderer.animation.transformation.ParallelTransformation
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
@@ -49,8 +50,12 @@ public class RustyHatchMovement implements IDoorMovement
 		if (!(tileEntity instanceof RustyHatchTileEntity))
 			return null;
 
+		MultiBlock mb = ((RustyHatchTileEntity) tileEntity).getMultiBlock();
+		if (mb == null)
+			return null;
+
 		float f = 0.125F;
-		AxisAlignedBB aabb = ((RustyHatchTileEntity) tileEntity).getMultiBlock().getWorldBounds();
+		AxisAlignedBB aabb = mb.getWorldBounds();
 		ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getDirection());
 
 		if (!tileEntity.isOpened())

@@ -30,6 +30,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
@@ -49,8 +50,12 @@ public class CarriageDoorMovement implements IDoorMovement
 		if (!(tileEntity instanceof CarriageDoorTileEntity))
 			return null;
 
+		MultiBlock mb = ((CarriageDoorTileEntity) tileEntity).getMultiBlock();
+		if (mb == null)
+			return null;
+
 		float f = Door.DOOR_WIDTH;
-		AxisAlignedBB aabb = ((CarriageDoorTileEntity) tileEntity).getMultiBlock().getWorldBounds();
+		AxisAlignedBB aabb = mb.getWorldBounds();
 		ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getDirection());
 
 		//MalisisCore.message(dir);

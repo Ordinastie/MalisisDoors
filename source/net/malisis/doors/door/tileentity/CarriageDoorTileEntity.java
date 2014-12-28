@@ -103,6 +103,8 @@ public class CarriageDoorTileEntity extends DoorTileEntity implements MultiBlock
 
 	public boolean isLeftFrame(int x, int y, int z)
 	{
+		if (multiBlock == null)
+			return true;
 		return x == multiBlock.getX() && z == multiBlock.getZ();
 	}
 
