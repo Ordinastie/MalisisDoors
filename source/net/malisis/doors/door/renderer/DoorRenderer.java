@@ -121,6 +121,7 @@ public class DoorRenderer extends MalisisRenderer
 
 	protected void renderTileEntity()
 	{
+		initialize();
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
@@ -130,8 +131,6 @@ public class DoorRenderer extends MalisisRenderer
 			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
-
-		rp.interpolateUV.set(false);
 
 		//model.render(this, rp);
 		drawShape(model.getShape("bottom"), rp);

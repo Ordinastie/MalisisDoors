@@ -151,8 +151,11 @@ public class RustyHatch extends Block implements ITileEntityProvider
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return;
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE).offset(-x, -y, -z);
-		//MalisisCore.message(aabb);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE);
+		if (aabb == null)
+			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+
+		aabb.offset(-x, -y, -z);
 		setBlockBounds(aabb);
 	}
 

@@ -145,7 +145,8 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isLeftFrame(x, y, z), BoundingBoxType.RAYTRACE);
 		if (aabb == null)
-			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+
 		aabb.offset(-x, -y, -z);
 		setBlockBounds(aabb);
 	}
