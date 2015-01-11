@@ -47,6 +47,7 @@ public class VanillaDoor extends DoorDescriptor
 		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
 		setName(wood ? "doorWood" : "doorIron");
 		setTextureName(wood ? "door_wood" : "door_iron");
+		setAutoCloseTime(10);
 
 		//te
 		setRequireRedstone(!wood);

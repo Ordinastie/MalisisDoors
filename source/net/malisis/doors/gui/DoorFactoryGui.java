@@ -75,6 +75,7 @@ public class DoorFactoryGui extends MalisisGui
 	private UITab firstTab;
 	private UISelect selDoorMovement;
 	private UITextField tfOpenTime;
+	private UITextField tfAutoCloseTime;
 	private UICheckBox cbRedstone;
 	private UICheckBox cbDoubleDoor;
 	private UISelect selDoorSound;
@@ -104,9 +105,9 @@ public class DoorFactoryGui extends MalisisGui
 		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
 		tabGroup.attachTo(window, false);
 
-		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 90, Anchor.CENTER)
+		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 98, Anchor.CENTER)
 				.register(this);
-		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 112, Anchor.CENTER);
+		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 120, Anchor.CENTER);
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 
@@ -135,23 +136,26 @@ public class DoorFactoryGui extends MalisisGui
 		selDoorMovement.setLabelPattern("door_movement.%s");
 
 		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
-		cbRedstone = new UICheckBox(this).setPosition(-15, 26, Anchor.RIGHT).register(this);
-		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
+		tfAutoCloseTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 26, Anchor.RIGHT).register(this);
+		cbRedstone = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
+		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 50, Anchor.RIGHT).register(this);
 
 		HashMap<IDoorSound, String> listSounds = new HashMap<>();
 		for (Entry<String, IDoorSound> entry : DoorRegistry.listSounds().entrySet())
 			listSounds.put(entry.getValue(), entry.getKey());
-		selDoorSound = new UISelect(this, 100, UISelect.Option.fromList(listSounds)).setPosition(0, 50, Anchor.RIGHT).register(this);
+		selDoorSound = new UISelect(this, 100, UISelect.Option.fromList(listSounds)).setPosition(0, 62, Anchor.RIGHT).register(this);
 		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s");
 
 		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
 		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, 16));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_require_redstone").setPosition(0, 28));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 40));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, 52));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_auto_close_time").setPosition(0, 28));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_require_redstone").setPosition(0, 40));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 52));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, 64));
 
 		propContainer.add(selDoorMovement);
 		propContainer.add(tfOpenTime);
+		propContainer.add(tfAutoCloseTime);
 		propContainer.add(cbRedstone);
 		propContainer.add(cbDoubleDoor);
 		propContainer.add(selDoorSound);
@@ -184,6 +188,7 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		selDoorMovement.setSelectedOption(tileEntity.getDoorMovement());
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
+		tfAutoCloseTime.setText(Integer.toString(tileEntity.getAutoCloseTime()));
 		cbRedstone.setChecked(tileEntity.requireRedstone());
 		cbDoubleDoor.setChecked(tileEntity.isDoubleDoor());
 		selDoorSound.setSelectedOption(tileEntity.getDoorSound());
@@ -222,8 +227,9 @@ public class DoorFactoryGui extends MalisisGui
 
 		try
 		{
-			//parse the value of the textfield
+			//parse the value of the textfields
 			tileEntity.setOpeningTime(Integer.parseInt(tfOpenTime.getText()));
+			tileEntity.setAutoCloseTime(Integer.parseInt(tfAutoCloseTime.getText()));
 			DoorFactoryMessage.sendDoorInformations(tileEntity);
 		}
 		catch (NumberFormatException e)

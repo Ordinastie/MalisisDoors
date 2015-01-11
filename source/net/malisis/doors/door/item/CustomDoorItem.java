@@ -50,7 +50,7 @@ import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class CustomDoorItem extends DoorItem
 {
@@ -139,6 +139,7 @@ public class CustomDoorItem extends DoorItem
 		desc.setMovement(te.getDoorMovement());
 		desc.setSound(te.getDoorSound());
 		desc.setOpeningTime(te.getOpeningTime());
+		desc.setAutoCloseTime(te.getAutoCloseTime());
 		desc.setRequireRedstone(te.requireRedstone());
 		desc.setDoubleDoor(te.isDoubleDoor());
 

@@ -55,6 +55,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	private IDoorMovement doorMovement;
 	private IDoorSound doorSound;
 	private int openingTime = 6;
+	private int autoCloseTime = 0;
 	private boolean requireRedstone = false;
 	private boolean doubleDoor = true;
 
@@ -102,6 +103,16 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	public void setOpeningTime(int openingTime)
 	{
 		this.openingTime = openingTime;
+	}
+
+	public int getAutoCloseTime()
+	{
+		return autoCloseTime;
+	}
+
+	public void setAutoCloseTime(int autoCloseTime)
+	{
+		this.autoCloseTime = autoCloseTime;
 	}
 
 	public boolean requireRedstone()
@@ -189,6 +200,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		if (doorSound != null)
 			nbt.setString("doorSound", DoorRegistry.getId(doorSound));
 		nbt.setInteger("openingTime", openingTime);
+		nbt.setInteger("autoCloseTime", autoCloseTime);
 		nbt.setBoolean("requireRedstone", requireRedstone);
 		nbt.setBoolean("doubleDoor", doubleDoor);
 
@@ -202,6 +214,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		doorMovement = DoorRegistry.getMovement(nbt.getString("doorMovement"));
 		doorSound = DoorRegistry.getSound(nbt.getString("doorSound"));
 		openingTime = nbt.getInteger("openingTime");
+		autoCloseTime = nbt.getInteger("autoCloseTime");
 		requireRedstone = nbt.getBoolean("requireRedstone");
 		doubleDoor = nbt.getBoolean("doubleDoor");
 

@@ -77,6 +77,7 @@ gui.door_factory.tab_properties=Propiétés
 gui.door_factory.tab_materials=Matériaux
 gui.door_factory.door_movement=Mouvement
 gui.door_factory.door_open_time=Temps d'ouverture
+gui.door_factory.door_auto_close_time=Delai de fermeture
 gui.door_factory.door_require_redstone=Nécessite redstone
 gui.door_factory.door_double_door=Double porte
 gui.door_factory.door_sound=Type de son

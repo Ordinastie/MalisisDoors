@@ -54,6 +54,7 @@ public class DoorDescriptor
 	private SoundType soundType = Block.soundTypeWood;
 	private String name;
 	private String textureName;
+	private int autoCloseTime = 0;
 
 	//te
 	private IDoorMovement movement;
@@ -196,6 +197,16 @@ public class DoorDescriptor
 		this.requireRedstone = requireRedstone;
 	}
 
+	public int getAutoCloseTime()
+	{
+		return autoCloseTime;
+	}
+
+	public void setAutoCloseTime(int autoCloseTime)
+	{
+		this.autoCloseTime = autoCloseTime;
+	}
+
 	public CreativeTabs getTab()
 	{
 		return tab;
@@ -240,6 +251,8 @@ public class DoorDescriptor
 			setRequireRedstone(nbt.getBoolean("redstone"));
 		if (nbt.hasKey("doubleDoor"))
 			setDoubleDoor(nbt.getBoolean("doubleDoor"));
+		if (nbt.hasKey("autoCloseTime"))
+			setAutoCloseTime(nbt.getInteger("autoCloseTime"));
 	}
 
 	public void writeNBT(NBTTagCompound nbt)
@@ -253,6 +266,7 @@ public class DoorDescriptor
 		nbt.setInteger("openingTime", getOpeningTime());
 		nbt.setBoolean("redstone", requireRedstone());
 		nbt.setBoolean("doubleDoor", isDoubleDoor());
+		nbt.setInteger("autoCloseTime", getAutoCloseTime());
 
 	}
 

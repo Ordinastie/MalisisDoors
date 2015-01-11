@@ -175,7 +175,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if (te.getDescriptor().requireRedstone())
 			return true;
 
+		if (te.getDescriptor().getAutoCloseTime() > 0 && !te.isOpened())
+			world.scheduleBlockUpdate(x, y, z, this, te.getDescriptor().getAutoCloseTime() + te.getDescriptor().getOpeningTime());
+
 		te.openOrCloseDoor();
+
 		return true;
 	}
 
@@ -318,6 +322,19 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 
 	//#end BoudingBox
+
+	@Override
+	public void updateTick(World world, int x, int y, int z, Random rand)
+	{
+		DoorTileEntity te = getDoor(world, x, y, z);
+		if (te == null)
+			return;
+
+		if (te.getDescriptor().getAutoCloseTime() <= 0)
+			return;
+
+		te.openOrCloseDoor();
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)

@@ -36,7 +36,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Packet, IMessage>
 {
@@ -53,6 +53,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			te.setDoorMovement(DoorRegistry.getMovement(message.movement));
 			te.setDoorSound(DoorRegistry.getSound(message.sound));
 			te.setOpeningTime(message.openTime);
+			te.setAutoCloseTime(message.autoCloseTime);
 			te.setRequireRedstone(message.redstone);
 			te.setDoubleDoor(message.doubleDoor);
 		}
@@ -67,7 +68,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		Packet packet = new Packet(Packet.TYPE_DOORINFOS, te.xCoord, te.yCoord, te.zCoord);
 		String mvt = DoorRegistry.getId(te.getDoorMovement());
 		String snd = DoorRegistry.getId(te.getDoorSound());
-		packet.setDoorInfos(mvt, snd, te.getOpeningTime(), te.requireRedstone(), te.isDoubleDoor());
+		packet.setDoorInfos(mvt, snd, te.getOpeningTime(), te.getAutoCloseTime(), te.requireRedstone(), te.isDoubleDoor());
 		NetworkHandler.network.sendToServer(packet);
 	}
 
@@ -86,6 +87,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		private String movement;
 		private String sound;
 		private int openTime;
+		private int autoCloseTime;
 		private boolean redstone;
 		private boolean doubleDoor;
 
@@ -100,11 +102,12 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			this.z = z;
 		}
 
-		public void setDoorInfos(String movement, String sound, int openTime, boolean redstone, boolean doubleDoor)
+		public void setDoorInfos(String movement, String sound, int openTime, int autoCloseTime, boolean redstone, boolean doubleDoor)
 		{
 			this.movement = movement;
 			this.sound = sound;
 			this.openTime = openTime;
+			this.autoCloseTime = autoCloseTime;
 			this.redstone = redstone;
 			this.doubleDoor = doubleDoor;
 		}
@@ -125,6 +128,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 				if (sound.equals(""))
 					sound = null;
 				openTime = buf.readInt();
+				autoCloseTime = buf.readInt();
 				redstone = buf.readBoolean();
 				doubleDoor = buf.readBoolean();
 			}
@@ -143,6 +147,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 				ByteBufUtils.writeUTF8String(buf, movement != null ? movement : "");
 				ByteBufUtils.writeUTF8String(buf, sound != null ? sound : "");
 				buf.writeInt(openTime);
+				buf.writeInt(autoCloseTime);
 				buf.writeBoolean(redstone);
 				buf.writeBoolean(doubleDoor);
 			}
