@@ -50,6 +50,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 
 		if (message.type == Packet.TYPE_DOORINFOS)
 		{
+			te.setCreate(message.isCreate);
 			te.setDoorMovement(DoorRegistry.getMovement(message.movement));
 			te.setDoorSound(DoorRegistry.getSound(message.sound));
 			te.setOpeningTime(message.openTime);
@@ -68,7 +69,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		Packet packet = new Packet(Packet.TYPE_DOORINFOS, te.xCoord, te.yCoord, te.zCoord);
 		String mvt = DoorRegistry.getId(te.getDoorMovement());
 		String snd = DoorRegistry.getId(te.getDoorSound());
-		packet.setDoorInfos(mvt, snd, te.getOpeningTime(), te.getAutoCloseTime(), te.requireRedstone(), te.isDoubleDoor());
+		packet.setDoorInfos(te.isCreate(), mvt, snd, te.getOpeningTime(), te.getAutoCloseTime(), te.requireRedstone(), te.isDoubleDoor());
 		NetworkHandler.network.sendToServer(packet);
 	}
 
@@ -84,6 +85,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		private static int TYPE_CREATEDOOR = 1;
 		private int x, y, z;
 		private int type;
+		private boolean isCreate;
 		private String movement;
 		private String sound;
 		private int openTime;
@@ -102,8 +104,9 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			this.z = z;
 		}
 
-		public void setDoorInfos(String movement, String sound, int openTime, int autoCloseTime, boolean redstone, boolean doubleDoor)
+		public void setDoorInfos(boolean isCreate, String movement, String sound, int openTime, int autoCloseTime, boolean redstone, boolean doubleDoor)
 		{
+			this.isCreate = isCreate;
 			this.movement = movement;
 			this.sound = sound;
 			this.openTime = openTime;
@@ -121,6 +124,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			type = buf.readInt();
 			if (type == TYPE_DOORINFOS)
 			{
+				isCreate = buf.readBoolean();
 				movement = ByteBufUtils.readUTF8String(buf);
 				if (movement.equals(""))
 					movement = null;
@@ -144,6 +148,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 			buf.writeInt(type);
 			if (type == TYPE_DOORINFOS)
 			{
+				buf.writeBoolean(isCreate);
 				ByteBufUtils.writeUTF8String(buf, movement != null ? movement : "");
 				ByteBufUtils.writeUTF8String(buf, sound != null ? sound : "");
 				buf.writeInt(openTime);

@@ -29,12 +29,17 @@ import net.malisis.core.inventory.IInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.inventory.MalisisSlot;
+import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.item.DoorItem;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.gui.DoorFactoryGui;
+import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -59,9 +64,12 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	private boolean requireRedstone = false;
 	private boolean doubleDoor = true;
 
+	private boolean isCreate = true;
+
 	public MalisisSlot frameSlot;
 	public MalisisSlot topMaterialSlot;
 	public MalisisSlot bottomMaterialSlot;
+	public MalisisSlot doorEditSlot;
 	public MalisisSlot outputSlot;
 
 	public DoorFactoryTileEntity()
@@ -69,10 +77,22 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		frameSlot = new DoorFactorySlot(0);
 		topMaterialSlot = new DoorFactorySlot(1);
 		bottomMaterialSlot = new DoorFactorySlot(2);
-		outputSlot = new MalisisSlot(3);
+		doorEditSlot = new DoorEditSlot(3);
+		outputSlot = new MalisisSlot(4);
 		outputSlot.setOutputSlot();
 
-		inventory = new MalisisInventory(this, new MalisisSlot[] { frameSlot, topMaterialSlot, bottomMaterialSlot, outputSlot });
+		inventory = new MalisisInventory(this,
+				new MalisisSlot[] { frameSlot, topMaterialSlot, bottomMaterialSlot, doorEditSlot, outputSlot });
+	}
+
+	public boolean isCreate()
+	{
+		return isCreate;
+	}
+
+	public void setCreate(boolean isCreate)
+	{
+		this.isCreate = isCreate;
 	}
 
 	public IDoorMovement getDoorMovement()
@@ -143,18 +163,32 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		if (!canCreateDoor())
 			return;
 
-		ItemStack expected = CustomDoorItem.fromDoorFactory(this);
-		ItemStack output = outputSlot.getItemStack();
-		if (expected == null)
-			return;
+		if (isCreate)
+		{
+			ItemStack expected = CustomDoorItem.fromDoorFactory(this);
+			ItemStack output = outputSlot.getItemStack();
+			if (expected == null)
+				return;
 
-		if (output != null && (!ItemStack.areItemStackTagsEqual(output, expected) || output.stackSize >= output.getMaxStackSize()))
-			return;
+			if (output != null && (!ItemStack.areItemStackTagsEqual(output, expected) || output.stackSize >= output.getMaxStackSize()))
+				return;
 
-		frameSlot.extract(1);
-		topMaterialSlot.extract(1);
-		bottomMaterialSlot.extract(1);
-		outputSlot.insert(expected);
+			frameSlot.extract(1);
+			topMaterialSlot.extract(1);
+			bottomMaterialSlot.extract(1);
+			outputSlot.insert(expected);
+		}
+		else
+		{
+			ItemStack doors = doorEditSlot.extract(ItemUtils.FULL_STACK);
+			NBTTagCompound nbt = doors.stackTagCompound;
+			if (nbt == null)
+				nbt = new NBTTagCompound();
+
+			buildDescriptor().writeNBT(nbt);
+
+			outputSlot.insert(doors);
+		}
 	}
 
 	public boolean canCreateDoor()
@@ -162,14 +196,36 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		if (doorMovement == null || doorSound == null || openingTime == 0)
 			return false;
 
-		if (frameSlot.getItemStack() == null)
-			return false;
-		if (topMaterialSlot.getItemStack() == null)
-			return false;
-		if (bottomMaterialSlot.getItemStack() == null)
-			return false;
+		if (isCreate)
+		{
+			if (frameSlot.getItemStack() == null)
+				return false;
+			if (topMaterialSlot.getItemStack() == null)
+				return false;
+			if (bottomMaterialSlot.getItemStack() == null)
+				return false;
+		}
+		else
+		{
+			if (doorEditSlot.getItemStack() == null)
+				return false;
+		}
 
 		return true;
+	}
+
+	public DoorDescriptor buildDescriptor()
+	{
+		DoorDescriptor desc = new DoorDescriptor();
+		desc.set(MalisisDoors.Blocks.customDoor, MalisisDoors.Items.customDoorItem);
+		desc.setMovement(getDoorMovement());
+		desc.setSound(getDoorSound());
+		desc.setOpeningTime(getOpeningTime());
+		desc.setAutoCloseTime(getAutoCloseTime());
+		desc.setRequireRedstone(requireRedstone());
+		desc.setDoubleDoor(isDoubleDoor());
+
+		return desc;
 	}
 
 	@Override
@@ -195,6 +251,9 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+
+		nbt.setBoolean("isCreate", isCreate);
+
 		if (doorMovement != null)
 			nbt.setString("doorMovement", DoorRegistry.getId(doorMovement));
 		if (doorSound != null)
@@ -211,6 +270,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		isCreate = nbt.getBoolean("isCreate");
 		doorMovement = DoorRegistry.getMovement(nbt.getString("doorMovement"));
 		doorSound = DoorRegistry.getSound(nbt.getString("doorSound"));
 		openingTime = nbt.getInteger("openingTime");
@@ -250,4 +310,17 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		}
 	}
 
+	private class DoorEditSlot extends MalisisSlot
+	{
+		public DoorEditSlot(int index)
+		{
+			super(index);
+		}
+
+		@Override
+		public boolean isItemValid(ItemStack itemStack)
+		{
+			return itemStack.getItem() instanceof DoorItem || itemStack.getItem() instanceof ItemDoor;
+		}
+	}
 }

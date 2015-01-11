@@ -42,6 +42,7 @@ import net.malisis.core.client.gui.component.decoration.UILabel;
 import net.malisis.core.client.gui.component.decoration.UITooltip;
 import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
+import net.malisis.core.client.gui.component.interaction.UIRadioButton;
 import net.malisis.core.client.gui.component.interaction.UISelect;
 import net.malisis.core.client.gui.component.interaction.UITab;
 import net.malisis.core.client.gui.component.interaction.UITextField;
@@ -79,6 +80,10 @@ public class DoorFactoryGui extends MalisisGui
 	private UICheckBox cbRedstone;
 	private UICheckBox cbDoubleDoor;
 	private UISelect selDoorSound;
+	private UIRadioButton rbCreate;
+	private UIRadioButton rbEdit;
+	private UIContainer contCreate;
+	private UIContainer contEdit;
 
 	private static boolean firstTabActive = true;
 
@@ -168,17 +173,35 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		UIContainer matContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
-		UISlot frameSlot = new UISlot(this, tileEntity.frameSlot).setPosition(-10, 4, Anchor.RIGHT);
-		UISlot topMaterialSlot = new UISlot(this, tileEntity.topMaterialSlot).setPosition(-10, 22, Anchor.RIGHT);
-		UISlot bottomMaterialSlot = new UISlot(this, tileEntity.bottomMaterialSlot).setPosition(-10, 40, Anchor.RIGHT);
+		rbCreate = new UIRadioButton(this, "rbDoor", "gui.door_factory.rb_create").setPosition(30, 0).register(this);
+		rbEdit = new UIRadioButton(this, "rbDoor", "gui.door_factory.rb_edit").setPosition(100, 0).register(this);
 
-		matContainer.add(new UILabel(this, "gui.door_factory.frame_type").setPosition(0, 9));
-		matContainer.add(new UILabel(this, "gui.door_factory.top_material").setPosition(0, 27));
-		matContainer.add(new UILabel(this, "gui.door_factory.bottom_material").setPosition(0, 45));
+		matContainer.add(rbCreate);
+		matContainer.add(rbEdit);
 
-		matContainer.add(frameSlot);
-		matContainer.add(topMaterialSlot);
-		matContainer.add(bottomMaterialSlot);
+		contCreate = (UIContainer) new UIContainer(this).setPosition(0, 14);
+
+		int y = 0;
+		UISlot frameSlot = new UISlot(this, tileEntity.frameSlot).setPosition(-10, y, Anchor.RIGHT);
+		UISlot topMaterialSlot = new UISlot(this, tileEntity.topMaterialSlot).setPosition(-10, y + 18, Anchor.RIGHT);
+		UISlot bottomMaterialSlot = new UISlot(this, tileEntity.bottomMaterialSlot).setPosition(-10, y + 36, Anchor.RIGHT);
+
+		contCreate.add(new UILabel(this, "gui.door_factory.frame_type").setPosition(0, y + 5));
+		contCreate.add(new UILabel(this, "gui.door_factory.top_material").setPosition(0, y + 23));
+		contCreate.add(new UILabel(this, "gui.door_factory.bottom_material").setPosition(0, y + 41));
+
+		contCreate.add(frameSlot);
+		contCreate.add(topMaterialSlot);
+		contCreate.add(bottomMaterialSlot);
+
+		contEdit = (UIContainer) new UIContainer(this).setPosition(0, 14);
+
+		UISlot doorEditSlotSlot = new UISlot(this, tileEntity.doorEditSlot).setPosition(-10, 18, Anchor.RIGHT);
+		contEdit.add(new UILabel(this, "gui.door_factory.door_edit_slot").setPosition(0, 23));
+		contEdit.add(doorEditSlotSlot);
+
+		matContainer.add(contCreate);
+		matContainer.add(contEdit);
 
 		return matContainer;
 	}
@@ -186,6 +209,14 @@ public class DoorFactoryGui extends MalisisGui
 	@Override
 	public void updateGui()
 	{
+		boolean isCreate = tileEntity.isCreate();
+		if (isCreate)
+			rbCreate.setSelected();
+		else
+			rbEdit.setSelected();
+		contCreate.setVisible(isCreate);
+		contEdit.setVisible(!isCreate);
+
 		selDoorMovement.setSelectedOption(tileEntity.getDoorMovement());
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		tfAutoCloseTime.setText(Integer.toString(tileEntity.getAutoCloseTime()));
@@ -220,9 +251,21 @@ public class DoorFactoryGui extends MalisisGui
 	}
 
 	@Subscribe
+	public void onRbSelectEvent(UIRadioButton.SelectEvent event)
+	{
+		boolean isCreate = event.getNewValue() == rbCreate;
+
+		tileEntity.setCreate(isCreate);
+		contCreate.setVisible(isCreate);
+		contEdit.setVisible(!isCreate);
+
+		DoorFactoryMessage.sendDoorInformations(tileEntity);
+	}
+
+	@Subscribe
 	public void onGuiChangeEvent(ValueChange<UIComponent, Object> event)
 	{
-		if (event.getComponent() != tfOpenTime)
+		if (event.getComponent() != tfOpenTime && event.getComponent() != tfAutoCloseTime)
 			return;
 
 		try

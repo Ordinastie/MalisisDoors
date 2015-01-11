@@ -79,6 +79,8 @@ door_movement.spinning_around_door=Spinning around
 
 gui.door_factory.tab_properties=Properties
 gui.door_factory.tab_materials=Materials
+gui.door_factory.rb_create=Create
+gui.door_factory.rb_edit=Modify
 gui.door_factory.door_movement=Movement
 gui.door_factory.door_open_time=Opening time
 gui.door_factory.door_auto_close_time=Auto close delay
@@ -97,6 +99,7 @@ gui.door_factory.door_sound.carriage_door=Carriage door
 gui.door_factory.frame_type=Frame type
 gui.door_factory.top_material=Top block material
 gui.door_factory.bottom_material=Bottom block material
+gui.door_factory.door_edit_slot=Door to modify
 gui.door_factory.create_door=Build door
 
 gui.block_mixer.simple_rendering=Simple rendering

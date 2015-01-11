@@ -134,16 +134,7 @@ public class CustomDoorItem extends DoorItem
 		//NBT
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		DoorDescriptor desc = new DoorDescriptor();
-		desc.set(MalisisDoors.Blocks.customDoor, MalisisDoors.Items.customDoorItem);
-		desc.setMovement(te.getDoorMovement());
-		desc.setSound(te.getDoorSound());
-		desc.setOpeningTime(te.getOpeningTime());
-		desc.setAutoCloseTime(te.getAutoCloseTime());
-		desc.setRequireRedstone(te.requireRedstone());
-		desc.setDoubleDoor(te.isDoubleDoor());
-
-		desc.writeNBT(nbt);
+		te.buildDescriptor().writeNBT(nbt);
 
 		nbt.setInteger("frame", Block.getIdFromBlock(frameBlock));
 		nbt.setInteger("topMaterial", Block.getIdFromBlock(topMaterialBlock));
