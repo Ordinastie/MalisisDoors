@@ -1,3 +1,5 @@
+itemGroup.malisisdoors=Malisis'Doors
+
 item.wood_sliding_door.name=Деревянная стеклянная дверь
 item.iron_sliding_door.name=Железная стеклянная дверь
 item.jail_door.name=Тюремная дверь
@@ -5,10 +7,10 @@ item.laboratory_door.name=Лабораторная дверь
 item.factory_door.name=Фабричная дверь
 item.custom_door.name=Пользовательская дверь
 item.shoji_door.name=Дверь Сёдзи
-item.rustyHatch.name=Ржавый люк 2х2
+item.rustyHatch.name=Ржавый люк
 item.rustyHandle.name=Ржавый вентиль
 item.curtain.name=Занавеска
-item.carriage_door.name=Дворцовые ворота 4х5
+item.carriage_door.name=Дверь-фрейм
 item.forcefieldItem.name=Контроллер силового поля
 
 tile.player_sensor.name=Датчик игрока
@@ -27,9 +29,9 @@ tile.custom_door.name=Пользовательская дверь
 tile.shoji_door.name=Дверь Сёдзи
 tile.wood_sliding_door.name=Деревянная стеклянная дверь
 tile.iron_sliding_door.name=Железная стеклянная дверь
-tile.rustyHatch.name=Ржавый люк 2х2
+tile.rustyHatch.name=Ржавый люк
 tile.curtain.name=Занавеска
-tile.carriage_door.name=Дворцовые ворота 4х5
+tile.carriage_door.name=Дверь-фрейм
 tile.forcefieldDoor.name=Силовое поле
 tile.rustyLadder.name=Ржавая лестница
 
@@ -70,6 +72,10 @@ door_movement.rotating_4ways=4-стороннее вращение
 door_movement.rotate_around=Вращение вокруг
 door_movement.rotate_slide=Вращение и сдвиг
 door_movement.rotate_place=Вращение и замена
+door_movement.vanishing_door=Исчезновение
+door_movement.spinning_door=Кручение
+door_movement.spinning_around_door=Кручение вокруг
+
 
 gui.door_factory.tab_properties=Свойства
 gui.door_factory.tab_materials=Материалы
@@ -78,11 +84,13 @@ gui.door_factory.door_open_time=Время открытия
 gui.door_factory.door_require_redstone=Требуется сигнал красного камня
 gui.door_factory.door_double_door=Двойная дверь
 gui.door_factory.door_sound=Тип звука
+gui.door_factory.door_sound.silent_door=Без звука
 gui.door_factory.door_sound.vanilla_door=Обычная дверь
 gui.door_factory.door_sound.glass_door=Стеклянная дверь
 gui.door_factory.door_sound.jail_door=Тюремная дверь
 gui.door_factory.door_sound.pneumatic_door=Пневматическая дверь
 gui.door_factory.door_sound.shoji_door=Дверь Сёдзи
+gui.door_factory.door_sound.carriage_door=Дверь-фрейм
 
 
 gui.door_factory.frame_type=Тип рамки
