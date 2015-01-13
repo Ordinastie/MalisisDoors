@@ -57,6 +57,10 @@ config.enhancedMixedBlockPlacement=Utiliser l'amélioration de placement des blo
 config.enhancedMixedBlockPlacement.comment1=Base le placement du bloc en fonction de la direction de la vue plutot que la face visée. 
 config.enhancedMixedBlockPlacement.comment2=Utiliser la touche "S'accroupir" pour inverser la position du bloc.
 
+config.enableCamoFenceGate=Activer le camo pour les portillons
+config.enableCamoFenceGate.comment=Permet aux portillons d'utiliser la texture des blocs qui l'entourent. 
+
+
 door_movement.rotating_door=Tournante
 door_movement.sliding_door=Coulissante sur le côté
 door_movement.sliding_up_door=Coulissante vers le haut

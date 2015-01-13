@@ -48,6 +48,8 @@ public class MalisisDoorsSettings extends Settings
 	public static Setting<Boolean> enableVanishingGlitch = new BooleanSetting("config.enableVanishingGlitch", true);
 	@ConfigurationSetting
 	public static Setting<Double> vanishingGlitchChance = new DoubleSetting("config.vanishingGlitchChance", 0.0005D);
+	@ConfigurationSetting
+	public static Setting<Boolean> enableCamoFenceGate = new BooleanSetting("config.enableCamoFenceGate", true);
 
 	public MalisisDoorsSettings(File file)
 	{
@@ -63,5 +65,6 @@ public class MalisisDoorsSettings extends Settings
 		vanishingGlitchChance.setComment("config.vanishingGlitchChance.comment");
 		enhancedMixedBlockPlacement
 				.setComment("config.enhancedMixedBlockPlacement.comment1", "config.enhancedMixedBlockPlacement.comment2");
+		enableCamoFenceGate.setComment("config.enableCamoFenceGate.comment");
 	}
 }

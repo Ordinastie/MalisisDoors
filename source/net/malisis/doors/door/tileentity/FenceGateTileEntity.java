@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door.tileentity;
 
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.block.Door;
@@ -93,7 +94,8 @@ public class FenceGateTileEntity extends DoorTileEntity
 
 		isWall = (b1 == Blocks.cobblestone_wall || b2 == Blocks.cobblestone_wall);
 
-		if (b1 == b2 && meta1 == meta2 && (isWall || b1.renderAsNormalBlock()) && !b1.isAir(world, this.xCoord - ox, y, this.zCoord - oz))
+		if (MalisisDoorsSettings.enableCamoFenceGate.get() && b1 == b2 && meta1 == meta2 && (isWall || b1.renderAsNormalBlock())
+				&& !b1.isAir(world, this.xCoord - ox, y, this.zCoord - oz))
 		{
 			camoBlock = b1;
 			camoMeta = meta1;
@@ -114,20 +116,20 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+		isWall = nbt.getBoolean("isWall");
+
 		int blockID = nbt.getInteger("camoBlock");
-		if (blockID == 0)
+		if (blockID == 0 || !MalisisDoorsSettings.enableCamoFenceGate.get())
 		{
 			camoBlock = Blocks.planks;
 			camoMeta = 0;
 			camoColor = 0xFFFFFF;
-			isWall = false;
 		}
 		else
 		{
 			camoBlock = Block.getBlockById(blockID);
 			camoMeta = nbt.getInteger("camoMeta");
 			camoColor = nbt.getInteger("camoColor");
-			isWall = nbt.getBoolean("isWall");
 		}
 	}
 

@@ -58,8 +58,12 @@ config.vanishingGlitchChance=Vanishing Frames glitch frequency
 config.vanishingGlitchChance.comment=How often the frame become unstable.
 
 config.enhancedMixedBlockPlacement=Use enhanced mixed block placement
-config.enhancedMixedBlockPlacement.comment1=Allow to place the block base on where you look instead of the side you're placing it on.
+config.enhancedMixedBlockPlacement.comment1=Allows to place the block base on where you look instead of the side you're placing it on.
 config.enhancedMixedBlockPlacement.comment2=Use sneak key to inverse the block placement.
+
+config.enableCamoFenceGate=Enable camo Fence Gates
+config.enableCamoFenceGate.comment=Enables Fence Gate to use the texture of the blocks surrounding them. 
+
 
 door_movement.rotating_door=Rotating
 door_movement.sliding_door=Sliding on the side
