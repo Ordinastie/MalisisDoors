@@ -26,19 +26,45 @@ package net.malisis.doors.door.tileentity;
 
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.FenceGateMovement;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  */
 public class FenceGateTileEntity extends DoorTileEntity
 {
+	private Block camoBlock = Blocks.planks;
+	private int camoMeta = 0;
+	private int camoColor = 0xFFFFFF;
+	private boolean isWall = false;
+
 	public FenceGateTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
 		descriptor.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
 		setDescriptor(descriptor);
+	}
+
+	public boolean isWall()
+	{
+		return isWall;
+	}
+
+	public IIcon getCamoIcon()
+	{
+		return camoBlock.getIcon(2, camoMeta);
+	}
+
+	public int getCamoColor()
+	{
+		return camoColor;
 	}
 
 	/**
@@ -49,4 +75,70 @@ public class FenceGateTileEntity extends DoorTileEntity
 	{
 		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
+
+	public void updateCamo(World world, int x, int y, int z)
+	{
+		int ox = 0;
+		int oz = 0;
+
+		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
+			oz = 1;
+		else
+			ox = 1;
+
+		Block b1 = world.getBlock(xCoord - ox, y, zCoord - oz);
+		Block b2 = world.getBlock(xCoord + ox, y, zCoord + oz);
+		int meta1 = world.getBlockMetadata(xCoord - ox, y, zCoord - oz);
+		int meta2 = world.getBlockMetadata(xCoord + ox, y, zCoord + oz);
+
+		isWall = (b1 == Blocks.cobblestone_wall || b2 == Blocks.cobblestone_wall);
+
+		if (b1 == b2 && meta1 == meta2 && (isWall || b1.renderAsNormalBlock()) && !b1.isAir(world, this.xCoord - ox, y, this.zCoord - oz))
+		{
+			camoBlock = b1;
+			camoMeta = meta1;
+			camoColor = camoBlock.colorMultiplier(world, xCoord - ox, y, zCoord - oz);
+		}
+		else
+		{
+			camoBlock = Blocks.planks;
+			camoMeta = 0;
+			camoColor = 0xFFFFFF;
+		}
+
+		//world.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
+		world.markBlockForUpdate(x, y, z);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		int blockID = nbt.getInteger("camoBlock");
+		if (blockID == 0)
+		{
+			camoBlock = Blocks.planks;
+			camoMeta = 0;
+			camoColor = 0xFFFFFF;
+			isWall = false;
+		}
+		else
+		{
+			camoBlock = Block.getBlockById(blockID);
+			camoMeta = nbt.getInteger("camoMeta");
+			camoColor = nbt.getInteger("camoColor");
+			isWall = nbt.getBoolean("isWall");
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setInteger("camoBlock", Block.blockRegistry.getIDForObject(camoBlock));
+		nbt.setInteger("camoMeta", camoMeta);
+		nbt.setInteger("camoColor", camoColor);
+		nbt.setBoolean("isWall", isWall);
+	}
+
 }

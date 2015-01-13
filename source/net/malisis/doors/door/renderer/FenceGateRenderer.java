@@ -30,6 +30,7 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 
@@ -39,6 +40,8 @@ import net.minecraft.client.renderer.RenderBlocks;
  */
 public class FenceGateRenderer extends DoorRenderer
 {
+	protected FenceGateTileEntity tileEntity;
+
 	@Override
 	protected void initialize()
 	{
@@ -71,16 +74,30 @@ public class FenceGateRenderer extends DoorRenderer
 	}
 
 	@Override
+	protected void setTileEntity()
+	{
+		super.setTileEntity();
+		this.tileEntity = (FenceGateTileEntity) super.tileEntity;
+	}
+
+	@Override
 	protected void setup()
 	{
 		model.resetState();
 		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
+
+		if (tileEntity.isWall())
+			model.translate(0, -.19F, 0);
+
+		rp.icon.set(tileEntity.getCamoIcon());
+		rp.colorMultiplier.set(tileEntity.getCamoColor());
 	}
 
 	@Override
 	protected void renderTileEntity()
 	{
+		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();

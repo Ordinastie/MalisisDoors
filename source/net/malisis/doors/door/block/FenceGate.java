@@ -34,7 +34,9 @@ import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -50,6 +52,20 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
 		setBlockName("fenceGate");
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
+	{
+		super.onBlockPlacedBy(world, x, y, z, player, itemStack);
+		if (world.isRemote)
+			return;
+
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return;
+
+		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
 	}
 
 	/**
@@ -89,7 +105,10 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		if (te == null)
 			return;
 
-		te.setPowered(te.isPowered());
+		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
+
+		if (world.isBlockIndirectlyGettingPowered(x, y, z) || block.canProvidePower())
+			te.setPowered(te.isPowered());
 	}
 
 	@Override
