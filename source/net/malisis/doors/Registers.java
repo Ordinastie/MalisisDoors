@@ -38,7 +38,6 @@ import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.CustomDoor;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
@@ -110,12 +109,14 @@ public class Registers
 	private static void registerVanillaDoors()
 	{
 		VanillaDoor woodDoor = new VanillaDoor(Material.wood);
-		woodDoor.set(new Door(woodDoor), Items.wooden_door);
+		woodDoor.create();
+		MalisisCore.replaceVanillaItem(324, "wooden_door", "field_151135_aq", woodDoor.getItem(), Items.wooden_door);
 		MalisisCore.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", woodDoor.getBlock(), Blocks.wooden_door);
 		doubleDoorWood = woodDoor.getBlock();
 
 		VanillaDoor ironDoor = new VanillaDoor(Material.iron);
-		ironDoor.set(new Door(ironDoor), Items.iron_door);
+		ironDoor.create();
+		MalisisCore.replaceVanillaItem(330, "iron_door", "field_151139_aw", ironDoor.getItem(), Items.iron_door);
 		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
 		doubleDoorIron = ironDoor.getBlock();
 

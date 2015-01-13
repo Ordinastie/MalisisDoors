@@ -34,7 +34,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityDiggingFX;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -68,16 +67,6 @@ public class CustomDoor extends Door
 	public IIcon getIcon(int side, int metadata)
 	{
 		return null;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
-	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (!(te instanceof CustomDoorTileEntity))
-			return;
-
-		((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
 	}
 
 	@Override

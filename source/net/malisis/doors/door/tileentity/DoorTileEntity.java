@@ -30,6 +30,7 @@ import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -143,6 +144,12 @@ public class DoorTileEntity extends TileEntity
 	}
 
 	//#end Getter/Setter
+
+	public void onBlockPlaced(Door door, ItemStack itemStack)
+	{
+		DoorDescriptor desc = itemStack.getTagCompound() != null ? new DoorDescriptor(itemStack.getTagCompound()) : door.getDescriptor();
+		setDescriptor(desc);
+	}
 
 	/**
 	 * Open or close this DoorTileEntity

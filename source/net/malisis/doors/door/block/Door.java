@@ -32,6 +32,7 @@ import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -39,6 +40,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -159,6 +161,15 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	// #end
 
 	// #region Events
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
+	{
+		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		if (te == null)
+			return;
+		te.onBlockPlaced(this, itemStack);
+	}
+
 	/**
 	 * Called when right clicked by the player
 	 */
@@ -170,6 +181,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 		DoorTileEntity te = getDoor(world, x, y, z);
 		if (te == null)
+			return true;
+
+		if (te.getDescriptor() == null)
 			return true;
 
 		if (te.getDescriptor().requireRedstone())
@@ -331,6 +345,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			return;
 
 		if (te.getDescriptor().getAutoCloseTime() <= 0)
+			return;
+
+		if (te.getState() == DoorState.CLOSED || te.getState() == DoorState.CLOSING)
 			return;
 
 		te.openOrCloseDoor();

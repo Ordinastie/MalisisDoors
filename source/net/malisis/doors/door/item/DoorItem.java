@@ -26,8 +26,6 @@ package net.malisis.doors.door.item;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -95,13 +93,7 @@ public class DoorItem extends ItemDoor
 		placeDoorBlock(world, x, y, z, i1, block);
 		itemStack.stackSize--;
 
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null)
-			return true;
-
-		te.setDescriptor(((DoorItem) itemStack.getItem()).getDescriptor(itemStack));
-
+		block.onBlockPlacedBy(world, x, y, z, player, itemStack);
 		return true;
-
 	}
 }

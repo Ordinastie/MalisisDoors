@@ -30,6 +30,7 @@ import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.sound.VanillaDoorSound;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 
 /**
  * @author Ordinastie
@@ -47,11 +48,13 @@ public class VanillaDoor extends DoorDescriptor
 		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
 		setName(wood ? "doorWood" : "doorIron");
 		setTextureName(wood ? "door_wood" : "door_iron");
-		setAutoCloseTime(10);
 
 		//te
 		setRequireRedstone(!wood);
 		setMovement(DoorRegistry.getMovement(RotatingDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
+
+		//item
+		setTab(CreativeTabs.tabRedstone);
 	}
 }

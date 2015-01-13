@@ -75,13 +75,15 @@ door_movement.spinning_around_door=Tourbilonnante
 
 gui.door_factory.tab_properties=Propiétés
 gui.door_factory.tab_materials=Matériaux
+gui.door_factory.rb_create=Créer
+gui.door_factory.rb_edit=Modifier
 gui.door_factory.door_movement=Mouvement
 gui.door_factory.door_open_time=Temps d'ouverture
 gui.door_factory.door_auto_close_time=Delai de fermeture
 gui.door_factory.door_require_redstone=Nécessite redstone
 gui.door_factory.door_double_door=Double porte
 gui.door_factory.door_sound=Type de son
-gui.door_factory.door_sound.silent_door=Silecieux
+gui.door_factory.door_sound.silent_door=Silencieux
 gui.door_factory.door_sound.vanilla_door=Porte originale
 gui.door_factory.door_sound.glass_door=Porte vitrée
 gui.door_factory.door_sound.jail_door=Porte de prison
@@ -89,10 +91,13 @@ gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
 gui.door_factory.door_sound.shoji_door=Porte Shoji
 gui.door_factory.door_sound.carriage_door=Porte cochère
 
+
 gui.door_factory.frame_type=Type de cadre
 gui.door_factory.top_material=Matériau haut
 gui.door_factory.bottom_material=Matériau bas
-gui.door_factory.create_door=Fabriquer la porte
+gui.door_factory.door_edit_slot=Porte à modifier
+gui.door_factory.create_door=Créer la porte
+gui.door_factory.edit_door=Modifier la porte
 
 gui.block_mixer.simple_rendering=Rendu simplifié
 gui.block_mixer.simple_rendering_tooltip=Nécessite une mise à jour de tronçons pour les blocs du monde

@@ -30,9 +30,7 @@ import java.util.List;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -87,12 +85,12 @@ public class CustomDoorItem extends DoorItem
 	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
 	{
 		boolean b = super.onItemUse(itemStack, player, world, x, y, z, side, par8, par9, par10);
-		if (b)
-		{
-			DoorTileEntity te = Door.getDoor(world, x, y + 1, z);
-			if (te instanceof CustomDoorTileEntity)
-				((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
-		}
+		//		if (b)
+		//		{
+		//			DoorTileEntity te = Door.getDoor(world, x, y + 1, z);
+		//			if (te instanceof CustomDoorTileEntity)
+		//				((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
+		//		}
 
 		return b;
 	}

@@ -100,7 +100,8 @@ gui.door_factory.frame_type=Frame type
 gui.door_factory.top_material=Top block material
 gui.door_factory.bottom_material=Bottom block material
 gui.door_factory.door_edit_slot=Door to modify
-gui.door_factory.create_door=Build door
+gui.door_factory.create_door=Create door
+gui.door_factory.edit_door=Modify door
 
 gui.block_mixer.simple_rendering=Simple rendering
 gui.block_mixer.simple_rendering_tooltip=In world blocks require chunk update to take effect.

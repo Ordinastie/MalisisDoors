@@ -187,6 +187,8 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 
 			buildDescriptor().writeNBT(nbt);
 
+			doors.stackTagCompound = nbt;
+
 			outputSlot.insert(doors);
 		}
 	}

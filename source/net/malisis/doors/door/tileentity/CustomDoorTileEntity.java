@@ -24,13 +24,14 @@
 
 package net.malisis.doors.door.tileentity;
 
+import net.malisis.doors.door.block.Door;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class CustomDoorTileEntity extends DoorTileEntity
 {
@@ -105,8 +106,11 @@ public class CustomDoorTileEntity extends DoorTileEntity
 
 	//#end Getters/setters
 
-	public void onBlockPlaced(ItemStack itemStack)
+	@Override
+	public void onBlockPlaced(Door door, ItemStack itemStack)
 	{
+		super.onBlockPlaced(door, itemStack);
+
 		NBTTagCompound nbt = itemStack.stackTagCompound;
 
 		frame = Block.getBlockById(nbt.getInteger("frame"));

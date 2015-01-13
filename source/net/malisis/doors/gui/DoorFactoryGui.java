@@ -84,6 +84,7 @@ public class DoorFactoryGui extends MalisisGui
 	private UIRadioButton rbEdit;
 	private UIContainer contCreate;
 	private UIContainer contEdit;
+	private UIButton btnCreate;
 
 	private static boolean firstTabActive = true;
 
@@ -110,8 +111,7 @@ public class DoorFactoryGui extends MalisisGui
 		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
 		tabGroup.attachTo(window, false);
 
-		UIButton btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 98, Anchor.CENTER)
-				.register(this);
+		btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 98, Anchor.CENTER).register(this);
 		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 120, Anchor.CENTER);
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
@@ -216,6 +216,7 @@ public class DoorFactoryGui extends MalisisGui
 			rbEdit.setSelected();
 		contCreate.setVisible(isCreate);
 		contEdit.setVisible(!isCreate);
+		btnCreate.setText(isCreate ? "gui.door_factory.create_door" : "gui.door_factory.edit_door");
 
 		selDoorMovement.setSelectedOption(tileEntity.getDoorMovement());
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
@@ -258,6 +259,7 @@ public class DoorFactoryGui extends MalisisGui
 		tileEntity.setCreate(isCreate);
 		contCreate.setVisible(isCreate);
 		contEdit.setVisible(!isCreate);
+		btnCreate.setText(isCreate ? "gui.door_factory.create_door" : "gui.door_factory.edit_door");
 
 		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
