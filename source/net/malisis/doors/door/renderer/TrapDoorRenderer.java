@@ -24,7 +24,7 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.MalisisCore;
+import net.malisis.core.ReplacementTool;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Face;
@@ -111,7 +111,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		renderer.renderBlockAsItem(MalisisCore.orignalBlock(block), 0, 1);
+		renderer.renderBlockAsItem(ReplacementTool.orignalBlock(block), 0, 1);
 	}
 
 	@Override

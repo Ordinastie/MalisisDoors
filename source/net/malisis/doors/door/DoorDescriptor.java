@@ -222,7 +222,7 @@ public class DoorDescriptor
 		return recipe;
 	}
 
-	public void setRecipe(Object[] recipe)
+	public void setRecipe(Object... recipe)
 	{
 		this.recipe = recipe;
 	}

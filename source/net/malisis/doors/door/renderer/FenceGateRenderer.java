@@ -24,7 +24,7 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.MalisisCore;
+import net.malisis.core.ReplacementTool;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
@@ -114,7 +114,7 @@ public class FenceGateRenderer extends DoorRenderer
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		renderer.renderBlockAsItem(MalisisCore.orignalBlock(block), 0, 1);
+		renderer.renderBlockAsItem(ReplacementTool.orignalBlock(block), 0, 1);
 	}
 
 	@Override

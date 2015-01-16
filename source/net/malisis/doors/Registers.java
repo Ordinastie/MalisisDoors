@@ -26,7 +26,7 @@ package net.malisis.doors;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
-import net.malisis.core.MalisisCore;
+import net.malisis.core.ReplacementTool;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
@@ -110,21 +110,21 @@ public class Registers
 	{
 		VanillaDoor woodDoor = new VanillaDoor(Material.wood);
 		woodDoor.create();
-		MalisisCore.replaceVanillaItem(324, "wooden_door", "field_151135_aq", woodDoor.getItem(), Items.wooden_door);
-		MalisisCore.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", woodDoor.getBlock(), Blocks.wooden_door);
+		ReplacementTool.replaceVanillaItem(324, "wooden_door", "field_151135_aq", woodDoor.getItem(), Items.wooden_door);
+		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", woodDoor.getBlock(), Blocks.wooden_door);
 		doubleDoorWood = woodDoor.getBlock();
 
 		VanillaDoor ironDoor = new VanillaDoor(Material.iron);
 		ironDoor.create();
-		MalisisCore.replaceVanillaItem(330, "iron_door", "field_151139_aw", ironDoor.getItem(), Items.iron_door);
-		MalisisCore.replaceVanillaBlock(71, "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
+		ReplacementTool.replaceVanillaItem(330, "iron_door", "field_151139_aw", ironDoor.getItem(), Items.iron_door);
+		ReplacementTool.replaceVanillaBlock(71, "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
 		doubleDoorIron = ironDoor.getBlock();
 
 		fenceGate = new FenceGate();
 		trapDoor = new TrapDoor();
 
-		MalisisCore.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
-		MalisisCore.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", trapDoor, Blocks.trapdoor);
+		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
+		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", trapDoor, Blocks.trapdoor);
 
 		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
@@ -282,7 +282,7 @@ public class Registers
 		carriageDoorItem = Item.getItemFromBlock(carriageDoor);
 
 		GameRegistry.registerTileEntity(CarriageDoorTileEntity.class, "carriageDoorTileEntity");
-		GameRegistry.addRecipe(new ItemStack(carriageDoor), "AAA", "ABA", "ABA", 'A', Blocks.quartz_block, 'B', Blocks.planks);
+		GameRegistry.addRecipe(new ItemStack(carriageDoor), "AAA", "ABA", "ABA", 'A', Blocks.quartz_block, 'B', Items.wooden_door);
 
 	}
 
