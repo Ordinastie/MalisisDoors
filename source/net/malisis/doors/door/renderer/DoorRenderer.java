@@ -97,8 +97,8 @@ public class DoorRenderer extends MalisisRenderer
 		reversed = tileEntity.isReversed();
 		topBlock = tileEntity.isTopBlock(x, y, z);
 
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
 		rp.icon.set(null);
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 
 		renderTileEntity();
 	}
@@ -121,11 +121,11 @@ public class DoorRenderer extends MalisisRenderer
 
 	protected void renderTileEntity()
 	{
-		initialize();
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();
+
 		if (tileEntity.getMovement() != null)
 		{
 			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);

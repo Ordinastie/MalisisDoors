@@ -103,7 +103,6 @@ public class GarageDoorRenderer extends MalisisRenderer
 		opened = tileEntity.isOpened();
 		reversed = tileEntity.isReversed();
 
-		rp.brightness.set(world.getLightBrightnessForSkyBlocks(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, 0));
 		rp.icon.set(null);
 
 		enableBlending();
@@ -146,6 +145,8 @@ public class GarageDoorRenderer extends MalisisRenderer
 			Transformation chained = new ChainedTransformation(verticalAnim, topRotate, horizontalAnim);
 			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 				chained.reversed(true);
+
+			rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 
 			ar.animate(shape, chained);
 			drawShape(shape, rp);
