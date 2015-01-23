@@ -43,7 +43,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 {
 	private Block camoBlock = Blocks.planks;
 	private int camoMeta = 0;
-	private int camoColor = 0xFFFFFF;
+	private boolean isCamo = false;
 	private boolean isWall = false;
 
 	public FenceGateTileEntity()
@@ -65,7 +65,15 @@ public class FenceGateTileEntity extends DoorTileEntity
 
 	public int getCamoColor()
 	{
-		return camoColor;
+		int ox = 0;
+		int oz = 0;
+
+		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
+			oz = 1;
+		else
+			ox = 1;
+
+		return isCamo ? camoBlock.colorMultiplier(getWorldObj(), xCoord - ox, yCoord, zCoord - oz) : 0xFFFFFF;
 	}
 
 	/**
@@ -97,15 +105,16 @@ public class FenceGateTileEntity extends DoorTileEntity
 		if (MalisisDoorsSettings.enableCamoFenceGate.get() && b1 == b2 && meta1 == meta2 && (isWall || b1.renderAsNormalBlock())
 				&& !b1.isAir(world, this.xCoord - ox, y, this.zCoord - oz))
 		{
+			isCamo = true;
 			camoBlock = b1;
 			camoMeta = meta1;
-			camoColor = camoBlock.colorMultiplier(world, xCoord - ox, y, zCoord - oz);
+
 		}
 		else
 		{
+			isCamo = false;
 			camoBlock = Blocks.planks;
 			camoMeta = 0;
-			camoColor = 0xFFFFFF;
 		}
 
 		//world.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
@@ -121,15 +130,16 @@ public class FenceGateTileEntity extends DoorTileEntity
 		int blockID = nbt.getInteger("camoBlock");
 		if (blockID == 0 || !MalisisDoorsSettings.enableCamoFenceGate.get())
 		{
+			isCamo = false;
 			camoBlock = Blocks.planks;
 			camoMeta = 0;
-			camoColor = 0xFFFFFF;
+
 		}
 		else
 		{
+			isCamo = nbt.getBoolean("isCamo");
 			camoBlock = Block.getBlockById(blockID);
 			camoMeta = nbt.getInteger("camoMeta");
-			camoColor = nbt.getInteger("camoColor");
 		}
 	}
 
@@ -137,9 +147,9 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
+		nbt.setBoolean("isCamo", isCamo);
 		nbt.setInteger("camoBlock", Block.blockRegistry.getIDForObject(camoBlock));
 		nbt.setInteger("camoMeta", camoMeta);
-		nbt.setInteger("camoColor", camoColor);
 		nbt.setBoolean("isWall", isWall);
 	}
 
