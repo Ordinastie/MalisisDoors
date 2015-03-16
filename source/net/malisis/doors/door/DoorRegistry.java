@@ -25,7 +25,6 @@
 package net.malisis.doors.door;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.malisis.doors.door.movement.CarriageDoorMovement;
@@ -58,9 +57,6 @@ import net.malisis.doors.door.sound.RustyHatchSound;
 import net.malisis.doors.door.sound.ShojiDoorSound;
 import net.malisis.doors.door.sound.SilentDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Maps;
 
 /**
  * @author Ordinastie
@@ -162,17 +158,16 @@ public class DoorRegistry
 		throw new IllegalArgumentException(String.format("Door movement %s not found in the registry", movement.getClass().getSimpleName()));
 	}
 
-	public static Map<String, IDoorMovement> listMovements()
+	public static HashMap<String, IDoorMovement> listMovements()
 	{
-		return Maps.filterValues(movements, new Predicate<IDoorMovement>()
-		{
-			@Override
-			public boolean apply(IDoorMovement input)
-			{
-				return !input.isSpecial();
-			}
-		});
+		HashMap<String, IDoorMovement> mvts = new HashMap<>();
 
+		for (Entry<String, IDoorMovement> entry : movements.entrySet())
+		{
+			if (!entry.getValue().isSpecial())
+				mvts.put(entry.getKey(), entry.getValue());
+		}
+		return mvts;
 	}
 
 	//#end Movements
@@ -236,16 +231,16 @@ public class DoorRegistry
 		throw new IllegalArgumentException(String.format("Door sound %s not found in the registry", Sound.getClass().getSimpleName()));
 	}
 
-	public static Map<String, IDoorSound> listSounds()
+	public static HashMap<String, IDoorSound> listSounds()
 	{
-		return Maps.filterValues(sounds, new Predicate<IDoorSound>()
+		HashMap<String, IDoorSound> snds = new HashMap<>();
+
+		for (Entry<String, IDoorSound> entry : sounds.entrySet())
 		{
-			@Override
-			public boolean apply(IDoorSound input)
-			{
-				return !(input instanceof RustyHatchSound);
-			}
-		});
+			if (!(entry.getValue() instanceof RustyHatchSound))
+				snds.put(entry.getKey(), entry.getValue());
+		}
+		return snds;
 	}
 	//#end Sounds
 }
