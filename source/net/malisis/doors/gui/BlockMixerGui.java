@@ -27,11 +27,6 @@ public class BlockMixerGui extends MalisisGui
 	{
 		setInventoryContainer(container);
 		this.tileEntity = tileEntity;
-	}
-
-	@Override
-	public void construct()
-	{
 
 		UIWindow window = new UIWindow(this, "tile.block_mixer.name", 176, 166);
 
@@ -45,7 +40,7 @@ public class BlockMixerGui extends MalisisGui
 		cbRender = new UICheckBox(this, "gui.block_mixer.simple_rendering").setPosition(0, 50, Anchor.CENTER).register(this);
 		cbRender.setTooltip(new UITooltip(this, "gui.block_mixer.simple_rendering_tooltip"));
 
-		UIPlayerInventory playerInv = new UIPlayerInventory(this, inventoryContainer.getPlayerInventory());
+		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 
 		window.add(firstInputSlot);
 		window.add(secondInputSlot);

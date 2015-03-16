@@ -62,11 +62,6 @@ public class VanishingDiamondGui extends MalisisGui
 	{
 		setInventoryContainer(container);
 		this.tileEntity = te;
-	}
-
-	@Override
-	public void construct()
-	{
 
 		UIWindow window = new UIWindow(this, "tile.vanishing_block_diamond.name", 200, 220);
 
@@ -77,7 +72,7 @@ public class VanishingDiamondGui extends MalisisGui
 		int i = 0;
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
 		{
-			DirectionState state = tileEntity.getDirectionState(dir);
+			DirectionState state = te.getDirectionState(dir);
 			int y = i * 14 + 30;
 			UICheckBox cb = new UICheckBox(this, dir.name());
 			cb.setPosition(2, y).setChecked(state.shouldPropagate).register(this);
@@ -107,14 +102,14 @@ public class VanishingDiamondGui extends MalisisGui
 		cont.add(new UILabel(this, "Duration").setPosition(0, 0, Anchor.CENTER));
 		cont.add(duration);
 
-		UIInventory inv = new UIInventory(this, inventoryContainer.getInventory(1));
+		UIInventory inv = new UIInventory(this, container.getInventory(1));
 		inv.setPosition(0, 40, Anchor.CENTER);
 		cont.add(new UILabel(this, "Block").setPosition(0, 30, Anchor.CENTER));
 		cont.add(inv);
 
 		window.add(cont);
 
-		UIPlayerInventory playerInv = new UIPlayerInventory(this, inventoryContainer.getPlayerInventory());
+		UIPlayerInventory playerInv = new UIPlayerInventory(this, container.getPlayerInventory());
 		window.add(playerInv);
 
 		addToScreen(window);
