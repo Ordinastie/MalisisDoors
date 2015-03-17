@@ -46,7 +46,7 @@ public class DoorItem extends ItemDoor
 		super(desc.getMaterial());
 
 		this.descriptor = desc;
-
+		this.maxStackSize = desc.getMaxStackSize();
 		setUnlocalizedName(desc.getName());
 		setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());

@@ -65,9 +65,11 @@ public class DoorDescriptor
 
 	//item
 	private CreativeTabs tab;
+	private int maxStackSize = 1;
 
 	//recipe
 	private Object[] recipe;
+	private int numCrafted = 1;
 
 	public DoorDescriptor()
 	{
@@ -227,6 +229,22 @@ public class DoorDescriptor
 		this.recipe = recipe;
 	}
 
+	public int getNumCrafted() {
+		return numCrafted;
+	}
+
+	public void setNumCrafted(int numCrafted) {
+		this.numCrafted = numCrafted;
+	}
+
+	public int getMaxStackSize() {
+		return maxStackSize;
+	}
+
+	public void setMaxStackSize(int maxStackSize) {
+		this.maxStackSize = maxStackSize;
+	}
+
 	//#end Getters/Setters
 
 	public void readNBT(NBTTagCompound nbt)
@@ -290,7 +308,7 @@ public class DoorDescriptor
 		GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
 		GameRegistry.registerItem(item, item.getUnlocalizedName());
 		if (recipe != null)
-			GameRegistry.addRecipe(new ItemStack(item), recipe);
+			GameRegistry.addRecipe(new ItemStack(item, numCrafted), recipe);
 
 		return this;
 	}
