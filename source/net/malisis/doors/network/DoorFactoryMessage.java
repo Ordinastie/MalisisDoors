@@ -25,7 +25,9 @@
 package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
+import net.malisis.core.network.MalisisMessage;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.world.World;
@@ -33,13 +35,20 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * @author Ordinastie
  *
  */
+@MalisisMessage
 public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Packet, IMessage>
 {
+	public DoorFactoryMessage()
+	{
+		MalisisDoors.network.registerMessage(this, DoorFactoryMessage.Packet.class, Side.SERVER);
+	}
+
 	@Override
 	public IMessage onMessage(Packet message, MessageContext ctx)
 	{
@@ -70,13 +79,13 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		String mvt = DoorRegistry.getId(te.getDoorMovement());
 		String snd = DoorRegistry.getId(te.getDoorSound());
 		packet.setDoorInfos(te.isCreate(), mvt, snd, te.getOpeningTime(), te.getAutoCloseTime(), te.requireRedstone(), te.isDoubleDoor());
-		NetworkHandler.network.sendToServer(packet);
+		MalisisDoors.network.sendToServer(packet);
 	}
 
 	public static void sendCreateDoor(DoorFactoryTileEntity te)
 	{
 		Packet packet = new Packet(Packet.TYPE_CREATEDOOR, te.xCoord, te.yCoord, te.zCoord);
-		NetworkHandler.network.sendToServer(packet);
+		MalisisDoors.network.sendToServer(packet);
 	}
 
 	public static class Packet implements IMessage

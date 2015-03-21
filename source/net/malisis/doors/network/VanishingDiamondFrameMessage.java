@@ -32,6 +32,8 @@ import java.util.Map.Entry;
 import net.malisis.core.client.gui.component.UIComponent;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UITextField;
+import net.malisis.core.network.MalisisMessage;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -39,13 +41,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 
 /**
- * @author -
- * 
+ * @author Ordinastie
+ *
  */
+@MalisisMessage
 public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDiamondFrameMessage.Packet, IMessage>
 {
+	public VanishingDiamondFrameMessage()
+	{
+		MalisisDoors.network.registerMessage(this, VanishingDiamondFrameMessage.Packet.class, Side.SERVER);
+	}
 
 	@Override
 	public IMessage onMessage(Packet message, MessageContext ctx)
@@ -76,7 +84,7 @@ public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDi
 			packet.setConfig(entry.getKey().ordinal(), shouldPropagate, delay, inversed);
 		}
 
-		NetworkHandler.network.sendToServer(packet);
+		MalisisDoors.network.sendToServer(packet);
 	}
 
 	public static class Packet implements IMessage

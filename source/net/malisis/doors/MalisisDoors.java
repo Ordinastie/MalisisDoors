@@ -3,6 +3,7 @@ package net.malisis.doors;
 import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.configuration.Settings;
+import net.malisis.core.network.MalisisNetwork;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
@@ -14,7 +15,6 @@ import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.item.ForcefieldItem;
-import net.malisis.doors.network.NetworkHandler;
 import net.malisis.doors.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,7 +22,6 @@ import net.minecraft.item.Item;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
@@ -36,6 +35,7 @@ public class MalisisDoors implements IMalisisMod
 	public static final String version = "${version}";
 
 	public static MalisisDoors instance;
+	public static MalisisNetwork network;
 	public static MalisisDoorsSettings settings;
 
 	public static CreativeTabs tab = new MalisisDoorsTab();
@@ -43,6 +43,7 @@ public class MalisisDoors implements IMalisisMod
 	public MalisisDoors()
 	{
 		instance = this;
+		network = new MalisisNetwork(this);
 		MalisisCore.registerMod(this);
 	}
 
@@ -78,12 +79,6 @@ public class MalisisDoors implements IMalisisMod
 		Registers.init();
 
 		proxy.initRenderers();
-	}
-
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		NetworkHandler.init(modid);
 	}
 
 	public static class Blocks

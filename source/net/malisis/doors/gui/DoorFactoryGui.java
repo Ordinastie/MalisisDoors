@@ -24,8 +24,6 @@
 
 package net.malisis.doors.gui;
 
-import java.util.Map.Entry;
-
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.ComponentPosition;
 import net.malisis.core.client.gui.GuiTexture;
@@ -43,7 +41,6 @@ import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.component.interaction.UICheckBox;
 import net.malisis.core.client.gui.component.interaction.UIRadioButton;
 import net.malisis.core.client.gui.component.interaction.UISelect;
-import net.malisis.core.client.gui.component.interaction.UISelect.Option;
 import net.malisis.core.client.gui.component.interaction.UITab;
 import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent.ValueChange;
@@ -52,15 +49,11 @@ import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.movement.IDoorMovement;
-import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.network.DoorFactoryMessage;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -76,12 +69,12 @@ public class DoorFactoryGui extends MalisisGui
 
 	private DoorFactoryTileEntity tileEntity;
 	private UITab firstTab;
-	private UISelect selDoorMovement;
+	private UISelect<String> selDoorMovement;
 	private UITextField tfOpenTime;
 	private UITextField tfAutoCloseTime;
 	private UICheckBox cbRedstone;
 	private UICheckBox cbDoubleDoor;
-	private UISelect selDoorSound;
+	private UISelect<String> selDoorSound;
 	private UIRadioButton rbCreate;
 	private UIRadioButton rbEdit;
 	private UIContainer contCreate;
@@ -94,7 +87,7 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		setInventoryContainer(container);
 		tileEntity = te;
-
+		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
 	}
 
 	@Override
@@ -134,23 +127,23 @@ public class DoorFactoryGui extends MalisisGui
 		addToScreen(tabGroup);
 		addToScreen(window);
 
-		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
+		updateGui();
 	}
 
 	private UIContainer<UIContainer> getPropertiesContainer()
 	{
 		UIContainer propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
-		Iterable<Option> opts = Iterables.transform(DoorRegistry.listMovements().entrySet(), getLabelFunction("door_movement."));
-		selDoorMovement = new UISelect(this, 100, opts).setPosition(0, 2, Anchor.RIGHT).register(this);
+		selDoorMovement = new UISelect<String>(this, 100, DoorRegistry.listMovements().keySet()).setPosition(0, 2, Anchor.RIGHT);
+		selDoorMovement.setLabelPattern("door_movement.%s").register(this);
 
 		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
 		tfAutoCloseTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 26, Anchor.RIGHT).register(this);
 		cbRedstone = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
 		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 50, Anchor.RIGHT).register(this);
 
-		opts = Iterables.transform(DoorRegistry.listSounds().entrySet(), getLabelFunction("gui.door_factory.door_sound."));
-		selDoorSound = new UISelect(this, 100, opts).setPosition(0, 62, Anchor.RIGHT).register(this);
+		selDoorSound = new UISelect<String>(this, 100, DoorRegistry.listSounds().keySet()).setPosition(0, 62, Anchor.RIGHT);
+		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s").register(this);
 
 		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
 		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, 16));
@@ -167,18 +160,6 @@ public class DoorFactoryGui extends MalisisGui
 		propContainer.add(selDoorSound);
 
 		return propContainer;
-	}
-
-	private Function<Entry<String, ?>, Option> getLabelFunction(final String prefix)
-	{
-		return new Function<Entry<String, ?>, Option>()
-		{
-			@Override
-			public Option apply(Entry<String, ?> entry)
-			{
-				return new Option(entry.getValue(), prefix + entry.getKey());
-			};
-		};
 	}
 
 	private UIContainer getMaterialsContainer()
@@ -230,12 +211,12 @@ public class DoorFactoryGui extends MalisisGui
 		contEdit.setVisible(!isCreate);
 		btnCreate.setText(isCreate ? "gui.door_factory.create_door" : "gui.door_factory.edit_door");
 
-		selDoorMovement.setSelectedOption(tileEntity.getDoorMovement());
+		selDoorMovement.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorMovement()));
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		tfAutoCloseTime.setText(Integer.toString(tileEntity.getAutoCloseTime()));
 		cbRedstone.setChecked(tileEntity.requireRedstone());
 		cbDoubleDoor.setChecked(tileEntity.isDoubleDoor());
-		selDoorSound.setSelectedOption(tileEntity.getDoorSound());
+		selDoorSound.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorSound()));
 	}
 
 	@Subscribe
@@ -250,15 +231,15 @@ public class DoorFactoryGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onSelectEvent(UISelect.SelectEvent event)
+	public void onSelectEvent(UISelect.SelectEvent<String> event)
 	{
-		if (event.getOption() == null)
+		if (event.getNewValue() == null)
 			return;
 
 		if (event.getComponent() == selDoorMovement)
-			tileEntity.setDoorMovement((IDoorMovement) event.getOption().getKey());
+			tileEntity.setDoorMovement(DoorRegistry.getMovement(event.getNewValue()));
 		else
-			tileEntity.setDoorSound((IDoorSound) event.getOption().getKey());
+			tileEntity.setDoorSound(DoorRegistry.getSound(event.getNewValue()));
 
 		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
