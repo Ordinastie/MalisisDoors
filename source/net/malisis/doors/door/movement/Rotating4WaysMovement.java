@@ -39,7 +39,7 @@ import net.minecraft.util.AxisAlignedBB;
  * @author Ordinastie
  *
  */
-public class Roatating4WaysMovement implements IDoorMovement
+public class Rotating4WaysMovement implements IDoorMovement
 {
 
 	@Override

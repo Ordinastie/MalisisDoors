@@ -33,7 +33,7 @@ import net.malisis.doors.door.movement.CurtainMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.movement.ForcefieldMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
-import net.malisis.doors.door.movement.Roatating4WaysMovement;
+import net.malisis.doors.door.movement.Rotating4WaysMovement;
 import net.malisis.doors.door.movement.RotateAndPlaceMovement;
 import net.malisis.doors.door.movement.RotateAndSlideMovement;
 import net.malisis.doors.door.movement.RotateAroundMovement;
@@ -81,7 +81,7 @@ public class DoorRegistry
 		registerMovement("fence_gate", new FenceGateMovement());
 		registerMovement("rotating_split_door", new RotatingSplitMovement());
 		registerMovement("sliding_4ways", new Sliding4WaysMovement());
-		registerMovement("rotating_4ways", new Roatating4WaysMovement());
+		registerMovement("rotating_4ways", new Rotating4WaysMovement());
 		registerMovement("rotate_around", new RotateAroundMovement());
 		registerMovement("rotate_slide", new RotateAndSlideMovement());
 		registerMovement("rotate_place", new RotateAndPlaceMovement());
