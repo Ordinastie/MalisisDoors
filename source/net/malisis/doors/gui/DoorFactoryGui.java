@@ -265,15 +265,19 @@ public class DoorFactoryGui extends MalisisGui
 
 		try
 		{
-			//parse the value of the textfields
-			tileEntity.setOpeningTime(Integer.parseInt(tfOpenTime.getText()));
-			tileEntity.setAutoCloseTime(Integer.parseInt(tfAutoCloseTime.getText()));
+			int value = Integer.decode((String) event.getNewValue());
+
+			if (event.getComponent() == tfOpenTime)
+				tileEntity.setOpeningTime(value);
+			if (event.getComponent() == tfAutoCloseTime)
+				tileEntity.setAutoCloseTime(value);
+
 			DoorFactoryMessage.sendDoorInformations(tileEntity);
 		}
 		catch (NumberFormatException e)
 		{
 			//parsing failed, replace the value of the textfield by the value already in the TE
-			tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
+			//tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		}
 
 	}
