@@ -98,7 +98,6 @@ public class DoorRenderer extends MalisisRenderer
 		topBlock = tileEntity.isTopBlock(x, y, z);
 
 		rp.icon.set(null);
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 
 		renderTileEntity();
 	}
@@ -124,6 +123,7 @@ public class DoorRenderer extends MalisisRenderer
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
+		initialize();
 		setup();
 
 		if (tileEntity.getMovement() != null)
@@ -133,10 +133,12 @@ public class DoorRenderer extends MalisisRenderer
 		}
 
 		//model.render(this, rp);
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 		drawShape(model.getShape("bottom"), rp);
 
 		blockMetadata |= Door.FLAG_TOPBLOCK;
 		y++;
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 		drawShape(model.getShape("top"), rp);
 		y--;
 	}
