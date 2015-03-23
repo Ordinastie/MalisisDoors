@@ -68,7 +68,7 @@ public class VanishingTileEntity extends TileEntity
 	public VanishingTileEntity()
 	{
 		this.frameType = VanishingBlock.typeWoodFrame;
-		ProxyAccess.get(getWorldObj());
+		ProxyAccess.get(getWorld());
 	}
 
 	public VanishingTileEntity(int frameType)
@@ -97,9 +97,9 @@ public class VanishingTileEntity extends TileEntity
 		if (ArrayUtils.contains(excludes, block))
 			return false;
 
-		World proxy = (World) ProxyAccess.get(getWorldObj());
+		World proxy = (World) ProxyAccess.get(getWorld());
 		copiedBlock = block;
-		copiedMetadata = itemStack.getItemDamage();
+		copiedMetadata = itemStack.getMetadata();
 		initCopiedTileEntity();
 		copiedMetadata = block.onBlockPlaced(proxy, xCoord, yCoord, zCoord, side, hitX, hitY, hitZ, copiedMetadata);
 		if (p != null)
@@ -109,10 +109,10 @@ public class VanishingTileEntity extends TileEntity
 
 	private void initCopiedTileEntity()
 	{
-		copiedTileEntity = copiedBlock.createTileEntity(getWorldObj(), copiedMetadata);
+		copiedTileEntity = copiedBlock.createTileEntity(getWorld(), copiedMetadata);
 		if (copiedTileEntity != null)
 		{
-			copiedTileEntity.setWorldObj((World) ProxyAccess.get(getWorldObj()));
+			copiedTileEntity.setWorldObj((World) ProxyAccess.get(getWorld()));
 			copiedTileEntity.xCoord = xCoord;
 			copiedTileEntity.yCoord = yCoord;
 			copiedTileEntity.zCoord = zCoord;
@@ -244,7 +244,7 @@ public class VanishingTileEntity extends TileEntity
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		this.readFromNBT(packet.func_148857_g());
+		this.readFromNBT(packet.getNbtCompound());
 	}
 
 }

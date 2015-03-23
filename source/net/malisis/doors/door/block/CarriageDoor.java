@@ -62,12 +62,12 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setStepSound(soundTypeStone);
-		setBlockName("carriage_door");
+		setUnlocalizedName("carriage_door");
 		setCreativeTab(MalisisDoors.tab);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		blockIcon = register.registerIcon(MalisisDoors.modid + ":carriage_door");
 		frameIcon = register.registerIcon(MalisisDoors.modid + ":carriage_frame");

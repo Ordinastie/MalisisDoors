@@ -56,7 +56,7 @@ public class ForcefieldItem extends Item
 	{
 		setUnlocalizedName("forcefieldItem");
 		setCreativeTab(MalisisDoors.tab);
-		setMaxDamage(0);
+		setMaxDurability(0);
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class ForcefieldItem extends Item
 		if (energy < 0)
 			energy = 0;
 		else if (energy > getMaxEnergy())
-			energy = getMaxDamage();
+			energy = getMaxDurability();
 		getNBT(itemStack).setInteger("energy", energy);
 	}
 

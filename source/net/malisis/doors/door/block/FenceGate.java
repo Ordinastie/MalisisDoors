@@ -51,7 +51,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
-		setBlockName("fenceGate");
+		setUnlocalizedName("fenceGate");
 	}
 
 	@Override

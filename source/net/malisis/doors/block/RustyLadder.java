@@ -42,12 +42,12 @@ public class RustyLadder extends BlockLadder
 
 	public RustyLadder()
 	{
-		setBlockName("rustyLadder");
+		setUnlocalizedName("rustyLadder");
 		this.setCreativeTab(MalisisDoors.tab);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister p_149651_1_)
+	public void registerIcons(IIconRegister p_149651_1_)
 	{}
 
 	@Override

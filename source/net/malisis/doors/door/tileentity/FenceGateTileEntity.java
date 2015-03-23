@@ -73,7 +73,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 		else
 			ox = 1;
 
-		return isCamo ? camoBlock.colorMultiplier(getWorldObj(), xCoord - ox, yCoord, zCoord - oz) : 0xFFFFFF;
+		return isCamo ? camoBlock.colorMultiplier(getWorld(), xCoord - ox, yCoord, zCoord - oz) : 0xFFFFFF;
 	}
 
 	/**

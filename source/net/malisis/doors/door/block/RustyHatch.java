@@ -61,12 +61,12 @@ public class RustyHatch extends Block implements ITileEntityProvider
 		setHardness(3.0F);
 		setResistance(10000);
 		setStepSound(soundTypeMetal);
-		setBlockName("rustyHatch");
+		setUnlocalizedName("rustyHatch");
 		setCreativeTab(MalisisDoors.tab);
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		blockIcon = register.registerIcon(MalisisDoors.modid + ":rusty_hatch");
 		handleIcon = register.registerIcon(MalisisDoors.modid + ":rusty_hatch_handle");

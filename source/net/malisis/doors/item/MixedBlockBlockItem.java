@@ -75,13 +75,13 @@ public class MixedBlockBlockItem extends ItemBlock
 			block2 = Block.getBlockFromItem(is2.getItem());
 
 		//metadatas
-		int metadata1 = is1.getItemDamage();
+		int metadata1 = is1.getMetadata();
 		if (is1.getItem() instanceof ItemBlock)
-			metadata1 = ((ItemBlock) is1.getItem()).getMetadata(is1.getItemDamage());
+			metadata1 = ((ItemBlock) is1.getItem()).getMetadata(is1.getMetadata());
 
-		int metadata2 = is2.getItemDamage();
+		int metadata2 = is2.getMetadata();
 		if (is2.getItem() instanceof ItemBlock)
-			metadata2 = ((ItemBlock) is2.getItem()).getMetadata(is2.getItemDamage());
+			metadata2 = ((ItemBlock) is2.getItem()).getMetadata(is2.getMetadata());
 
 		//last check
 		if (block1 == block2 && metadata1 == metadata2)

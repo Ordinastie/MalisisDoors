@@ -118,9 +118,9 @@ public class DoorTileEntity extends TileEntity
 	@Override
 	public int getBlockMetadata()
 	{
-		if (lastMetadata != blockMetadata || blockMetadata == -1)
+		if (lastMetadata != blockMetadata || blockMetadata == -1 && getBlockType() != null)
 		{
-			blockMetadata = Door.getFullMetadata(worldObj, xCoord, yCoord, zCoord);
+			blockMetadata = ((Door) getBlockType()).getFullMetadata(worldObj, xCoord, yCoord, zCoord);
 			lastMetadata = blockMetadata;
 		}
 
@@ -139,8 +139,8 @@ public class DoorTileEntity extends TileEntity
 
 	public boolean isPowered()
 	{
-		return getWorldObj().isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)
-				|| getWorldObj().isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+		return getWorld().isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)
+				|| getWorld().isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 	}
 
 	//#end Getter/Setter
@@ -175,7 +175,7 @@ public class DoorTileEntity extends TileEntity
 			return;
 
 		state = newState;
-		if (getWorldObj() == null)
+		if (getWorld() == null)
 			return;
 
 		if (state == DoorState.CLOSING || state == DoorState.OPENING)
@@ -218,7 +218,7 @@ public class DoorTileEntity extends TileEntity
 		if (descriptor.getSound() != null)
 			soundPath = descriptor.getSound().getSoundPath(state);
 		if (soundPath != null)
-			getWorldObj().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
+			getWorld().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
 	}
 
 	/**
@@ -338,7 +338,7 @@ public class DoorTileEntity extends TileEntity
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		this.readFromNBT(packet.func_148857_g());
+		this.readFromNBT(packet.getNbtCompound());
 	}
 
 	//#end NBT/Network

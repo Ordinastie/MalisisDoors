@@ -45,7 +45,7 @@ public class VanishingBlockItem extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		int i = itemstack.getItemDamage();
+		int i = itemstack.getMetadata();
 		if (i < 0 || i >= names.length)
 			i = 0;
 		return getUnlocalizedName() + "_" + names[i];
@@ -60,7 +60,7 @@ public class VanishingBlockItem extends ItemBlock
 	@Override
 	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
 	{
-		Block block = field_150939_a;
+		Block block = blockInstance;
 		if ((metadata & 3) == VanishingBlock.typeDiamondFrame)
 			block = MalisisDoors.Blocks.vanishingDiamondBlock;
 

@@ -81,7 +81,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 
 	public GarageDoorTileEntity getGarageDoor(ForgeDirection dir)
 	{
-		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, getWorldObj(), xCoord + dir.offsetX, yCoord
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, getWorld(), xCoord + dir.offsetX, yCoord
 				+ dir.offsetY, zCoord + dir.offsetZ);
 		if (te == null)
 			return null;

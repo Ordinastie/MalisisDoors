@@ -73,7 +73,7 @@ public class VanishingBlock extends BlockContainer
 	public VanishingBlock()
 	{
 		super(Material.wood);
-		setBlockName("vanishing_block");
+		setUnlocalizedName("vanishing_block");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(0.5F);
 	}
@@ -81,7 +81,7 @@ public class VanishingBlock extends BlockContainer
 	// #region Icons
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		icons[typeWoodFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_wood");
 		icons[typeIronFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_iron");

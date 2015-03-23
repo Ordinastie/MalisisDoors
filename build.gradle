@@ -52,7 +52,7 @@ artifacts {
 }
 
 minecraft {
-	version = "1.7.10-10.13.2.1232"
+	version = "1.7.10-10.13.2.1342-1.7.10"
 	if(file("../../run").exists()) 	{
 		runDir = "../../run/assets"
 	}
@@ -62,6 +62,7 @@ minecraft {
 	
 	replace '${version}', project.version
     replaceIn "MalisisDoors.java"
+    mappings = "stable_12"
 }
 
 processResources

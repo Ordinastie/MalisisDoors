@@ -60,7 +60,7 @@ public class CustomDoor extends Door
 	}
 
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{}
 
 	@Override

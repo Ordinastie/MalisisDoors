@@ -85,8 +85,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 		setHardness(desc.getHardness());
 		setStepSound(desc.getSoundType());
-		setBlockName(desc.getName());
-		setBlockTextureName(desc.getTextureName());
+		setUnlocalizedName(desc.getName());
+		setTextureName(desc.getTextureName());
 	}
 
 	public Door(Material material)
@@ -102,7 +102,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	// #region Icons
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void registerBlockIcons(IIconRegister register)
+	public void registerIcons(IIconRegister register)
 	{
 		String textureName = getTextureName();
 		iconTop = new MalisisIcon(textureName + "_upper").register((TextureMap) register);
@@ -155,7 +155,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return getIcon(side, Door.getFullMetadata(world, x, y, z));
+		return getIcon(side, getFullMetadata(world, x, y, z));
 	}
 
 	// #end
@@ -382,9 +382,11 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public static DoorTileEntity getDoor(IBlockAccess world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
-		int metadata = getFullMetadata(world, x, y, z);
-		if (block instanceof Door)
-			y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
+		if (!(block instanceof Door))
+			return null;
+		int metadata = ((Door) block).getFullMetadata(world, x, y, z);
+
+		y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
 
 		return TileEntityUtils.getTileEntity(DoorTileEntity.class, world, x, y, z);
 	}
@@ -398,7 +400,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	 * @param z
 	 * @return
 	 */
-	public static int getFullMetadata(IBlockAccess world, int x, int y, int z)
+	@Override
+	public int getFullMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
 		int metadata = world.getBlockMetadata(x, y, z);

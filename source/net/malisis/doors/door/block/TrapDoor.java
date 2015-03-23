@@ -57,8 +57,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		disableStats();
 		setHardness(3.0F);
 		setStepSound(soundTypeWood);
-		setBlockName("trapdoor");
-		setBlockTextureName("trapdoor");
+		setUnlocalizedName("trapdoor");
+		setTextureName("trapdoor");
 	}
 
 	/**

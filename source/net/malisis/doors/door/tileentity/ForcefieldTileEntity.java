@@ -55,7 +55,7 @@ public class ForcefieldTileEntity extends DoorTileEntity implements MultiBlock.I
 
 	private int getOriginMetadata()
 	{
-		return getWorldObj().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
+		return getWorld().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
 	}
 
 	@Override
