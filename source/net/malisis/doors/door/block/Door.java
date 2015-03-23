@@ -155,7 +155,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	@Override
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
 	{
-		return getIcon(side, getFullMetadata(world, x, y, z));
+		return getIcon(side, Door.fullMetadata(world, x, y, z));
 	}
 
 	// #end
@@ -384,7 +384,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		Block block = world.getBlock(x, y, z);
 		if (!(block instanceof Door))
 			return null;
-		int metadata = ((Door) block).getFullMetadata(world, x, y, z);
+		int metadata = Door.fullMetadata(world, x, y, z);
 
 		y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
 
@@ -400,8 +400,7 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	 * @param z
 	 * @return
 	 */
-	@Override
-	public int getFullMetadata(IBlockAccess world, int x, int y, int z)
+	public static int fullMetadata(IBlockAccess world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
 		int metadata = world.getBlockMetadata(x, y, z);

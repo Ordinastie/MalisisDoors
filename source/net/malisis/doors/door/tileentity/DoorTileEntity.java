@@ -120,7 +120,7 @@ public class DoorTileEntity extends TileEntity
 	{
 		if (lastMetadata != blockMetadata || blockMetadata == -1 && getBlockType() != null)
 		{
-			blockMetadata = ((Door) getBlockType()).getFullMetadata(worldObj, xCoord, yCoord, zCoord);
+			blockMetadata = Door.fullMetadata(worldObj, xCoord, yCoord, zCoord);
 			lastMetadata = blockMetadata;
 		}
 
