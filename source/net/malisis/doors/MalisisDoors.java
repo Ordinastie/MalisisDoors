@@ -24,7 +24,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version)
+@Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore")
 public class MalisisDoors implements IMalisisMod
 {
 	@SidedProxy(clientSide = "net.malisis.doors.proxy.ClientProxy", serverSide = "net.malisis.doors.proxy.CommonProxy")
@@ -85,6 +85,11 @@ public class MalisisDoors implements IMalisisMod
 	{
 		public static Block doubleDoorWood;
 		public static Block doubleDoorIron;
+		public static Block doorAcacia;
+		public static Block doorBirch;
+		public static Block doorDarkOak;
+		public static Block doorJungle;
+		public static Block doorSpruce;
 		public static Block fenceGate;
 		public static Block trapDoor;
 		public static Block woodSlidingDoor;
@@ -112,6 +117,11 @@ public class MalisisDoors implements IMalisisMod
 	{
 		public static Item woodSlidingDoorItem;
 		public static Item ironSlidingDoorItem;
+		public static Item doorAcaciaItem;
+		public static Item doorBirchItem;
+		public static Item doorDarkOakItem;
+		public static Item doorJungleItem;
+		public static Item doorSpruceItem;
 		public static Item jailDoorItem;
 		public static Item customDoorItem;
 		public static Item laboratoryDoorItem;

@@ -69,10 +69,8 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public static final int FLAG_TOPBLOCK = 1 << 3;
 	public static final int FLAG_REVERSED = 1 << 4;
 
-	protected MalisisIcon iconTop;
-	protected MalisisIcon iconBottom;
-	protected MalisisIcon[] iconTopSides;
-	protected MalisisIcon[] iconBottomSides;
+	protected MalisisIcon[] iconTop;
+	protected MalisisIcon[] iconBottom;
 	protected String soundPath;
 
 	private DoorDescriptor descriptor;
@@ -105,26 +103,30 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public void registerIcons(IIconRegister register)
 	{
 		String textureName = getTextureName();
-		iconTop = new MalisisIcon(textureName + "_upper").register((TextureMap) register);
-		iconBottom = new MalisisIcon(textureName + "_lower").register((TextureMap) register);
+		MalisisIcon top = new MalisisIcon(textureName + "_upper").register((TextureMap) register);
+		MalisisIcon bottom = new MalisisIcon(textureName + "_lower").register((TextureMap) register);
+
 		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (textureName.equals("door_wood") || textureName.equals("door_iron"))
 			textureName = MalisisDoors.modid + ":" + textureName;
-
 		MalisisIcon side = new MalisisIcon(textureName + "_side").register((TextureMap) register);
 		float w = 3F / 16F;
-		iconTopSides = new MalisisIcon[6];
-		iconTopSides[0] = new ClippedIcon(side, 0, 0, w, 1);
-		iconTopSides[0].setRotation(1);
-		iconTopSides[1] = iconTopSides[0];
-		iconTopSides[4] = new ClippedIcon(side, w, 0, w, 1);
-		iconTopSides[5] = new ClippedIcon(side, 2 * w, 0, w, 1);
+		iconTop = new MalisisIcon[6];
+		iconTop[0] = new ClippedIcon(side, 0, 0, w, 1);
+		iconTop[0].setRotation(1);
+		iconTop[1] = iconTop[0];
+		iconTop[2] = top;
+		iconTop[3] = top;
+		iconTop[4] = new ClippedIcon(side, w, 0, w, 1);
+		iconTop[5] = new ClippedIcon(side, 2 * w, 0, w, 1);
 
-		iconBottomSides = new MalisisIcon[6];
-		iconBottomSides[0] = iconTopSides[0];
-		iconBottomSides[1] = iconTopSides[0];
-		iconBottomSides[4] = new ClippedIcon(side, 3 * w, 0, w, 1);
-		iconBottomSides[5] = new ClippedIcon(side, 4 * w, 0, w, 1);
+		iconBottom = new MalisisIcon[6];
+		iconBottom[0] = iconTop[0];
+		iconBottom[1] = iconTop[0];
+		iconBottom[2] = bottom;
+		iconBottom[3] = bottom;
+		iconBottom[4] = new ClippedIcon(side, 3 * w, 0, w, 1);
+		iconBottom[5] = new ClippedIcon(side, 4 * w, 0, w, 1);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -133,23 +135,30 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	{
 		boolean topBlock = (metadata & FLAG_TOPBLOCK) != 0;
 		boolean reversed = (metadata & FLAG_REVERSED) != 0;
-		MalisisIcon icon = iconBottom;
+		boolean flipH = false;
+		boolean flipV = false;
+		MalisisIcon icon = iconBottom[2];
 
 		switch (side)
 		{
+			case 4:
+				side = reversed ? 5 : 4;
+				break;
+			case 5:
+				side = reversed ? 4 : 5;
+				break;
 			case 0:
 			case 1:
-			case 4:
-			case 5:
-				return topBlock ? iconTopSides[side] : iconBottomSides[side];
+				flipV = !reversed;
 			case 2:
 			case 3:
-				icon = topBlock ? iconTop : iconBottom;
-				icon.flip(!reversed, false);
-				return icon;
-			default:
-				return icon;
+				flipH = !reversed;
+				break;
 		}
+
+		icon = topBlock ? iconTop[side] : iconBottom[side];
+		icon.flip(flipH, flipV);
+		return icon;
 	}
 
 	@Override

@@ -49,6 +49,7 @@ import net.malisis.doors.door.descriptor.JailDoor;
 import net.malisis.doors.door.descriptor.LaboratoryDoor;
 import net.malisis.doors.door.descriptor.ShojiDoor;
 import net.malisis.doors.door.descriptor.VanillaDoor;
+import net.malisis.doors.door.descriptor.WoodDoor;
 import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.item.ForcefieldItem;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
@@ -80,6 +81,8 @@ public class Registers
 	{
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 			registerVanillaDoors();
+
+		registerWoodDoors();
 
 		registerDoors();
 
@@ -128,6 +131,31 @@ public class Registers
 
 		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
+	}
+
+	private static void registerWoodDoors()
+	{
+		DoorDescriptor desc;
+
+		desc = new WoodDoor("door_acacia", 4).register();
+		doorAcacia = desc.getBlock();
+		doorAcaciaItem = desc.getItem();
+
+		desc = new WoodDoor("door_birch", 2).register();
+		doorBirch = desc.getBlock();
+		doorBirchItem = desc.getItem();
+
+		desc = new WoodDoor("door_dark_oak", 5).register();
+		doorDarkOak = desc.getBlock();
+		doorDarkOakItem = desc.getItem();
+
+		desc = new WoodDoor("door_jungle", 3).register();
+		doorJungle = desc.getBlock();
+		doorJungleItem = desc.getItem();
+
+		desc = new WoodDoor("door_spruce", 1).register();
+		doorSpruce = desc.getBlock();
+		doorSpruceItem = desc.getItem();
 	}
 
 	private static void registerDoors()
