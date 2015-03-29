@@ -39,6 +39,7 @@ import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGrass;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -127,7 +128,7 @@ public class MixedBlockRenderer extends MalisisRenderer
 			enableBlending();
 		}
 
-		if (MalisisDoorsSettings.simpleMixedBlockRendering.get())
+		if (MalisisDoorsSettings.simpleMixedBlockRendering.get() || !Minecraft.getMinecraft().gameSettings.fancyGraphics)
 		{
 			renderSimple();
 			return;
