@@ -24,13 +24,13 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.ReplacementTool;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.block.TrapDoor;
 import net.minecraft.block.Block;

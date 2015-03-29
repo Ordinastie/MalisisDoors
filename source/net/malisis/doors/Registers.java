@@ -26,7 +26,7 @@ package net.malisis.doors;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
-import net.malisis.core.ReplacementTool;
+import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
