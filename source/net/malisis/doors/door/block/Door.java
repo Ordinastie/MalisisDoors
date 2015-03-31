@@ -49,6 +49,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -434,5 +435,27 @@ public class Door extends BlockDoor implements ITileEntityProvider
 
 		boolean flag1 = (topMetadata & 1) != 0;
 		return bottomMetadata & 7 | (blockTop ? Door.FLAG_TOPBLOCK : 0) | (flag1 ? Door.FLAG_REVERSED : 0);
+	}
+
+	public static int dirToInt(ForgeDirection dir)
+	{
+		if (dir == ForgeDirection.NORTH)
+			return DIR_NORTH;
+		else if (dir == ForgeDirection.EAST)
+			return DIR_EAST;
+		else if (dir == ForgeDirection.SOUTH)
+			return DIR_SOUTH;
+		return DIR_WEST;
+	}
+
+	public static ForgeDirection intToDir(int i)
+	{
+		if (i == DIR_NORTH)
+			return ForgeDirection.NORTH;
+		else if (i == DIR_EAST)
+			return ForgeDirection.EAST;
+		else if (i == DIR_SOUTH)
+			return ForgeDirection.SOUTH;
+		return ForgeDirection.WEST;
 	}
 }
