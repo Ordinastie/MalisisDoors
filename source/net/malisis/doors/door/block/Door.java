@@ -392,11 +392,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	public static DoorTileEntity getDoor(IBlockAccess world, int x, int y, int z)
 	{
 		Block block = world.getBlock(x, y, z);
-		if (!(block instanceof Door))
-			return null;
 		int metadata = Door.fullMetadata(world, x, y, z);
-
-		y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
+		if (block instanceof Door)
+			y -= (metadata & Door.FLAG_TOPBLOCK) != 0 ? 1 : 0;
 
 		return TileEntityUtils.getTileEntity(DoorTileEntity.class, world, x, y, z);
 	}
