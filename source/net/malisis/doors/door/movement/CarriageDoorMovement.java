@@ -30,13 +30,10 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
@@ -47,42 +44,8 @@ public class CarriageDoorMovement implements IDoorMovement
 	@Override
 	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean left, BoundingBoxType type)
 	{
-		if (!(tileEntity instanceof CarriageDoorTileEntity))
-			return null;
-
-		MultiBlock mb = ((CarriageDoorTileEntity) tileEntity).getMultiBlock();
-		if (mb == null)
-			return null;
-
-		float f = Door.DOOR_WIDTH;
-		AxisAlignedBB aabb = mb.getWorldBounds();
-		ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getDirection());
-
-		//MalisisCore.message(dir);
-		if (dir == ForgeDirection.NORTH)
-			aabb.minZ = aabb.maxZ - f;
-		if (dir == ForgeDirection.SOUTH)
-			aabb.maxZ = aabb.minZ + f;
-		if (dir == ForgeDirection.EAST)
-			aabb.maxX = aabb.minX + f;
-		if (dir == ForgeDirection.WEST)
-			aabb.minX = aabb.maxX - f;
-
-		if (tileEntity.getState() != DoorState.CLOSED && type != BoundingBoxType.SELECTION)
-		{
-
-			if ((dir == ForgeDirection.NORTH && left) || (dir == ForgeDirection.SOUTH && !left))
-				aabb.maxX = aabb.minX + 0.5F;
-			if ((dir == ForgeDirection.SOUTH && left) || (dir == ForgeDirection.NORTH && !left))
-				aabb.minX = aabb.maxX - 0.5F;
-			if ((dir == ForgeDirection.EAST && left) || (dir == ForgeDirection.WEST && !left))
-				aabb.maxZ = aabb.minZ + 0.5F;
-			if ((dir == ForgeDirection.WEST && left) || (dir == ForgeDirection.EAST && !left))
-				aabb.minZ = aabb.maxZ - 0.5F;
-
-		}
-
-		return aabb;
+		//not called
+		return null;
 	}
 
 	/**

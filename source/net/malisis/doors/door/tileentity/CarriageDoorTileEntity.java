@@ -24,24 +24,30 @@
 
 package net.malisis.doors.door.tileentity;
 
+import net.malisis.core.MalisisCore;
+import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.util.MultiBlock;
+import net.malisis.core.util.chunkblock.ChunkBlockHandler;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.DoorState;
+import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.sound.CarriageDoorSound;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
  *
  */
-public class CarriageDoorTileEntity extends DoorTileEntity implements MultiBlock.IProvider
+public class CarriageDoorTileEntity extends DoorTileEntity
 {
-	private MultiBlock multiBlock;
+	private boolean delete = false;
+	private boolean processed = true;
+	private ForgeDirection direction = ForgeDirection.NORTH;
 
 	public CarriageDoorTileEntity()
 	{
@@ -53,27 +59,10 @@ public class CarriageDoorTileEntity extends DoorTileEntity implements MultiBlock
 		setDescriptor(descriptor);
 	}
 
-	private int getOriginMetadata()
-	{
-		return getWorld().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
-	}
-
 	@Override
 	public boolean isTopBlock(int x, int y, int z)
 	{
 		return false;
-	}
-
-	@Override
-	public int getDirection()
-	{
-		return multiBlock.getDirection().ordinal();
-	}
-
-	@Override
-	public boolean isOpened()
-	{
-		return (getOriginMetadata() & Door.FLAG_OPENED) != 0;
 	}
 
 	@Override
@@ -89,85 +78,47 @@ public class CarriageDoorTileEntity extends DoorTileEntity implements MultiBlock
 	}
 
 	@Override
-	public DoorState getState()
+	public void updateEntity()
 	{
-		CarriageDoorTileEntity te = MultiBlock.getOriginProvider(this);
-		if (te == null)
-			return DoorState.CLOSED;
-
-		if (te != this)
-			return te.getState();
-
-		return super.getState();
-	}
-
-	public boolean isLeftFrame(int x, int y, int z)
-	{
-		if (multiBlock == null)
-			return true;
-		return x == multiBlock.getX() && z == multiBlock.getZ();
-	}
-
-	@Override
-	public void openOrCloseDoor()
-	{
-		CarriageDoorTileEntity te = MultiBlock.getOriginProvider(this);
-		if (te == null)
-			return;
-
-		if (te != this)
+		if (!processed && getWorld() != null)
 		{
-			te.openOrCloseDoor();
+			if (delete)
+			{
+				MalisisCore.log.info("Deleting " + xCoord + "," + yCoord + "," + zCoord);
+				getWorld().setBlockToAir(xCoord, yCoord, zCoord);
+			}
+			else
+			{
+				MalisisCore.log.info("Adding to chunk : " + xCoord + "," + yCoord + "," + zCoord);
+				ChunkBlockHandler.get().updateCoordinates(getWorld().getChunkFromBlockCoords(xCoord, zCoord), xCoord, yCoord, zCoord,
+						Blocks.air, getBlockType());
+				getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, Door.dirToInt(direction), 2);
+				processed = true;
+			}
 			return;
 		}
-
-		if (getState() != DoorState.CLOSED && getState() != DoorState.OPENED)
-			return;
-
-		super.openOrCloseDoor();
-	}
-
-	@Override
-	public void setMultiBlock(MultiBlock multiBlock)
-	{
-		this.multiBlock = multiBlock;
-	}
-
-	@Override
-	public MultiBlock getMultiBlock()
-	{
-		return multiBlock;
-	}
-
-	@Override
-	public void setWorldObj(World world)
-	{
-		super.setWorldObj(world);
-		if (multiBlock != null)
-			multiBlock.setWorld(world);
+		super.updateEntity();
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		multiBlock = new MultiBlock(tag);
-	}
+		if (tag.hasKey("multiBlock"))
+		{
+			MultiBlock mb = new MultiBlock(tag);
+			delete = !mb.isOrigin(xCoord, yCoord, zCoord);
+			direction = mb.getDirection();
+			processed = false;
+		}
 
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		if (multiBlock != null)
-			multiBlock.writeToNBT(tag);
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		if (multiBlock != null)
-			return multiBlock.getWorldBounds();
-		return super.getRenderBoundingBox();
+		return ((CarriageDoor) getBlockType()).getBoundingBox(getWorld(), xCoord, yCoord, zCoord, BoundingBoxType.RENDER)[0].offset(xCoord,
+				yCoord, zCoord);
 	}
 
 }

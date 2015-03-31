@@ -25,12 +25,13 @@
 package net.malisis.doors.door.block;
 
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.EntityUtils;
-import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.chunkcollision.IChunkCollidable;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -43,18 +44,17 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class CarriageDoor extends Block implements ITileEntityProvider
+public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable
 {
 	protected IIcon frameIcon;
-
 	public static int renderId;
+
+	private AxisAlignedBB defaultBoundingBox = AxisAlignedBB.getBoundingBox(0, 0, 1 - Door.DOOR_WIDTH, 4, 5, 1);
 
 	public CarriageDoor()
 	{
@@ -97,13 +97,9 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
 	{
-		ForgeDirection side = EntityUtils.getEntityFacing(player);
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 4, 5, 1);
-		MultiBlock mb = new MultiBlock(world, x, y, z);
-		mb.setDirection(side);
-		mb.setBounds(aabb);
-		if (!mb.placeBlocks())
-			itemStack.stackSize++;
+		ForgeDirection dir = EntityUtils.getEntityFacing(player);
+		int metadata = Door.dirToInt(dir);
+		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 	}
 
 	@Override
@@ -121,67 +117,40 @@ public class CarriageDoor extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	public AxisAlignedBB[] getPlacedBoundingBox(IBlockAccess world, int x, int y, int z, int side, EntityPlayer player, ItemStack itemStack)
 	{
-		MultiBlock.destroy(world, x, y, z);
-		world.setBlockToAir(x, y, z);
-		return true;
-	}
-
-	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
-	{
-		if (aabb == null)
-			return null;
-		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
-		return aabb;
+		ForgeDirection dir = EntityUtils.getEntityFacing(player);
+		return AABBUtils.rotate(new AxisAlignedBB[] { defaultBoundingBox.copy() }, dir);
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public AxisAlignedBB[] getBoundingBox(IBlockAccess world, int x, int y, int z, BoundingBoxType type)
 	{
 		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return;
+		if (te == null)
+			return AABBUtils.identities();
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isLeftFrame(x, y, z), BoundingBoxType.RAYTRACE);
-		if (aabb == null)
-			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
+		//MalisisCore.message(te.getDirection());
 
-		aabb.offset(-x, -y, -z);
-		setBlockBounds(aabb);
+		AxisAlignedBB[] aabbs = new AxisAlignedBB[] { defaultBoundingBox.copy() };
+		if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.CHUNKCOLLISION || type == BoundingBoxType.RAYTRACE)
+				&& (te.isOpened() || te.isMoving()))
+		{
+			aabbs = new AxisAlignedBB[] { AxisAlignedBB.getBoundingBox(0, 0, -0.5F, 0.5F, 4, 1),
+					AxisAlignedBB.getBoundingBox(3.5F, 0, -0.5F, 4, 4, 1), AxisAlignedBB.getBoundingBox(0, 4, 1 - Door.DOOR_WIDTH, 4, 5, 1) };
+		}
+
+		return AABBUtils.rotate(aabbs, Door.intToDir(te.getDirection()));
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+	public int blockRange()
 	{
-		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return AxisAlignedBB.getBoundingBox(1, 1, 1, 1, 1, 1);
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, false, BoundingBoxType.SELECTION);
-		if (aabb == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		return aabb;
+		return 5;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return null;
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isLeftFrame(x, y, z), BoundingBoxType.COLLISION);
-		if (aabb == null)
-			return null;
-
-		return setBlockBounds(aabb);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_)
+	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new CarriageDoorTileEntity();
 	}

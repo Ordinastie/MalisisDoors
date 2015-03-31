@@ -31,9 +31,9 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.util.ResourceLocation;
@@ -78,12 +78,11 @@ public class CarriageDoorRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		tileEntity = MultiBlock.getOriginProvider(CarriageDoorTileEntity.class, world, x, y, z);
-		if (tileEntity == null || !MultiBlock.isOrigin(world, x, y, z))
+		if (super.tileEntity == null)
 			return;
 
 		tileEntity = (CarriageDoorTileEntity) super.tileEntity;
-		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
+		direction = Door.intToDir(tileEntity.getDirection());
 		setup();
 
 		if (renderType == RenderType.ISBRH_WORLD)
@@ -131,9 +130,12 @@ public class CarriageDoorRenderer extends MalisisRenderer
 	@Override
 	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
 	{
-		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
-		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
-				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
+		//		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
+		//		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
+		//				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
+		//TODO:
+		//return super.isCurrentBlockDestroyProgress(dbp);
+		return true;
 	}
 
 	@Override

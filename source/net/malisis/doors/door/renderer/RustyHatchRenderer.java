@@ -230,6 +230,9 @@ public class RustyHatchRenderer extends MalisisRenderer
 	@Override
 	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
 	{
+		if (!(world.getTileEntity(dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ()) instanceof RustyHatchTileEntity))
+			return false;
+
 		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
 		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
 				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
