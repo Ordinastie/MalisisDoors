@@ -79,7 +79,7 @@ public class DoorItem extends ItemDoor
 		Block block = getDescriptor(itemStack).getBlock();
 		if (block == null)
 		{
-			MalisisCore.message("Block null");
+			MalisisCore.log.error("Can't place Door : block is null for " + itemStack);
 			return false;
 		}
 
