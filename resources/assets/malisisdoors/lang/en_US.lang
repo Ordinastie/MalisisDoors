@@ -12,6 +12,12 @@ item.rustyHandle.name=Rusty Handle
 item.curtain.name=Curtain
 item.carriage_door.name=Carriage Door
 item.forcefieldItem.name=Forcefield Controller
+item.door_spruce.name=Spruce Door
+item.door_birch.name=Birch Door
+item.door_jungle.name=Jungle Door
+item.door_acacia.name=Acacia Door
+item.door_dark_oak.name=Dark Oak Door
+
 
 tile.player_sensor.name=Player Sensor
 tile.vanishing_block_wood.name=Wooden Vanishing Frame
@@ -34,6 +40,12 @@ tile.curtain.name=Curtain
 tile.carriage_door.name=Carriage Door
 tile.forcefieldDoor.name=Forcefield
 tile.rustyLadder.name=Rusty Ladder
+tile.door_spruce.name=Spruce Door
+tile.door_birch.name=Birch Door
+tile.door_jungle.name=Jungle Door
+tile.door_acacia.name=Acacia Door
+tile.door_dark_oak.name=Dark Oak Door
+
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 

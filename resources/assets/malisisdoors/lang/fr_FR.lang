@@ -10,6 +10,11 @@ item.rustyHandle.name=Poignée Rouillée
 item.curtain.name=Rideau
 item.carriage_door.name=Porte cochère
 item.forcefieldItem.name=Contrôleur de champs de force
+item.door_spruce.name=Porte en bois de sapin
+item.door_birch.name=Porte en bois de bouleau
+item.door_jungle.name=Porte en bois d'acajou
+item.door_acacia.name=Porte en bois d'acacia
+item.door_dark_oak.name=Porte en bois de chêne noir
 
 tile.player_sensor.name=Detecteur de joueur
 tile.vanishing_block_wood.name=Cadre de disparition en bois
@@ -30,6 +35,11 @@ tile.curtain.name=Rideau
 tile.carriage_door.name=Porte cochère
 tile.forcefieldDoor.name=Champs de force
 tile.rustyLadder.name=Echelle rouillée
+tile.door_spruce.name=Porte en bois de sapin
+tile.door_birch.name=Porte en bois de bouleau
+tile.door_jungle.name=Porte en bois d'acajou
+tile.door_acacia.name=Porte en bois d'acacia
+tile.door_dark_oak.name=Porte en bois de chêne noir
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
