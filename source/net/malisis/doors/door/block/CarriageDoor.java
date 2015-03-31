@@ -27,9 +27,13 @@ package net.malisis.doors.door.block;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.BlockPos;
+import net.malisis.core.util.BlockState;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.core.util.chunkcollision.IChunkCollidable;
+import net.malisis.core.util.chunklistener.IBlockListener;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.minecraft.block.ITileEntityProvider;
@@ -49,7 +53,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author Ordinastie
  *
  */
-public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable
+public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener
 {
 	protected IIcon frameIcon;
 	public static int renderId;
@@ -100,6 +104,8 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 		ForgeDirection dir = EntityUtils.getEntityFacing(player);
 		int metadata = Door.dirToInt(dir);
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+
+		ChunkCollision.get().replaceBlocks(world, new BlockState(world, x, y, z));
 	}
 
 	@Override
@@ -133,7 +139,11 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 		//MalisisCore.message(te.getDirection());
 
 		AxisAlignedBB[] aabbs = new AxisAlignedBB[] { defaultBoundingBox.copy() };
-		if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.CHUNKCOLLISION || type == BoundingBoxType.RAYTRACE)
+		if (type == BoundingBoxType.RENDER)
+		{
+			aabbs[0].minZ = -.5F;
+		}
+		else if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.CHUNKCOLLISION || type == BoundingBoxType.RAYTRACE)
 				&& (te.isOpened() || te.isMoving()))
 		{
 			aabbs = new AxisAlignedBB[] { AxisAlignedBB.getBoundingBox(0, 0, -0.5F, 0.5F, 4, 1),
@@ -173,4 +183,24 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 		return renderId;
 	}
 
+	@Override
+	public boolean onBlockSet(World world, BlockPos pos, BlockState state)
+	{
+		if (!state.getBlock().isReplaceable(world, state.getX(), state.getY(), state.getZ()))
+			return true;
+
+		for (AxisAlignedBB aabb : AABBUtils.getCollisionBoundingBoxes(world, new BlockState(pos, this), true))
+		{
+			if (state.getPos().isInside(aabb))
+				return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public boolean onBlockRemoved(World world, BlockPos pos, BlockPos blockPos)
+	{
+		return true;
+	}
 }

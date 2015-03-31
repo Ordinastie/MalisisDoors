@@ -26,10 +26,13 @@ package net.malisis.doors.door.tileentity;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.util.BlockState;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.chunkblock.ChunkBlockHandler;
+import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
+import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
@@ -75,6 +78,23 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 	public boolean isPowered()
 	{
 		return false;
+	}
+
+	@Override
+	public void setDoorState(DoorState newState)
+	{
+		boolean moving = this.moving;
+		BlockState state = null;
+		if (getWorld() != null)
+		{
+			state = new BlockState(xCoord, yCoord, zCoord, getBlockType());
+			ChunkCollision.get().updateBlocks(getWorld(), state);
+		}
+
+		super.setDoorState(newState);
+		if (getWorld() != null && moving && !this.moving)
+			ChunkCollision.get().replaceBlocks(getWorld(), state);
+
 	}
 
 	@Override
