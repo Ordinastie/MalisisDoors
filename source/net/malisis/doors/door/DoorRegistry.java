@@ -30,13 +30,15 @@ import java.util.Map.Entry;
 
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.movement.CurtainMovement;
+import net.malisis.doors.door.movement.DoubleRotateMovement;
+import net.malisis.doors.door.movement.DoubleSlideMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
 import net.malisis.doors.door.movement.ForcefieldMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
-import net.malisis.doors.door.movement.Rotating4WaysMovement;
 import net.malisis.doors.door.movement.RotateAndPlaceMovement;
 import net.malisis.doors.door.movement.RotateAndSlideMovement;
 import net.malisis.doors.door.movement.RotateAroundMovement;
+import net.malisis.doors.door.movement.Rotating4WaysMovement;
 import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.movement.RotatingSplitMovement;
 import net.malisis.doors.door.movement.RustyHatchMovement;
@@ -92,6 +94,10 @@ public class DoorRegistry
 		registerMovement("vanishing_door", new VanishingDoorMovement());
 		registerMovement("spinning_door", new SpinningDoorMovement());
 		registerMovement("spinning_around_door", new SpinningAroundDoorMovement());
+		registerMovement("double_slide_left", new DoubleSlideMovement(false));
+		registerMovement("double_slide_right", new DoubleSlideMovement(true));
+		registerMovement("double_rotate_left", new DoubleRotateMovement(false));
+		registerMovement("double_rotate_right", new DoubleRotateMovement(true));
 
 		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new VanillaDoorSound());

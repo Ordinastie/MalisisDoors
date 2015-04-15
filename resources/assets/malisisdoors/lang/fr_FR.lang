@@ -83,8 +83,12 @@ door_movement.rotate_around=Circulaire
 door_movement.rotate_slide=Tournante et coulissante
 door_movement.rotate_place=Tournante se replace
 door_movement.vanishing_door=Disparaissante
-door_movement.spinning_door=Tourbilonnante
-door_movement.spinning_around_door=Tourbilonnante
+door_movement.spinning_door=Tourbillonnante
+door_movement.spinning_around_door=Vortex
+door_movement.double_slide_left=Coulissante double à gauche
+door_movement.double_slide_right=Coulissante double à droite
+door_movement.double_rotate_left=Tournante double à gauche
+door_movement.double_rotate_right=Tournant double à droite
 
 
 gui.door_factory.tab_properties=Propiétés

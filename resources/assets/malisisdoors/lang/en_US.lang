@@ -90,7 +90,12 @@ door_movement.rotate_slide=Rotating and sliding
 door_movement.rotate_place=Rotating and replacing
 door_movement.vanishing_door=Vanishing
 door_movement.spinning_door=Spinning
-door_movement.spinning_around_door=Spinning around
+door_movement.spinning_around_door=Vortex
+door_movement.double_slide_left=Double sliding left
+door_movement.double_slide_right=Double sliding right
+door_movement.double_rotate_left=Double rotating left
+door_movement.double_rotate_right=Double rotating right
+
 
 
 gui.door_factory.tab_properties=Properties
