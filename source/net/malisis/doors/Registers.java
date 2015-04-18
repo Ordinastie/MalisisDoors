@@ -41,7 +41,6 @@ import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
-import net.malisis.doors.door.block.TrapDoor;
 import net.malisis.doors.door.descriptor.Curtain;
 import net.malisis.doors.door.descriptor.FactoryDoor;
 import net.malisis.doors.door.descriptor.GlassDoor;
@@ -58,7 +57,6 @@ import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
-import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
@@ -67,6 +65,9 @@ import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.item.VanishingBlockItem;
+import net.malisis.doors.trapdoor.descriptor.IronTrapDoor;
+import net.malisis.doors.trapdoor.descriptor.VanillaTrapDoor;
+import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
@@ -80,11 +81,17 @@ public class Registers
 	public static void init()
 	{
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
+		{
 			registerVanillaDoors();
+			registerVanillaTrapDoor();
+			registerVanillaFenceGate();
+		}
 
 		registerWoodDoors();
 
 		registerDoors();
+
+		registerIronTrapDoor();
 
 		registerPlayerSensor();
 
@@ -107,6 +114,7 @@ public class Registers
 		registerForcefieldDoor();
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
+		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
 	}
 
 	private static void registerVanillaDoors()
@@ -115,22 +123,25 @@ public class Registers
 		woodDoor.create();
 		ReplacementTool.replaceVanillaItem(324, "wooden_door", "field_151135_aq", woodDoor.getItem(), Items.wooden_door);
 		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "field_150466_ao", woodDoor.getBlock(), Blocks.wooden_door);
-		doubleDoorWood = woodDoor.getBlock();
 
 		VanillaDoor ironDoor = new VanillaDoor(Material.iron);
 		ironDoor.create();
 		ReplacementTool.replaceVanillaItem(330, "iron_door", "field_151139_aw", ironDoor.getItem(), Items.iron_door);
 		ReplacementTool.replaceVanillaBlock(71, "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
-		doubleDoorIron = ironDoor.getBlock();
+	}
 
-		fenceGate = new FenceGate();
-		trapDoor = new TrapDoor();
+	private static void registerVanillaTrapDoor()
+	{
+		VanillaTrapDoor vanillaTrapDoor = new VanillaTrapDoor();
+		vanillaTrapDoor.create();
+		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", vanillaTrapDoor.getBlock(), Blocks.trapdoor);
+	}
 
+	private static void registerVanillaFenceGate()
+	{
+		FenceGate fenceGate = new FenceGate();
 		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
-		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "field_150415_aT", trapDoor, Blocks.trapdoor);
-
 		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
-		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
 	}
 
 	private static void registerWoodDoors()
@@ -196,6 +207,13 @@ public class Registers
 		curtains = desc.getBlock();
 		curtainsItem = desc.getItem();
 
+	}
+
+	private static void registerIronTrapDoor()
+	{
+		DoorDescriptor desc = new IronTrapDoor().register();
+		ironTrapDoor = desc.getBlock();
+		ironTrapDoorItem = desc.getItem();
 	}
 
 	private static void registerPlayerSensor()

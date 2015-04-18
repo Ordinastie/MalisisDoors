@@ -22,14 +22,16 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.block;
+package net.malisis.doors.trapdoor.block;
 
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.malisis.doors.door.tileentity.TrapDoorTileEntity;
+import net.malisis.doors.trapdoor.TrapDoorDescriptor;
+import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -51,14 +53,25 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 
 	public static int renderId = -1;
 
-	public TrapDoor()
+	private TrapDoorDescriptor descriptor;
+
+	public TrapDoor(TrapDoorDescriptor desc)
 	{
-		super(Material.wood);
+		super(desc.getMaterial());
+
+		this.descriptor = desc;
+
+		setHardness(desc.getHardness());
+		setStepSound(desc.getSoundType());
+		setUnlocalizedName(desc.getName());
+		setTextureName(desc.getTextureName());
+
 		disableStats();
-		setHardness(3.0F);
-		setStepSound(soundTypeWood);
-		setUnlocalizedName("trapdoor");
-		setTextureName("trapdoor");
+	}
+
+	public DoorDescriptor getDescriptor()
+	{
+		return descriptor;
 	}
 
 	/**
@@ -72,6 +85,12 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 
 		DoorTileEntity te = Door.getDoor(world, x, y, z);
 		if (te == null)
+			return true;
+
+		if (te.getDescriptor() == null)
+			return true;
+
+		if (te.getDescriptor().requireRedstone())
 			return true;
 
 		te.openOrCloseDoor();
@@ -136,9 +155,11 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 	//#end BoudingBox
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
+	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-		return new TrapDoorTileEntity();
+		TrapDoorTileEntity te = new TrapDoorTileEntity();
+		te.setDescriptor(descriptor);
+		return te;
 	}
 
 	/**

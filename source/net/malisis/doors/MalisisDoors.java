@@ -83,15 +83,11 @@ public class MalisisDoors implements IMalisisMod
 
 	public static class Blocks
 	{
-		public static Block doubleDoorWood;
-		public static Block doubleDoorIron;
 		public static Block doorAcacia;
 		public static Block doorBirch;
 		public static Block doorDarkOak;
 		public static Block doorJungle;
 		public static Block doorSpruce;
-		public static Block fenceGate;
-		public static Block trapDoor;
 		public static Block woodSlidingDoor;
 		public static Block ironSlidingDoor;
 		public static PlayerSensor playerSensor;
@@ -111,6 +107,7 @@ public class MalisisDoors implements IMalisisMod
 		public static CarriageDoor carriageDoor;
 		public static ForcefieldDoor forcefieldDoor;
 		public static RustyLadder rustyLadder;
+		public static Block ironTrapDoor;
 	}
 
 	public static class Items
@@ -131,6 +128,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Item curtainsItem;
 		public static Item carriageDoorItem;
 		public static ForcefieldItem forcefieldItem;
+		public static Item ironTrapDoorItem;
 	}
 
 }

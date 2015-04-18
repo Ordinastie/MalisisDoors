@@ -45,31 +45,31 @@ import cpw.mods.fml.common.registry.GameRegistry;
  */
 public class DoorDescriptor
 {
-	private Block block;
-	private Item item;
+	protected Block block;
+	protected Item item;
 
 	//block
-	private Material material = Material.wood;
-	private float hardness = 3.0F;
-	private SoundType soundType = Block.soundTypeWood;
-	private String name;
-	private String textureName;
-	private int autoCloseTime = 0;
+	protected Material material = Material.wood;
+	protected float hardness = 3.0F;
+	protected SoundType soundType = Block.soundTypeWood;
+	protected String name;
+	protected String textureName;
+	protected int autoCloseTime = 0;
 
 	//te
-	private IDoorMovement movement;
-	private IDoorSound sound;
-	private int openingTime = 6;
-	private boolean doubleDoor = true;
-	private boolean requireRedstone = false;
+	protected IDoorMovement movement;
+	protected IDoorSound sound;
+	protected int openingTime = 6;
+	protected boolean doubleDoor = true;
+	protected boolean requireRedstone = false;
 
 	//item
-	private CreativeTabs tab;
-	private int maxStackSize = 1;
+	protected CreativeTabs tab;
+	protected int maxStackSize = 1;
 
 	//recipe
-	private Object[] recipe;
-	private int numCrafted = 1;
+	protected Object[] recipe;
+	protected int numCrafted = 1;
 
 	public DoorDescriptor()
 	{
@@ -229,19 +229,23 @@ public class DoorDescriptor
 		this.recipe = recipe;
 	}
 
-	public int getNumCrafted() {
+	public int getNumCrafted()
+	{
 		return numCrafted;
 	}
 
-	public void setNumCrafted(int numCrafted) {
+	public void setNumCrafted(int numCrafted)
+	{
 		this.numCrafted = numCrafted;
 	}
 
-	public int getMaxStackSize() {
+	public int getMaxStackSize()
+	{
 		return maxStackSize;
 	}
 
-	public void setMaxStackSize(int maxStackSize) {
+	public void setMaxStackSize(int maxStackSize)
+	{
 		this.maxStackSize = maxStackSize;
 	}
 

@@ -48,7 +48,6 @@ import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
 import net.malisis.doors.door.movement.SlidingUpDoorMovement;
 import net.malisis.doors.door.movement.SpinningAroundDoorMovement;
 import net.malisis.doors.door.movement.SpinningDoorMovement;
-import net.malisis.doors.door.movement.TrapDoorMovement;
 import net.malisis.doors.door.movement.VanishingDoorMovement;
 import net.malisis.doors.door.movement.VaultDoorMovement;
 import net.malisis.doors.door.sound.CarriageDoorSound;
@@ -60,6 +59,7 @@ import net.malisis.doors.door.sound.RustyHatchSound;
 import net.malisis.doors.door.sound.ShojiDoorSound;
 import net.malisis.doors.door.sound.SilentDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.doors.trapdoor.movement.TrapDoorMovement;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;

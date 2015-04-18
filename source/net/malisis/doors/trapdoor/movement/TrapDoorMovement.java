@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.movement;
+package net.malisis.doors.trapdoor.movement;
 
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
@@ -32,8 +32,9 @@ import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.block.TrapDoor;
+import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.trapdoor.block.TrapDoor;
 import net.minecraft.util.AxisAlignedBB;
 
 /**

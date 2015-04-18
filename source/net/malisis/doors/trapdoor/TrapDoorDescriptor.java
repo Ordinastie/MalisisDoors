@@ -22,36 +22,35 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.tileentity;
+package net.malisis.doors.trapdoor;
 
 import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.movement.TrapDoorMovement;
-import net.minecraft.util.AxisAlignedBB;
+import net.malisis.doors.trapdoor.block.TrapDoor;
+import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
-public class TrapDoorTileEntity extends DoorTileEntity
+public class TrapDoorDescriptor extends DoorDescriptor
 {
-	public TrapDoorTileEntity()
+	@Override
+	public void create()
 	{
-		DoorDescriptor descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
-		setDescriptor(descriptor);
+		block = new TrapDoor(this);
 	}
 
 	@Override
-	public boolean isTopBlock(int x, int y, int z)
+	public DoorDescriptor register()
 	{
-		return (getBlockMetadata() & Door.FLAG_TOPBLOCK) != 0;
-	}
+		if (block == null)
+			create();
 
-	@Override
-	public AxisAlignedBB getRenderBoundingBox()
-	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+		GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
+		if (recipe != null)
+			GameRegistry.addRecipe(new ItemStack(block, numCrafted), recipe);
+
+		return this;
 	}
 }

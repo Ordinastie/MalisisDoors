@@ -22,20 +22,19 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.door.renderer;
+package net.malisis.doors.trapdoor.renderer;
 
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.block.TrapDoor;
-import net.minecraft.block.Block;
+import net.malisis.doors.door.renderer.DoorRenderer;
+import net.malisis.doors.trapdoor.block.TrapDoor;
 import net.minecraft.client.renderer.DestroyBlockProgress;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -79,6 +78,8 @@ public class TrapDoorRenderer extends DoorRenderer
 
 		if (topBlock)
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
+		if (renderType == RenderType.ISBRH_INVENTORY)
+			model.translate(0, -0.5F, 0);
 	}
 
 	@Override
@@ -106,12 +107,6 @@ public class TrapDoorRenderer extends DoorRenderer
 	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
 	{
 		return dbp.getPartialBlockX() == x && dbp.getPartialBlockY() == y && dbp.getPartialBlockZ() == z;
-	}
-
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
-		renderer.renderBlockAsItem(ReplacementTool.orignalBlock(block), 0, 1);
 	}
 
 	@Override
