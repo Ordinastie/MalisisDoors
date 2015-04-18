@@ -31,6 +31,7 @@ import net.malisis.doors.trapdoor.TrapDoorDescriptor;
 import net.malisis.doors.trapdoor.movement.TrapDoorMovement;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -55,5 +56,8 @@ public class IronTrapDoor extends TrapDoorDescriptor
 
 		//item
 		setTab(MalisisDoors.tab);
+
+		//recipe
+		setRecipe("AAA", "AAA", 'A', Items.iron_ingot);
 	}
 }
