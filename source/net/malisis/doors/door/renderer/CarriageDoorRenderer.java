@@ -125,6 +125,8 @@ public class CarriageDoorRenderer extends MalisisRenderer
 			model.rotate(-90, 0, 1, 0, 0, 0, 0);
 		else if (direction == ForgeDirection.WEST)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
+
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 	}
 
 	@Override
