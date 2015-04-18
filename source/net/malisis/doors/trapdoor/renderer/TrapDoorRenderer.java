@@ -31,6 +31,7 @@ import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.trapdoor.block.TrapDoor;
@@ -44,6 +45,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TrapDoorRenderer extends DoorRenderer
 {
 	RenderParameters rpTop;
+	MalisisModel trapDoorModel;
+	MalisisModel slidingTrapDoorModel;
 
 	@Override
 	protected void initialize()
@@ -52,12 +55,19 @@ public class TrapDoorRenderer extends DoorRenderer
 		s.setSize(1, Door.DOOR_WIDTH, 1);
 		s.interpolateUV();
 
-		model = new MalisisModel();
-		model.addShape("shape", s);
-
-		model.storeState();
+		trapDoorModel = new MalisisModel();
+		trapDoorModel.addShape("shape", s);
+		trapDoorModel.storeState();
 
 		s.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
+
+		s = new Cube();
+		s.setSize(1, Door.DOOR_WIDTH / 2, 1);
+		s.interpolateUV();
+
+		slidingTrapDoorModel = new MalisisModel();
+		slidingTrapDoorModel.addShape("shape", s);
+		slidingTrapDoorModel.storeState();
 
 		initParams();
 	}
@@ -70,6 +80,7 @@ public class TrapDoorRenderer extends DoorRenderer
 
 		if (renderType == RenderType.ISBRH_INVENTORY)
 		{
+			model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
 			model.resetState();
 			model.translate(0, 0.5F, 0);
 			model.render(this, rp);
@@ -82,6 +93,7 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	protected void setup()
 	{
+		model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
 		model.resetState();
 
 		float angle = 0;

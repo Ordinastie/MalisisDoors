@@ -66,6 +66,7 @@ import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.item.VanishingBlockItem;
 import net.malisis.doors.trapdoor.descriptor.IronTrapDoor;
+import net.malisis.doors.trapdoor.descriptor.SlidingTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.VanillaTrapDoor;
 import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.material.Material;
@@ -91,7 +92,7 @@ public class Registers
 
 		registerDoors();
 
-		registerIronTrapDoor();
+		registerTrapDoors();
 
 		registerPlayerSensor();
 
@@ -209,11 +210,17 @@ public class Registers
 
 	}
 
-	private static void registerIronTrapDoor()
+	private static void registerTrapDoors()
 	{
-		DoorDescriptor desc = new IronTrapDoor().register();
+		DoorDescriptor desc;
+
+		desc = new IronTrapDoor().register();
 		ironTrapDoor = desc.getBlock();
 		ironTrapDoorItem = desc.getItem();
+
+		desc = new SlidingTrapDoor().register();
+		slidingTrapDoor = desc.getBlock();
+		slidingTrapDoorItem = desc.getItem();
 	}
 
 	private static void registerPlayerSensor()

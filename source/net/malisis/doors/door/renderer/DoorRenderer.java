@@ -123,7 +123,6 @@ public class DoorRenderer extends MalisisRenderer
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
-		initialize();
 		setup();
 
 		if (tileEntity.getMovement() != null)

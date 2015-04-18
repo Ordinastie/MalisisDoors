@@ -44,6 +44,7 @@ tile.door_jungle.name=Porte en bois d'acajou
 tile.door_acacia.name=Porte en bois d'acacia
 tile.door_dark_oak.name=Porte en bois de chêne noir
 tile.iron_tropdoor.name=Trappe en fer
+tile.sliding_trapdoor.name=Trappe coulissante
 
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version

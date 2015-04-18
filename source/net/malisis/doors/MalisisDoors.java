@@ -108,6 +108,7 @@ public class MalisisDoors implements IMalisisMod
 		public static ForcefieldDoor forcefieldDoor;
 		public static RustyLadder rustyLadder;
 		public static Block ironTrapDoor;
+		public static Block slidingTrapDoor;
 	}
 
 	public static class Items
@@ -129,6 +130,7 @@ public class MalisisDoors implements IMalisisMod
 		public static Item carriageDoorItem;
 		public static ForcefieldItem forcefieldItem;
 		public static Item ironTrapDoorItem;
+		public static Item slidingTrapDoorItem;
 	}
 
 }
