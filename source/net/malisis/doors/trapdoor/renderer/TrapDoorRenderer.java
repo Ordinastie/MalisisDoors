@@ -63,6 +63,23 @@ public class TrapDoorRenderer extends DoorRenderer
 	}
 
 	@Override
+	public void render()
+	{
+		if (renderType == RenderType.ISBRH_WORLD)
+			return;
+
+		if (renderType == RenderType.ISBRH_INVENTORY)
+		{
+			model.resetState();
+			model.translate(0, 0.5F, 0);
+			model.render(this, rp);
+			return;
+		}
+
+		super.render();
+	}
+
+	@Override
 	protected void setup()
 	{
 		model.resetState();
@@ -78,8 +95,8 @@ public class TrapDoorRenderer extends DoorRenderer
 
 		if (topBlock)
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
-		if (renderType == RenderType.ISBRH_INVENTORY)
-			model.translate(0, -0.5F, 0);
+
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 	}
 
 	@Override
