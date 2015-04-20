@@ -208,4 +208,15 @@ public class CustomDoor extends Door
 
 		return true;
 	}
+
+	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	{
+		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
+		if (te == null || te.getFrame() == null)
+			return 0;
+
+		return Math.max(Math.max(te.getFrame().getLightValue(), te.getTopMaterial().getLightValue()), te.getBottomMaterial()
+				.getLightValue());
+	}
 }
