@@ -58,6 +58,6 @@ public class IronTrapDoor extends TrapDoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe("AAA", "AAA", 'A', Items.iron_ingot);
+		setRecipe("AA", "AA", 'A', Items.iron_ingot);
 	}
 }
