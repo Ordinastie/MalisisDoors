@@ -83,6 +83,7 @@ public class RustyHatchRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 		if (block == MalisisDoors.Blocks.rustyLadder)
 		{
 			ladder.resetState();
