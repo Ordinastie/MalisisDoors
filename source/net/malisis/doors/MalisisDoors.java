@@ -4,6 +4,7 @@ import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.configuration.Settings;
 import net.malisis.core.network.MalisisNetwork;
+import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
@@ -15,20 +16,21 @@ import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.item.ForcefieldItem;
-import net.malisis.doors.proxy.CommonProxy;
+import net.malisis.doors.proxy.IProxy;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore")
 public class MalisisDoors implements IMalisisMod
 {
-	@SidedProxy(clientSide = "net.malisis.doors.proxy.ClientProxy", serverSide = "net.malisis.doors.proxy.CommonProxy")
-	public static CommonProxy proxy;
+	@SidedProxy(clientSide = "net.malisis.doors.proxy.ClientProxy", serverSide = "net.malisis.doors.proxy.ServerProxy")
+	public static IProxy proxy;
 
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
@@ -39,6 +41,7 @@ public class MalisisDoors implements IMalisisMod
 	public static MalisisDoorsSettings settings;
 
 	public static CreativeTabs tab = new MalisisDoorsTab();
+	public static MalisisFont digitalFont;
 
 	public MalisisDoors()
 	{
@@ -79,6 +82,12 @@ public class MalisisDoors implements IMalisisMod
 		Registers.init();
 
 		proxy.initRenderers();
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		proxy.initFonts();
 	}
 
 	public static class Blocks
