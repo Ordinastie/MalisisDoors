@@ -83,6 +83,12 @@ public class RustyHatchRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
+		if (renderType == RenderType.ITEM_INVENTORY)
+		{
+			renderItem();
+			return;
+		}
+
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
 		if (block == MalisisDoors.Blocks.rustyLadder)
 		{
@@ -108,12 +114,6 @@ public class RustyHatchRenderer extends MalisisRenderer
 			ladder.translate(-1, 0, 0);
 
 			drawShape(ladder, rp);
-			return;
-		}
-
-		if (renderType == RenderType.ITEM_INVENTORY)
-		{
-			renderItem();
 			return;
 		}
 
