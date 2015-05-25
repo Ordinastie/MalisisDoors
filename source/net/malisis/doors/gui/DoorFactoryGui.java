@@ -63,12 +63,12 @@ import com.google.common.eventbus.Subscribe;
 public class DoorFactoryGui extends MalisisGui
 {
 	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorFactoryTabIcons.png");
-	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 64);
+	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 128);
 	public static IIcon propIcon = tabTexture.getIcon(0, 0, 64, 64);
 	public static IIcon matIcon = tabTexture.getIcon(64, 0, 64, 64);
+	public static IIcon dcIcon = tabTexture.getIcon(0, 64, 64, 64);
 
 	private DoorFactoryTileEntity tileEntity;
-	private UITab firstTab;
 	private UISelect<String> selDoorMovement;
 	private UITextField tfOpenTime;
 	private UITextField tfAutoCloseTime;
@@ -80,8 +80,9 @@ public class DoorFactoryGui extends MalisisGui
 	private UIContainer contCreate;
 	private UIContainer contEdit;
 	private UIButton btnCreate;
+	private Digicode digicode;
 
-	private static boolean firstTabActive = true;
+	private static String activeTab;
 
 	public DoorFactoryGui(DoorFactoryTileEntity te, MalisisInventoryContainer container)
 	{
@@ -97,18 +98,23 @@ public class DoorFactoryGui extends MalisisGui
 
 		UIContainer propContainer = getPropertiesContainer();
 		UIContainer matContainer = getMaterialsContainer();
+		UIContainer dcContainer = getDigicodeContainer();
 
 		UITabGroup tabGroup = new UITabGroup(this, ComponentPosition.LEFT).setPosition(0, 10);
 
 		int a = 16;
-		firstTab = new UITab(this, new UIImage(this, tabTexture, propIcon).setSize(a, a)).setTooltip(
-				new UITooltip(this, "gui.door_factory.tab_properties")).register(this);
-		UITab tab2 = new UITab(this, new UIImage(this, tabTexture, matIcon).setSize(a, a)).setTooltip(
-				new UITooltip(this, "gui.door_factory.tab_materials")).register(this);
-		tabGroup.addTab(firstTab, propContainer);
-		tabGroup.addTab(tab2, matContainer);
+		UITab tabProp = new UITab(this, new UIImage(this, tabTexture, propIcon).setSize(a, a)).setName("tab_prop");
+		tabProp.setTooltip(new UITooltip(this, "gui.door_factory.tab_properties")).register(this);
+		UITab tabMat = new UITab(this, new UIImage(this, tabTexture, matIcon).setSize(a, a)).setName("tab_mat");
+		tabMat.setTooltip(new UITooltip(this, "gui.door_factory.tab_materials")).register(this);
+		UITab tabDc = new UITab(this, new UIImage(this, tabTexture, dcIcon).setSize(a, a)).setName("tab_dc");
+		tabDc.setTooltip(new UITooltip(this, "gui.door_factory.tab_digicode")).register(this);
 
-		tabGroup.setActiveTab(firstTabActive ? firstTab : tab2);
+		tabGroup.addTab(tabProp, propContainer);
+		tabGroup.addTab(tabMat, matContainer);
+		tabGroup.addTab(tabDc, dcContainer);
+
+		tabGroup.setActiveTab(activeTab != null ? activeTab : "tab_prop");
 		tabGroup.attachTo(window, false);
 
 		btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 98, Anchor.CENTER).register(this);
@@ -120,6 +126,7 @@ public class DoorFactoryGui extends MalisisGui
 
 		window.add(propContainer);
 		window.add(matContainer);
+		window.add(dcContainer);
 
 		window.add(btnCreate);
 		window.add(outputSlot);
@@ -197,6 +204,16 @@ public class DoorFactoryGui extends MalisisGui
 		matContainer.add(contEdit);
 
 		return matContainer;
+	}
+
+	private UIContainer getDigicodeContainer()
+	{
+		UIContainer dcContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
+
+		digicode = new Digicode(this).setAnchor(Anchor.CENTER).register(this);
+		dcContainer.add(digicode);
+
+		return dcContainer;
 	}
 
 	@Override
@@ -279,7 +296,13 @@ public class DoorFactoryGui extends MalisisGui
 			//parsing failed, replace the value of the textfield by the value already in the TE
 			//tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		}
+	}
 
+	@Subscribe
+	public void onDigicodeChange(Digicode.CodeChangeEvent event)
+	{
+		tileEntity.setCode(event.getCode());
+		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
 
 	@Subscribe
@@ -292,7 +315,14 @@ public class DoorFactoryGui extends MalisisGui
 	public void onTabActivation(ActiveStateChange<UITab> event)
 	{
 		if (event.getState())
-			firstTabActive = event.getComponent() == firstTab;
+		{
+			activeTab = event.getComponent().getName();
+
+			if ("tab_dc".equals(activeTab))
+				registerKeyListener(digicode);
+			else
+				unregisterKeyListener(digicode);
+		}
 	}
 
 }

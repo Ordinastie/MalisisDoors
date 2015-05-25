@@ -34,6 +34,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.malisis.doors.gui.DigicodeGui;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
@@ -186,14 +187,21 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
 	{
-		if (world.isRemote)
-			return true;
-
 		DoorTileEntity te = getDoor(world, x, y, z);
 		if (te == null)
 			return true;
 
 		if (te.getDescriptor() == null)
+			return true;
+
+		if (te.getDescriptor().hasCode() && !te.isOpened())
+		{
+			if (world.isRemote)
+				new DigicodeGui(te).display();
+			return true;
+		}
+
+		if (world.isRemote)
 			return true;
 
 		if (te.getDescriptor().requireRedstone())
@@ -215,6 +223,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
 		if (te == null)
+			return;
+
+		if (te.getDescriptor().hasCode())
 			return;
 
 		if (te.getDescriptor().requireRedstone())
@@ -259,6 +270,9 @@ public class Door extends BlockDoor implements ITileEntityProvider
 			{
 				DoorTileEntity te = getDoor(world, x, y, z);
 				if (te == null)
+					return;
+
+				if (te.getDescriptor() != null && te.getDescriptor().hasCode())
 					return;
 
 				boolean powered = te.isPowered();

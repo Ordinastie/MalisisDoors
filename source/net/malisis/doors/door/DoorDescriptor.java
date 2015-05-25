@@ -37,6 +37,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import org.apache.commons.lang3.StringUtils;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
@@ -70,6 +73,9 @@ public class DoorDescriptor
 	//recipe
 	protected Object[] recipe;
 	protected int numCrafted = 1;
+
+	//digicode
+	protected String code = null;
 
 	public DoorDescriptor()
 	{
@@ -249,6 +255,21 @@ public class DoorDescriptor
 		this.maxStackSize = maxStackSize;
 	}
 
+	public void setCode(String code)
+	{
+		this.code = code;
+	}
+
+	public String getCode()
+	{
+		return code;
+	}
+
+	public boolean hasCode()
+	{
+		return !StringUtils.isEmpty(code);
+	}
+
 	//#end Getters/Setters
 
 	public void readNBT(NBTTagCompound nbt)
@@ -275,6 +296,8 @@ public class DoorDescriptor
 			setDoubleDoor(nbt.getBoolean("doubleDoor"));
 		if (nbt.hasKey("autoCloseTime"))
 			setAutoCloseTime(nbt.getInteger("autoCloseTime"));
+		if (nbt.hasKey("code"))
+			setCode(nbt.getString("code"));
 	}
 
 	public void writeNBT(NBTTagCompound nbt)
@@ -289,7 +312,10 @@ public class DoorDescriptor
 		nbt.setBoolean("redstone", requireRedstone());
 		nbt.setBoolean("doubleDoor", isDoubleDoor());
 		nbt.setInteger("autoCloseTime", getAutoCloseTime());
-
+		if (hasCode())
+			nbt.setString("code", getCode());
+		else
+			nbt.removeTag("code");
 	}
 
 	public void set(Block block, Item item)

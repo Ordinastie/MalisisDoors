@@ -63,6 +63,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	private int autoCloseTime = 0;
 	private boolean requireRedstone = false;
 	private boolean doubleDoor = true;
+	private String code;
 
 	private boolean isCreate = true;
 
@@ -155,6 +156,16 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		this.doubleDoor = doubleDoor;
 	}
 
+	public String getCode()
+	{
+		return code;
+	}
+
+	public void setCode(String code)
+	{
+		this.code = code;
+	}
+
 	public void createDoor()
 	{
 		if (getWorld().isRemote)
@@ -226,6 +237,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		desc.setAutoCloseTime(getAutoCloseTime());
 		desc.setRequireRedstone(requireRedstone());
 		desc.setDoubleDoor(isDoubleDoor());
+		desc.setCode(getCode());
 
 		return desc;
 	}

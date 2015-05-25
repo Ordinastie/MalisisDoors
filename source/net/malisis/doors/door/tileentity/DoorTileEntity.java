@@ -313,8 +313,8 @@ public class DoorTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		if (descriptor == null)
-			descriptor = new DoorDescriptor(nbt);
+		//if (descriptor == null)
+		descriptor = new DoorDescriptor(nbt);
 		setDoorState(DoorState.values()[nbt.getInteger("state")]);
 	}
 
