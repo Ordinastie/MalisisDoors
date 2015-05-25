@@ -2,6 +2,8 @@ package net.malisis.doors.proxy;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
+import net.malisis.core.renderer.font.MalisisFont;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
@@ -31,8 +33,9 @@ import net.malisis.doors.trapdoor.block.TrapDoor;
 import net.malisis.doors.trapdoor.renderer.TrapDoorRenderer;
 import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
-public class ClientProxy extends CommonProxy
+public class ClientProxy implements IProxy
 {
 	@Override
 	public void initRenderers()
@@ -84,5 +87,12 @@ public class ClientProxy extends CommonProxy
 		//forcefield doors
 		ForcefieldRenderer ffr = new ForcefieldRenderer();
 		ffr.registerFor(ForcefieldTileEntity.class);
+	}
+
+	@Override
+	public void initFonts()
+	{
+		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid + ":fonts/digital-7 (mono).ttf");
+		MalisisDoors.digitalFont = new MalisisFont(rl);
 	}
 }
