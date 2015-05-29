@@ -99,6 +99,7 @@ door_movement.double_rotate_right=Tournant double à droite
 
 gui.door_factory.tab_properties=Propiétés
 gui.door_factory.tab_materials=Matériaux
+gui.door_factory.tab_digicode=Digicode
 gui.door_factory.rb_create=Créer
 gui.door_factory.rb_edit=Modifier
 gui.door_factory.door_movement=Mouvement

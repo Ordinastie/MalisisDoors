@@ -102,6 +102,7 @@ door_movement.double_rotate_right=Double rotating right
 
 gui.door_factory.tab_properties=Properties
 gui.door_factory.tab_materials=Materials
+gui.door_factory.tab_digicode=Digicode
 gui.door_factory.rb_create=Create
 gui.door_factory.rb_edit=Modify
 gui.door_factory.door_movement=Movement
