@@ -231,13 +231,19 @@ public class ProxyAccess
 		@Override
 		public WorldInfo getWorldInfo()
 		{
+			if (original != null)
+				return original.getWorldInfo();
 			// called from within super(), so we can't use original
 			return tmpCache.getWorldInfo();
+
 		}
 
 		@Override
 		public long getSeed()
 		{
+			if (original != null)
+				return original.getSeed();
+
 			// called from within super(), so we can't use original
 			return tmpCache.getSeed();
 		}
