@@ -75,6 +75,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Registers
@@ -230,7 +231,8 @@ public class Registers
 		GameRegistry.registerBlock(playerSensor, playerSensor.getUnlocalizedName().substring(5));
 
 		// Sensor recipe
-		GameRegistry.addRecipe(new ItemStack(playerSensor), "ABA", "CCC", 'A', Items.iron_ingot, 'B', Items.redstone, 'C', Blocks.glass);
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(playerSensor), "ABA", "CCC", 'A', Items.iron_ingot, 'B', Items.redstone,
+				'C', "blockGlass"));
 	}
 
 	private static void registerVanishingBlock()
