@@ -36,7 +36,7 @@ import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class ShojiDoor extends DoorDescriptor
 {
@@ -59,6 +59,6 @@ public class ShojiDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe(new Object[] { "AB", "AB", "AB", 'A', Blocks.planks, 'B', Items.paper });
+		setRecipe("AB", "AB", "AB", 'A', Blocks.planks, 'B', Items.paper);
 	}
 }

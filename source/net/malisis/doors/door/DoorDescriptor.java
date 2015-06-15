@@ -37,6 +37,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -338,7 +339,7 @@ public class DoorDescriptor
 		GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
 		GameRegistry.registerItem(item, item.getUnlocalizedName());
 		if (recipe != null)
-			GameRegistry.addRecipe(new ItemStack(item, numCrafted), recipe);
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
 
 		return this;
 	}

@@ -232,7 +232,7 @@ public class Registers
 
 		// Sensor recipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(playerSensor), "ABA", "CCC", 'A', Items.iron_ingot, 'B', Items.redstone,
-				'C', "blockGlass"));
+				'C', "blockGlassColorless"));
 	}
 
 	private static void registerVanishingBlock()

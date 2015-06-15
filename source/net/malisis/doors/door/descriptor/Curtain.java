@@ -58,7 +58,7 @@ public class Curtain extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe(new Object[] { "AA", "AA", "AA", 'A', Blocks.wool });
+		setRecipe("AA", "AA", "AA", 'A', Blocks.wool);
 	}
 
 }

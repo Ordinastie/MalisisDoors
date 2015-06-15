@@ -35,7 +35,7 @@ import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class LaboratoryDoor extends DoorDescriptor
 {
@@ -58,6 +58,6 @@ public class LaboratoryDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe(new Object[] { "AA", "BB", "BB", 'A', Items.gold_ingot, 'B', Items.iron_ingot });
+		setRecipe("AA", "BB", "BB", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
 	}
 }

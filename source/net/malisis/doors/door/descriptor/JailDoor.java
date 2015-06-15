@@ -35,7 +35,7 @@ import net.minecraft.init.Blocks;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class JailDoor extends DoorDescriptor
 {
@@ -58,6 +58,6 @@ public class JailDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe(new Object[] { "AA", "AA", "AA", 'A', Blocks.iron_bars });
+		setRecipe("AA", "AA", "AA", 'A', Blocks.iron_bars);
 	}
 }

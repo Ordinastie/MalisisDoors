@@ -36,7 +36,7 @@ import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class GlassDoor extends DoorDescriptor
 {
@@ -59,6 +59,6 @@ public class GlassDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe(new Object[] { "AB", "AB", "AB", 'A', wood ? Blocks.planks : Items.iron_ingot, 'B', Blocks.glass });
+		setRecipe("AB", "AB", "AB", 'A', wood ? Blocks.planks : Items.iron_ingot, 'B', "blockGlassColorless");
 	}
 }
