@@ -30,6 +30,7 @@ import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.sound.IDoorSound;
 import net.malisis.doors.door.sound.VanillaDoorSound;
+import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.Block.SoundType;
 import net.minecraft.block.material.Material;
@@ -61,6 +62,7 @@ public class DoorDescriptor
 	protected int autoCloseTime = 0;
 
 	//te
+	protected Class<? extends DoorTileEntity> tileEntityClass = DoorTileEntity.class;
 	protected IDoorMovement movement;
 	protected IDoorSound sound;
 	protected int openingTime = 6;
@@ -154,6 +156,16 @@ public class DoorDescriptor
 	public void setTextureName(String textureName)
 	{
 		this.textureName = textureName;
+	}
+
+	public Class<? extends DoorTileEntity> getTileEntityClass()
+	{
+		return tileEntityClass;
+	}
+
+	public void setTileEntityClass(Class<? extends DoorTileEntity> clazz)
+	{
+		this.tileEntityClass = clazz;
 	}
 
 	public IDoorMovement getMovement()

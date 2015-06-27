@@ -42,6 +42,7 @@ import net.malisis.doors.door.movement.Rotating4WaysMovement;
 import net.malisis.doors.door.movement.RotatingDoorMovement;
 import net.malisis.doors.door.movement.RotatingSplitMovement;
 import net.malisis.doors.door.movement.RustyHatchMovement;
+import net.malisis.doors.door.movement.SaloonDoorMovement;
 import net.malisis.doors.door.movement.Sliding4WaysMovement;
 import net.malisis.doors.door.movement.SlidingDoorMovement;
 import net.malisis.doors.door.movement.SlidingSplitDoorMovement;
@@ -100,6 +101,7 @@ public class DoorRegistry
 		registerMovement("double_rotate_left", new DoubleRotateMovement(false));
 		registerMovement("double_rotate_right", new DoubleRotateMovement(true));
 		registerMovement("sliding_trapdoor", new SlidingTrapDoorMovement());
+		registerMovement("saloon_door", new SaloonDoorMovement());
 
 		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new VanillaDoorSound());

@@ -17,6 +17,7 @@ item.door_birch.name=Birch Door
 item.door_jungle.name=Jungle Door
 item.door_acacia.name=Acacia Door
 item.door_dark_oak.name=Dark Oak Door
+item.saloon_door=Saloon Door
 
 
 tile.player_sensor.name=Player Sensor
@@ -47,7 +48,7 @@ tile.door_acacia.name=Acacia Door
 tile.door_dark_oak.name=Dark Oak Door
 tile.iron_trapdoor.name=Iron Trapdoor
 tile.sliding_trapdoor.name=Sliding Trapdoor
-
+tile.saloon_door=Saloon Door
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 

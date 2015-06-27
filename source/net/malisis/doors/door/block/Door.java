@@ -383,7 +383,15 @@ public class Door extends BlockDoor implements ITileEntityProvider
 		if ((metadata & FLAG_TOPBLOCK) != 0)
 			return null;
 
-		DoorTileEntity te = new DoorTileEntity();
+		DoorTileEntity te;
+		try
+		{
+			te = descriptor.getTileEntityClass().newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			te = new DoorTileEntity();
+		}
 		te.setDescriptor(descriptor);
 		return te;
 	}

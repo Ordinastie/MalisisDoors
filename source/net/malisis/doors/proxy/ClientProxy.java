@@ -17,12 +17,14 @@ import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
 import net.malisis.doors.door.renderer.ForcefieldRenderer;
 import net.malisis.doors.door.renderer.RustyHatchRenderer;
+import net.malisis.doors.door.renderer.SaloonDoorRenderer;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
+import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.renderer.GarageDoorRenderer;
@@ -87,6 +89,10 @@ public class ClientProxy implements IProxy
 		//forcefield doors
 		ForcefieldRenderer ffr = new ForcefieldRenderer();
 		ffr.registerFor(ForcefieldTileEntity.class);
+
+		//saloon door
+		SaloonDoorRenderer sdr = new SaloonDoorRenderer();
+		sdr.registerFor(SaloonDoorTileEntity.class);
 	}
 
 	@Override

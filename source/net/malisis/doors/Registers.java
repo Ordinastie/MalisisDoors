@@ -41,15 +41,18 @@ import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
+import net.malisis.doors.door.block.SaloonDoorBlock;
 import net.malisis.doors.door.descriptor.Curtain;
 import net.malisis.doors.door.descriptor.FactoryDoor;
 import net.malisis.doors.door.descriptor.GlassDoor;
 import net.malisis.doors.door.descriptor.JailDoor;
 import net.malisis.doors.door.descriptor.LaboratoryDoor;
+import net.malisis.doors.door.descriptor.SaloonDoor;
 import net.malisis.doors.door.descriptor.ShojiDoor;
 import net.malisis.doors.door.descriptor.VanillaDoor;
 import net.malisis.doors.door.descriptor.WoodDoor;
 import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.item.DoorItem;
 import net.malisis.doors.door.item.ForcefieldItem;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
@@ -57,6 +60,7 @@ import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
+import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
 import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
@@ -92,6 +96,8 @@ public class Registers
 		registerWoodDoors();
 
 		registerDoors();
+
+		registerSaloonDoor();
 
 		registerTrapDoors();
 
@@ -208,7 +214,18 @@ public class Registers
 		desc = new Curtain().register();
 		curtains = desc.getBlock();
 		curtainsItem = desc.getItem();
+	}
 
+	private static void registerSaloonDoor()
+	{
+		DoorDescriptor desc = new SaloonDoor();
+		saloonDoor = new SaloonDoorBlock(desc);
+		saloonDoorItem = new DoorItem(desc);
+
+		desc.set(saloonDoor, saloonDoorItem);
+		desc.register();
+
+		GameRegistry.registerTileEntity(SaloonDoorTileEntity.class, "saloonDoorTileEntity");
 	}
 
 	private static void registerTrapDoors()
