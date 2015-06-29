@@ -31,6 +31,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,37 +44,21 @@ public class RotateAroundMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = te.getDirection();
-		boolean opened = te.isOpened();
-		boolean reversed = te.isReversed();
-
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if ((dir == DIR_NORTH && !opened) || (dir == DIR_WEST && opened && !reversed) || (dir == DIR_EAST && opened && reversed))
-			Z = DOOR_WIDTH;
-		else if ((dir == DIR_WEST && !opened) || (dir == DIR_SOUTH && opened && !reversed) || (dir == DIR_NORTH && opened && reversed))
-			X = DOOR_WIDTH;
-		else if ((dir == DIR_EAST && !opened) || (dir == DIR_NORTH && opened && !reversed) || (dir == DIR_SOUTH && opened && reversed))
-			x = 1 - DOOR_WIDTH;
-		else if ((dir == DIR_SOUTH && !opened) || (dir == DIR_EAST && opened && !reversed) || (dir == DIR_WEST && opened && reversed))
-			z = 1 - DOOR_WIDTH;
-
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
 		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
-				Y++;
+				aabb.maxY++;
 			else
-				y--;
+				aabb.minY--;
 		}
 
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		if (tileEntity.isOpened())
+			AABBUtils.rotate(aabb, tileEntity.isReversed() ? -1 : 1);
+
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
@@ -96,6 +81,12 @@ public class RotateAroundMovement implements IDoorMovement
 
 	@Override
 	public boolean isSpecial()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canCenter()
 	{
 		return false;
 	}

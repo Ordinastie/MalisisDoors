@@ -35,7 +35,6 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -55,19 +54,10 @@ public class DoubleRotateMovement implements IDoorMovement
 	@Override
 	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		boolean opened = tileEntity.isOpened();
-		boolean reversed = tileEntity.isReversed();
-
-		if ((reversed != rightDirection) && opened)
+		if ((tileEntity.isReversed() != rightDirection) && tileEntity.isOpened())
 			return null;
 
 		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (opened)
-			AABBUtils.rotate(aabb, rightDirection ? -1 : 1);
-
-		AABBUtils.rotate(aabb, Door.intToDir(dir));
-
 		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
@@ -76,6 +66,8 @@ public class DoubleRotateMovement implements IDoorMovement
 				aabb.minY--;
 		}
 
+		if (tileEntity.isOpened())
+			AABBUtils.rotate(aabb, rightDirection ? -1 : 1);
 		return aabb;
 	}
 
@@ -123,6 +115,12 @@ public class DoubleRotateMovement implements IDoorMovement
 
 	@Override
 	public boolean isSpecial()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canCenter()
 	{
 		return false;
 	}

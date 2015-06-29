@@ -132,4 +132,10 @@ public class SaloonDoorMovement implements IDoorMovement
 		return true;
 	}
 
+	@Override
+	public boolean canCenter()
+	{
+		return false;
+	}
+
 }

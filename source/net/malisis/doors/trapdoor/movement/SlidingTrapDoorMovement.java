@@ -98,4 +98,10 @@ public class SlidingTrapDoorMovement implements IDoorMovement
 		return true;
 	}
 
+	@Override
+	public boolean canCenter()
+	{
+		return false;
+	}
+
 }

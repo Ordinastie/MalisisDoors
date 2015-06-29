@@ -41,5 +41,7 @@ public interface IDoorMovement
 
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
 
-	public abstract boolean isSpecial();
+	public boolean isSpecial();
+
+	public boolean canCenter();
 }

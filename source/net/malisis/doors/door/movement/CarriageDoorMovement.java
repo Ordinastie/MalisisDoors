@@ -83,4 +83,10 @@ public class CarriageDoorMovement implements IDoorMovement
 		return true;
 	}
 
+	@Override
+	public boolean canCenter()
+	{
+		return false;
+	}
+
 }

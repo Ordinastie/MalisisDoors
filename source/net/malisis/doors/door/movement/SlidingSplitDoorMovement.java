@@ -47,39 +47,19 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 		if (tileEntity.isOpened() && !topBlock)
 			return null;
 
-		int dir = tileEntity.getDirection();
-
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if (dir == DIR_NORTH)
-			Z = DOOR_WIDTH;
-		if (dir == DIR_SOUTH)
-			z = 1 - DOOR_WIDTH;
-		if (dir == DIR_WEST)
-			X = DOOR_WIDTH;
-		if (dir == DIR_EAST)
-			x = 1 - DOOR_WIDTH;
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
+		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
+		{
+			if (!topBlock)
+				aabb.maxY++;
+			else
+				aabb.minY--;
+		}
 
 		if (tileEntity.isOpened())
-		{
-			y += 1 - DOOR_WIDTH * (topBlock ? 1 : -1);
-			Y += 1 - DOOR_WIDTH * (topBlock ? 1 : -1);
-		}
+			aabb.offset(0, topBlock ? 1 - DOOR_WIDTH : -1, 0);
 
-		if (type == BoundingBoxType.SELECTION && !tileEntity.isOpened())
-		{
-			if (topBlock)
-				y--;
-			else
-				Y++;
-		}
-
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean top)
@@ -102,6 +82,12 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 	public boolean isSpecial()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canCenter()
+	{
+		return true;
 	}
 
 }

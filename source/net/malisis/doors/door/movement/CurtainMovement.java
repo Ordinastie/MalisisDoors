@@ -159,4 +159,10 @@ public class CurtainMovement implements IDoorMovement
 	{
 		return true;
 	}
+
+	@Override
+	public boolean canCenter()
+	{
+		return false;
+	}
 }

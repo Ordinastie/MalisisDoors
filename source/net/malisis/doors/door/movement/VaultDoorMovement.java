@@ -46,74 +46,28 @@ public class VaultDoorMovement implements IDoorMovement
 	@Override
 	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		boolean opened = tileEntity.isOpened();
-		boolean reversed = tileEntity.isReversed();
-		float left = -1 + DOOR_WIDTH;
-		float right = 1 - DOOR_WIDTH;
+		if (tileEntity.isOpened() && type == BoundingBoxType.COLLISION && !topBlock)
+			return null;
 
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if (dir == DIR_NORTH)
-		{
-			Z = DOOR_WIDTH;
-			if (opened && topBlock == reversed)
-			{
-				x += reversed ? left : right;
-				X += reversed ? left : right;
-			}
-		}
-		if (dir == DIR_SOUTH)
-		{
-			z = 1 - DOOR_WIDTH;
-			if (opened && topBlock == reversed)
-			{
-				x += reversed ? right : left;
-				X += reversed ? right : left;
-			}
-		}
-		if (dir == DIR_WEST)
-		{
-			X = DOOR_WIDTH;
-			if (opened && topBlock == reversed)
-			{
-				z += reversed ? right : left;
-				Z += reversed ? right : left;
-			}
-		}
-		if (dir == DIR_EAST)
-		{
-			x = 1 - DOOR_WIDTH;
-			if (opened && topBlock == reversed)
-			{
-				z += reversed ? left : right;
-				Z += reversed ? left : right;
-			}
-		}
-
-		if (opened && (topBlock == !reversed))
-		{
-			y += reversed ? left : right;
-			if (topBlock || type == BoundingBoxType.SELECTION)
-				Y += reversed ? left : right;
-			else
-				Y = 0;
-		}
-
-		if (type == BoundingBoxType.SELECTION && !opened)
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
+		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
-				Y++;
+				aabb.maxY++;
 			else
-				y--;
+				aabb.minY--;
 		}
 
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		float x = 0, y = 0;
+		if (topBlock == tileEntity.isReversed())
+			x = topBlock ? DOOR_WIDTH - 1 : 1 - DOOR_WIDTH;
+		else
+			y = topBlock ? 1 - DOOR_WIDTH : DOOR_WIDTH - 1;
+
+		if (tileEntity.isOpened())
+			aabb.offset(x, y, 0);
+
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
@@ -147,5 +101,11 @@ public class VaultDoorMovement implements IDoorMovement
 	public boolean isSpecial()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canCenter()
+	{
+		return true;
 	}
 }

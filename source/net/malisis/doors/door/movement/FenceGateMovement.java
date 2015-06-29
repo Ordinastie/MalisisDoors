@@ -85,4 +85,10 @@ public class FenceGateMovement implements IDoorMovement
 	{
 		return true;
 	}
+
+	@Override
+	public boolean canCenter()
+	{
+		return false;
+	}
 }

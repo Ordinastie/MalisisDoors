@@ -24,11 +24,15 @@
 
 package net.malisis.doors.door.block;
 
+import java.util.List;
 import java.util.Random;
 
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.renderer.icon.ClippedIcon;
 import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.RaytraceBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorDescriptor;
@@ -41,6 +45,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -48,9 +53,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,7 +68,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class Door extends BlockDoor implements ITileEntityProvider
+public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 {
 	public static final int DIR_WEST = 0;
 	public static final int DIR_NORTH = 1;
@@ -311,52 +321,42 @@ public class Door extends BlockDoor implements ITileEntityProvider
 	}
 
 	//#region BoundingBox
-	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
-	{
-		if (aabb == null)
-			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
-		return aabb;
-	}
-
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public AxisAlignedBB[] getBoundingBox(IBlockAccess world, int x, int y, int z, BoundingBoxType type)
 	{
 		DoorTileEntity te = getDoor(world, x, y, z);
 		if (te == null || te.isMoving() || te.getMovement() == null)
-			return;
+			return new AxisAlignedBB[0];
 
-		//may be called for other than RAYTRACE
-		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE));
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), type);
+		AABBUtils.rotate(aabb, intToDir(te.getDirection()));
+
+		return new AxisAlignedBB[] { aabb };
 	}
 
-	@SideOnly(Side.CLIENT)
+	@Override
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity)
+	{
+		for (AxisAlignedBB aabb : getBoundingBox(world, x, y, z, BoundingBoxType.COLLISION))
+		{
+			if (aabb != null && mask.intersectsWith(aabb.offset(x, y, z)))
+				list.add(aabb);
+		}
+	}
+
+	@Override
+	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 src, Vec3 dest)
+	{
+		return RaytraceBlock.set(world, src, dest, x, y, z).trace();
+	}
+
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
 	{
-		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
+		AxisAlignedBB[] aabbs = getBoundingBox(world, x, y, z, BoundingBoxType.SELECTION);
+		if (ArrayUtils.isEmpty(aabbs) || aabbs[0] == null)
 			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
-		if (aabb == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		return aabb.offset(x, y, z);
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return null;
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
-		if (aabb == null)
-			return null;
-		return setBlockBounds(aabb.offset(x, y, z));
+		return aabbs[0].offset(x, y, z);
 	}
 
 	//#end BoudingBox

@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ *  The MIT License (MIT)
  *
  * Copyright (c) 2014 Ordinastie
  *
@@ -42,69 +42,22 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class SlidingDoorMovement implements IDoorMovement
 {
-
 	@Override
 	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		boolean opened = tileEntity.isOpened();
-		boolean reversed = tileEntity.isReversed();
-		float left = -1 + DOOR_WIDTH;
-		float right = 1 - DOOR_WIDTH;
-
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if (dir == DIR_NORTH)
-		{
-			Z = DOOR_WIDTH;
-			if (opened)
-			{
-				x += reversed ? left : right;
-				X += reversed ? left : right;
-			}
-		}
-		if (dir == DIR_SOUTH)
-		{
-			z = 1 - DOOR_WIDTH;
-			if (opened)
-			{
-				x += reversed ? right : left;
-				X += reversed ? right : left;
-			}
-		}
-		if (dir == DIR_WEST)
-		{
-			X = DOOR_WIDTH;
-			if (opened)
-			{
-				z += reversed ? right : left;
-				Z += reversed ? right : left;
-			}
-		}
-		if (dir == DIR_EAST)
-		{
-			x = 1 - DOOR_WIDTH;
-			if (opened)
-			{
-				z += reversed ? left : right;
-				Z += reversed ? left : right;
-			}
-		}
-
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
 		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
-				Y++;
+				aabb.maxY++;
 			else
-				y--;
+				aabb.minY--;
 		}
 
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		if (tileEntity.isOpened())
+			aabb.offset(tileEntity.isReversed() ? DOOR_WIDTH - 1 : 1 - DOOR_WIDTH, 0, 0);
+
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
@@ -127,6 +80,12 @@ public class SlidingDoorMovement implements IDoorMovement
 	public boolean isSpecial()
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canCenter()
+	{
+		return true;
 	}
 
 }
