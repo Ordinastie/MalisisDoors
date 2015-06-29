@@ -76,6 +76,7 @@ public class DoorDescriptor
 	//recipe
 	protected Object[] recipe;
 	protected int numCrafted = 1;
+	protected boolean oredict = false;
 
 	//digicode
 	protected String code = null;
@@ -248,6 +249,12 @@ public class DoorDescriptor
 		this.recipe = recipe;
 	}
 
+	public void setOreDictRecipe(Object... recipe)
+	{
+		this.recipe = recipe;
+		oredict = true;
+	}
+
 	public int getNumCrafted()
 	{
 		return numCrafted;
@@ -351,7 +358,12 @@ public class DoorDescriptor
 		GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
 		GameRegistry.registerItem(item, item.getUnlocalizedName());
 		if (recipe != null)
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
+		{
+			if (oredict)
+				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
+			else
+				GameRegistry.addRecipe(new ItemStack(item, numCrafted), recipe);
+		}
 
 		return this;
 	}
