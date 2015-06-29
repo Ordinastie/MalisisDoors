@@ -98,10 +98,4 @@ public class RotateAndSlideMovement implements IDoorMovement
 	{
 		return false;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
-	}
 }

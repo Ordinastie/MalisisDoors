@@ -51,73 +51,24 @@ public class CurtainMovement implements IDoorMovement
 	@Override
 	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		boolean opened = tileEntity.isOpened();
-		boolean reversed = tileEntity.isReversed();
-		float left = -1 + DOOR_WIDTH;
-		float right = 1 - DOOR_WIDTH;
-
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
-
-		if (dir == DIR_NORTH)
-		{
-			Z = DOOR_WIDTH;
-			if (opened)
-			{
-				if (reversed)
-					X += left;
-				else
-					x += right;
-			}
-		}
-		if (dir == DIR_SOUTH)
-		{
-			z = 1 - DOOR_WIDTH;
-			if (opened)
-			{
-				if (reversed)
-					x += right;
-				else
-					X += left;
-			}
-		}
-		if (dir == DIR_WEST)
-		{
-			X = DOOR_WIDTH;
-			if (opened)
-			{
-				if (reversed)
-					z += right;
-				else
-					Z += left;
-			}
-		}
-		if (dir == DIR_EAST)
-		{
-			x = 1 - DOOR_WIDTH;
-			if (opened)
-			{
-				if (reversed)
-					Z += left;
-				else
-					z += right;
-			}
-		}
-
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
 		if (type == BoundingBoxType.SELECTION)
 		{
 			if (!topBlock)
-				Y++;
+				aabb.maxY++;
 			else
-				y--;
+				aabb.minY--;
 		}
 
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		if (tileEntity.isOpened())
+		{
+			if (tileEntity.isReversed())
+				aabb.maxX = DOOR_WIDTH;
+			else
+				aabb.minX = 1 - DOOR_WIDTH;
+		}
+
+		return aabb;
 	}
 
 	@Override
@@ -158,11 +109,5 @@ public class CurtainMovement implements IDoorMovement
 	public boolean isSpecial()
 	{
 		return true;
-	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
 	}
 }

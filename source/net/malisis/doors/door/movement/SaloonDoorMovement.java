@@ -31,7 +31,6 @@ import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -49,32 +48,20 @@ public class SaloonDoorMovement implements IDoorMovement
 		if (type == BoundingBoxType.COLLISION || te.isMoving())
 			return null;
 
-		int dir = te.getDirection();
-
 		float f = 1 / 16F;
-
-		float x = .5F - f / 2;
-		float y = 0.25F;
-		float z = 0;
-		float X = .5F + f / 2;
-		float Y = 1;
-		float Z = 1;
-
+		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0.25F, .5F - f / 2, 1, 1, .5F + f / 2);
 		if (topBlock)
-		{
-			y -= 0.25F;
-			Y -= 0.25F;
-		}
+			aabb.offset(0, -0.25F, 0);
 
 		if (type == BoundingBoxType.SELECTION)
 		{
-			if (!topBlock)
-				Y += .75F;
+			if (topBlock)
+				aabb.minY -= .75F;
 			else
-				y -= .75F;
+				aabb.maxY += .75F;
 		}
 
-		return AABBUtils.rotate(AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z), dir);
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
@@ -131,11 +118,4 @@ public class SaloonDoorMovement implements IDoorMovement
 	{
 		return true;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
-	}
-
 }

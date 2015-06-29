@@ -39,6 +39,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * @author Ordinastie
  *
@@ -306,6 +308,23 @@ public class DoorTileEntity extends TileEntity
 
 		if (timer.elapsedTick() > descriptor.getOpeningTime())
 			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
+	}
+
+	public boolean shouldCenter()
+	{
+		if (getMovement() == null /*|| !getMovement().canCenter()*/)
+			return false;
+
+		int ox = 0, oz = 0;
+		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
+			ox = 1;
+		else
+			oz = 1;
+
+		Block b1 = worldObj.getBlock(xCoord - ox, yCoord, zCoord - oz);
+		Block b2 = worldObj.getBlock(xCoord + ox, yCoord, zCoord + oz);
+
+		return ArrayUtils.contains(Door.centerBlocks, b1) || ArrayUtils.contains(Door.centerBlocks, b2);
 	}
 
 	//#region NBT/Network

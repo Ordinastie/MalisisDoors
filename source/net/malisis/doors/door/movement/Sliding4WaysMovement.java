@@ -101,11 +101,4 @@ public class Sliding4WaysMovement implements IDoorMovement
 	{
 		return false;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
-	}
-
 }

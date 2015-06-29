@@ -110,12 +110,16 @@ public class DoorRenderer extends MalisisRenderer
 	protected void setup()
 	{
 		model.resetState();
+
 		if (direction == Door.DIR_SOUTH)
 			model.rotate(180, 0, 1, 0, 0, 0, 0);
 		if (direction == Door.DIR_EAST)
 			model.rotate(-90, 0, 1, 0, 0, 0, 0);
 		if (direction == Door.DIR_WEST)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
+
+		if (((Door) block).shouldCenter(world, x, y, z))
+			model.translate(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
 	}
 
 	protected void renderTileEntity()

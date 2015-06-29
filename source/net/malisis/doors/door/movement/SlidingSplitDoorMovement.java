@@ -83,11 +83,4 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 	{
 		return false;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return true;
-	}
-
 }

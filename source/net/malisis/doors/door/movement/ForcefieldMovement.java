@@ -85,11 +85,4 @@ public class ForcefieldMovement implements IDoorMovement
 	{
 		return true;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
-	}
-
 }

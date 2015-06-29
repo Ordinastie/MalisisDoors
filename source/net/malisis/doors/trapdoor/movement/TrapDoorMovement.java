@@ -105,11 +105,4 @@ public class TrapDoorMovement implements IDoorMovement
 	{
 		return true;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return false;
-	}
-
 }

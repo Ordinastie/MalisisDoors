@@ -95,11 +95,4 @@ public class DoubleSlideMovement implements IDoorMovement
 	{
 		return false;
 	}
-
-	@Override
-	public boolean canCenter()
-	{
-		return true;
-	}
-
 }

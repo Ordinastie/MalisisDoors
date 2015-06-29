@@ -48,6 +48,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -70,6 +71,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 {
+	public static Block[] centerBlocks = new Block[] { Blocks.iron_bars, Blocks.cobblestone_wall, Blocks.fence };
+
 	public static final int DIR_WEST = 0;
 	public static final int DIR_NORTH = 1;
 	public static final int DIR_EAST = 2;
@@ -329,6 +332,8 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 			return new AxisAlignedBB[0];
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), type);
+		if (aabb != null && shouldCenter(world, x, y, z))
+			aabb.offset(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
 		AABBUtils.rotate(aabb, intToDir(te.getDirection()));
 
 		return new AxisAlignedBB[] { aabb };
@@ -375,6 +380,28 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 			return;
 
 		te.openOrCloseDoor();
+	}
+
+	public boolean shouldCenter(IBlockAccess world, int x, int y, int z)
+	{
+		centerBlocks = new Block[] { Blocks.iron_bars, Blocks.cobblestone_wall, Blocks.fence, Blocks.glass_pane, Blocks.stained_glass_pane };
+		DoorTileEntity te = getDoor(world, x, y, z);
+		if (te == null)
+			return false;
+
+		if (te.shouldCenter())
+			return true;
+
+		te = te.getDoubleDoor();
+		return te != null && te.shouldCenter();
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	{
+		Block b = world.getBlock(x + side.offsetX, y + side.offsetY, z + side.offsetZ);
+		return ArrayUtils.contains(centerBlocks, b);
+		//if(side == ForgeDirection.UP|| side == ForgeDirection.DOWN) super.isSideSolid(world, x, y, z, side);
 	}
 
 	@Override
