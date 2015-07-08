@@ -66,6 +66,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		setUnlocalizedName(desc.getName());
 		setTextureName(desc.getTextureName());
 
+		setCreativeTab(desc.getTab());
+
 		disableStats();
 	}
 
