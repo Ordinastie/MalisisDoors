@@ -25,11 +25,11 @@
 package net.malisis.doors.door.block;
 
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -49,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class RustyHatch extends Block implements ITileEntityProvider
+public class RustyHatch extends MalisisBlock implements ITileEntityProvider
 {
 	private IIcon handleIcon;
 

@@ -6,6 +6,7 @@ import net.malisis.core.configuration.Settings;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.doors.block.BlockMixer;
+import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
@@ -106,7 +107,7 @@ public class MalisisDoors implements IMalisisMod
 		public static MixedBlock mixedBlock;
 		public static GarageDoor garageDoor;
 		public static Block jailDoor;
-		public static Block doorFactory;
+		public static DoorFactory doorFactory;
 		public static Block customDoor;
 		public static Block laboratoryDoor;
 		public static Block factoryDoor;

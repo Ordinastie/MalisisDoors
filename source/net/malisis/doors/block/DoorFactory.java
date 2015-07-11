@@ -24,6 +24,7 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.inventory.IInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.util.TileEntityUtils;
@@ -48,7 +49,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class DoorFactory extends Block implements ITileEntityProvider
+public class DoorFactory extends MalisisBlock implements ITileEntityProvider
 {
 	private IIcon frontIcon;
 
@@ -64,8 +65,8 @@ public class DoorFactory extends Block implements ITileEntityProvider
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)) + "_side");
-		this.frontIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
+		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + name + "_side");
+		this.frontIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + name);
 	}
 
 	@Override

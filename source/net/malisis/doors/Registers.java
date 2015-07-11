@@ -304,7 +304,7 @@ public class Registers
 	private static void registerDoorFactory()
 	{
 		doorFactory = new DoorFactory();
-		GameRegistry.registerBlock(doorFactory, doorFactory.getUnlocalizedName().substring(5));
+		doorFactory.register();
 
 		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");
 
@@ -326,7 +326,7 @@ public class Registers
 	private static void registerRustyHatch()
 	{
 		rustyHatch = new RustyHatch();
-		GameRegistry.registerBlock(rustyHatch, rustyHatch.getUnlocalizedName().substring(5));
+		rustyHatch.register();
 
 		rustyHandle = new Item()
 		{
@@ -349,7 +349,7 @@ public class Registers
 	private static void registerCarriageDoor()
 	{
 		carriageDoor = new CarriageDoor();
-		GameRegistry.registerBlock(carriageDoor, carriageDoor.getUnlocalizedName().substring(5));
+		carriageDoor.register();
 
 		carriageDoorItem = Item.getItemFromBlock(carriageDoor);
 
