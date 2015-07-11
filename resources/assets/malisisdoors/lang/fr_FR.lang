@@ -15,7 +15,7 @@ item.door_birch.name=Porte en bois de bouleau
 item.door_jungle.name=Porte en bois d'acajou
 item.door_acacia.name=Porte en bois d'acacia
 item.door_dark_oak.name=Porte en bois de chêne noir
-item.saloon_door=Porte de saloon
+item.saloon.name=Porte de saloon
 
 
 tile.player_sensor.name=Detecteur de joueur
@@ -46,7 +46,7 @@ tile.door_acacia.name=Porte en bois d'acacia
 tile.door_dark_oak.name=Porte en bois de chêne noir
 tile.iron_tropdoor.name=Trappe en fer
 tile.sliding_trapdoor.name=Trappe coulissante
-tile.saloon_door=Porte de saloon
+tile.saloon.name=Porte de saloon
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
