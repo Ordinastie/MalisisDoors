@@ -293,6 +293,9 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 					te.setPowered(powered);
 
 				//center check
+				if (te.getDescriptor() == null)
+					return;
+
 				boolean centered = te.shouldCenter();
 				DoorTileEntity dd = te.getDoubleDoor();
 				if (dd != null)

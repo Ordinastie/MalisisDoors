@@ -120,6 +120,8 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		frameMetadata = nbt.getInteger("frameMetadata");
 		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
 		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
+
+		setCentered(shouldCenter());
 	}
 
 	@Override
