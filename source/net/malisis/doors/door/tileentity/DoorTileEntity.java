@@ -52,6 +52,7 @@ public class DoorTileEntity extends TileEntity
 	protected Timer timer = new Timer();
 	protected DoorState state = DoorState.CLOSED;
 	protected boolean moving;
+	protected boolean centered = false;
 
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
@@ -145,6 +146,36 @@ public class DoorTileEntity extends TileEntity
 				|| getWorld().isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
 	}
 
+	public boolean isCentered()
+	{
+		return centered;
+	}
+
+	public boolean shouldCenter()
+	{
+		if (getMovement() == null /*|| !getMovement().canCenter()*/)
+			return false;
+
+		int ox = 0, oz = 0;
+		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
+			ox = 1;
+		else
+			oz = 1;
+
+		Block b1 = worldObj.getBlock(xCoord - ox, yCoord, zCoord - oz);
+		Block b2 = worldObj.getBlock(xCoord + ox, yCoord, zCoord + oz);
+
+		return ArrayUtils.contains(Door.centerBlocks, b1) || ArrayUtils.contains(Door.centerBlocks, b2);
+	}
+
+	public boolean setCentered(boolean centered)
+	{
+		this.centered = centered;
+		if (worldObj != null)
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		return centered;
+	}
+
 	//#end Getter/Setter
 
 	public void onBlockPlaced(Door door, ItemStack itemStack)
@@ -235,7 +266,7 @@ public class DoorTileEntity extends TileEntity
 
 		int dir = getDirection();
 		boolean reversed = isReversed();
-		DoorTileEntity te;
+
 		int x = xCoord;
 		int z = zCoord;
 
@@ -248,9 +279,9 @@ public class DoorTileEntity extends TileEntity
 		else if (dir == Door.DIR_WEST)
 			z += (reversed ? -1 : 1);
 
-		te = Door.getDoor(worldObj, x, yCoord, z);
-		if (te != null && isMatchingDoubleDoor(te))
-			return te;
+		TileEntity te = worldObj.getTileEntity(x, yCoord, z);
+		if (te instanceof DoorTileEntity && isMatchingDoubleDoor((DoorTileEntity) te))
+			return (DoorTileEntity) te;
 
 		return null;
 	}
@@ -310,23 +341,6 @@ public class DoorTileEntity extends TileEntity
 			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
 	}
 
-	public boolean shouldCenter()
-	{
-		if (getMovement() == null /*|| !getMovement().canCenter()*/)
-			return false;
-
-		int ox = 0, oz = 0;
-		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
-			ox = 1;
-		else
-			oz = 1;
-
-		Block b1 = worldObj.getBlock(xCoord - ox, yCoord, zCoord - oz);
-		Block b2 = worldObj.getBlock(xCoord + ox, yCoord, zCoord + oz);
-
-		return ArrayUtils.contains(Door.centerBlocks, b1) || ArrayUtils.contains(Door.centerBlocks, b2);
-	}
-
 	//#region NBT/Network
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -335,6 +349,7 @@ public class DoorTileEntity extends TileEntity
 		//if (descriptor == null)
 		descriptor = new DoorDescriptor(nbt);
 		setDoorState(DoorState.values()[nbt.getInteger("state")]);
+		setCentered(nbt.getBoolean("centered"));
 	}
 
 	@Override
@@ -344,6 +359,7 @@ public class DoorTileEntity extends TileEntity
 		if (descriptor != null)
 			descriptor.writeNBT(nbt);
 		nbt.setInteger("state", state.ordinal());
+		nbt.setBoolean("centered", centered);
 	}
 
 	@Override

@@ -291,6 +291,17 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 				boolean powered = te.isPowered();
 				if ((powered || block.canProvidePower()) && block != this)
 					te.setPowered(powered);
+
+				//center check
+				boolean centered = te.shouldCenter();
+				DoorTileEntity dd = te.getDoubleDoor();
+				if (dd != null)
+				{
+					centered |= dd.shouldCenter();
+					dd.setCentered(centered);
+				}
+
+				te.setCentered(centered);
 			}
 		}
 		else
@@ -332,7 +343,7 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 			return new AxisAlignedBB[0];
 
 		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), type);
-		if (aabb != null && shouldCenter(world, x, y, z))
+		if (aabb != null && te.isCentered())
 			aabb.offset(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
 		AABBUtils.rotate(aabb, intToDir(te.getDirection()));
 
@@ -380,20 +391,6 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 			return;
 
 		te.openOrCloseDoor();
-	}
-
-	public boolean shouldCenter(IBlockAccess world, int x, int y, int z)
-	{
-		centerBlocks = new Block[] { Blocks.iron_bars, Blocks.cobblestone_wall, Blocks.fence, Blocks.glass_pane, Blocks.stained_glass_pane };
-		DoorTileEntity te = getDoor(world, x, y, z);
-		if (te == null)
-			return false;
-
-		if (te.shouldCenter())
-			return true;
-
-		te = te.getDoubleDoor();
-		return te != null && te.shouldCenter();
 	}
 
 	@Override
