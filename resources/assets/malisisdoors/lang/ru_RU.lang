@@ -12,6 +12,13 @@ item.rustyHandle.name=Ржавый вентиль
 item.curtain.name=Занавеска
 item.carriage_door.name=Дверь-фрейм
 item.forcefieldItem.name=Контроллер силового поля
+item.door_spruce.name=Дверь из ели
+item.door_birch.name=Дверь из берёзы
+item.door_jungle.name=Дверь из тропического дерева
+item.door_acacia.name=Дверь из акации
+item.door_dark_oak.name=Дверь из тёмного дуба
+item.saloon.name=Дверь салуна
+
 
 tile.player_sensor.name=Датчик игрока
 tile.vanishing_block_wood.name=Деревянная рамка исчезновения
@@ -34,6 +41,14 @@ tile.curtain.name=Занавеска
 tile.carriage_door.name=Дверь-фрейм
 tile.forcefieldDoor.name=Силовое поле
 tile.rustyLadder.name=Ржавая лестница
+tile.door_spruce.name=Дверь из ели
+tile.door_birch.name=Дверь из берёзы
+tile.door_jungle.name=Дверь из тропического дерева
+tile.door_acacia.name=Дверь из акации
+tile.door_dark_oak.name=Дверь из тёмного дуба
+tile.iron_trapdoor.name=Железный люк
+tile.sliding_trapdoor.name=Задвижной люк
+tile.saloon.name=Дверь салуна
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда>, где "команда" - это "config" или "version"
 
@@ -61,6 +76,10 @@ config.enhancedMixedBlockPlacement=Использовать продвинуту
 config.enhancedMixedBlockPlacement.comment1=Позволяет разместить основу блока в точке взгляда, а не на стороне какого-либо ранее размещённого блока.
 config.enhancedMixedBlockPlacement.comment2=Присядьте, чтобы изменить размещение блока.
 
+config.enableCamoFenceGate=Включить "камуфляжные" калитки
+config.enableCamoFenceGate.comment=Позволяет калиткам использовать текстуру ближайших блоков. 
+
+
 door_movement.rotating_door=Вращение
 door_movement.sliding_door=Сдвиг в сторону
 door_movement.sliding_up_door=Сдвиг вверх
@@ -75,12 +94,21 @@ door_movement.rotate_place=Вращение и замена
 door_movement.vanishing_door=Исчезновение
 door_movement.spinning_door=Кручение
 door_movement.spinning_around_door=Кручение вокруг
+door_movement.double_slide_left=Двойной сдвиг влево
+door_movement.double_slide_right=Двойной сдвиг вправо
+door_movement.double_rotate_left=Двойное вращение влево
+door_movement.double_rotate_right=Двойное вращение вправо
+
 
 
 gui.door_factory.tab_properties=Свойства
 gui.door_factory.tab_materials=Материалы
+gui.door_factory.tab_digicode=Цифр. код
+gui.door_factory.rb_create=Сделать
+gui.door_factory.rb_edit=Изменить
 gui.door_factory.door_movement=Движение
 gui.door_factory.door_open_time=Время открытия
+gui.door_factory.door_auto_close_time=Задержка закрытия
 gui.door_factory.door_require_redstone=Требуется сигнал красного камня
 gui.door_factory.door_double_door=Двойная дверь
 gui.door_factory.door_sound=Тип звука
@@ -96,7 +124,9 @@ gui.door_factory.door_sound.carriage_door=Дверь-фрейм
 gui.door_factory.frame_type=Тип рамки
 gui.door_factory.top_material=Материал верхнего блока
 gui.door_factory.bottom_material=Материал нижнего блока
+gui.door_factory.door_edit_slot=Дверь для изменения
 gui.door_factory.create_door=Сделать дверь
+gui.door_factory.edit_door=Изменить дверь
 
 gui.block_mixer.simple_rendering=Упрощённое отображение
 gui.block_mixer.simple_rendering_tooltip=Потребуется обновление чанка, чтобы изменения проявились.
