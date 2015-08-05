@@ -26,6 +26,7 @@ package net.malisis.doors.door.block;
 
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.MultiBlock;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -42,8 +43,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -136,56 +135,17 @@ public class RustyHatch extends MalisisBlock implements ITileEntityProvider
 		return true;
 	}
 
-	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
-	{
-		if (aabb == null)
-			return null;
-		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
-		return aabb;
-	}
-
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public AxisAlignedBB[] getBoundingBox(IBlockAccess world, int x, int y, int z, BoundingBoxType type)
 	{
 		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return;
+		if (te == null || te.isMoving() || te.getMovement() == null || te.getMultiBlock() == null)
+			return AABBUtils.identities();
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE);
-		if (aabb == null)
-			aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
-
-		aabb.offset(-x, -y, -z);
-		setBlockBounds(aabb);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
-		if (aabb == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		return aabb;
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		RustyHatchTileEntity te = TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return null;
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
-		if (aabb == null)
-			return null;
-
-		return setBlockBounds(aabb);
+		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), type);
+		if (aabb != null)
+			aabb.offset(-x, -y, -z);
+		return new AxisAlignedBB[] { aabb };
 	}
 
 	@Override
