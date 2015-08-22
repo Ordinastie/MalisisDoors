@@ -217,7 +217,7 @@ public class VanishingBlock extends BlockContainer
 	public void breakBlock(World world, int x, int y, int z, Block block, int j)
 	{
 		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if (te.copiedBlock != null)
+		if (te != null te.copiedBlock != null)
 			te.copiedBlock.dropBlockAsItem(world, x, y, z, te.copiedMetadata, 0);
 
 		world.removeTileEntity(x, y, z);
