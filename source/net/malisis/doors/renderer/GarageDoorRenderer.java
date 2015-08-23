@@ -68,7 +68,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
-		rp.useBlockBrightness.set(false);
+		rp.useEnvironmentBrightness.set(false);
 		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
 		rp.useWorldSensitiveIcon.set(false);

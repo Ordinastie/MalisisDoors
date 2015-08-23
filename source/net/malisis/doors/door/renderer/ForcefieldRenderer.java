@@ -72,7 +72,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 		rp.useBlockBounds.set(false);
 		rp.calculateAOColor.set(false);
 		rp.setBrightness(Vertex.BRIGHTNESS_MAX);
-		rp.useBlockBrightness.set(false);
+		rp.useEnvironmentBrightness.set(false);
 		rp.calculateBrightness.set(false);
 		rp.applyTexture.set(false);
 		rp.alpha.set(50);
