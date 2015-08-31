@@ -27,6 +27,7 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.ProxyAccess;
@@ -304,10 +305,18 @@ public class VanishingBlock extends BlockContainer
 		}
 		else
 		{
+
 			if (te == null || te.copiedBlock == null)
 				return super.collisionRayTrace(world, x, y, z, src, dest);
 			else
-				return te.copiedBlock.collisionRayTrace((World) ProxyAccess.get(world), x, y, z, src, dest);
+			{
+				World proxy = (World) ProxyAccess.get(world);
+				if (proxy == world && te.copiedBlock instanceof IBoundingBox)
+					return super.collisionRayTrace(world, x, y, z, src, dest);
+				else
+					return te.copiedBlock.collisionRayTrace(proxy, x, y, z, src, dest);
+			}
+
 		}
 	}
 
