@@ -76,6 +76,17 @@ public class FenceGateMovement implements IDoorMovement
 	@Override
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
+		DoorTileEntity doubleDoor = tileEntity.getDoubleDoor();
+		if (doubleDoor != null)
+		{
+			boolean left = true;
+			if (tileEntity.getDirection() == Door.DIR_NORTH || tileEntity.getDirection() == Door.DIR_NORTH)
+				left = tileEntity.zCoord < doubleDoor.zCoord;
+			else
+				left = tileEntity.xCoord > doubleDoor.xCoord;
+			return new Animation[] { new Animation(model, getTransformation(tileEntity, left)) };
+		}
+
 		return new Animation[] { new Animation(model.getShape("left"), getTransformation(tileEntity, true)),
 				new Animation(model.getShape("right"), getTransformation(tileEntity, false)) };
 	}

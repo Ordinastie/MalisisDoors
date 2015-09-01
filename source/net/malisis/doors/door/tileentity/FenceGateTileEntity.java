@@ -32,6 +32,7 @@ import net.malisis.doors.door.movement.FenceGateMovement;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
@@ -77,8 +78,64 @@ public class FenceGateTileEntity extends DoorTileEntity
 	}
 
 	/**
-	 * Specify the bounding box ourselves otherwise, the block bounding box would be use. (And it should be at this point {0, 0, 0})
+	 * Overriden from DoorTileEntity because metadata doesn't match Door's
 	 */
+	@Override
+	public FenceGateTileEntity getDoubleDoor()
+	{
+		if (!descriptor.isDoubleDoor())
+			return null;
+
+		int dir = getDirection();
+
+		TileEntity te = null;
+		if (dir == Door.DIR_NORTH || dir == Door.DIR_SOUTH)
+		{
+			te = worldObj.getTileEntity(xCoord, yCoord, zCoord + 1);
+			if (te instanceof FenceGateTileEntity && isMatchingDoubleDoor((FenceGateTileEntity) te))
+				return (FenceGateTileEntity) te;
+			te = worldObj.getTileEntity(xCoord, yCoord, zCoord - 1);
+			if (te instanceof DoorTileEntity && isMatchingDoubleDoor((DoorTileEntity) te))
+				return (FenceGateTileEntity) te;
+		}
+		else
+		{
+			te = worldObj.getTileEntity(xCoord + 1, yCoord, zCoord);
+			if (te instanceof FenceGateTileEntity && isMatchingDoubleDoor((DoorTileEntity) te))
+				return (FenceGateTileEntity) te;
+			te = worldObj.getTileEntity(xCoord - 1, yCoord, zCoord);
+			if (te instanceof FenceGateTileEntity && isMatchingDoubleDoor((DoorTileEntity) te))
+				return (FenceGateTileEntity) te;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Overriden from DoorTileEntity because reverse flag doesn't need to match
+	 *
+	 * @param te
+	 * @return
+	 */
+	@Override
+	public boolean isMatchingDoubleDoor(DoorTileEntity te)
+	{
+		if (getBlockType() != te.getBlockType()) // different block
+			return false;
+
+		if ((getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH) != (te.getDirection() == Door.DIR_NORTH || te
+				.getDirection() == Door.DIR_SOUTH)) // different direction
+			return false;
+
+		if (getMovement() != te.getMovement()) //different movement type
+			return false;
+
+		if ((getBlockMetadata() & Door.FLAG_OPENED) != (te.getBlockMetadata() & Door.FLAG_OPENED)) // different state
+			return false;
+
+		return true;
+	}
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{

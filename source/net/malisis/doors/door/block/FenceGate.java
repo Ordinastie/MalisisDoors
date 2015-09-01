@@ -91,6 +91,13 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		if (dir == ((world.getBlockMetadata(x, y, z) & 3) + 2) % 4)
 			world.setBlockMetadataWithNotify(x, y, z, dir, 2);
 
+		te = te.getDoubleDoor();
+		if (te != null)
+		{
+			if (dir == ((world.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 3) + 2) % 4)
+				world.setBlockMetadataWithNotify(te.xCoord, te.yCoord, te.zCoord, dir, 2);
+		}
+
 		return true;
 	}
 
