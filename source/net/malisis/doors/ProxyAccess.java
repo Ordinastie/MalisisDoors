@@ -86,7 +86,7 @@ public class ProxyAccess
 				}
 				catch (Exception e)
 				{
-					MalisisCore.log.error("[ProxyAccess] Proxy wold instanciation failed : {} ", e);
+					MalisisCore.log.error("[ProxyAccess] Proxy wold instanciation failed :", e);
 					worldInstanciationFailed = true;
 					return world;
 				}
