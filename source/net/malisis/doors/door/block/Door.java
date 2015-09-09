@@ -327,7 +327,7 @@ public class Door extends BlockDoor implements ITileEntityProvider, IBoundingBox
 	@Override
 	public Item getItemDropped(int metadata, Random random, int fortune)
 	{
-		return (metadata & FLAG_TOPBLOCK) != 0 ? null : descriptor.getItem();
+		return (metadata & FLAG_TOPBLOCK) != 0 || descriptor == null ? null : descriptor.getItem();
 	}
 
 	@Override
