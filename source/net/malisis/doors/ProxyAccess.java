@@ -86,7 +86,7 @@ public class ProxyAccess
 				}
 				catch (Exception e)
 				{
-					MalisisCore.log.error("[ProxyAccess] Proxy wold instanciation failed :", e);
+					MalisisCore.log.error("[ProxyAccess] Proxy world instanciation failed :", e);
 					worldInstanciationFailed = true;
 					return world;
 				}
@@ -172,7 +172,7 @@ public class ProxyAccess
 
 		public ProxyWorld(World world)
 		{
-			super(world.getSaveHandler(), null, new WorldSettings(world.getWorldInfo()), world.provider, (Profiler) null);
+			super(world.getSaveHandler(), "ProxyWorld", new WorldSettings(world.getWorldInfo()), world.provider, (Profiler) null);
 			original = world;
 			// reset back the world for the provider
 			provider.worldObj = world;
