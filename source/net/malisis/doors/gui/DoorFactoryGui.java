@@ -24,6 +24,9 @@
 
 package net.malisis.doors.gui;
 
+import java.util.Comparator;
+import java.util.Set;
+
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.ComponentPosition;
 import net.malisis.core.client.gui.GuiTexture;
@@ -53,7 +56,10 @@ import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.network.DoorFactoryMessage;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -141,7 +147,8 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		UIContainer propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
-		selDoorMovement = new UISelect<String>(this, 100, DoorRegistry.listMovements().keySet()).setPosition(0, 2, Anchor.RIGHT);
+		selDoorMovement = new UISelect<String>(this, 100, getSortedList(DoorRegistry.listMovements().keySet(), "door_movement."));
+		selDoorMovement.setPosition(0, 2, Anchor.RIGHT);
 		selDoorMovement.setLabelPattern("door_movement.%s").register(this);
 
 		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
@@ -149,7 +156,8 @@ public class DoorFactoryGui extends MalisisGui
 		cbRedstone = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
 		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 50, Anchor.RIGHT).register(this);
 
-		selDoorSound = new UISelect<String>(this, 100, DoorRegistry.listSounds().keySet()).setPosition(0, 62, Anchor.RIGHT);
+		selDoorSound = new UISelect<String>(this, 100, getSortedList(DoorRegistry.listSounds().keySet(), "gui.door_factory.door_sound."));
+		selDoorSound.setPosition(0, 62, Anchor.RIGHT);
 		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s").register(this);
 
 		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
@@ -167,6 +175,18 @@ public class DoorFactoryGui extends MalisisGui
 		propContainer.add(selDoorSound);
 
 		return propContainer;
+	}
+
+	private ImmutableList<String> getSortedList(Set<String> set, final String prefix)
+	{
+		return FluentIterable.from(set).toSortedList(new Comparator<String>()
+		{
+			@Override
+			public int compare(String s1, String s2)
+			{
+				return StatCollector.translateToLocal(prefix + s1).compareTo(StatCollector.translateToLocal(prefix + s2));
+			}
+		});
 	}
 
 	private UIContainer getMaterialsContainer()
