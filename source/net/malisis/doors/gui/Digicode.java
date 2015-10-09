@@ -32,6 +32,7 @@ import net.malisis.core.client.gui.event.ComponentEvent;
 import net.malisis.core.renderer.font.FontRenderOptions;
 import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.network.DigicodeMessage;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
@@ -52,8 +53,9 @@ public class Digicode extends UIContainer<Digicode>
 		super(gui);
 
 		setSize(50, 80);
-		createButtons(gui);
 		expectedCode = expected;
+		createButtons(gui);
+
 	}
 
 	public Digicode(MalisisGui gui)
@@ -64,12 +66,6 @@ public class Digicode extends UIContainer<Digicode>
 	public String getExpectedCode()
 	{
 		return expectedCode;
-	}
-
-	public Digicode setExpectedCode(String code)
-	{
-		expectedCode = code;
-		return this;
 	}
 
 	public String getEnteredCode()
@@ -91,7 +87,7 @@ public class Digicode extends UIContainer<Digicode>
 
 	public boolean isValidCode()
 	{
-		return expectedCode != null && expectedCode.equals(enteredCode);
+		return !StringUtils.isEmpty(expectedCode) && expectedCode.equals(enteredCode);
 	}
 
 	private void createButtons(MalisisGui gui)
@@ -111,7 +107,8 @@ public class Digicode extends UIContainer<Digicode>
 
 		add(new UIButton(gui, "C").setSize(16, h).setPosition(0, oy + 3 * (h + 2)).setName("C"));
 		add(new UIButton(gui, "0").setSize(16, h).setPosition(17, oy + 3 * (h + 2)).setName("0"));
-		add(new UIButton(gui, "V").setSize(16, h).setPosition(34, oy + 3 * (h + 2)).setName("V"));
+		if (!StringUtils.isEmpty(expectedCode))
+			add(new UIButton(gui, "V").setSize(16, h).setPosition(34, oy + 3 * (h + 2)).setName("V"));
 	}
 
 	@Override
@@ -168,6 +165,11 @@ public class Digicode extends UIContainer<Digicode>
 				setEnteredCode("");
 				break;
 			case "V":
+				if (isValidCode())
+				{
+					getGui().close();
+					DigicodeMessage.send(((DigicodeGui) getGui()).te);
+				}
 				break;
 			default:
 				setEnteredCode(enteredCode + event.getComponent().getName());
