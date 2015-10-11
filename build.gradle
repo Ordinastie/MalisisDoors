@@ -85,7 +85,7 @@ uploadArchives()
 {
 	//dependsOn reobf
 	
-	if (project.mavenUrl != null) 
+	if (project.hasProperty("mavenUrl")) 
 	{
 		repositories 
 		{
