@@ -26,11 +26,14 @@ package net.malisis.doors.entity;
 
 import java.util.Random;
 
+import net.malisis.core.util.ItemUtils;
+import net.malisis.core.util.MBlockState;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.block.VanishingBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -38,44 +41,62 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-public class VanishingTileEntity extends TileEntity
+public class VanishingTileEntity extends TileEntity implements IUpdatePlayerListBox
 {
 	public final static int maxTransitionTime = 8;
 	public final static int maxVibratingTime = 15;
 
-	public Block copiedBlock;
-	public int copiedMetadata;
-	public TileEntity copiedTileEntity;
-	public int frameType;
-	public boolean powered;
+	protected IBlockState copiedState;
+	protected TileEntity copiedTileEntity;
+	protected VanishingBlock.Type frameType;
+	protected boolean powered;
 	// animation purpose
 	protected int duration = maxTransitionTime;
-	public int transitionTimer;
-	public boolean inTransition;
-	public boolean vibrating;
-	public int vibratingTimer;
+	protected int transitionTimer;
+	protected boolean inTransition;
+	protected boolean vibrating;
+	protected int vibratingTimer;
 
 	private final Random rand = new Random();
 
 	private Block[] excludes = new Block[] { MalisisDoors.Blocks.vanishingBlock, Blocks.air, Blocks.ladder, Blocks.stone_button,
 			Blocks.wooden_button, Blocks.lever, Blocks.vine };
 
+	public boolean blockDrawn = true;
+
 	public VanishingTileEntity()
 	{
-		this.frameType = VanishingBlock.typeWoodFrame;
+		this.frameType = VanishingBlock.Type.WOOD;
 		ProxyAccess.get(getWorld());
 	}
 
-	public VanishingTileEntity(int frameType)
+	public VanishingTileEntity(VanishingBlock.Type frameType)
 	{
-		if (frameType < 0 || frameType > 3)
-			frameType = 0;
 		this.frameType = frameType;
+	}
+
+	public VanishingBlock.Type getType()
+	{
+		return frameType;
+	}
+
+	public IBlockState getCopiedState()
+	{
+		return copiedState;
+	}
+
+	public TileEntity getCopiedTileEntity()
+	{
+		return copiedTileEntity;
 	}
 
 	public int getDuration()
@@ -83,39 +104,60 @@ public class VanishingTileEntity extends TileEntity
 		return duration;
 	}
 
-	public boolean setBlock(ItemStack itemStack, EntityPlayer p, int side, float hitX, float hitY, float hitZ)
+	public boolean isPowered()
+	{
+		return powered;
+	}
+
+	public boolean isInTransition()
+	{
+		return inTransition;
+	}
+
+	public boolean isVibrating()
+	{
+		return vibrating;
+	}
+
+	public int getTransitionTimer()
+	{
+		return transitionTimer;
+	}
+
+	public void setBlockState(IBlockState state)
+	{
+		this.copiedState = state;
+	}
+
+	public boolean setBlockState(ItemStack itemStack, EntityPlayer p, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (itemStack == null)
 		{
-			copiedBlock = null;
-			copiedMetadata = 0;
+			copiedState = null;
 			copiedTileEntity = null;
 			return true;
 		}
 
-		Block block = Block.getBlockFromItem(itemStack.getItem());
-		if (ArrayUtils.contains(excludes, block))
+		IBlockState state = ItemUtils.getStateFromItemStack(itemStack);
+		if (ArrayUtils.contains(excludes, state.getBlock()))
 			return false;
 
 		World proxy = (World) ProxyAccess.get(getWorld());
-		copiedBlock = block;
-		copiedMetadata = itemStack.getMetadata();
+		copiedState = state;
 		initCopiedTileEntity();
-		copiedMetadata = block.onBlockPlaced(proxy, xCoord, yCoord, zCoord, side, hitX, hitY, hitZ, copiedMetadata);
+		copiedState = state.getBlock().onBlockPlaced(proxy, pos, side, hitX, hitY, hitZ, itemStack.getMetadata(), p);
 		if (p != null)
-			block.onBlockPlacedBy(proxy, xCoord, yCoord, zCoord, p, itemStack);
+			copiedState.getBlock().onBlockPlacedBy(proxy, pos, copiedState, p, itemStack);
 		return true;
 	}
 
 	private void initCopiedTileEntity()
 	{
-		copiedTileEntity = copiedBlock.createTileEntity(getWorld(), copiedMetadata);
+		copiedTileEntity = copiedState.getBlock().createTileEntity(getWorld(), copiedState);
 		if (copiedTileEntity != null)
 		{
 			copiedTileEntity.setWorldObj((World) ProxyAccess.get(getWorld()));
-			copiedTileEntity.xCoord = xCoord;
-			copiedTileEntity.yCoord = yCoord;
-			copiedTileEntity.zCoord = zCoord;
+			copiedTileEntity.setPos(pos);
 		}
 
 	}
@@ -129,30 +171,35 @@ public class VanishingTileEntity extends TileEntity
 			this.transitionTimer = powered ? 0 : duration;
 		this.powered = powered;
 		this.inTransition = true;
-		worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | VanishingBlock.flagInTransition, 2);
+		//will probably break
+		worldObj.setBlockState(pos, getWorld().getBlockState(pos).withProperty(VanishingBlock.TRANSITION, true));
+		blockDrawn = false;
 
 		return true;
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (!inTransition && !powered)
 		{
+			if (!worldObj.isRemote)
+				return;
 			float r = rand.nextFloat();
 			boolean b = r < MalisisDoorsSettings.vanishingGlitchChance.get();
-			if (b && MalisisDoorsSettings.enableVanishingGlitch.get())
+			if (b && MalisisDoorsSettings.enableVanishingGlitch.get() && !vibrating)
 			{
 				vibrating = true;
 				vibratingTimer = 0;
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() | VanishingBlock.flagInTransition, 2);
+				blockDrawn = false;
+				worldObj.markBlockForUpdate(pos);
 			}
 
 			if (vibrating && vibratingTimer++ >= maxVibratingTime)
 			{
 				vibrating = false;
 				vibratingTimer = 0;
-				worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~VanishingBlock.flagInTransition, 2);
+				worldObj.markBlockForUpdate(pos);
 			}
 
 		}
@@ -167,8 +214,8 @@ public class VanishingTileEntity extends TileEntity
 				if (transitionTimer >= duration)
 				{
 					inTransition = false;
-					worldObj.spawnParticle("smoke", xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0.0F, 0.0F, 0.0F);
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~VanishingBlock.flagInTransition, 2);
+					worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, 0.0F,
+							0.0F, 0.0F);
 				}
 			}
 			else
@@ -178,7 +225,7 @@ public class VanishingTileEntity extends TileEntity
 				if (transitionTimer <= 0)
 				{
 					inTransition = false;
-					worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, getBlockMetadata() & ~VanishingBlock.flagInTransition, 2);
+					worldObj.markBlockForUpdate(pos);
 				}
 			}
 		}
@@ -188,18 +235,21 @@ public class VanishingTileEntity extends TileEntity
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		int blockID = nbt.getInteger("BlockID");
-		if (blockID != 0)
+		if (nbt.hasKey("BlockID"))
 		{
-			copiedBlock = Block.getBlockById(blockID);
-			copiedMetadata = nbt.getInteger("BlockMetadata");
-			if (nbt.hasKey("copiedTileEntity"))
-			{
-				initCopiedTileEntity();
-				copiedTileEntity.readFromNBT(nbt.getCompoundTag("copiedTileEntity"));
-			}
+			Block block = Block.getBlockById(nbt.getInteger("BlockId"));
+			copiedState = block.getStateFromMeta(nbt.getInteger("BlockMetadata"));
 		}
-		frameType = nbt.getInteger("FrameType");
+		else
+			copiedState = MBlockState.fromNBT(nbt);
+
+		if (nbt.hasKey("copiedTileEntity"))
+		{
+			initCopiedTileEntity();
+			copiedTileEntity.readFromNBT(nbt.getCompoundTag("copiedTileEntity"));
+		}
+
+		frameType = VanishingBlock.Type.values()[nbt.getInteger("FrameType")];
 		powered = nbt.getBoolean("Powered");
 		duration = nbt.getInteger("Duration");
 		inTransition = nbt.getBoolean("InTransition");
@@ -213,10 +263,9 @@ public class VanishingTileEntity extends TileEntity
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (copiedBlock != null)
+		if (copiedState != null)
 		{
-			nbt.setInteger("BlockID", Block.blockRegistry.getIDForObject(copiedBlock));
-			nbt.setInteger("BlockMetadata", copiedMetadata);
+			MBlockState.toNBT(nbt, copiedState);
 			if (copiedTileEntity != null)
 			{
 				NBTTagCompound teTag = new NBTTagCompound();
@@ -224,7 +273,7 @@ public class VanishingTileEntity extends TileEntity
 				nbt.setTag("copiedTileEntity", teTag);
 			}
 		}
-		nbt.setInteger("FrameType", frameType);
+		nbt.setInteger("FrameType", frameType.ordinal());
 		nbt.setBoolean("Powered", powered);
 		nbt.setInteger("Duration", duration);
 		nbt.setBoolean("InTransition", inTransition);
@@ -238,7 +287,7 @@ public class VanishingTileEntity extends TileEntity
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -247,4 +296,15 @@ public class VanishingTileEntity extends TileEntity
 		this.readFromNBT(packet.getNbtCompound());
 	}
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		return oldState.getBlock() != newSate.getBlock();
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass)
+	{
+		return pass == 0;
+	}
 }

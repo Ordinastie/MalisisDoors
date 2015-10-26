@@ -24,25 +24,32 @@
 
 package net.malisis.doors.door.renderer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
+import net.malisis.core.renderer.animation.transformation.ITransformable;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.client.renderer.DestroyBlockProgress;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.util.EnumFacing;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 public class DoorRenderer extends MalisisRenderer
 {
 	protected DoorTileEntity tileEntity;
 	protected MalisisModel model;
-	protected int direction;
+	protected EnumFacing direction;
 	protected boolean opened;
-	protected boolean reversed;
+	protected boolean hingeLeft;
 	protected boolean topBlock;
 
 	protected Shape shape;
@@ -51,8 +58,11 @@ public class DoorRenderer extends MalisisRenderer
 
 	public DoorRenderer()
 	{
-		getBlockDamage = true;
+		registerFor(DoorTileEntity.class);
 	}
+
+	public DoorRenderer(boolean noRegister)
+	{}
 
 	@Override
 	protected void initialize()
@@ -87,36 +97,47 @@ public class DoorRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		if (renderType == RenderType.ISBRH_WORLD)
+		if (renderType == RenderType.BLOCK)
 			return;
 
-		setTileEntity();
-
-		direction = tileEntity.getDirection();
-		opened = tileEntity.isOpened();
-		reversed = tileEntity.isReversed();
-		topBlock = tileEntity.isTopBlock(x, y, z);
-
 		rp.icon.set(null);
+		if (renderType == RenderType.TILE_ENTITY)
+		{
+			setTileEntity();
+			setup();
+			renderTileEntity();
+		}
 
-		renderTileEntity();
-	}
+		//not used for regular doors
+		if (renderType == RenderType.ITEM)
+		{
+			setItem();
+			setup();
+			renderItem();
+		}
 
-	protected void setTileEntity()
-	{
-		this.tileEntity = (DoorTileEntity) super.tileEntity;
 	}
 
 	protected void setup()
 	{
 		model.resetState();
 
-		if (direction == Door.DIR_SOUTH)
+		if (direction == EnumFacing.NORTH)
 			model.rotate(180, 0, 1, 0, 0, 0, 0);
-		if (direction == Door.DIR_EAST)
+		if (direction == EnumFacing.WEST)
 			model.rotate(-90, 0, 1, 0, 0, 0, 0);
-		if (direction == Door.DIR_WEST)
+		if (direction == EnumFacing.EAST)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
+
+	}
+
+	protected void setTileEntity()
+	{
+		this.tileEntity = (DoorTileEntity) super.tileEntity;
+
+		direction = tileEntity.getDirection();
+		opened = tileEntity.isOpened();
+		hingeLeft = tileEntity.isHingeLeft();
 
 		if (tileEntity.isCentered())
 			model.translate(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
@@ -127,36 +148,37 @@ public class DoorRenderer extends MalisisRenderer
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
-		setup();
-
+		List<ITransformable> toRender = new ArrayList<>();
 		if (tileEntity.getMovement() != null)
 		{
 			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
-			ar.animate(anims);
+			toRender = ar.animate(anims);
+			if (!ArrayUtils.isEmpty(anims) && toRender.size() == 0)
+				return;
 		}
 
 		//model.render(this, rp);
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		drawShape(model.getShape("bottom"), rp);
 
-		blockMetadata |= Door.FLAG_TOPBLOCK;
-		y++;
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		set(pos.up());
+		set(blockState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		drawShape(model.getShape("top"), rp);
-		y--;
+		set(pos.down());
 	}
 
-	@Override
-	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
+	protected void setItem()
+	{}
+
+	protected void renderItem()
 	{
-		return dbp.getPartialBlockX() == x && (dbp.getPartialBlockY() == y || dbp.getPartialBlockY() == y + 1)
-				&& dbp.getPartialBlockZ() == z;
-	}
+		if (itemStack.getTagCompound() == null)
+			return;
 
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return false;
-	}
+		enableBlending();
+		model.render(this, rp);
 
+		return;
+	}
 }

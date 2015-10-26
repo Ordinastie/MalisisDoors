@@ -46,7 +46,7 @@ public class JailDoor extends DoorDescriptor
 		setHardness(5.0F);
 		setSoundType(Block.soundTypeMetal);
 		setName("jail_door");
-		setTextureName(MalisisDoors.modid + ":jail_door");
+		setTextureName(MalisisDoors.modid, "jail_door");
 
 		//TileEntity
 		setRequireRedstone(true);

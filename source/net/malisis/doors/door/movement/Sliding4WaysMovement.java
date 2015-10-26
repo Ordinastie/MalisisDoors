@@ -43,41 +43,36 @@ public class Sliding4WaysMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && type == BoundingBoxType.COLLISION && !topBlock)
+		if (!tileEntity.isOpened())
+			return IDoorMovement.getFullBoundingBox(topBlock, type);
+
+		if (type == BoundingBoxType.COLLISION && !topBlock)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
+		AxisAlignedBB aabb = IDoorMovement.getHalfBoundingBox();
 		float x = 0, y = 0;
-		if (topBlock == tileEntity.isReversed())
+		if (topBlock != tileEntity.isHingeLeft())
 			x = topBlock ? DOOR_WIDTH - 1 : 1 - DOOR_WIDTH;
 		else
 			y = topBlock ? 1 - DOOR_WIDTH : DOOR_WIDTH - 1;
 
 		if (tileEntity.isOpened())
-			aabb.offset(x, y, 0);
+			aabb = aabb.offset(x, y, 0);
 
 		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
-		float dir = 1 - DOOR_WIDTH;
+		float dir = -1 + DOOR_WIDTH;
 		float toX = 0;
 		float toY = 0;
-		if (tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 			dir = -dir;
 
-		if (topBlock != tileEntity.isReversed())
+		if (topBlock == tileEntity.isHingeLeft())
 			toY = dir;
 		else
 			toX = dir;

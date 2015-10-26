@@ -52,23 +52,12 @@ public class DoubleRotateMovement implements IDoorMovement
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if ((tileEntity.isReversed() != rightDirection) && tileEntity.isOpened())
+		if (tileEntity.isHingeLeft() == rightDirection)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			AABBUtils.rotate(aabb, rightDirection ? -1 : 1);
-		return aabb;
+		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), rightDirection ? 1 : -1);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
@@ -84,7 +73,7 @@ public class DoubleRotateMovement implements IDoorMovement
 		//			angle = -angle;
 		//		}
 
-		if (tileEntity.isReversed())
+		if (!tileEntity.isHingeLeft())
 		{
 			hingeX = -hingeX;
 			angle = -angle;
@@ -95,7 +84,7 @@ public class DoubleRotateMovement implements IDoorMovement
 		rotation.reversed(reversed);
 		rotation.forTicks(ot);
 
-		if (tileEntity.isReversed() != rightDirection)
+		if (tileEntity.isHingeLeft() == rightDirection)
 		{
 			float x = 2 - DOOR_WIDTH;
 			if (rightDirection)
@@ -110,7 +99,10 @@ public class DoubleRotateMovement implements IDoorMovement
 	@Override
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		Animation animation = new Animation(model, getTransformation(tileEntity));
+		if ((tileEntity.isHingeLeft() == rightDirection) && tileEntity.getState() == DoorState.OPENED)
+			animation.setRender(true, false);
+		return new Animation[] { animation };
 	}
 
 	@Override

@@ -34,9 +34,8 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.renderer.DoorRenderer;
-import net.malisis.doors.trapdoor.block.TrapDoor;
-import net.minecraft.client.renderer.DestroyBlockProgress;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
@@ -44,22 +43,30 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class TrapDoorRenderer extends DoorRenderer
 {
+	public static TrapDoorRenderer instance = new TrapDoorRenderer();
 	RenderParameters rpTop;
 	MalisisModel trapDoorModel;
 	MalisisModel slidingTrapDoorModel;
+
+	public TrapDoorRenderer()
+	{
+		super(false);
+		registerFor(TrapDoorTileEntity.class);
+	}
 
 	@Override
 	protected void initialize()
 	{
 		Shape s = new Cube();
-		s.setSize(1, Door.DOOR_WIDTH, 1);
+		s.setBounds(0, 1 - Door.DOOR_WIDTH, 0, 1, 1, 1);
+		s.translate(0, -1 + Door.DOOR_WIDTH, 0);
 		s.interpolateUV();
 
 		trapDoorModel = new MalisisModel();
 		trapDoorModel.addShape("shape", s);
 		trapDoorModel.storeState();
 
-		s.getFace(Face.nameFromDirection(ForgeDirection.UP)).getParameters().calculateAOColor.set(true);
+		s.getFace(Face.nameFromDirection(EnumFacing.UP)).getParameters().calculateAOColor.set(true);
 
 		s = new Cube();
 		s.setSize(1, Door.DOOR_WIDTH / 2, 1);
@@ -75,14 +82,14 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-		if (renderType == RenderType.ISBRH_WORLD)
+		initialize();
+		if (renderType == RenderType.BLOCK)
 			return;
 
-		if (renderType == RenderType.ISBRH_INVENTORY)
+		if (renderType == RenderType.ITEM)
 		{
 			model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
 			model.resetState();
-			model.translate(0, 0.5F, 0);
 			model.render(this, rp);
 			return;
 		}
@@ -97,18 +104,19 @@ public class TrapDoorRenderer extends DoorRenderer
 		model.resetState();
 
 		float angle = 0;
-		if (direction == TrapDoor.DIR_NORTH)
+		if (direction == EnumFacing.SOUTH)
 			angle = 180;
-		else if (direction == TrapDoor.DIR_EAST)
+		else if (direction == EnumFacing.WEST)
 			angle = 90;
-		else if (direction == TrapDoor.DIR_WEST)
+		else if (direction == EnumFacing.EAST)
 			angle = 270;
 		model.rotate(angle, 0, 1, 0, 0, 0, 0);
 
-		if (topBlock)
+		if (((TrapDoorTileEntity) tileEntity).isTop())
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
 
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		model.getShape("shape").deductParameters();
 	}
 
 	@Override
@@ -124,23 +132,11 @@ public class TrapDoorRenderer extends DoorRenderer
 			ar.animate(anims);
 		}
 
-		Shape s = model.getShape("shape");
-		Face f = s.getFace(Face.nameFromDirection(ForgeDirection.UP));
-		s.applyMatrix();
-		f.getParameters().aoMatrix.set(f.calculateAoMatrix(ForgeDirection.UP));
+		//Shape s = model.getShape("shape");
+		//		Face f = s.getFace(Face.nameFromDirection(EnumFacing.UP));
+		//		s.applyMatrix();
+		//		f.getParameters().aoMatrix.set(f.calculateAoMatrix(EnumFacing.UP));
 
 		model.render(this, rp);
-	}
-
-	@Override
-	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
-	{
-		return dbp.getPartialBlockX() == x && dbp.getPartialBlockY() == y && dbp.getPartialBlockZ() == z;
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
 	}
 }

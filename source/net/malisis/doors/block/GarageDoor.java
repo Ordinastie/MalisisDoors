@@ -24,6 +24,11 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorState;
@@ -32,126 +37,88 @@ import net.malisis.doors.entity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class GarageDoor extends Block implements ITileEntityProvider
+public class GarageDoor extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
 {
-	private IIcon topBlockIcon;
+	public static PropertyBool POWERED = PropertyBool.create("powered");
 
 	public GarageDoor()
 	{
 		super(Material.wood);
-		setUnlocalizedName("garage_door");
+		setName("garage_door");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(2.0F);
 		setStepSound(soundTypeWood);
+
+		setDefaultState(getDefaultState().withProperty(POWERED, false));
 	}
 
 	@Override
-	public void registerIcons(IIconRegister iconRegister)
+	protected BlockState createBlockState()
 	{
-		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
-		this.topBlockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)) + "_top");
-	}
-
-	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		if ((metadata & Door.FLAG_TOPBLOCK) != 0 && (side == 4 || side == 5))
-			return topBlockIcon;
-		else
-			return blockIcon;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
-	{
-		int metadata = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F - 0.5F) & 3;
-		Block block = world.getBlock(x, y + 1, z);
-		if (block instanceof GarageDoor)
-			metadata = world.getBlockMetadata(x, y + 1, z) & 3;
-		else
-		{
-			block = world.getBlock(x, y - 1, z);
-			if (block instanceof GarageDoor)
-				metadata = world.getBlockMetadata(x, y - 1, z) & 3;
-		}
-
-		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-		setBlockBoundsBasedOnState(world, x, y, z);
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
-	{
-		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
-		if (te == null)
-			return;
-
-		boolean powered = te.isPowered();
-		if ((powered || block.canProvidePower()) && block != this)
-			te.setPowered(powered);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-	{
-		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, x, y, z);
-		if (te == null)
-			setBlockBounds(0, 0, 0, 1, 1, 1);
-		else if (te.getState() != DoorState.CLOSED)
-			setBlockBounds(0, 0, 0, 0, 0, 0);
-		else
-		{
-			float w = Door.DOOR_WIDTH / 2;
-
-			if (isEastOrWest(te.getBlockMetadata()))
-				setBlockBounds(0.5F - w, 0, 0, 0.5F + w, 1, 1);
-			else
-				setBlockBounds(0, 0, 0.5F - w, 1, 1, 0.5F + w);
-		}
-	}
-
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 src, Vec3 dest)
-	{
-		setBlockBoundsBasedOnState(world, x, y, z);
-		return super.collisionRayTrace(world, x, y, z, src, dest);
+		return new BlockState(this, HORIZONTAL, POWERED);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+	public void createIconProvider(Object object)
 	{
-		setBlockBoundsBasedOnState(world, x, y, z);
-		return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+		iconProvider = new GarageDoorIconProvider();
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		int metadata = world.getBlockMetadata(x, y, z);
-		if ((metadata & Door.FLAG_OPENED) != 0)
+		IBlockState neighborState = world.getBlockState(pos.up());
+		if (neighborState.getBlock() == this)
+			return neighborState;
+
+		neighborState = world.getBlockState(pos.down());
+		if (neighborState.getBlock() == this)
+			return neighborState;
+
+		return super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, placer);
+	}
+
+	@Override
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	{
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos);
+		if (te == null || te.isMoving())
+			return;
+
+		boolean powered = world.isBlockIndirectlyGettingPowered(pos) != 0;
+		if ((powered || neighborBlock.canProvidePower()) && neighborBlock != this)
+			te.getTopDoor().setPowered(powered);
+	}
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	{
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos);
+		if (te != null && (te.isMoving() || te.getState() != DoorState.CLOSED))
 			return null;
 
-		setBlockBoundsBasedOnState(world, x, y, z);
-		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+		float w = Door.DOOR_WIDTH / 2;
+		return new AxisAlignedBB(0, 0, 0.5F - w, 1, 1, 0.5F + w);
 	}
 
 	@Override
@@ -161,13 +128,25 @@ public class GarageDoor extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean isNormalCube(IBlockAccess world, int x, int y, int z)
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return super.getStateFromMeta(meta).withProperty(POWERED, (meta & 8) != 0);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return super.getMetaFromState(state) + ((boolean) state.getValue(POWERED) ? 8 : 0);
+	}
+
+	@Override
+	public boolean isNormalCube()
 	{
 		return false;
 	}
 
 	@Override
-	public boolean renderAsNormalBlock()
+	public boolean isFullCube()
 	{
 		return false;
 	}
@@ -184,8 +163,41 @@ public class GarageDoor extends Block implements ITileEntityProvider
 		return -1;
 	}
 
-	public static boolean isEastOrWest(int metadata)
+	@SideOnly(Side.CLIENT)
+	public static class GarageDoorIconProvider implements IBlockIconProvider
 	{
-		return (metadata & 3) == Door.DIR_EAST || (metadata & 3) == Door.DIR_WEST;
+		private MalisisIcon topIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/garage_door_top");
+		private MalisisIcon baseIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/garage_door");
+
+		@Override
+		public void registerIcons(TextureMap textureMap)
+		{
+			topIcon = topIcon.register(textureMap);
+			baseIcon = baseIcon.register(textureMap);
+		}
+
+		@Override
+		public MalisisIcon getIcon()
+		{
+			return baseIcon;
+		}
+
+		@Override
+		public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+		{
+			GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos);
+			return te != null && te.isTop() ? getIcon(side) : baseIcon;
+		}
+
+		@Override
+		public MalisisIcon getIcon(ItemStack itemStack, EnumFacing side)
+		{
+			return getIcon(side);
+		}
+
+		private MalisisIcon getIcon(EnumFacing side)
+		{
+			return side == EnumFacing.SOUTH || side == EnumFacing.NORTH ? topIcon : baseIcon;
+		}
 	}
 }

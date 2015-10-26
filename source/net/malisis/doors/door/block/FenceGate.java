@@ -24,60 +24,110 @@
 
 package net.malisis.doors.door.block;
 
-/**
- * @author Ordinastie
- *
- */
-
+import net.malisis.core.MalisisCore;
+import net.malisis.core.block.IRegisterable;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.renderer.icon.IMetaIconProvider;
+import net.malisis.core.renderer.icon.VanillaIcon;
+import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
+import net.malisis.core.util.EntityUtils;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.iconprovider.CamoFenceGateIconProvider;
+import net.malisis.doors.door.renderer.FenceGateRenderer;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FenceGate extends BlockFenceGate implements ITileEntityProvider
+/**
+ * @author Ordinastie
+ *
+ */
+@MalisisRendered(FenceGateRenderer.class)
+public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IMetaIconProvider, IRegisterable
 {
-	public static int renderId = -1;
-
-	public FenceGate()
+	public static enum Type
 	{
+		//@formatter:off
+		OAK("fenceGate", EnumType.OAK),
+		ACACIA("acaciaFenceGate", EnumType.ACACIA),
+		BIRCH("birchFenceGate", EnumType.BIRCH),
+		DARK_OAK("darkOakFenceGate", EnumType.DARK_OAK),
+		JUNGLE("jungleFenceGate", EnumType.JUNGLE),
+		SPRUCE("spruceFenceGate", EnumType.SPRUCE),
+		CAMO("camoFenceGate", null);
+		//@formatter:on
+		private EnumType type;
+		private String name;
+
+		private Type(String name, EnumType type)
+		{
+			this.name = name;
+			this.type = type;
+		}
+	}
+
+	private Type type;
+	@SideOnly(Side.CLIENT)
+	private IIconProvider iconProvider;
+
+	public FenceGate(Type type)
+	{
+		this.type = type;
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
-		setUnlocalizedName("fenceGate");
+		setUnlocalizedName(type.name);
+
+		if (type == Type.CAMO)
+			setCreativeTab(MalisisDoors.tab);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
+	public String getRegistryName()
 	{
-		super.onBlockPlacedBy(world, x, y, z, player, itemStack);
-		if (world.isRemote)
-			return;
-
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null)
-			return;
-
-		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
+		return type.name;
 	}
 
-	/**
-	 * Called upon block activation (right click on the block.)
-	 */
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	@SideOnly(Side.CLIENT)
+	public void createIconProvider(Object object)
+	{
+		if (type == Type.CAMO)
+			iconProvider = new CamoFenceGateIconProvider();
+		else
+			iconProvider = new DefaultIconProvider(new VanillaIcon(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT,
+					type.type)));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIconProvider getIconProvider()
+	{
+		return iconProvider;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
 
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null)
 			return true;
 
@@ -87,45 +137,40 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		if (opened)
 			return true;
 
-		int dir = (MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3) % 4;
-		if (dir == ((world.getBlockMetadata(x, y, z) & 3) + 2) % 4)
-			world.setBlockMetadataWithNotify(x, y, z, dir, 2);
+		EnumFacing facing = EntityUtils.getEntityFacing(player);
+		if (state.getValue(FACING) != facing.getOpposite())
+			return true;
+
+		world.setBlockState(pos, state.withProperty(FACING, facing));
 
 		te = te.getDoubleDoor();
 		if (te != null)
-		{
-			if (dir == ((world.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 3) + 2) % 4)
-				world.setBlockMetadataWithNotify(te.xCoord, te.yCoord, te.zCoord, dir, 2);
-		}
+			world.setBlockState(te.getPos(), state.withProperty(FACING, facing));
 
 		return true;
 	}
 
-	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are their own) Args: x,
-	 * y, z, neighbor Block
-	 */
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null)
 			return;
 
-		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
+		//	((FenceGateTileEntity) te).updateCamo(world, pos);
 
-		if (world.isBlockIndirectlyGettingPowered(x, y, z) || block.canProvidePower())
+		if (world.isBlockIndirectlyGettingPowered(pos) != 0 || state.getBlock().canProvidePower())
 			te.setPowered(te.isPowered());
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null || te.isMoving() || te.isOpened())
 			return null;
 
-		return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+		return super.getCollisionBoundingBox(world, pos, state);
 	}
 
 	@Override
@@ -134,13 +179,9 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		return new FenceGateTileEntity();
 	}
 
-	/**
-	 * The type of render function that is called for this block
-	 */
 	@Override
 	public int getRenderType()
 	{
-		return renderId;
+		return MalisisCore.malisisRenderType;
 	}
-
 }

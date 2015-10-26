@@ -33,7 +33,6 @@ import net.malisis.doors.door.movement.CurtainMovement;
 import net.malisis.doors.door.movement.DoubleRotateMovement;
 import net.malisis.doors.door.movement.DoubleSlideMovement;
 import net.malisis.doors.door.movement.FenceGateMovement;
-import net.malisis.doors.door.movement.ForcefieldMovement;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.movement.RotateAndPlaceMovement;
 import net.malisis.doors.door.movement.RotateAndSlideMovement;
@@ -92,7 +91,6 @@ public class DoorRegistry
 		registerMovement("rusty_hatch", new RustyHatchMovement());
 		registerMovement("curtain", new CurtainMovement());
 		registerMovement("carriageDoor", new CarriageDoorMovement());
-		registerMovement("forcefieldDoor", new ForcefieldMovement());
 		registerMovement("vanishing_door", new VanishingDoorMovement());
 		registerMovement("spinning_door", new SpinningDoorMovement());
 		registerMovement("spinning_around_door", new SpinningAroundDoorMovement());

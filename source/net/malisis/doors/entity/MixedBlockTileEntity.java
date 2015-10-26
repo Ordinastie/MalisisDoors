@@ -1,62 +1,60 @@
 package net.malisis.doors.entity;
 
-import net.minecraft.block.Block;
+import net.malisis.doors.item.MixedBlockBlockItem;
 import net.minecraft.block.BlockBreakable;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class MixedBlockTileEntity extends TileEntity
 {
-	public Block block1;
-	public Block block2;
-	public int metadata1;
-	public int metadata2;
+	private IBlockState state1;
+	private IBlockState state2;
 
 	public void set(ItemStack itemStack)
 	{
-		block1 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block1"));
-		block2 = Block.getBlockById(itemStack.stackTagCompound.getInteger("block2"));
-		metadata1 = itemStack.stackTagCompound.getInteger("metadata1");
-		metadata2 = itemStack.stackTagCompound.getInteger("metadata2");
+		Pair<IBlockState, IBlockState> pair = MixedBlockBlockItem.readNBT(itemStack.getTagCompound());
+		state1 = pair.getLeft();
+		state2 = pair.getRight();
+	}
+
+	public IBlockState getState1()
+	{
+		return state1;
+	}
+
+	public IBlockState getState2()
+	{
+		return state2;
 	}
 
 	public boolean isOpaque()
 	{
-		return !(block1 instanceof BlockBreakable || block2 instanceof BlockBreakable);
+		return !(state1.getBlock() instanceof BlockBreakable || state2.getBlock() instanceof BlockBreakable);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
-		block1 = Block.getBlockById(nbt.getInteger("block1"));
-		block2 = Block.getBlockById(nbt.getInteger("block2"));
-		metadata1 = nbt.getInteger("metadata1");
-		metadata2 = nbt.getInteger("metadata2");
+		Pair<IBlockState, IBlockState> pair = MixedBlockBlockItem.readNBT(nbt);
+		state1 = pair.getLeft();
+		state2 = pair.getRight();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-		if (block1 != null && block2 != null)
-		{
-			nbt.setInteger("block1", Block.getIdFromBlock(block1));
-			nbt.setInteger("block2", Block.getIdFromBlock(block2));
-			nbt.setInteger("metadata1", metadata1);
-			nbt.setInteger("metadata2", metadata2);
-		}
-
-	}
-
-	@Override
-	public boolean canUpdate()
-	{
-		return false;
+		MixedBlockBlockItem.writeNBT(nbt, state1, state2);
 	}
 
 	@Override
@@ -64,7 +62,7 @@ public class MixedBlockTileEntity extends TileEntity
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -73,4 +71,9 @@ public class MixedBlockTileEntity extends TileEntity
 		this.readFromNBT(packet.getNbtCompound());
 	}
 
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		return oldState.getBlock() != newSate.getBlock();
+	}
 }

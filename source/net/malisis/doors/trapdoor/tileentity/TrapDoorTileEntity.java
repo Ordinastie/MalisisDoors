@@ -24,9 +24,12 @@
 
 package net.malisis.doors.trapdoor.tileentity;
 
-import net.malisis.doors.door.block.Door;
+import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.minecraft.block.BlockTrapDoor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
@@ -34,15 +37,31 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class TrapDoorTileEntity extends DoorTileEntity
 {
-	@Override
-	public boolean isTopBlock(int x, int y, int z)
+	public TrapDoorTileEntity()
 	{
-		return (getBlockMetadata() & Door.FLAG_TOPBLOCK) != 0;
+		openProperty = BlockTrapDoor.OPEN;
+	}
+
+	@Override
+	public IBlockState getBlockState()
+	{
+		return worldObj.getBlockState(pos);
+	}
+
+	@Override
+	public EnumFacing getDirection()
+	{
+		return (EnumFacing) getBlockState().getValue(BlockTrapDoor.FACING);
+	}
+
+	public boolean isTop()
+	{
+		return getBlockState().getValue(BlockTrapDoor.HALF) == BlockTrapDoor.DoorHalf.TOP;
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
+		return AABBUtils.identity(pos);
 	}
 }

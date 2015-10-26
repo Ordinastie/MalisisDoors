@@ -38,19 +38,41 @@ import net.minecraft.creativetab.CreativeTabs;
  */
 public class VanillaDoor extends DoorDescriptor
 {
-	public VanillaDoor(Material material)
+	public static enum Type
 	{
-		boolean wood = material == Material.wood;
+		//@formatter:off
+		OAK("doorOak", "door_wood"),
+		SPRUCE("doorSpruce", "door_spruce"),
+		BIRCH("doorBirch", "door_birch"),
+		JUNGLE("doorJungle", "door_jungle"),
+		ACACIA("doorAcacia", "door_acacia"),
+		DARK_OAK("doorDarkOak", "door_dark_oak"),
+		IRON("doorIron", "door_iron");
+		//@formatter:on
+
+		private String name;
+		private String texture;
+
+		private Type(String name, String texture)
+		{
+			this.name = name;
+			this.texture = texture;
+		}
+
+	}
+
+	public VanillaDoor(Type type)
+	{
 		//Block
 		setOpeningTime(6);
-		setMaterial(material);
-		setHardness(wood ? 3.0F : 5.0F);
-		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
-		setName(wood ? "doorWood" : "doorIron");
-		setTextureName(wood ? "door_wood" : "door_iron");
+		setMaterial(type == Type.IRON ? Material.iron : Material.wood);
+		setHardness(type == Type.IRON ? 5.0F : 3.0F);
+		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
+		setName(type.name);
+		setTextureName("minecraft", type.texture);
 
 		//te
-		setRequireRedstone(!wood);
+		setRequireRedstone(type == Type.IRON);
 		setMovement(DoorRegistry.getMovement(RotatingDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 

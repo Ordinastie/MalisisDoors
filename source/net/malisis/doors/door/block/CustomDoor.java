@@ -24,32 +24,36 @@
 
 package net.malisis.doors.door.block;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import net.malisis.core.MalisisCore;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.util.EntityUtils;
 import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author Ordinastie
  *
  */
+@MalisisRendered(CustomDoorRenderer.class)
 public class CustomDoor extends Door
 {
 	public CustomDoor()
@@ -57,166 +61,107 @@ public class CustomDoor extends Door
 		super(Material.wood);
 		setHardness(3.0F);
 		setStepSound(soundTypeWood);
+		setUnlocalizedName("customDoor");
 	}
 
 	@Override
-	public void registerIcons(IIconRegister register)
-	{}
+	public String getRegistryName()
+	{
+		return "customDoor";
+	}
 
 	@Override
-	public IIcon getIcon(int side, int metadata)
+	public IIconProvider getIconProvider()
 	{
 		return null;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		if ((metadata & FLAG_TOPBLOCK) != 0)
+		if (isTop(state))
 			return null;
 
 		return new CustomDoorTileEntity();
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, net.minecraft.util.BlockPos pos)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (!(te instanceof CustomDoorTileEntity))
 			return null;
 
 		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		if (!player.capabilities.isCreativeMode)
 		{
-			DoorTileEntity te = Door.getDoor(world, x, y, z);
+			DoorTileEntity te = Door.getDoor(world, pos);
 			if (!(te instanceof CustomDoorTileEntity))
 				return true;
-			if (!te.isTopBlock(x, y, z))
-				dropBlockAsItem(world, x, y, z, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
+			if (!te.isTopBlock(pos))
+				spawnAsEntity(world, pos, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
 		}
-		return super.removedByPlayer(world, player, x, y, z);
+		return super.removedByPlayer(world, pos, player, willHarvest);
 	}
 
 	@Override
-	protected ItemStack getDoorItemStack(IBlockAccess world, int x, int y, int z)
+	protected ItemStack getDoorItemStack(IBlockAccess world, BlockPos pos)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (!(te instanceof CustomDoorTileEntity))
 			return null;
 		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		return new ArrayList<ItemStack>();
+		return ImmutableList.of();
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
 	{
-		int x = target.blockX;
-		int y = target.blockY;
-		int z = target.blockZ;
-
-		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
-		if (te == null)
+		DoorTileEntity door = Door.getDoor(world, target.getBlockPos());
+		if (!(door instanceof CustomDoorTileEntity))
 			return true;
 
-		Block[] blocks = { te.getFrame(), te.getTopMaterial(), te.getBottomMaterial() };
-		int[] metadata = { te.getFrameMetadata(), te.getTopMaterialMetadata(), te.getBottomMaterialMetadata() };
-
-		ForgeDirection side = ForgeDirection.getOrientation(target.sideHit);
-
-		double fxX = x + world.rand.nextDouble();
-		double fxY = y + world.rand.nextDouble();
-		double fxZ = z + world.rand.nextDouble();
-
-		switch (side)
-		{
-			case DOWN:
-				fxY = y + getBlockBoundsMinY() - 0.1F;
-				break;
-			case UP:
-				fxY = y + getBlockBoundsMaxY() + 0.1F;
-				break;
-			case NORTH:
-				fxZ = z + getBlockBoundsMinZ() - 0.1F;
-				break;
-			case SOUTH:
-				fxZ = z + getBlockBoundsMaxY() + 0.1F;
-				break;
-			case EAST:
-				fxX = x + getBlockBoundsMaxX() + 0.1F;
-				break;
-			case WEST:
-				fxX = x + getBlockBoundsMinX() + 0.1F;
-				break;
-			default:
-				break;
-		}
-
-		int i = world.rand.nextInt(blocks.length);
-		if (blocks[i] == null)
-			blocks[i] = Blocks.planks;
-
-		EntityDiggingFX fx = new EntityDiggingFX(world, fxX, fxY, fxZ, 0.0D, 0.0D, 0.0D, blocks[i], metadata[i]);
-		fx.multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
-		effectRenderer.addEffect(fx);
+		CustomDoorTileEntity te = (CustomDoorTileEntity) door;
+		EntityUtils.addHitEffects(world, target, effectRenderer, te.getFrame(), te.getTop(), te.getBottom());
 
 		return true;
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	public boolean addDestroyEffects(World world, BlockPos pos, EffectRenderer effectRenderer)
 	{
-		byte nb = 4;
-		EntityDiggingFX fx;
-
-		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
-		if (te == null)
+		DoorTileEntity door = Door.getDoor(world, pos);
+		if (!(door instanceof CustomDoorTileEntity))
 			return true;
 
-		Block[] blocks = { te.getFrame(), te.getTopMaterial(), te.getBottomMaterial() };
-		int[] metadata = { te.getFrameMetadata(), te.getTopMaterialMetadata(), te.getBottomMaterialMetadata() };
-
-		for (int i = 0; i < nb; ++i)
-		{
-			for (int j = 0; j < nb; ++j)
-			{
-				for (int k = 0; k < nb; ++k)
-				{
-					double fxX = x + (i + 0.5D) / nb;
-					double fxY = y + (j + 0.5D) / nb;
-					double fxZ = z + (k + 0.5D) / nb;
-					int l = (i + j + k) % 2;
-					if (blocks[l] == null)
-						blocks[l] = Blocks.planks;
-					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - x - 0.5D, fxY - y - 0.5D, fxZ - z - 0.5D, blocks[l], metadata[l]);
-					effectRenderer.addEffect(fx);
-				}
-			}
-		}
+		CustomDoorTileEntity te = (CustomDoorTileEntity) door;
+		EntityUtils.addDestroyEffects(world, pos, effectRenderer, te.getFrame(), te.getTop(), te.getBottom());
 
 		return true;
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	public int getLightOpacity(IBlockAccess world, BlockPos pos)
 	{
-		CustomDoorTileEntity te = (CustomDoorTileEntity) Door.getDoor(world, x, y, z);
-		if (te == null || te.getFrame() == null)
-			return 0;
+		DoorTileEntity te = Door.getDoor(world, pos);
+		return te instanceof CustomDoorTileEntity ? ((CustomDoorTileEntity) te).getLightValue() : 0;
+	}
 
-		return Math.max(Math.max(te.getFrame().getLightValue(), te.getTopMaterial().getLightValue()), te.getBottomMaterial()
-				.getLightValue());
+	@Override
+	public int getRenderType()
+	{
+		return MalisisCore.malisisRenderType;
 	}
 }

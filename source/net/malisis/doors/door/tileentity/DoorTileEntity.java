@@ -30,13 +30,19 @@ import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -45,7 +51,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Ordinastie
  *
  */
-public class DoorTileEntity extends TileEntity
+public class DoorTileEntity extends TileEntity implements IUpdatePlayerListBox
 {
 	protected DoorDescriptor descriptor;
 	protected int lastMetadata = -1;
@@ -53,6 +59,7 @@ public class DoorTileEntity extends TileEntity
 	protected DoorState state = DoorState.CLOSED;
 	protected boolean moving;
 	protected boolean centered = false;
+	protected PropertyBool openProperty = BlockDoor.OPEN;
 
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
@@ -108,42 +115,39 @@ public class DoorTileEntity extends TileEntity
 		return getDescriptor() != null ? getDescriptor().getOpeningTime() : 6;
 	}
 
-	public int getDirection()
+	public IBlockState getBlockState()
 	{
-		return getBlockMetadata() & 3;
+		IBlockState state = worldObj.getBlockState(pos);
+		if (state.getBlock() != getBlockType())
+			return null;
+
+		return state.getBlock().getActualState(state, worldObj, pos);
 	}
 
-	public boolean isTopBlock(int x, int y, int z)
+	public EnumFacing getDirection()
 	{
-		return x == xCoord && y == yCoord + 1 && z == zCoord;
+		return BlockDoor.getFacing(worldObj, pos);
 	}
 
-	@Override
-	public int getBlockMetadata()
+	public boolean isTopBlock(BlockPos pos)
 	{
-		if (lastMetadata != blockMetadata || blockMetadata == -1 && getBlockType() != null)
-		{
-			blockMetadata = Door.fullMetadata(worldObj, xCoord, yCoord, zCoord);
-			lastMetadata = blockMetadata;
-		}
-
-		return blockMetadata;
+		return this.pos.up().equals(pos);
 	}
 
 	public boolean isOpened()
 	{
-		return (getBlockMetadata() & Door.FLAG_OPENED) != 0;
+		IBlockState state = getBlockState();
+		return state != null && (boolean) state.getValue(BlockDoor.OPEN);
 	}
 
-	public boolean isReversed()
+	public boolean isHingeLeft()
 	{
-		return (getBlockMetadata() & Door.FLAG_REVERSED) != 0;
+		return getBlockType() instanceof Door && getBlockState().getValue(BlockDoor.HINGE) == BlockDoor.EnumHingePosition.LEFT;
 	}
 
 	public boolean isPowered()
 	{
-		return getWorld().isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)
-				|| getWorld().isBlockIndirectlyGettingPowered(xCoord, yCoord + 1, zCoord);
+		return getWorld().isBlockIndirectlyGettingPowered(pos) + getWorld().isBlockIndirectlyGettingPowered(pos.up()) != 0;
 	}
 
 	public boolean isCentered()
@@ -156,14 +160,9 @@ public class DoorTileEntity extends TileEntity
 		if (getMovement() == null /*|| !getMovement().canCenter()*/)
 			return false;
 
-		int ox = 0, oz = 0;
-		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
-			ox = 1;
-		else
-			oz = 1;
-
-		Block b1 = worldObj.getBlock(xCoord - ox, yCoord, zCoord - oz);
-		Block b2 = worldObj.getBlock(xCoord + ox, yCoord, zCoord + oz);
+		EnumFacing offset = getDirection().rotateY();
+		Block b1 = worldObj.getBlockState(pos.offset(offset, 1)).getBlock();
+		Block b2 = worldObj.getBlockState(pos.offset(offset, -1)).getBlock();
 
 		return ArrayUtils.contains(Door.centerBlocks, b1) || ArrayUtils.contains(Door.centerBlocks, b2);
 	}
@@ -172,7 +171,7 @@ public class DoorTileEntity extends TileEntity
 	{
 		this.centered = centered;
 		if (worldObj != null)
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			worldObj.markBlockForUpdate(pos);
 		return centered;
 	}
 
@@ -227,15 +226,13 @@ public class DoorTileEntity extends TileEntity
 		}
 		else
 		{
-			int metadata = getBlockMetadata();
-			if (getBlockType() instanceof Door)
-				metadata = metadata & 7;
-			metadata = state == DoorState.OPENED ? metadata | Door.FLAG_OPENED : metadata & ~Door.FLAG_OPENED;
-			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, metadata, 2);
+			IBlockState state = getBlockState();
+			if (state != null)
+				worldObj.setBlockState(pos, state.withProperty(openProperty, newState == DoorState.OPENED));
 			moving = false;
 		}
 
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockForUpdate(pos);
 		playSound();
 	}
 
@@ -251,7 +248,7 @@ public class DoorTileEntity extends TileEntity
 		if (descriptor.getSound() != null)
 			soundPath = descriptor.getSound().getSoundPath(state);
 		if (soundPath != null)
-			getWorld().playSoundEffect(xCoord, yCoord, zCoord, soundPath, 1F, 1F);
+			getWorld().playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), soundPath, 1F, 1F);
 	}
 
 	/**
@@ -264,24 +261,13 @@ public class DoorTileEntity extends TileEntity
 		if (!descriptor.isDoubleDoor())
 			return null;
 
-		int dir = getDirection();
-		boolean reversed = isReversed();
+		EnumFacing offset = getDirection().rotateYCCW();
+		if (isHingeLeft())
+			offset = offset.getOpposite();
 
-		int x = xCoord;
-		int z = zCoord;
-
-		if (dir == Door.DIR_NORTH)
-			x += (reversed ? 1 : -1);
-		else if (dir == Door.DIR_SOUTH)
-			x += (reversed ? -1 : 1);
-		else if (dir == Door.DIR_EAST)
-			z += (reversed ? 1 : -1);
-		else if (dir == Door.DIR_WEST)
-			z += (reversed ? -1 : 1);
-
-		TileEntity te = worldObj.getTileEntity(x, yCoord, z);
-		if (te instanceof DoorTileEntity && isMatchingDoubleDoor((DoorTileEntity) te))
-			return (DoorTileEntity) te;
+		DoorTileEntity te = Door.getDoor(worldObj, pos.offset(offset));
+		if (isMatchingDoubleDoor(te))
+			return te;
 
 		return null;
 	}
@@ -294,6 +280,9 @@ public class DoorTileEntity extends TileEntity
 	 */
 	public boolean isMatchingDoubleDoor(DoorTileEntity te)
 	{
+		if (te == null)
+			return false;
+
 		if (getBlockType() != te.getBlockType()) // different block
 			return false;
 
@@ -303,10 +292,10 @@ public class DoorTileEntity extends TileEntity
 		if (getMovement() != te.getMovement()) //different movement type
 			return false;
 
-		if ((getBlockMetadata() & Door.FLAG_OPENED) != (te.getBlockMetadata() & Door.FLAG_OPENED)) // different state
+		if (isOpened() != te.isOpened()) // different state
 			return false;
 
-		if ((getBlockMetadata() & Door.FLAG_REVERSED) == (te.getBlockMetadata() & Door.FLAG_REVERSED)) // handle same side
+		if (isHingeLeft() == te.isHingeLeft()) // handle same side
 			return false;
 
 		return true;
@@ -332,7 +321,7 @@ public class DoorTileEntity extends TileEntity
 	}
 
 	@Override
-	public void updateEntity()
+	public void update()
 	{
 		if (!moving)
 			return;
@@ -367,7 +356,7 @@ public class DoorTileEntity extends TileEntity
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -384,12 +373,12 @@ public class DoorTileEntity extends TileEntity
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 2, zCoord + 1);
+		return new AxisAlignedBB(pos, pos.add(1, 2, 1));
 	}
 
 	@Override
-	public boolean shouldRefresh(Block oldBlock, Block newBlock, int oldMeta, int newMeta, World world, int x, int y, int z)
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
 	{
-		return oldBlock != newBlock;
+		return oldState.getBlock() != newState.getBlock();
 	}
 }

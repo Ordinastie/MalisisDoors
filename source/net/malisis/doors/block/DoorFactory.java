@@ -24,77 +24,51 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.inventory.IInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
+import net.malisis.core.renderer.icon.provider.SidesIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class DoorFactory extends MalisisBlock implements ITileEntityProvider
+public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
 {
-	private IIcon frontIcon;
-
 	public DoorFactory()
 	{
 		super(Material.iron);
 		setCreativeTab(MalisisDoors.tab);
-		setUnlocalizedName("door_factory");
+		setName("door_factory");
 		setHardness(3.0F);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
+	public void createIconProvider(Object object)
 	{
-		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + name + "_side");
-		this.frontIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + name);
+		SidesIconProvider ip = new SidesIconProvider(MalisisDoors.modid + ":blocks/door_factory_side");
+		ip.setSideIcon(EnumFacing.SOUTH, MalisisDoors.modid + ":blocks/door_factory");
+		iconProvider = ip;
 	}
 
 	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		if ((metadata != 0 && side == metadata) || (metadata == 0 && side == 3))
-			return frontIcon;
-		return blockIcon;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
-	{
-		int side = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-		int metadata = 0;
-		if (side == 0)
-			metadata = 2;
-		if (side == 1)
-			metadata = 5;
-		if (side == 2)
-			metadata = 3;
-		if (side == 3)
-			metadata = 4;
-		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -102,19 +76,18 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider
 		if (player.isSneaking())
 			return false;
 
-		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
 		MalisisInventory.open((EntityPlayerMP) player, te);
-
 		return true;
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
-		for (MalisisInventory inventory : provider.getInventories())
-			inventory.breakInventory(world, x, y, z);
-		super.breakBlock(world, x, y, z, block, metadata);
+		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
+		if (provider != null)
+			provider.breakInventories(world, pos);
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override

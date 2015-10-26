@@ -47,7 +47,7 @@ public class SlidingTrapDoor extends TrapDoorDescriptor
 		setHardness(4.0F);
 		setSoundType(Block.soundTypeMetal);
 		setName("sliding_trapdoor");
-		setTextureName(MalisisDoors.modid + ":sliding_trapdoor");
+		setTextureName(MalisisDoors.modid, "blocks/sliding_trapdoor");
 
 		//te
 		setRequireRedstone(false);

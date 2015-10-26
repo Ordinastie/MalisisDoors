@@ -24,6 +24,8 @@
 
 package net.malisis.doors.gui;
 
+import java.util.Set;
+
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.ComponentPosition;
 import net.malisis.core.client.gui.GuiTexture;
@@ -46,14 +48,17 @@ import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent.ValueChange;
 import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateChange;
 import net.malisis.core.inventory.MalisisInventoryContainer;
+import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.network.DoorFactoryMessage;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -64,9 +69,9 @@ public class DoorFactoryGui extends MalisisGui
 {
 	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorFactoryTabIcons.png");
 	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 128);
-	public static IIcon propIcon = tabTexture.getIcon(0, 0, 64, 64);
-	public static IIcon matIcon = tabTexture.getIcon(64, 0, 64, 64);
-	public static IIcon dcIcon = tabTexture.getIcon(0, 64, 64, 64);
+	public static MalisisIcon propIcon = tabTexture.getIcon(0, 0, 64, 64);
+	public static MalisisIcon matIcon = tabTexture.getIcon(64, 0, 64, 64);
+	public static MalisisIcon dcIcon = tabTexture.getIcon(0, 64, 64, 64);
 
 	private DoorFactoryTileEntity tileEntity;
 	private UISelect<String> selDoorMovement;
@@ -88,7 +93,6 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		setInventoryContainer(container);
 		tileEntity = te;
-		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
 	}
 
 	@Override
@@ -134,14 +138,15 @@ public class DoorFactoryGui extends MalisisGui
 		addToScreen(tabGroup);
 		addToScreen(window);
 
-		updateGui();
+		TileEntityUtils.linkTileEntityToGui(tileEntity, this);
 	}
 
 	private UIContainer<UIContainer> getPropertiesContainer()
 	{
 		UIContainer propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
-		selDoorMovement = new UISelect<String>(this, 100, DoorRegistry.listMovements().keySet()).setPosition(0, 2, Anchor.RIGHT);
+		selDoorMovement = new UISelect<String>(this, 100, getSortedList(DoorRegistry.listMovements().keySet(), "door_movement."));
+		selDoorMovement.setPosition(0, 2, Anchor.RIGHT);
 		selDoorMovement.setLabelPattern("door_movement.%s").register(this);
 
 		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
@@ -149,7 +154,8 @@ public class DoorFactoryGui extends MalisisGui
 		cbRedstone = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
 		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 50, Anchor.RIGHT).register(this);
 
-		selDoorSound = new UISelect<String>(this, 100, DoorRegistry.listSounds().keySet()).setPosition(0, 62, Anchor.RIGHT);
+		selDoorSound = new UISelect<String>(this, 100, getSortedList(DoorRegistry.listSounds().keySet(), "gui.door_factory.door_sound."));
+		selDoorSound.setPosition(0, 62, Anchor.RIGHT);
 		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s").register(this);
 
 		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
@@ -167,6 +173,13 @@ public class DoorFactoryGui extends MalisisGui
 		propContainer.add(selDoorSound);
 
 		return propContainer;
+	}
+
+	private ImmutableList<String> getSortedList(Set<String> set, String prefix)
+	{
+		return FluentIterable.from(set).toSortedList((String s1, String s2) -> {
+			return StatCollector.translateToLocal(prefix + s1).compareTo(StatCollector.translateToLocal(prefix + s2));
+		});
 	}
 
 	private UIContainer getMaterialsContainer()

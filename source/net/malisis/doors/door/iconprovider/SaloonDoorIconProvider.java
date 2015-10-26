@@ -22,42 +22,51 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.trapdoor.descriptor;
+package net.malisis.doors.door.iconprovider;
 
-import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.sound.VanillaDoorSound;
-import net.malisis.doors.trapdoor.TrapDoorDescriptor;
-import net.malisis.doors.trapdoor.movement.TrapDoorMovement;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.doors.door.DoorDescriptor;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 
 /**
  * @author Ordinastie
  *
  */
-public class IronTrapDoor extends TrapDoorDescriptor
+public class SaloonDoorIconProvider implements IBlockIconProvider
 {
-	public IronTrapDoor()
+	private MalisisIcon itemIcon;
+	private MalisisIcon blockIcon;
+
+	public SaloonDoorIconProvider(DoorDescriptor descriptor)
 	{
-		//Block
-		setOpeningTime(6);
-		setMaterial(Material.iron);
-		setHardness(5.0F);
-		setSoundType(Block.soundTypeMetal);
-		setName("iron_trapdoor");
-		setTextureName(MalisisDoors.modid + ":iron_trapdoor");
+		String modid = descriptor.getModId();
+		String name = descriptor.getTextureName();
 
-		//te
-		setRequireRedstone(true);
-		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
-		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		itemIcon = new MalisisIcon(modid + ":items/" + name);
+		blockIcon = new MalisisIcon(modid + ":blocks/" + name);
+	}
 
-		//item
-		setTab(MalisisDoors.tab);
+	@Override
+	public void registerIcons(TextureMap map)
+	{
+		itemIcon = itemIcon.register(map);
+		blockIcon = blockIcon.register(map);
+	}
 
-		//recipe
-		setRecipe("AA", "AA", 'A', Items.iron_ingot);
+	@Override
+	public MalisisIcon getIcon()
+	{
+		return itemIcon;
+	}
+
+	@Override
+	public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	{
+		return blockIcon;
 	}
 }

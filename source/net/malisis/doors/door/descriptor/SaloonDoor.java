@@ -47,7 +47,7 @@ public class SaloonDoor extends DoorDescriptor
 		setHardness(2.5F);
 		setSoundType(Block.soundTypeWood);
 		setName("saloon");
-		setTextureName(MalisisDoors.modid + ":saloon_door");
+		setTextureName(MalisisDoors.modid, "saloon_door");
 
 		//TileEntity
 		setOpeningTime(40);
@@ -60,5 +60,12 @@ public class SaloonDoor extends DoorDescriptor
 
 		//Recipe
 		setRecipe("AA", "BB", "AA", 'A', Blocks.planks, 'B', Items.stick);
+	}
+
+	@Override
+	public void setTextureName(String modid, String textureName)
+	{
+		this.modid = modid;
+		this.textureName = textureName;
 	}
 }

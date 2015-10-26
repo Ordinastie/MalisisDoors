@@ -24,25 +24,26 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.core.util.MultiBlock;
+import net.malisis.core.block.IBlockDirectional;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.movement.RustyHatchMovement;
 import net.malisis.doors.door.sound.RustyHatchSound;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
  *
  */
-public class RustyHatchTileEntity extends DoorTileEntity implements MultiBlock.IProvider
+public class RustyHatchTileEntity extends DoorTileEntity
 {
-	private MultiBlock multiBlock;
+	private boolean isTop = false;
 
 	public RustyHatchTileEntity()
 	{
@@ -54,35 +55,28 @@ public class RustyHatchTileEntity extends DoorTileEntity implements MultiBlock.I
 		setDescriptor(descriptor);
 	}
 
-	private int getOriginMetadata()
+	@Override
+	public IBlockState getBlockState()
 	{
-		if (getWorld() == null || multiBlock == null)
-			return 0;
-		return getWorld().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
+		return null;
+	}
+
+	public boolean isTop()
+	{
+		IBlockState state = worldObj.getBlockState(pos);
+		return state.getBlock() == getBlockType() && (boolean) state.getValue(RustyHatch.TOP);
 	}
 
 	@Override
-	public boolean isTopBlock(int x, int y, int z)
+	public EnumFacing getDirection()
 	{
-		return (getOriginMetadata() & Door.FLAG_TOPBLOCK) != 0;
-	}
-
-	@Override
-	public int getDirection()
-	{
-		return (getOriginMetadata() & 3) + 2;
+		return IBlockDirectional.getDirection(worldObj, pos);
 	}
 
 	@Override
 	public boolean isOpened()
 	{
-		return (getOriginMetadata() & Door.FLAG_OPENED) != 0;
-	}
-
-	@Override
-	public boolean isReversed()
-	{
-		return (getOriginMetadata() & Door.FLAG_REVERSED) != 0;
+		return state == DoorState.OPENED;
 	}
 
 	@Override
@@ -91,34 +85,24 @@ public class RustyHatchTileEntity extends DoorTileEntity implements MultiBlock.I
 		return false;
 	}
 
-	public boolean shouldLadder(int x, int y, int z)
+	public boolean shouldLadder(BlockPos pos)
 	{
 		//		if (!isOpened()/* && y == multiBlock.getY()*/)
 		//			return false;
 
-		ForgeDirection dir = ForgeDirection.getOrientation(getDirection());
+		EnumFacing dir = getDirection();
 
-		if (z == zCoord && (dir == ForgeDirection.NORTH || dir == ForgeDirection.SOUTH))
+		if (pos.getZ() == this.pos.getZ() && (dir == EnumFacing.NORTH || dir == EnumFacing.SOUTH))
 			return false;
-		if (x == xCoord && (dir == ForgeDirection.WEST || dir == ForgeDirection.EAST))
+		if (pos.getX() == this.pos.getX() && (dir == EnumFacing.WEST || dir == EnumFacing.EAST))
 			return false;
 
-		return getWorld().isSideSolid(x + dir.offsetX, y, z + dir.offsetZ, dir.getOpposite());
+		return getWorld().isSideSolid(pos.offset(dir), dir.getOpposite());
 	}
 
 	@Override
 	public void openOrCloseDoor()
 	{
-		RustyHatchTileEntity te = MultiBlock.getOriginProvider(this);
-		if (te == null)
-			return;
-
-		if (te != this)
-		{
-			te.openOrCloseDoor();
-			return;
-		}
-
 		if (getState() != DoorState.CLOSED && getState() != DoorState.OPENED)
 			return;
 
@@ -126,46 +110,23 @@ public class RustyHatchTileEntity extends DoorTileEntity implements MultiBlock.I
 	}
 
 	@Override
-	public void setMultiBlock(MultiBlock multiBlock)
-	{
-		this.multiBlock = multiBlock;
-	}
-
-	@Override
-	public MultiBlock getMultiBlock()
-	{
-		return multiBlock;
-	}
-
-	@Override
-	public void setWorldObj(World world)
-	{
-		super.setWorldObj(world);
-		if (multiBlock != null)
-			multiBlock.setWorld(world);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		multiBlock = new MultiBlock(tag);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound tag)
-	{
-		super.writeToNBT(tag);
-		if (multiBlock != null)
-			multiBlock.writeToNBT(tag);
-	}
-
-	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		if (multiBlock != null)
-			return multiBlock.getWorldBounds();
-		return super.getRenderBoundingBox();
+		return INFINITE_EXTENT_AABB;
+		//return TileEntityUtils.getRenderingBounds(this);
 	}
 
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		isTop = nbt.getBoolean("top");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		nbt.setBoolean("top", isTop);
+	}
 }

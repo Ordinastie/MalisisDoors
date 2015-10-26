@@ -26,99 +26,122 @@ package net.malisis.doors.renderer;
 
 import java.util.Random;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.util.BlockPosUtils;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.ProxyAccess;
-import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.entity.VanishingTileEntity;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraftforge.client.ForgeHooksClient;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+@SuppressWarnings("deprecation")
 public class VanishingBlockRenderer extends MalisisRenderer
 {
+	private Shape cube = new Cube();
 	public Random rand = new Random();
+	private VanishingTileEntity tileEntity;
+
+	public VanishingBlockRenderer()
+	{
+		registerFor(VanishingTileEntity.class);
+	}
 
 	@Override
 	public void render()
 	{
-		if (renderType == RenderType.TESR_WORLD)
+		cube.resetState();
+		if (renderType == RenderType.TILE_ENTITY)
 			renderVanishingTileEntity();
-		else if (renderType == RenderType.ISBRH_INVENTORY)
+		else if (renderType == RenderType.ITEM)
 		{
 			RenderParameters rp = new RenderParameters();
 			rp.useBlockBounds.set(false);
-			drawShape(new Cube(), rp);
+			drawShape(cube, rp);
 		}
-		else if (renderType == RenderType.ISBRH_WORLD)
+		else if (renderType == RenderType.BLOCK)
 		{
-			VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-
-			if ((te.getBlockMetadata() & (VanishingBlock.flagPowered | VanishingBlock.flagInTransition)) != 0)
+			tileEntity = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+			if (tileEntity.isPowered() || tileEntity.isInTransition() || tileEntity.isVibrating())
 				return;
 
-			if (te.copiedBlock != null)
+			tileEntity.blockDrawn = true;
+			if (tileEntity.getCopiedState() == null)
 			{
-				tessellatorUnshift();
-				renderBlocks.blockAccess = ProxyAccess.get(world);
-				renderBlocks.renderAllFaces = true;
-				try
-				{
-					if (te.copiedBlock.canRenderInPass(((VanishingBlock) block).renderPass))
-						vertexDrawn = renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
-				}
-				catch (Exception e)
-				{
-
-					tessellatorShift();
-					drawShape(new Cube());
-				}
-
-				renderBlocks.renderAllFaces = false;
-				renderBlocks.blockAccess = world;
+				if (getRenderLayer() == EnumWorldBlockLayer.CUTOUT_MIPPED)
+					drawShape(cube);
+				return;
 			}
-			else if (((VanishingBlock) block).renderPass == 0)
-				drawShape(new Cube());
+
+			BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+			wr.setVertexFormat(DefaultVertexFormats.BLOCK);
+			try
+			{
+				if (tileEntity.getCopiedState().getBlock().canRenderInLayer(getRenderLayer()))
+				{
+					if (tileEntity.getCopiedState().getBlock().getRenderType() == MalisisCore.malisisRenderType)
+						blockRenderer.renderBlock(tileEntity.getCopiedState(), pos, ProxyAccess.get(world), wr);
+					else
+					{
+						IBakedModel model = blockRenderer.getModelFromBlockState(tileEntity.getCopiedState(), ProxyAccess.get(world), pos);
+						vertexDrawn |= blockRenderer.getBlockModelRenderer().renderModel(ProxyAccess.get(world), model,
+								tileEntity.getCopiedState(), pos, wr, false);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				drawShape(cube);
+			}
 		}
 	}
 
 	private void renderVanishingTileEntity()
 	{
-		VanishingTileEntity te = (VanishingTileEntity) this.tileEntity;
-
-		if (!te.inTransition && !te.vibrating)
-		{
-			if (!te.powered && te.copiedTileEntity != null)
-			{
-				clean();
-				TileEntityRendererDispatcher.instance.renderTileEntity(te.copiedTileEntity, partialTick);
-			}
+		tileEntity = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (tileEntity == null)
 			return;
-		}
 
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glAlphaFunc(GL11.GL_GREATER, 0);
+		//		if (!tileEntity.blockDrawn/* || (!tileEntity.isInTransition() && !tileEntity.isVibrating())*/)
+		//		{
+		//			if (!tileEntity.isPowered() && tileEntity.getCopiedTileEntity() != null)
+		//			{
+		//				clean();
+		//				TileEntityRendererDispatcher.instance.renderTileEntity(tileEntity.getCopiedTileEntity(), partialTick, 0);
+		//			}
+		//			if (tileEntity.blockDrawn)
+		//				return;
+		//		}
+
+		enableBlending();
 
 		float fx = 0.0F;
 		float fy = 0.0F;
 		float fz = 0.0F;
-		float scale = (float) (te.getDuration() - te.transitionTimer) / (float) te.getDuration();
-		boolean rendered = te.copiedBlock != null;
+		float scale = (float) (tileEntity.getDuration() - tileEntity.getTransitionTimer()) / tileEntity.getDuration();
+		boolean rendered = tileEntity.getCopiedState() != null;
 
 		RenderParameters rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
 		rp.interpolateUV.set(false);
 
-		Shape shape = new Cube();
 		// randomize position for vibrations
-		if (!te.inTransition && !te.powered)
+		if (tileEntity.isVibrating())
 		{
 			rp.alpha.set(200);
 			fx = rand.nextFloat() * 0.05F;
@@ -129,56 +152,71 @@ public class VanishingBlockRenderer extends MalisisRenderer
 			else
 				GL11.glRotatef(rand.nextInt(5), 1, 1, 1);
 		}
-		else
+		else if (tileEntity.isInTransition())
 		{
-			int alpha = te.copiedBlock != null ? 255 - (int) (scale * 255) : (int) (scale * 255);
+			int alpha = tileEntity.getCopiedState() != null ? 255 - (int) (scale * 255) : (int) (scale * 255);
 			rp.alpha.set(alpha);
-			shape.scale(scale - 0.001F);
+			cube.scale(scale - 0.001F);
 		}
 
-		if (te.copiedBlock != null)
+		if (tileEntity.getCopiedState() != null)
 		{
-			RenderBlocks renderBlocks = new RenderBlocks(ProxyAccess.get(world));
-			renderBlocks.renderAllFaces = true;
+			BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+			wr.setVertexFormat(DefaultVertexFormats.BLOCK);
 			try
 			{
 				boolean smbr = MalisisDoorsSettings.simpleMixedBlockRendering.get();
 				MalisisDoorsSettings.simpleMixedBlockRendering.set(true);
 
-				GL11.glPushMatrix();
-				GL11.glTranslated(0.5F, 0.5F, 0.5F);
-				GL11.glScalef(scale, scale, scale);
-				GL11.glTranslated(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+				BlockPos translate = BlockPosUtils.chunkPosition(pos);
+				//GlStateManager.pushMatrix();
+				GlStateManager.translate(0.5F, 0.5F, 0.5F);
+				GlStateManager.scale(scale, scale, scale);
+				if (tileEntity.getCopiedState().getBlock().getRenderType() == MalisisCore.malisisRenderType)
+					GlStateManager.translate(-translate.getX(), -translate.getY(), -translate.getZ());
+				else
+					GlStateManager.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+				GlStateManager.translate(-0.5F, -0.5F, -0.5F);
 
 				GL11.glBlendFunc(GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
-				GL14.glBlendColor(0, 0, 0, 1 - scale);
-				renderBlocks.overrideBlockTexture = block.getIcon(blockMetadata, 0);
-				rendered = renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
-				renderBlocks.overrideBlockTexture = null;
-				next();
+				//				GL11.glAlphaFunc(GL11.GL_GREATER, 1F);
+				//GL14.glBlendColor(0, 0, 0, 1 - scale);
+				//TODO: render underlying model with vanishing block texture
+				//				renderBlocks.overrideBlockTexture = block.getIcon(blockMetadata, 0);
+				//				rendered = renderBlocks.renderBlockByRenderType(tileEntity.copiedBlock, x, y, z);
+				//				renderBlocks.overrideBlockTexture = null;
+				//				next();
 
-				if (te.copiedBlock.canRenderInPass(0))
+				GL14.glBlendColor(0, 0, 0, scale);
+				for (EnumWorldBlockLayer layer : EnumWorldBlockLayer.values())
 				{
-					GL14.glBlendColor(0, 0, 0, scale);
-					rendered |= renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
-					next();
-				}
-				if (te.copiedBlock.canRenderInPass(1))
-				{
-					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-					rendered |= renderBlocks.renderBlockByRenderType(te.copiedBlock, x, y, z);
+					if (!tileEntity.getCopiedState().getBlock().canRenderInLayer(layer))
+						continue;
+
+					ForgeHooksClient.setRenderLayer(layer);
+					if (layer == EnumWorldBlockLayer.TRANSLUCENT)
+						GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+					if (tileEntity.getCopiedState().getBlock().getRenderType() == MalisisCore.malisisRenderType)
+						blockRenderer.renderBlock(tileEntity.getCopiedState(), pos, ProxyAccess.get(world), wr);
+					else
+					{
+						IBakedModel model = blockRenderer.getModelFromBlockState(tileEntity.getCopiedState(), ProxyAccess.get(world), pos);
+						rendered |= blockRenderer.getBlockModelRenderer().renderModel(ProxyAccess.get(world), model,
+								tileEntity.getCopiedState(), pos, wr, false);
+					}
+
 					next();
 				}
 
 				if (!rendered)
-					drawShape(shape, rp);
+					drawShape(cube, rp);
 
-				GL11.glPopMatrix();
+				//GlStateManager.popMatrix();
 
-				if (te.copiedTileEntity != null)
+				if (tileEntity.getCopiedTileEntity() != null)
 				{
 					clean();
-					TileEntityRendererDispatcher.instance.renderTileEntity(te.copiedTileEntity, partialTick);
+					TileEntityRendererDispatcher.instance.renderTileEntity(tileEntity.getCopiedTileEntity(), partialTick, 0);
 				}
 
 				MalisisDoorsSettings.simpleMixedBlockRendering.set(smbr);
@@ -186,17 +224,11 @@ public class VanishingBlockRenderer extends MalisisRenderer
 			}
 			catch (Exception e)
 			{
-				drawShape(shape, rp);
+				drawShape(cube, rp);
 			}
 
 		}
 		else
-			drawShape(shape, rp);
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
+			drawShape(cube, rp);
 	}
 }

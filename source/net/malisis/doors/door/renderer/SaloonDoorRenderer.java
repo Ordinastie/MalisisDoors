@@ -27,6 +27,7 @@ package net.malisis.doors.door.renderer;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -37,6 +38,12 @@ import org.lwjgl.opengl.GL11;
  */
 public class SaloonDoorRenderer extends DoorRenderer
 {
+	public SaloonDoorRenderer()
+	{
+		super(false);
+		registerFor(SaloonDoorTileEntity.class);
+	}
+
 	@Override
 	protected void initialize()
 	{
@@ -55,7 +62,7 @@ public class SaloonDoorRenderer extends DoorRenderer
 
 		setup();
 
-		if (tileEntity.isReversed())
+		if (!tileEntity.isHingeLeft())
 			model.rotate(180, 0, 1, 0, 0, 0, 0);
 
 		if (tileEntity.getMovement() != null)
@@ -66,7 +73,7 @@ public class SaloonDoorRenderer extends DoorRenderer
 
 		next(GL11.GL_POLYGON);
 		//model.render(this, rp);
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		model.render(this, rp);
 	}
 

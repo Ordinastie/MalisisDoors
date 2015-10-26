@@ -46,7 +46,7 @@ public class LaboratoryDoor extends DoorDescriptor
 		setHardness(4.0F);
 		setSoundType(Block.soundTypeMetal);
 		setName("laboratory_door");
-		setTextureName(MalisisDoors.modid + ":laboratory_door");
+		setTextureName(MalisisDoors.modid, "laboratory_door");
 
 		//te
 		setOpeningTime(12);

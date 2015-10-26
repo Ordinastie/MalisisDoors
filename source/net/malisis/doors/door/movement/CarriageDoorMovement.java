@@ -42,7 +42,7 @@ import net.minecraft.util.AxisAlignedBB;
 public class CarriageDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean left, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean left, BoundingBoxType type)
 	{
 		//not called
 		return null;

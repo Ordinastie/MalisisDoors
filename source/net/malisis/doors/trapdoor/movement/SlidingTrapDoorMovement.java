@@ -30,12 +30,11 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.malisis.doors.trapdoor.block.TrapDoor;
+import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 /**
@@ -45,35 +44,14 @@ import net.minecraft.util.AxisAlignedBB;
 public class SlidingTrapDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		float w = Door.DOOR_WIDTH / 2;
-
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, w, 1);
-		if (topBlock)
-			aabb.offset(0, 1 - Door.DOOR_WIDTH, 0);
-
+		AxisAlignedBB aabb = new AxisAlignedBB(0, 0, 0, 1, Door.DOOR_WIDTH / 2, 1);
+		boolean top = ((TrapDoorTileEntity) tileEntity).isTop();
+		if (top)
+			aabb = aabb.offset(0, 1 - Door.DOOR_WIDTH, 0);
 		if (tileEntity.isOpened())
-			aabb.offset(0, 0, Door.DOOR_WIDTH - 1);
-
-		switch (dir)
-		{
-			case TrapDoor.DIR_EAST:
-				dir = 1;
-				break;
-			case TrapDoor.DIR_WEST:
-				dir = 3;
-				break;
-			case TrapDoor.DIR_SOUTH:
-				dir = 2;
-				break;
-			case TrapDoor.DIR_NORTH:
-			default:
-				dir = 0;
-				break;
-		}
-		AABBUtils.rotate(aabb, dir);
+			aabb = aabb.offset(0, 0, Door.DOOR_WIDTH - 1);
 
 		return aabb;
 	}

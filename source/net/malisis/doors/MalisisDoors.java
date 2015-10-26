@@ -2,7 +2,9 @@ package net.malisis.doors;
 
 import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
+import net.malisis.core.MalisisRegistry;
 import net.malisis.core.configuration.Settings;
+import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.doors.block.BlockMixer;
@@ -14,25 +16,30 @@ import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.block.CarriageDoor;
-import net.malisis.doors.door.block.ForcefieldDoor;
+import net.malisis.doors.door.block.CustomDoor;
+import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.block.Forcefield;
 import net.malisis.doors.door.block.RustyHatch;
+import net.malisis.doors.door.block.SaloonDoorBlock;
+import net.malisis.doors.door.item.CustomDoorItem;
+import net.malisis.doors.door.item.DoorItem;
 import net.malisis.doors.door.item.ForcefieldItem;
-import net.malisis.doors.proxy.IProxy;
-import net.minecraft.block.Block;
+import net.malisis.doors.door.renderer.ForcefieldRenderer;
+import net.malisis.doors.door.renderer.RustyHatchRenderer;
+import net.malisis.doors.renderer.GarageDoorRenderer;
+import net.malisis.doors.trapdoor.block.TrapDoor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore")
 public class MalisisDoors implements IMalisisMod
 {
-	@SidedProxy(clientSide = "net.malisis.doors.proxy.ClientProxy", serverSide = "net.malisis.doors.proxy.ServerProxy")
-	public static IProxy proxy;
-
 	public static final String modid = "malisisdoors";
 	public static final String modname = "Malisis' Doors";
 	public static final String version = "${version}";
@@ -81,68 +88,104 @@ public class MalisisDoors implements IMalisisMod
 		settings = new MalisisDoorsSettings(event.getSuggestedConfigurationFile());
 
 		Registers.init();
-
-		proxy.initRenderers();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		proxy.initFonts();
+		if (MalisisCore.isClient())
+		{
+			new ForcefieldRenderer();
+			new GarageDoorRenderer();
+
+			MalisisRegistry.registerItemRenderer(Items.rustyHandle, RustyHatchRenderer.instance);
+
+			ResourceLocation rl = new ResourceLocation(MalisisDoors.modid + ":fonts/digital-7 (mono).ttf");
+			MalisisDoors.digitalFont = new MalisisFont(rl);
+		}
 	}
 
 	public static class Blocks
 	{
-		public static Block doorAcacia;
-		public static Block doorBirch;
-		public static Block doorDarkOak;
-		public static Block doorJungle;
-		public static Block doorSpruce;
-		public static Block woodSlidingDoor;
-		public static Block ironSlidingDoor;
+		//Vanilla Blocks
+		public static Door doorOak;
+		public static Door doorAcacia;
+		public static Door doorBirch;
+		public static Door doorDarkOak;
+		public static Door doorJungle;
+		public static Door doorSpruce;
+		public static Door doorIron;
+
+		public static TrapDoor oakTrapDoor;
+		public static TrapDoor ironTrapDoor;
+
+		public static FenceGate oakFenceGate;
+		public static FenceGate acaciaFenceGate;
+		public static FenceGate birchFenceGate;
+		public static FenceGate darkOakFenceGate;
+		public static FenceGate jungleFenceGate;
+		public static FenceGate spruceFenceGate;
+
+		//MalisisDoors doors
+		public static Door woodSlidingDoor;
+		public static Door ironSlidingDoor;
+		public static Door jailDoor;
+		public static Door laboratoryDoor;
+		public static Door factoryDoor;
+		public static Door shojiDoor;
+		public static Door curtains;
+
+		//Special doors
+		public static CustomDoor customDoor;
+		public static SaloonDoorBlock saloonDoor;
+		public static CarriageDoor carriageDoor;
+
+		public static TrapDoor slidingTrapDoor;
+		public static FenceGate camoFenceGate;
+		public static Forcefield forcefieldDoor;
+		public static RustyHatch rustyHatch;
+		public static GarageDoor garageDoor;
+
+		//MalisisDoors blocks
 		public static PlayerSensor playerSensor;
-		public static VanishingBlock vanishingBlock;
-		public static VanishingDiamondBlock vanishingDiamondBlock;
+		public static DoorFactory doorFactory;
 		public static BlockMixer blockMixer;
 		public static MixedBlock mixedBlock;
-		public static GarageDoor garageDoor;
-		public static Block jailDoor;
-		public static DoorFactory doorFactory;
-		public static Block customDoor;
-		public static Block laboratoryDoor;
-		public static Block factoryDoor;
-		public static Block shojiDoor;
-		public static RustyHatch rustyHatch;
-		public static Block curtains;
-		public static CarriageDoor carriageDoor;
-		public static ForcefieldDoor forcefieldDoor;
+		public static VanishingBlock vanishingBlock;
+		public static VanishingDiamondBlock vanishingDiamondBlock;
 		public static RustyLadder rustyLadder;
-		public static Block ironTrapDoor;
-		public static Block slidingTrapDoor;
-		public static Block saloonDoor;
 	}
 
 	public static class Items
 	{
-		public static Item woodSlidingDoorItem;
-		public static Item ironSlidingDoorItem;
-		public static Item doorAcaciaItem;
-		public static Item doorBirchItem;
-		public static Item doorDarkOakItem;
-		public static Item doorJungleItem;
-		public static Item doorSpruceItem;
-		public static Item jailDoorItem;
-		public static Item customDoorItem;
-		public static Item laboratoryDoorItem;
-		public static Item factoryDoorItem;
-		public static Item shojiDoorItem;
-		public static Item rustyHandle;
-		public static Item curtainsItem;
-		public static Item carriageDoorItem;
-		public static ForcefieldItem forcefieldItem;
-		public static Item ironTrapDoorItem;
+		//Vanilla items
+		public static DoorItem doorOakItem;
+		public static DoorItem doorAcaciaItem;
+		public static DoorItem doorBirchItem;
+		public static DoorItem doorDarkOakItem;
+		public static DoorItem doorJungleItem;
+		public static DoorItem doorSpruceItem;
+		public static DoorItem doorIronItem;
+
+		//MalisisDoors door items
+		public static DoorItem woodSlidingDoorItem;
+		public static DoorItem ironSlidingDoorItem;
+		public static DoorItem jailDoorItem;
+		public static DoorItem laboratoryDoorItem;
+		public static DoorItem factoryDoorItem;
+		public static DoorItem shojiDoorItem;
+		public static DoorItem curtainsItem;
+
+		//Special door items
+		public static CustomDoorItem customDoorItem;
+		public static DoorItem saloonDoorItem;
+		public static DoorItem carriageDoorItem;
+
 		public static Item slidingTrapDoorItem;
-		public static Item saloonDoorItem;
+
+		//Other items
+		public static MalisisItem rustyHandle;
+		public static ForcefieldItem forcefieldItem;
 	}
 
 }

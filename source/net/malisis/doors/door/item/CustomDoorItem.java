@@ -27,44 +27,51 @@ package net.malisis.doors.door.item;
 import java.util.HashMap;
 import java.util.List;
 
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.util.ItemUtils;
+import net.malisis.core.util.MBlockState;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Ordinastie
  *
  */
+@MalisisRendered(CustomDoorRenderer.class)
 public class CustomDoorItem extends DoorItem
 {
-	private static HashMap<Item, Block> itemsAllowed = new HashMap<>();
+	private static HashMap<Item, IBlockState> itemsAllowed = new HashMap<>();
 	static
 	{
-		itemsAllowed.put(Items.flint_and_steel, Blocks.fire);
-		itemsAllowed.put(Items.ender_pearl, Blocks.portal);
-		itemsAllowed.put(Items.water_bucket, Blocks.water);
-		itemsAllowed.put(Items.lava_bucket, Blocks.lava);
+		itemsAllowed.put(Items.flint_and_steel, Blocks.fire.getDefaultState());
+		itemsAllowed.put(Items.ender_pearl, Blocks.portal.getDefaultState());
+		itemsAllowed.put(Items.water_bucket, Blocks.water.getDefaultState());
+		itemsAllowed.put(Items.lava_bucket, Blocks.lava.getDefaultState());
 	}
 
 	public CustomDoorItem()
 	{
 		super();
-		setUnlocalizedName("custom_door");
+		setUnlocalizedName("customDoorItem");
 		this.maxStackSize = 16;
 		setCreativeTab(null);
 	}
@@ -72,27 +79,19 @@ public class CustomDoorItem extends DoorItem
 	@Override
 	public DoorDescriptor getDescriptor(ItemStack itemStack)
 	{
-		return new DoorDescriptor(itemStack.stackTagCompound);
+		return new DoorDescriptor(itemStack.getTagCompound());
 	}
 
 	@Override
-	public void registerIcons(IIconRegister par1IconRegister)
+	public String getRegistryName()
 	{
-
+		return "customDoorItem";
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
+	public IIconProvider getIconProvider()
 	{
-		boolean b = super.onItemUse(itemStack, player, world, x, y, z, side, par8, par9, par10);
-		//		if (b)
-		//		{
-		//			DoorTileEntity te = Door.getDoor(world, x, y + 1, z);
-		//			if (te instanceof CustomDoorTileEntity)
-		//				((CustomDoorTileEntity) te).onBlockPlaced(itemStack);
-		//		}
-
-		return b;
+		return null;
 	}
 
 	public static ItemStack fromDoorFactory(DoorFactoryTileEntity te)
@@ -100,70 +99,38 @@ public class CustomDoorItem extends DoorItem
 		if (te.getDoorMovement() == null || te.getDoorSound() == null)
 			return null;
 
-		ItemStack frameItemStack = te.frameSlot.getItemStack();
-		ItemStack topMaterialItemStack = te.topMaterialSlot.getItemStack();
-		ItemStack bottomMaterialItemStack = te.bottomMaterialSlot.getItemStack();
-		if (!canBeUsedForDoor(frameItemStack, true) || !canBeUsedForDoor(topMaterialItemStack, false)
-				|| !canBeUsedForDoor(bottomMaterialItemStack, false))
+		ItemStack isFrame = te.frameSlot.getItemStack();
+		ItemStack isTop = te.topMaterialSlot.getItemStack();
+		ItemStack isBottom = te.bottomMaterialSlot.getItemStack();
+		if (!canBeUsedForDoor(isFrame, true) || !canBeUsedForDoor(isTop, false) || !canBeUsedForDoor(isBottom, false))
 			return null;
 
-		//frame
-		Block frameBlock = Block.getBlockFromItem(frameItemStack.getItem());
-		int frameMetadata = ((ItemBlock) frameItemStack.getItem()).getMetadata(frameItemStack.getMetadata());
-
-		//top material
-		Block topMaterialBlock = itemsAllowed.get(topMaterialItemStack.getItem());
-		if (topMaterialBlock == null)
-			topMaterialBlock = Block.getBlockFromItem(topMaterialItemStack.getItem());
-
-		int topMaterialMetadata = topMaterialItemStack.getMetadata();
-		if (topMaterialItemStack.getItem() instanceof ItemBlock)
-			topMaterialMetadata = ((ItemBlock) topMaterialItemStack.getItem()).getMetadata(topMaterialItemStack.getMetadata());
-
-		//bottom material
-		Block bottomMaterialBlock = itemsAllowed.get(bottomMaterialItemStack.getItem());
-		if (bottomMaterialBlock == null)
-			bottomMaterialBlock = Block.getBlockFromItem(bottomMaterialItemStack.getItem());
-
-		int bottomMaterialMetadata = bottomMaterialItemStack.getMetadata();
-		if (bottomMaterialItemStack.getItem() instanceof ItemBlock)
-			bottomMaterialMetadata = ((ItemBlock) bottomMaterialItemStack.getItem()).getMetadata(bottomMaterialItemStack.getMetadata());
+		IBlockState frame = ItemUtils.getStateFromItemStack(isFrame);
+		IBlockState top = Objects.firstNonNull(itemsAllowed.get(isTop.getItem()), ItemUtils.getStateFromItemStack(isTop));
+		IBlockState bottom = Objects.firstNonNull(itemsAllowed.get(isBottom.getItem()), ItemUtils.getStateFromItemStack(isBottom));
 
 		//NBT
 		NBTTagCompound nbt = new NBTTagCompound();
-
 		te.buildDescriptor().writeNBT(nbt);
-
-		nbt.setInteger("frame", Block.getIdFromBlock(frameBlock));
-		nbt.setInteger("topMaterial", Block.getIdFromBlock(topMaterialBlock));
-		nbt.setInteger("bottomMaterial", Block.getIdFromBlock(bottomMaterialBlock));
-		nbt.setInteger("frameMetadata", frameMetadata);
-		nbt.setInteger("topMaterialMetadata", topMaterialMetadata);
-		nbt.setInteger("bottomMaterialMetadata", bottomMaterialMetadata);
+		writeNBT(nbt, frame, top, bottom);
 
 		//ItemStack
 		ItemStack is = new ItemStack(MalisisDoors.Items.customDoorItem, 1);
-		is.stackTagCompound = nbt;
+		is.setTagCompound(nbt);
 		return is;
 	}
 
 	public static ItemStack fromTileEntity(CustomDoorTileEntity te)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-
 		if (te.getDescriptor() != null)
 			te.getDescriptor().writeNBT(nbt);
+		else
+			new DoorDescriptor().writeNBT(nbt);
 
-		nbt.setInteger("frame", Block.getIdFromBlock(te.getFrame()));
-		nbt.setInteger("topMaterial", Block.getIdFromBlock(te.getTopMaterial()));
-		nbt.setInteger("bottomMaterial", Block.getIdFromBlock(te.getBottomMaterial()));
-
-		nbt.setInteger("frameMetadata", te.getFrameMetadata());
-		nbt.setInteger("topMaterialMetadata", te.getTopMaterialMetadata());
-		nbt.setInteger("bottomMaterialMetadata", te.getBottomMaterialMetadata());
-
+		writeNBT(nbt, te.getFrame(), te.getTop(), te.getBottom());
 		ItemStack is = new ItemStack(MalisisDoors.Items.customDoorItem, 1);
-		is.stackTagCompound = nbt;
+		is.setTagCompound(nbt);
 		return is;
 	}
 
@@ -173,43 +140,61 @@ public class CustomDoorItem extends DoorItem
 			return true;
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());
-		return !(block instanceof MixedBlock) && block.getRenderType() != -1;
-	}
-
-	@Override
-	public String getItemStackDisplayName(ItemStack par1ItemStack)
-	{
-		return super.getItemStackDisplayName(par1ItemStack);
+		return block != null && !(block instanceof MixedBlock) && block.getRenderType() != -1;
 	}
 
 	@Override
 	public EnumRarity getRarity(ItemStack par1ItemStack)
 	{
-		return EnumRarity.rare;
+		return EnumRarity.RARE;
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean advancedTooltip)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean advancedTooltip)
 	{
-		if (itemStack.stackTagCompound == null)
+		super.addInformation(itemStack, player, tooltip, advancedTooltip);
+		if (itemStack.getTagCompound() == null)
 			return;
 
-		Block frame = Block.getBlockById(itemStack.stackTagCompound.getInteger("frame"));
-		int frameMetadata = itemStack.stackTagCompound.getInteger("frameMetadata");
-		ItemStack isFrame = new ItemStack(frame, 0, frameMetadata);
+		Triple<IBlockState, IBlockState, IBlockState> triple = CustomDoorItem.readNBT(itemStack.getTagCompound());
+		ItemStack frame = ItemUtils.getItemStackFromState(triple.getLeft());
+		ItemStack top = ItemUtils.getItemStackFromState(triple.getMiddle());
+		ItemStack bottom = ItemUtils.getItemStackFromState(triple.getRight());
 
-		Block topMaterial = Block.getBlockById(itemStack.stackTagCompound.getInteger("topMaterial"));
-		int topMaterialMetadata = itemStack.stackTagCompound.getInteger("topMaterialMetadata");
-		ItemStack istopMaterial = new ItemStack(topMaterial, 0, topMaterialMetadata);
+		tooltip.addAll(frame.getTooltip(player, advancedTooltip));
+		tooltip.addAll(top.getTooltip(player, advancedTooltip));
+		tooltip.addAll(bottom.getTooltip(player, advancedTooltip));
+	}
 
-		Block bottomMaterial = Block.getBlockById(itemStack.stackTagCompound.getInteger("bottomMaterial"));
-		int bottomMaterialMetadata = itemStack.stackTagCompound.getInteger("bottomMaterialMetadata");
-		ItemStack isBottomMaterial = new ItemStack(bottomMaterial, 0, bottomMaterialMetadata);
+	public static Triple<IBlockState, IBlockState, IBlockState> readNBT(NBTTagCompound nbt)
+	{
+		IBlockState frame = MBlockState.fromNBT(nbt, "frame", "frameMetadata");
+		IBlockState top = MBlockState.fromNBT(nbt, "topMaterial", "topMaterialMetadata");
+		IBlockState bottom = MBlockState.fromNBT(nbt, "bottomMaterial", "bottomMaterialMetadata");
 
-		list.add(EnumChatFormatting.WHITE
-				+ StatCollector.translateToLocal("door_movement." + itemStack.stackTagCompound.getString("movement")));
-		list.addAll(isFrame.getTooltip(player, advancedTooltip));
-		list.addAll(istopMaterial.getTooltip(player, advancedTooltip));
-		list.addAll(isBottomMaterial.getTooltip(player, advancedTooltip));
+		if (frame == null)
+			frame = Blocks.planks.getDefaultState();
+		if (top == null)
+			top = Blocks.glass.getDefaultState();
+		if (top == null)
+			top = Blocks.glass.getDefaultState();
+
+		return new ImmutableTriple<IBlockState, IBlockState, IBlockState>(frame, top, bottom);
+	}
+
+	public static NBTTagCompound writeNBT(NBTTagCompound nbt, IBlockState frame, IBlockState top, IBlockState bottom)
+	{
+		if (frame == null)
+			frame = Blocks.planks.getDefaultState();
+		if (top == null)
+			top = Blocks.glass.getDefaultState();
+		if (top == null)
+			top = Blocks.glass.getDefaultState();
+
+		MBlockState.toNBT(nbt, frame, "frame", "frameMetadata");
+		MBlockState.toNBT(nbt, top, "topMaterial", "topMaterialMetadata");
+		MBlockState.toNBT(nbt, bottom, "bottomMaterial", "bottomMaterialMetadata");
+
+		return nbt;
 	}
 }

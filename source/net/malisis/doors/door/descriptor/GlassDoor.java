@@ -48,7 +48,7 @@ public class GlassDoor extends DoorDescriptor
 		setHardness(wood ? 2.0F : 3.0F);
 		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
 		setName(wood ? "wood_sliding_door" : "iron_sliding_door");
-		setTextureName(MalisisDoors.modid + ":" + (wood ? "sliding_door_wood" : "sliding_door_iron"));
+		setTextureName(MalisisDoors.modid, wood ? "sliding_door_wood" : "sliding_door_iron");
 
 		//te
 		setRequireRedstone(!wood);

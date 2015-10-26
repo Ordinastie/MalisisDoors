@@ -25,24 +25,25 @@
 package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
+import net.malisis.core.network.IMalisisMessageHandler;
 import net.malisis.core.network.MalisisMessage;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author Ordinastie
  *
  */
 @MalisisMessage
-public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Packet, IMessage>
+public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMessage.Packet, IMessage>
 {
 	public DoorFactoryMessage()
 	{
@@ -50,12 +51,12 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 	}
 
 	@Override
-	public IMessage onMessage(Packet message, MessageContext ctx)
+	public void process(Packet message, MessageContext ctx)
 	{
 		World world = ctx.getServerHandler().playerEntity.worldObj;
-		DoorFactoryTileEntity te = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, message.x, message.y, message.z);
+		DoorFactoryTileEntity te = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, message.pos);
 		if (te == null)
-			return null;
+			return;
 
 		if (message.type == Packet.TYPE_DOORINFOS)
 		{
@@ -71,19 +72,19 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		else
 			te.createDoor();
 
-		return null;
+		return;
 	}
 
 	public static void sendDoorInformations(DoorFactoryTileEntity te)
 	{
-		Packet packet = new Packet(Packet.TYPE_DOORINFOS, te.xCoord, te.yCoord, te.zCoord);
+		Packet packet = new Packet(Packet.TYPE_DOORINFOS, te.getPos());
 		packet.setDoorInfos(te);
 		MalisisDoors.network.sendToServer(packet);
 	}
 
 	public static void sendCreateDoor(DoorFactoryTileEntity te)
 	{
-		Packet packet = new Packet(Packet.TYPE_CREATEDOOR, te.xCoord, te.yCoord, te.zCoord);
+		Packet packet = new Packet(Packet.TYPE_CREATEDOOR, te.getPos());
 		MalisisDoors.network.sendToServer(packet);
 	}
 
@@ -91,7 +92,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 	{
 		private static int TYPE_DOORINFOS = 0;
 		private static int TYPE_CREATEDOOR = 1;
-		private int x, y, z;
+		private BlockPos pos;
 		private int type;
 		private boolean isCreate;
 		private String movement;
@@ -105,12 +106,10 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		public Packet()
 		{}
 
-		public Packet(int type, int x, int y, int z)
+		public Packet(int type, BlockPos pos)
 		{
 			this.type = type;
-			this.x = x;
-			this.y = y;
-			this.z = z;
+			this.pos = pos;
 		}
 
 		public void setDoorInfos(DoorFactoryTileEntity te)
@@ -131,9 +130,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		@Override
 		public void fromBytes(ByteBuf buf)
 		{
-			x = buf.readInt();
-			y = buf.readInt();
-			z = buf.readInt();
+			pos = BlockPos.fromLong(buf.readLong());
 			type = buf.readInt();
 			if (type == TYPE_DOORINFOS)
 			{
@@ -155,9 +152,7 @@ public class DoorFactoryMessage implements IMessageHandler<DoorFactoryMessage.Pa
 		@Override
 		public void toBytes(ByteBuf buf)
 		{
-			buf.writeInt(x);
-			buf.writeInt(y);
-			buf.writeInt(z);
+			buf.writeLong(pos.toLong());
 			buf.writeInt(type);
 			if (type == TYPE_DOORINFOS)
 			{

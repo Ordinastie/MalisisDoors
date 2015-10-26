@@ -25,22 +25,23 @@
 package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
+import net.malisis.core.network.IMalisisMessageHandler;
 import net.malisis.core.network.MalisisMessage;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author Ordinastie
  *
  */
 @MalisisMessage
-public class DigicodeMessage implements IMessageHandler<DigicodeMessage.Packet, IMessage>
+public class DigicodeMessage implements IMalisisMessageHandler<DigicodeMessage.Packet, IMessage>
 {
 	public DigicodeMessage()
 	{
@@ -48,21 +49,20 @@ public class DigicodeMessage implements IMessageHandler<DigicodeMessage.Packet, 
 	}
 
 	@Override
-	public IMessage onMessage(Packet message, MessageContext ctx)
+	public void process(Packet message, MessageContext ctx)
 	{
 		World world = ctx.getServerHandler().playerEntity.worldObj;
-		DoorTileEntity te = Door.getDoor(world, message.x, message.y, message.z);
+		DoorTileEntity te = Door.getDoor(world, message.pos);
 		if (te == null)
-			return null;
+			return;
 
 		te.openOrCloseDoor();
 
 		if (te.getDescriptor().getAutoCloseTime() > 0 && !te.isOpened())
-			world.scheduleBlockUpdate(message.x, message.y, message.z, world.getBlock(message.x, message.y, message.z), te.getDescriptor()
-					.getAutoCloseTime() + te.getDescriptor().getOpeningTime());
+			world.scheduleBlockUpdate(message.pos, world.getBlockState(message.pos).getBlock(), te.getDescriptor().getAutoCloseTime()
+					+ te.getDescriptor().getOpeningTime(), 0);
 
-		return null;
-
+		return;
 	}
 
 	public static void send(DoorTileEntity te)
@@ -76,13 +76,11 @@ public class DigicodeMessage implements IMessageHandler<DigicodeMessage.Packet, 
 	 */
 	public static class Packet implements IMessage
 	{
-		private int x, y, z;
+		private BlockPos pos;
 
 		public Packet(DoorTileEntity te)
 		{
-			x = te.xCoord;
-			y = te.yCoord;
-			z = te.zCoord;
+			pos = te.getPos();
 		}
 
 		public Packet()
@@ -91,17 +89,13 @@ public class DigicodeMessage implements IMessageHandler<DigicodeMessage.Packet, 
 		@Override
 		public void fromBytes(ByteBuf buf)
 		{
-			x = buf.readInt();
-			y = buf.readInt();
-			z = buf.readInt();
+			pos = BlockPos.fromLong(buf.readLong());
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf)
 		{
-			buf.writeInt(x);
-			buf.writeInt(y);
-			buf.writeInt(z);
+			buf.writeLong(pos.toLong());
 		}
 	}
 

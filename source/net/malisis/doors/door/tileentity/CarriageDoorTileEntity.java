@@ -24,23 +24,19 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.core.MalisisCore;
-import net.malisis.core.block.BoundingBoxType;
-import net.malisis.core.util.BlockState;
-import net.malisis.core.util.MultiBlock;
-import net.malisis.core.util.chunkblock.ChunkBlockHandler;
+import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.util.MBlockState;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.CarriageDoor;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.sound.CarriageDoorSound;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
@@ -48,10 +44,6 @@ import net.minecraftforge.common.util.ForgeDirection;
  */
 public class CarriageDoorTileEntity extends DoorTileEntity
 {
-	private boolean delete = false;
-	private boolean processed = true;
-	private ForgeDirection direction = ForgeDirection.NORTH;
-
 	public CarriageDoorTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
@@ -63,15 +55,33 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 	}
 
 	@Override
-	public boolean isTopBlock(int x, int y, int z)
+	public EnumFacing getDirection()
+	{
+		return IBlockDirectional.getDirection(worldObj, pos);
+	}
+
+	@Override
+	public IBlockState getBlockState()
+	{
+		return null;
+	}
+
+	@Override
+	public boolean isOpened()
+	{
+		return state == DoorState.OPENED;
+	}
+
+	@Override
+	public boolean isTopBlock(BlockPos pos)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isReversed()
+	public boolean isHingeLeft()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -84,61 +94,21 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 	public void setDoorState(DoorState newState)
 	{
 		boolean moving = this.moving;
-		BlockState state = null;
+		MBlockState state = null;
 		if (getWorld() != null)
 		{
-			state = new BlockState(xCoord, yCoord, zCoord, getBlockType());
+			state = new MBlockState(pos, getBlockType());
 			ChunkCollision.get().updateBlocks(getWorld(), state);
 		}
 
 		super.setDoorState(newState);
 		if (getWorld() != null && moving && !this.moving)
 			ChunkCollision.get().replaceBlocks(getWorld(), state);
-
-	}
-
-	@Override
-	public void updateEntity()
-	{
-		if (!processed && getWorld() != null)
-		{
-			if (delete)
-			{
-				MalisisCore.log.info("Deleting " + xCoord + "," + yCoord + "," + zCoord);
-				getWorld().setBlockToAir(xCoord, yCoord, zCoord);
-			}
-			else
-			{
-				MalisisCore.log.info("Adding to chunk : " + xCoord + "," + yCoord + "," + zCoord);
-				ChunkBlockHandler.get().updateCoordinates(getWorld().getChunkFromBlockCoords(xCoord, zCoord), xCoord, yCoord, zCoord,
-						Blocks.air, getBlockType());
-				getWorld().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, Door.dirToInt(direction), 2);
-				processed = true;
-			}
-			return;
-		}
-		super.updateEntity();
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		if (tag.hasKey("multiBlock"))
-		{
-			MultiBlock mb = new MultiBlock(tag);
-			delete = !mb.isOrigin(xCoord, yCoord, zCoord);
-			direction = mb.getDirection();
-			processed = false;
-		}
-
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return ((CarriageDoor) getBlockType()).getBoundingBox(getWorld(), xCoord, yCoord, zCoord, BoundingBoxType.RENDER)[0].offset(xCoord,
-				yCoord, zCoord);
+		return TileEntityUtils.getRenderingBounds(this);
 	}
-
 }

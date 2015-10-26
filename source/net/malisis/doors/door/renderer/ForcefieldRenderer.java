@@ -24,20 +24,17 @@
 
 package net.malisis.doors.door.renderer;
 
-import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.Vertex;
 import net.malisis.core.renderer.element.face.NorthFace;
-import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -48,10 +45,19 @@ import org.lwjgl.opengl.GL11;
 public class ForcefieldRenderer extends MalisisRenderer
 {
 	protected static ResourceLocation[] rl;
-	protected MalisisModel model;
 	protected ForcefieldTileEntity tileEntity;
+	protected AxisAlignedBB aabb;
+	protected EnumFacing direction;
+	protected double scaleX, scaleY;
+
+	protected Shape shape;
+	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
-	protected ForgeDirection direction;
+
+	public ForcefieldRenderer()
+	{
+		registerFor(ForcefieldTileEntity.class);
+	}
 
 	@Override
 	protected void initialize()
@@ -60,12 +66,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 		for (int i = 0; i < 50; i++)
 			rl[i] = new ResourceLocation(String.format(MalisisDoors.modid + ":textures/blocks/forcefield%02d.png", i));
 
-		Shape shape = new Shape(new NorthFace());
-		shape.scale(1, 1, 0);
-
-		model = new MalisisModel();
-		model.addShape(shape);
-		model.storeState();
+		shape = new Shape(new NorthFace());
 
 		rp = new RenderParameters();
 		rp.interpolateUV.set(false);
@@ -80,47 +81,62 @@ public class ForcefieldRenderer extends MalisisRenderer
 
 	}
 
+	private void setDirection()
+	{
+		if (aabb.maxY - aabb.minY == 0)
+			direction = EnumFacing.UP;
+		else if (aabb.maxX - aabb.minX == 0)
+			direction = EnumFacing.EAST;
+		else
+			direction = EnumFacing.NORTH;
+	}
+
+	private void setScale()
+	{
+		scaleX = 1;
+		scaleY = 1;
+		if (direction == EnumFacing.UP)
+		{
+			scaleX = aabb.maxX - aabb.minX;
+			scaleY = aabb.maxZ - aabb.minZ;
+		}
+		else
+		{
+			scaleY = aabb.maxY - aabb.minY;
+			if (direction == EnumFacing.EAST)
+				scaleX = aabb.maxZ - aabb.minZ;
+			else if (direction == EnumFacing.NORTH)
+				scaleX = aabb.maxX - aabb.minX;
+		}
+	}
+
 	@Override
 	public void render()
 	{
-		tileEntity = MultiBlock.getOriginProvider(ForcefieldTileEntity.class, world, x, y, z);
-		if (tileEntity == null || tileEntity.isOpened() || !MultiBlock.isOrigin(world, x, y, z))
+		tileEntity = (ForcefieldTileEntity) super.tileEntity;
+		if (tileEntity == null || tileEntity.isOpened())
 			return;
+
+		aabb = tileEntity.getRenderBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ());
+		setDirection();
+		setScale();
 
 		enableBlending();
 
-		tileEntity = (ForcefieldTileEntity) super.tileEntity;
-		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
+		shape = new Shape(new NorthFace());
+		if (direction == EnumFacing.UP)
+			shape.rotate(90, 1, 0, 0);
+		else if (direction == EnumFacing.EAST)
+			shape.rotate(90, 0, 1, 0);
 
-		model.resetState();
-
-		//ar.setStartTime(tileEntity.getStartNanoTime());
-		if (tileEntity.getMovement() == null)
-			return;
-
-		AxisAlignedBB aabb = tileEntity.getMovement().getBoundingBox(tileEntity, false, BoundingBoxType.COLLISION);
-		if (aabb == null)
-			return;
-
-		aabb.offset(-x, -y, -z);
-		rp.renderBounds.set(aabb);
-		direction = ForgeDirection.NORTH;
-		if ((int) aabb.minY == (int) aabb.maxY)
-		{
-			direction = ForgeDirection.UP;
-			model.rotate(90, 1, 0, 0, 0, 0, 0);
-		}
-		else if ((int) aabb.minX == (int) aabb.maxX)
-		{
-			direction = ForgeDirection.EAST;
-			model.rotate(90, 0, 1, 0, 0, 0, 0);
-		}
+		shape.translate(0, 0, 0.5F);
+		shape.scale((float) scaleX, (float) scaleY, 1, direction == EnumFacing.EAST ? 0.5F : -0.5F, -0.5F, 0.5F);
 
 		setTextureMatrix();
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 
-		model.render(this, rp);
+		drawShape(shape, rp);
 		next();
 
 		GL11.glEnable(GL11.GL_CULL_FACE);
@@ -139,24 +155,8 @@ public class ForcefieldRenderer extends MalisisRenderer
 		GL11.glMatrixMode(GL11.GL_TEXTURE);
 		GL11.glLoadIdentity();
 
-		AxisAlignedBB aabb = tileEntity.getMultiBlock().getBounds();
-		double scaleX = 1, scaleY = 1;
-		if (direction == ForgeDirection.UP)
-		{
-			scaleX = aabb.maxX - aabb.minX;
-			scaleY = aabb.maxZ - aabb.minZ;
-
-			if (aabb.maxZ - aabb.minZ > aabb.maxX - aabb.minX)
-				GL11.glRotatef(90, 0, 0, 1);
-		}
-		else
-		{
-			scaleY = aabb.maxY - aabb.minY;
-			if (direction == ForgeDirection.EAST)
-				scaleX = aabb.maxZ - aabb.minZ;
-			else if (direction == ForgeDirection.NORTH)
-				scaleX = aabb.maxX - aabb.minX;
-		}
+		if (direction == EnumFacing.UP && aabb.maxZ - aabb.minZ > aabb.maxX - aabb.minX)
+			GL11.glRotatef(90, 0, 0, 1);
 
 		//GL11.glTranslatef(fx, fy, 0);
 		GL11.glScaled(scaleX / 3, scaleY / 3, 1);

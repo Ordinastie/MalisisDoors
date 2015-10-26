@@ -27,46 +27,59 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
+import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.provider.PropertyEnumIconProvider;
+import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.IMSerializable;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.ProxyAccess;
 import net.malisis.doors.entity.VanishingTileEntity;
+import net.malisis.doors.item.VanishingBlockItem;
+import net.malisis.doors.renderer.VanishingBlockRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class VanishingBlock extends BlockContainer
+@MalisisRendered(VanishingBlockRenderer.class)
+public class VanishingBlock extends MalisisBlock implements ITileEntityProvider
 {
-	public static final int typeWoodFrame = 0;
-	public static final int typeIronFrame = 1;
-	public static final int typeGoldFrame = 2;
-	public static final int typeDiamondFrame = 3;
+	public enum Type implements IMSerializable
+	{
+		WOOD, IRON, GOLD, DIAMOND;
+	};
 
-	public static final int flagPowered = 1 << 2;
-	public static final int flagInTransition = 1 << 3;
-
-	private static IIcon[] icons = new IIcon[4];
+	public static final PropertyEnum TYPE = PropertyEnum.create("type", Type.class);
+	public static PropertyBool POWERED = PropertyBool.create("powered");
+	public static PropertyBool TRANSITION = PropertyBool.create("transition");
 
 	public static int renderId = -1;
 	public int renderPass = -1;
@@ -74,84 +87,105 @@ public class VanishingBlock extends BlockContainer
 	public VanishingBlock()
 	{
 		super(Material.wood);
-		setUnlocalizedName("vanishing_block");
+		setName("vanishing_block");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(0.5F);
+
+		setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.WOOD).withProperty(POWERED, false)
+				.withProperty(TRANSITION, false));
 	}
 
-	// #region Icons
+	@Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister register)
+	public void createIconProvider(Object object)
 	{
-		icons[typeWoodFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_wood");
-		icons[typeIronFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_iron");
-		icons[typeGoldFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_gold");
-		icons[typeDiamondFrame] = register.registerIcon(MalisisDoors.modid + ":vanishing_block_diamond");
+		PropertyEnumIconProvider<Type> ip = new PropertyEnumIconProvider<>(TYPE, Type.class, MalisisDoors.modid
+				+ ":blocks/vanishing_block_wood");
+		for (Type type : Type.values())
+			ip.setIcon(type, MalisisDoors.modid + ":blocks/vanishing_block_" + type.getName().toLowerCase());
+		iconProvider = ip;
 	}
 
 	@Override
-	public IIcon getIcon(int side, int frameType)
+	public Class<? extends ItemBlock> getItemClass()
 	{
-		return icons[frameType & 3];
+		return VanishingBlockItem.class;
 	}
 
-	// #end Icons
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, TYPE, POWERED, TRANSITION);
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return super.getActualState(state, worldIn, pos);
+	}
 
 	/**
 	 * Check if block at x, y, z is a powered VanishingBlock
 	 */
-	public boolean isPowered(World world, int x, int y, int z)
+	public boolean isPowered(World world, BlockPos pos)
 	{
-		return world.getBlock(x, y, z) == this && (world.getBlockMetadata(x, y, z) & flagPowered) != 0;
+		return isPowered(world.getBlockState(pos));
+	}
+
+	public boolean isPowered(IBlockState state)
+	{
+		return state.getBlock() == this && (boolean) state.getValue(POWERED);
+	}
+
+	public boolean shouldDefer(VanishingTileEntity te)
+	{
+		return te != null && te.getCopiedState() != null && !te.isPowered() && !te.isInTransition();
 	}
 
 	/**
 	 * Set the power state for the block at x, y, z
 	 */
-	public void setPowerState(World world, int x, int y, int z, boolean powered)
+	public void setPowerState(World world, BlockPos pos, boolean powered)
 	{
-		if (world.getBlock(x, y, z) != this) // block is VanishingBlock ?
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != this) // block is VanishingBlock ?
 			return;
-		if (isPowered(world, x, y, z) == powered) // same power state?
+		if (isPowered(state) == powered) // same power state?
 			return;
 
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
 		if (te == null)
 			return;
+
 		te.setPowerState(powered);
-
-		if (powered)
-			world.setBlockMetadataWithNotify(x, y, z, te.blockMetadata | flagPowered, 2);
-		else
-			world.setBlockMetadataWithNotify(x, y, z, te.blockMetadata & ~flagPowered, 2);
-
-		world.scheduleBlockUpdate(x, y, z, this, 1);
+		world.setBlockState(pos, state.withProperty(POWERED, powered));
+		world.scheduleBlockUpdate(pos, this, 1, 0);
 	}
 
 	/**
 	 * Check if the block is available for propagation of power state
 	 */
-	public boolean shouldPropagate(World world, int x, int y, int z, VanishingTileEntity source)
+	public boolean shouldPropagate(World world, BlockPos pos, VanishingTileEntity source)
 	{
-		if (world.getBlock(x, y, z) != this) // block is VanishingBlock ?
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != this) // block is VanishingBlock ?
 			return false;
 
-		if ((source.getBlockMetadata() & 3) == typeWoodFrame)
+		Type sourceType = source.getType();
+		if (sourceType == Type.WOOD)
 			return true;
 
-		VanishingTileEntity dest = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
+		VanishingTileEntity dest = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
 		if (dest == null)
 			return false;
 
-		if (source.copiedBlock == null || dest.copiedBlock == null)
+		if (source.getCopiedState() == null || dest.getCopiedState() == null)
 			return true;
 
-		if ((source.getBlockMetadata() & 3) == typeIronFrame && source.copiedBlock == dest.copiedBlock)
+		if (sourceType == Type.IRON && source.getCopiedState().getBlock() == dest.getCopiedState().getBlock())
 			return true;
 
-		if ((source.getBlockMetadata() & 3) == typeGoldFrame && source.copiedBlock == dest.copiedBlock
-				&& source.copiedMetadata == dest.copiedMetadata)
+		if (sourceType == Type.GOLD && source.getCopiedState().equals(dest.getCopiedState()))
 			return true;
 
 		return false;
@@ -160,169 +194,155 @@ public class VanishingBlock extends BlockContainer
 	/**
 	 * Propagate power state in all six direction
 	 */
-	public void propagateState(World world, int x, int y, int z)
+	public void propagateState(World world, BlockPos pos)
 	{
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		for (EnumFacing dir : EnumFacing.values())
 		{
-			if (shouldPropagate(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, te))
-				this.setPowerState(world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, te.powered);
+			if (shouldPropagate(world, pos.offset(dir), te))
+				this.setPowerState(world, pos.offset(dir), te.isPowered());
 		}
 	}
 
 	// #region Events
+
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		ItemStack is = p.getHeldItem();
+		ItemStack is = player.getHeldItem();
 		if (is == null)
 			return false;
 
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		if (te == null || te.copiedBlock != null)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (te == null || te.getCopiedState() != null)
 			return false;
 
-		if (!te.setBlock(is, p, side, hitX, hitY, hitZ))
+		if (!te.setBlockState(is, player, side, hitX, hitY, hitZ))
 			return false;
 
-		if (!p.capabilities.isCreativeMode)
+		if (!player.capabilities.isCreativeMode)
 			is.stackSize--;
 
-		world.markBlockForUpdate(x, y, z);
-		((World) ProxyAccess.get(world)).notifyBlocksOfNeighborChange(x, y, z, te.copiedBlock);
+		world.markBlockForUpdate(pos);
+		((World) ProxyAccess.get(world)).notifyNeighborsOfStateChange(pos, te.getCopiedState().getBlock());
 		return true;
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block)
 	{
 		if (world.isRemote)
 			return;
 
-		boolean powered = world.isBlockIndirectlyGettingPowered(x, y, z);
+		boolean powered = world.isBlockIndirectlyGettingPowered(pos) != 0;
 		if (powered || (block.canProvidePower() && block != this))
 		{
-			if (isPowered(world, x, y, z) != powered)
-				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, MalisisDoors.modid + ":portal", 0.3F, 0.5F);
-			this.setPowerState(world, x, y, z, powered);
+			if (isPowered(world, pos) != powered)
+				world.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, MalisisDoors.modid + ":portal", 0.3F, 0.5F);
+			this.setPowerState(world, pos, powered);
 		}
 	}
 
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		this.propagateState(world, x, y, z);
+		this.propagateState(world, pos);
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int j)
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		VanishingTileEntity te = (VanishingTileEntity) world.getTileEntity(x, y, z);
-		if (te.copiedBlock != null)
-			te.copiedBlock.dropBlockAsItem(world, x, y, z, te.copiedMetadata, 0);
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (te != null && te.getCopiedState() != null)
+			te.getCopiedState().getBlock().dropBlockAsItem(world, pos, te.getCopiedState(), 0);
 
-		world.removeTileEntity(x, y, z);
+		world.removeTileEntity(pos);
 	}
 
 	// #end Events
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side)
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		return false;
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
 	{
-		if ((world.getBlockMetadata(x, y, z) & (flagPowered | flagInTransition)) != 0)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (te == null || te.isPowered() || te.isInTransition())
 			return null;
-		else
-		{
-			VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-			if (te == null || te.copiedBlock == null)
-				return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
-			else
-				return te.copiedBlock.getCollisionBoundingBoxFromPool((World) ProxyAccess.get(world), x, y, z);
-		}
+
+		return AABBUtils.identity();
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity)
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state)
 	{
-		if ((world.getBlockMetadata(x, y, z) & (flagPowered | flagInTransition)) != 0)
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (!shouldDefer(te))
+			return super.getCollisionBoundingBox(world, pos, state);
+
+		return te.getCopiedState().getBlock().getCollisionBoundingBox((World) ProxyAccess.get(world), pos, state);
+
+	}
+
+	@Override
+	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	{
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (!shouldDefer(te))
+		{
+			super.addCollisionBoxesToList(world, pos, state, mask, list, collidingEntity);
 			return;
+		}
 
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		if (te == null || te.copiedBlock == null)
+		te.getCopiedState().getBlock().addCollisionBoxesToList((World) ProxyAccess.get(world), pos, state, mask, list, collidingEntity);
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos)
+	{
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (!shouldDefer(te))
 		{
-			super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
+			super.setBlockBoundsBasedOnState(world, pos);
 			return;
 		}
-		else
-			te.copiedBlock.addCollisionBoxesToList((World) ProxyAccess.get(world), x, y, z, mask, list, entity);
+
+		te.getCopiedState().getBlock().setBlockBoundsBasedOnState(ProxyAccess.get(world), pos);
+
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos)
 	{
-		if ((world.getBlockMetadata(x, y, z) & (flagPowered | flagInTransition)) != 0)
-			setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-		else
-		{
-			VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-			if (te == null || te.copiedBlock == null)
-				setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-			else
-				te.copiedBlock.setBlockBoundsBasedOnState(ProxyAccess.get(world), x, y, z);
-		}
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (!shouldDefer(te))
+			return super.getSelectedBoundingBox(world, pos);
+
+		return te.getCopiedState().getBlock().getSelectedBoundingBox((World) ProxyAccess.get(world), pos);
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
+	public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 src, Vec3 dest)
 	{
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		if (te == null || te.powered || te.inTransition)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-		else
-		{
-			setBlockBoundsBasedOnState(world, x, y, z);
-			if (te == null || te.copiedBlock == null)
-				return AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, 1);
-			else
-				return te.copiedBlock.getSelectedBoundingBoxFromPool((World) ProxyAccess.get(world), x, y, z);
-		}
-	}
+		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, pos);
+		if (!shouldDefer(te))
+			return super.collisionRayTrace(world, pos, src, dest);
 
-	@Override
-	public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 src, Vec3 dest)
-	{
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		if (te == null || te.powered || te.inTransition)
-		{
-			setBlockBounds(0, 0, 0, 0, 0, 0);
-			return super.collisionRayTrace(world, x, y, z, src, dest);
-		}
-		else
-		{
+		World proxy = (World) ProxyAccess.get(world);
+		//prevent infinite recursion
+		if (proxy == world && te.getCopiedState().getBlock() instanceof IBoundingBox)
+			return super.collisionRayTrace(world, pos, src, dest);
 
-			if (te == null || te.copiedBlock == null)
-				return super.collisionRayTrace(world, x, y, z, src, dest);
-			else
-			{
-				World proxy = (World) ProxyAccess.get(world);
-				if (proxy == world && te.copiedBlock instanceof IBoundingBox)
-					return super.collisionRayTrace(world, x, y, z, src, dest);
-				else
-					return te.copiedBlock.collisionRayTrace(proxy, x, y, z, src, dest);
-			}
-
-		}
+		return te.getCopiedState().getBlock().collisionRayTrace(proxy, pos, src, dest);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_)
+	public Item getItem(World worldIn, BlockPos pos)
 	{
 		// VanishingDiamondBlock has its own unused itemBlock, but we don't want it
 		return Item.getItemFromBlock(MalisisDoors.Blocks.vanishingBlock);
@@ -331,16 +351,14 @@ public class VanishingBlock extends BlockContainer
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List list)
 	{
-		list.add(new ItemStack(item, 1, typeWoodFrame));
-		list.add(new ItemStack(item, 1, typeIronFrame));
-		list.add(new ItemStack(item, 1, typeGoldFrame));
-		list.add(new ItemStack(item, 1, typeDiamondFrame));
+		for (Type type : Type.values())
+			list.add(new ItemStack(item, 1, type.ordinal()));
 	}
 
 	@Override
-	public int damageDropped(int metadata)
+	public int damageDropped(IBlockState state)
 	{
-		return metadata;
+		return ((Type) state.getValue(TYPE)).ordinal();
 	}
 
 	@Override
@@ -362,28 +380,26 @@ public class VanishingBlock extends BlockContainer
 	}
 
 	@Override
+	public IBlockState getStateFromMeta(int meta)
+	{
+		return getDefaultState().withProperty(TYPE, Type.values()[meta & 3]).withProperty(POWERED, (meta & 8) != 0);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return ((Type) state.getValue(TYPE)).ordinal() + ((boolean) state.getValue(POWERED) ? 8 : 0);
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-		return new VanishingTileEntity(metadata);
+		return new VanishingTileEntity((Type) getStateFromMeta(metadata).getValue(TYPE));
 	}
 
 	@Override
-	public boolean canRenderInPass(int pass)
+	public boolean canRenderInLayer(EnumWorldBlockLayer layer)
 	{
-		renderPass = pass;
 		return true;
 	}
-
-	@Override
-	public int getRenderBlockPass()
-	{
-		return 1;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return renderId;
-	}
-
 }

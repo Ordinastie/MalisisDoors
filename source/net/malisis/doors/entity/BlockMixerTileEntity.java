@@ -9,12 +9,12 @@ import net.malisis.doors.gui.BlockMixerGui;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockMixerTileEntity extends TileEntity implements IInventoryProvider
+public class BlockMixerTileEntity extends TileEntity implements IInventoryProvider, IUpdatePlayerListBox
 {
 	private MalisisInventory inventory;
 	private int mixTimer = 0;
@@ -33,7 +33,20 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 	}
 
 	@Override
-	public void updateEntity()
+	public MalisisInventory getInventory(Object... data)
+	{
+		return inventory;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public MalisisGui getGui(MalisisInventoryContainer container)
+	{
+		return new BlockMixerGui(this, container);
+	}
+
+	@Override
+	public void update()
 	{
 		ItemStack firstItemStack = firstInput.getItemStack();
 		ItemStack secondItemStack = secondInput.getItemStack();
@@ -91,25 +104,6 @@ public class BlockMixerTileEntity extends TileEntity implements IInventoryProvid
 		super.readFromNBT(tagCompound);
 		mixTimer = tagCompound.getInteger("mixTimer");
 		inventory.readFromNBT(tagCompound);
-	}
-
-	@Override
-	public MalisisInventory[] getInventories(Object... data)
-	{
-		return new MalisisInventory[] { inventory };
-	}
-
-	@Override
-	public MalisisInventory[] getInventories(ForgeDirection side, Object... data)
-	{
-		return getInventories(data);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public MalisisGui getGui(MalisisInventoryContainer container)
-	{
-		return new BlockMixerGui(this, container);
 	}
 
 	public class MixerSlot extends MalisisSlot

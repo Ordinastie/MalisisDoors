@@ -25,91 +25,105 @@
 package net.malisis.doors.block;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.entity.MixedBlockTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
-import net.minecraft.block.Block;
+import net.malisis.doors.renderer.MixedBlockRenderer;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.client.particle.EntityDiggingFX;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MixedBlock extends Block implements ITileEntityProvider
+@MalisisRendered(MixedBlockRenderer.class)
+public class MixedBlock extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
 {
-	public static int renderId = -1;
-
 	public MixedBlock()
 	{
 		super(Material.rock);
+		setName("mixed_block");
 		setHardness(0.7F);
-		setUnlocalizedName("mixed_block");
 	}
 
 	@Override
-	public void registerIcons(IIconRegister p_149651_1_)
-	{}
-
-	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
+	public Class<? extends ItemBlock> getItemClass()
 	{
-		return side;
+		return MixedBlockBlockItem.class;
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack itemStack)
+	public PropertyDirection getPropertyDirection()
+	{
+		return IBlockDirectional.ALL;
+	}
+
+	@Override
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{
+		return getDefaultState().withProperty(IBlockDirectional.ALL, facing.getOpposite());
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack)
 	{
 		if (!(itemStack.getItem() instanceof MixedBlockBlockItem))
 			return;
 
-		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
 		if (te == null)
 			return;
 		te.set(itemStack);
 
 		if (MalisisDoorsSettings.enhancedMixedBlockPlacement.get())
 		{
-			ForgeDirection dir = EntityUtils.getEntityFacing(player, true);
-			if (!player.isSneaking())
+			EnumFacing dir = EntityUtils.getEntityFacing(placer, true);
+			if (!placer.isSneaking())
 				dir = dir.getOpposite();
-			world.setBlockMetadataWithNotify(x, y, z, dir.ordinal(), 3);
+			world.setBlockState(pos, state.withProperty(IBlockDirectional.ALL, dir));
 		}
 		else
-			world.notifyBlockChange(x, y, z, this);
+			world.notifyBlockOfStateChange(pos, this);
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player)
 	{
-		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
 		if (te == null)
 			return null;
 		return MixedBlockBlockItem.fromTileEntity(te);
 	}
 
 	@Override
-	public int getLightValue(IBlockAccess world, int x, int y, int z)
+	public int getLightValue(IBlockAccess world, BlockPos pos)
 	{
-		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
-		if (te == null || te.block1 == null || te.block2 == null)
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
+		if (te == null || te.getState1() == null || te.getState2() == null)
 			return 0;
 
-		return Math.max(te.block1.getLightValue(), te.block2.getLightValue());
+		return Math.max(te.getState1().getBlock().getLightValue(), te.getState2().getBlock().getLightValue());
 	}
 
 	@Override
@@ -119,98 +133,36 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
+	public int isProvidingWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
-		if (te == null)
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
+		if (te == null || te.getState1() == null || te.getState2() == null)
 			return 0;
 
-		return te.block1 == Blocks.redstone_block || te.block2 == Blocks.redstone_block ? 15 : 0;
+		return te.getState1().getBlock() == Blocks.redstone_block || te.getState2().getBlock() == Blocks.redstone_block ? 15 : 0;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean addHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
 	{
-		int x = target.blockX;
-		int y = target.blockY;
-		int z = target.blockZ;
-
-		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		if (te == null || te.block1 == null || te.block2 == null)
+		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(target.getBlockPos());
+		if (te == null || te.getState1() == null || te.getState2() == null)
 			return true;
 
-		Block[] blocks = { te.block1, te.block2 };
-		int[] metadata = { te.metadata1, te.metadata2 };
-
-		ForgeDirection side = ForgeDirection.getOrientation(target.sideHit);
-
-		double fxX = x + world.rand.nextDouble();
-		double fxY = y + world.rand.nextDouble();
-		double fxZ = z + world.rand.nextDouble();
-
-		switch (side)
-		{
-			case DOWN:
-				fxY = y + getBlockBoundsMinY() - 0.1F;
-				break;
-			case UP:
-				fxY = y + getBlockBoundsMaxY() + 0.1F;
-				break;
-			case NORTH:
-				fxZ = z + getBlockBoundsMinZ() - 0.1F;
-				break;
-			case SOUTH:
-				fxZ = z + getBlockBoundsMaxY() + 0.1F;
-				break;
-			case EAST:
-				fxX = x + getBlockBoundsMaxX() + 0.1F;
-				break;
-			case WEST:
-				fxX = x + getBlockBoundsMinX() + 0.1F;
-				break;
-			default:
-				break;
-		}
-
-		int i = world.rand.nextBoolean() ? 0 : 1;
-
-		EntityDiggingFX fx = new EntityDiggingFX(world, fxX, fxY, fxZ, 0.0D, 0.0D, 0.0D, blocks[i], metadata[i]);
-		fx.multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
-		effectRenderer.addEffect(fx);
+		EntityUtils.addHitEffects(world, target, effectRenderer, te.getState1(), te.getState2());
 
 		return true;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean addDestroyEffects(World world, int x, int y, int z, int meta, EffectRenderer effectRenderer)
+	public boolean addDestroyEffects(World world, BlockPos pos, EffectRenderer effectRenderer)
 	{
-		byte nb = 4;
-		EntityDiggingFX fx;
-
-		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(x, y, z);
-		if (te == null || te.block1 == null || te.block2 == null)
+		MixedBlockTileEntity te = (MixedBlockTileEntity) world.getTileEntity(pos);
+		if (te == null || te.getState1() == null || te.getState2() == null)
 			return true;
 
-		Block[] blocks = { te.block1, te.block2 };
-		int[] metadata = { te.metadata1, te.metadata2 };
-
-		for (int i = 0; i < nb; ++i)
-		{
-			for (int j = 0; j < nb; ++j)
-			{
-				for (int k = 0; k < nb; ++k)
-				{
-					double fxX = x + (i + 0.5D) / nb;
-					double fxY = y + (j + 0.5D) / nb;
-					double fxZ = z + (k + 0.5D) / nb;
-					int l = (i + j + k) % 2;
-					fx = new EntityDiggingFX(world, fxX, fxY, fxZ, fxX - x - 0.5D, fxY - y - 0.5D, fxZ - z - 0.5D, blocks[l], metadata[l]);
-					effectRenderer.addEffect(fx);
-				}
-			}
-		}
+		EntityUtils.addDestroyEffects(world, pos, effectRenderer, te.getState1(), te.getState2());
 
 		return true;
 	}
@@ -221,21 +173,20 @@ public class MixedBlock extends Block implements ITileEntityProvider
 		return new MixedBlockTileEntity();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		if (!player.capabilities.isCreativeMode)
 		{
-			MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+			MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
 			if (te != null)
-				dropBlockAsItem(world, x, y, z, MixedBlockBlockItem.fromTileEntity(te));
+				spawnAsEntity(world, pos, MixedBlockBlockItem.fromTileEntity(te));
 		}
-		return super.removedByPlayer(world, player, x, y, z);
+		return super.removedByPlayer(world, pos, player, willHarvest);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
 		return new ArrayList<ItemStack>();
 	}
@@ -247,42 +198,32 @@ public class MixedBlock extends Block implements ITileEntityProvider
 	}
 
 	@Override
-	public int getRenderType()
+	public boolean canRenderInLayer(EnumWorldBlockLayer layer)
 	{
-		return renderId;
+		return layer == EnumWorldBlockLayer.TRANSLUCENT;
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getRenderBlockPass()
+	public boolean shouldSideBeRendered(IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
-		return 1;
-	}
-
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side)
-	{
-		if (world.isAirBlock(x, y, z))
+		if (world.isAirBlock(pos))
 			return true;
 
-		Block block = world.getBlock(x, y, z);
-		if (block != this && !(block instanceof BlockBreakable))
-			return !block.isOpaqueCube();
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != this && !(state.getBlock() instanceof BlockBreakable))
+			return !state.getBlock().isOpaqueCube();
 
-		ForgeDirection op = ForgeDirection.getOrientation(side).getOpposite();
-		MixedBlockTileEntity current = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x + op.offsetX, y + op.offsetY, z
-				+ op.offsetZ);
-
-		return !isOpaque(world, x, y, z) && current.isOpaque();
+		MixedBlockTileEntity current = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos.offset(side.getOpposite()));
+		return current != null && !isOpaque(world, pos) && current.isOpaque();
 	}
 
-	public static boolean isOpaque(IBlockAccess world, int x, int y, int z)
+	public static boolean isOpaque(IBlockAccess world, BlockPos pos)
 	{
-		Block block = world.getBlock(x, y, z);
-		if (block instanceof BlockBreakable)
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() instanceof BlockBreakable)
 			return true;
 
-		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, x, y, z);
+		MixedBlockTileEntity te = TileEntityUtils.getTileEntity(MixedBlockTileEntity.class, world, pos);
 		return te != null && te.isOpaque();
 	}
 }

@@ -46,7 +46,7 @@ public class Curtain extends DoorDescriptor
 		setHardness(2.0F);
 		setSoundType(Block.soundTypeCloth);
 		setName("curtain");
-		setTextureName(MalisisDoors.modid + ":curtain");
+		setTextureName(MalisisDoors.modid, "curtain");
 
 		//TileEntity
 		setOpeningTime(6);

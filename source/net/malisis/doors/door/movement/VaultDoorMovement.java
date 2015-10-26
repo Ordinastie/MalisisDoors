@@ -44,30 +44,18 @@ public class VaultDoorMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && type == BoundingBoxType.COLLISION && !topBlock)
+		if (type == BoundingBoxType.COLLISION && !topBlock)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
 		float x = 0, y = 0;
-		if (topBlock == tileEntity.isReversed())
+		if (topBlock != tileEntity.isHingeLeft())
 			x = topBlock ? DOOR_WIDTH - 1 : 1 - DOOR_WIDTH;
 		else
 			y = topBlock ? 1 - DOOR_WIDTH : DOOR_WIDTH - 1;
 
-		if (tileEntity.isOpened())
-			aabb.offset(x, y, 0);
-
-		return aabb;
+		return IDoorMovement.getHalfBoundingBox().offset(x, y, 0);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
@@ -80,7 +68,7 @@ public class VaultDoorMovement implements IDoorMovement
 		if (topBlock)
 			offsetY = 1 - offsetY;
 
-		if (!tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 			offsetX = -offsetX;
 
 		Rotation rotation = new Rotation(angle).aroundAxis(0, 0, 1).offset(offsetX, offsetY, 0);

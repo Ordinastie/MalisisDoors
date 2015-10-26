@@ -22,50 +22,51 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.item;
+package net.malisis.doors.door.iconprovider;
 
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.VanillaIcon;
+import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.block.VanishingBlock;
-import net.minecraft.block.Block;
+import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.world.IBlockAccess;
 
-public class VanishingBlockItem extends ItemBlock
+/**
+ * @author Ordinastie
+ *
+ */
+public class CamoFenceGateIconProvider implements IBlockIconProvider
 {
-	String[] names = { "wood", "iron", "gold", "diamond" };
+	private MalisisIcon defaultIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/camo_fencegate");
 
-	public VanishingBlockItem(Block block)
+	@Override
+	public void registerIcons(TextureMap map)
 	{
-		super(block);
-		setHasSubtypes(true);
+		defaultIcon = defaultIcon.register(map);
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemstack)
+	public MalisisIcon getIcon()
 	{
-		int i = itemstack.getMetadata();
-		if (i < 0 || i >= names.length)
-			i = 0;
-		return getUnlocalizedName() + "_" + names[i];
+		return defaultIcon;
 	}
 
 	@Override
-	public int getMetadata(int metadata)
+	public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		return metadata;
-	}
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
+		if (te == null)
+			return getIcon();
 
-	@Override
-	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState)
-	{
-		if (newState.getValue(VanishingBlock.TYPE) == VanishingBlock.Type.DIAMOND)
-			newState = MalisisDoors.Blocks.vanishingDiamondBlock.getDefaultState();
+		IBlockState neighborState = te.getNeighborsState();
+		if (neighborState == null)
+			return getIcon();
 
-		return super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
+		return new VanillaIcon(neighborState);
 	}
 }

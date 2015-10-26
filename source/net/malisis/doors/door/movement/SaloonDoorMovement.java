@@ -43,23 +43,25 @@ public class SaloonDoorMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getClosedBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
+	{
+		return getOpenBoundingBox(te, topBlock, type);
+	}
+
+	@Override
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
 	{
 		if (type == BoundingBoxType.COLLISION || te.isMoving())
 			return null;
 
 		float f = 1 / 16F;
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0.25F, .5F - f / 2, 1, 1, .5F + f / 2);
-		if (topBlock)
-			aabb.offset(0, -0.25F, 0);
-
+		AxisAlignedBB aabb;
 		if (type == BoundingBoxType.SELECTION)
-		{
-			if (topBlock)
-				aabb.minY -= .75F;
-			else
-				aabb.maxY += .75F;
-		}
+			aabb = new AxisAlignedBB(0, topBlock ? -0.75F : 0.25F, .5F - f / 2, 1, topBlock ? 0.75F : 1.75F, .5F + f / 2);
+		else
+			aabb = new AxisAlignedBB(0, topBlock ? 0 : 0.25F, .5F - f / 2, 1, topBlock ? 0.75F : 1, .5F + f / 2);
+		//		AxisAlignedBB aabb = new AxisAlignedBB(0, topBlock && type == BoundingBoxType.SELECTION ? -0.75F : 0.25F, 0.5F - f / 2, 1,
+		//				!topBlock && type == BoundingBoxType.SELECTION ? 1.75F : 0.75F, 0.5F + f / 2);
 
 		return aabb;
 	}
@@ -67,11 +69,11 @@ public class SaloonDoorMovement implements IDoorMovement
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
 		float f = 1 / 16F;
-		float angle = 90;
+		float angle = -90;
 		float hingeX = 0.5F - f / 2;
 		//float hingeZ = -0.5F + DOOR_WIDTH / 2;
 
-		if (tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 			angle = -angle;
 
 		if (((SaloonDoorTileEntity) tileEntity).isBackward())

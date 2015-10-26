@@ -24,20 +24,26 @@
 
 package net.malisis.doors.door.block;
 
-import net.malisis.doors.MalisisDoors;
+import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.doors.door.DoorDescriptor;
+import net.malisis.doors.door.iconprovider.SaloonDoorIconProvider;
+import net.malisis.doors.door.renderer.SaloonDoorRenderer;
 import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
+@MalisisRendered(SaloonDoorRenderer.class)
 public class SaloonDoorBlock extends Door
 {
 	public SaloonDoorBlock(DoorDescriptor desc)
@@ -46,30 +52,25 @@ public class SaloonDoorBlock extends Door
 	}
 
 	@Override
-	public void registerIcons(IIconRegister register)
+	@SideOnly(Side.CLIENT)
+	public void createIconProvider(Object object)
 	{
-		blockIcon = register.registerIcon(MalisisDoors.modid + ":saloon_door");
+		iconProvider = new SaloonDoorIconProvider(descriptor);
 	}
 
 	@Override
-	public IIcon getIcon(int side, int metadata)
-	{
-		return blockIcon;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int par6, float par7, float par8, float par9)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		return true;
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
 		if (!(entity instanceof EntityPlayer))
 			return;
 
-		SaloonDoorTileEntity te = (SaloonDoorTileEntity) getDoor(world, x, y, z);
+		SaloonDoorTileEntity te = (SaloonDoorTileEntity) getDoor(world, pos);
 		if (te == null)
 			return;
 
@@ -88,9 +89,9 @@ public class SaloonDoorBlock extends Door
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		if ((metadata & FLAG_TOPBLOCK) != 0)
+		if (isTop(state))
 			return null;
 
 		return new SaloonDoorTileEntity();

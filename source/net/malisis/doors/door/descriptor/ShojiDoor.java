@@ -40,7 +40,6 @@ import net.minecraft.init.Items;
  */
 public class ShojiDoor extends DoorDescriptor
 {
-
 	public ShojiDoor()
 	{
 		//Block
@@ -48,7 +47,7 @@ public class ShojiDoor extends DoorDescriptor
 		setHardness(1.0F);
 		setSoundType(Block.soundTypeCloth);
 		setName("shoji_door");
-		setTextureName(MalisisDoors.modid + ":shoji_door");
+		setTextureName(MalisisDoors.modid, "shoji_door");
 
 		//te
 		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));

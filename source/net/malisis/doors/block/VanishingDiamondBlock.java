@@ -31,11 +31,14 @@ import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -44,50 +47,30 @@ import net.minecraft.world.World;
  */
 public class VanishingDiamondBlock extends VanishingBlock
 {
-
 	public VanishingDiamondBlock()
 	{
 		super();
-		setUnlocalizedName("vanishing_block_diamond");
+		setName("vanishing_block_diamond");
+		setDefaultState(blockState.getBaseState().withProperty(TYPE, Type.DIAMOND));
 	}
 
 	@Override
-	public void setPowerState(World world, int x, int y, int z, boolean powered)
-	{
-		if (world.getBlock(x, y, z) != this) // block is VanishingBlock ?
-			return;
-		if (isPowered(world, x, y, z) == powered) // same power state?
-			return;
-
-		VanishingTileEntity te = TileEntityUtils.getTileEntity(VanishingTileEntity.class, world, x, y, z);
-		if (te == null)
-			return;
-
-		te.setPowerState(powered);
-
-		if (powered)
-			world.setBlockMetadataWithNotify(x, y, z, te.blockMetadata | flagPowered, 2);
-		else
-			world.setBlockMetadataWithNotify(x, y, z, te.blockMetadata & ~flagPowered, 2);
-	}
-
-	@Override
-	public boolean shouldPropagate(World world, int x, int y, int z, VanishingTileEntity source)
+	public boolean shouldPropagate(World world, BlockPos pos, VanishingTileEntity source)
 	{
 		return false;
 	}
 
 	@Override
-	public void propagateState(World world, int x, int y, int z)
+	public void propagateState(World world, BlockPos pos)
 	{}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
 
-		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, x, y, z);
+		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
 		MalisisInventory.open((EntityPlayerMP) player, te);
 
 		return true;
@@ -95,9 +78,7 @@ public class VanishingDiamondBlock extends VanishingBlock
 
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List list)
-	{
-
-	}
+	{}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)

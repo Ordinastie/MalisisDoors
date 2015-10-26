@@ -24,23 +24,49 @@
 
 package net.malisis.doors.door.renderer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.replacement.ReplacementTool;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraftforge.client.model.TRSRTransformation;
 
 /**
  * @author Ordinastie
  *
  */
+@SuppressWarnings("deprecation")
 public class FenceGateRenderer extends DoorRenderer
 {
 	protected FenceGateTileEntity tileEntity;
+	//    "display": {
+	//        "thirdperson": {
+	//            "rotation": [ 0, -90, 170 ],
+	//            "translation": [ 0, 1.5, -2.75 ] * 0.0625,
+	//            "scale": [ 0.375, 0.375, 0.375 ]
+	//        },
+	//        "firstperson": {
+	//            "rotation": [ 0, 90, 0 ],
+	//            "translation": [ 0, 0, 0 ],
+	//            "scale": [ 1, 1, 1 ]
+	//        }
+
+	protected Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(0, 0.09375F, -0.171875F),
+			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -90, 170)), new Vector3f(0.375F, 0.375F, 0.375F), null).getMatrix();
+	protected Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)), null, null)
+			.getMatrix();
+
+	public FenceGateRenderer()
+	{
+		super(false);
+		registerFor(FenceGateTileEntity.class);
+	}
 
 	@Override
 	protected void initialize()
@@ -63,6 +89,8 @@ public class FenceGateRenderer extends DoorRenderer
 
 		Shape left = new Shape(right);
 		left.rotate(180, 0, 1, 0);
+		left.applyMatrix();
+		left.deductParameters();
 
 		model = new MalisisModel();
 		model.addShape("right", right);
@@ -71,6 +99,28 @@ public class FenceGateRenderer extends DoorRenderer
 		model.storeState();
 
 		initParams();
+	}
+
+	@Override
+	public Matrix4f getTransform(TransformType tranformType)
+	{
+		if (tranformType == TransformType.FIRST_PERSON)
+			return firstPerson;
+		if (tranformType == TransformType.THIRD_PERSON)
+			return thirdPerson;
+		return null;
+	}
+
+	@Override
+	public void render()
+	{
+		if (renderType == RenderType.ITEM)
+		{
+			model.resetState();
+			model.render(this, rp);
+			return;
+		}
+		super.render();
 	}
 
 	@Override
@@ -84,15 +134,15 @@ public class FenceGateRenderer extends DoorRenderer
 	protected void setup()
 	{
 		model.resetState();
-		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
+		if (direction.getAxis() == Axis.X)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
 
 		if (tileEntity.isWall())
 			model.translate(0, -.19F, 0);
 
-		rp.icon.set(tileEntity.getCamoIcon());
-		rp.colorMultiplier.set(tileEntity.getCamoColor());
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		//rp.icon.set(tileEntity.getCamoIcon());
+		//rp.colorMultiplier.set(tileEntity.getCamoColor());
+		//rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 	}
 
 	@Override
@@ -112,15 +162,4 @@ public class FenceGateRenderer extends DoorRenderer
 		model.render(this, rp);
 	}
 
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
-		renderer.renderBlockAsItem(ReplacementTool.orignalBlock(block), 0, 1);
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return true;
-	}
 }

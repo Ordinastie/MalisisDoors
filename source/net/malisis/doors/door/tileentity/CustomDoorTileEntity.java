@@ -25,9 +25,12 @@
 package net.malisis.doors.door.tileentity;
 
 import net.malisis.doors.door.block.Door;
-import net.minecraft.block.Block;
+import net.malisis.doors.door.item.CustomDoorItem;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import org.apache.commons.lang3.tuple.Triple;
 
 /**
  * @author Ordinastie
@@ -35,73 +38,31 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class CustomDoorTileEntity extends DoorTileEntity
 {
-	private Block frame;
-	private Block topMaterial;
-	private Block bottomMaterial;
-
-	private int frameMetadata;
-	private int topMaterialMetadata;
-	private int bottomMaterialMetadata;
+	private IBlockState frame;
+	private IBlockState top;
+	private IBlockState bottom;
 
 	//#region Getters/setters
-	public Block getFrame()
+	public IBlockState getFrame()
 	{
 		return frame;
 	}
 
-	public void setFrame(Block frame)
+	public IBlockState getTop()
 	{
-		this.frame = frame;
+		return top;
 	}
 
-	public Block getTopMaterial()
+	public IBlockState getBottom()
 	{
-		return topMaterial;
+		return bottom;
 	}
 
-	public void setTopMaterial(Block topMaterial)
+	public int getLightValue()
 	{
-		this.topMaterial = topMaterial;
-	}
-
-	public Block getBottomMaterial()
-	{
-		return bottomMaterial;
-	}
-
-	public void setBottomMaterial(Block bottomMaterial)
-	{
-		this.bottomMaterial = bottomMaterial;
-	}
-
-	public int getFrameMetadata()
-	{
-		return frameMetadata;
-	}
-
-	public void setFrameMetadata(int frameMetadata)
-	{
-		this.frameMetadata = frameMetadata;
-	}
-
-	public int getTopMaterialMetadata()
-	{
-		return topMaterialMetadata;
-	}
-
-	public void setTopMaterialMetadata(int topMaterialMetadata)
-	{
-		this.topMaterialMetadata = topMaterialMetadata;
-	}
-
-	public int getBottomMaterialMetadata()
-	{
-		return bottomMaterialMetadata;
-	}
-
-	public void setBottomMaterialMetadata(int bottomMaterialMetadata)
-	{
-		this.bottomMaterialMetadata = bottomMaterialMetadata;
+		if (frame == null)
+			return 0;
+		return Math.max(Math.max(frame.getBlock().getLightValue(), top.getBlock().getLightValue()), bottom.getBlock().getLightValue());
 	}
 
 	//#end Getters/setters
@@ -111,15 +72,10 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	{
 		super.onBlockPlaced(door, itemStack);
 
-		NBTTagCompound nbt = itemStack.stackTagCompound;
-
-		frame = Block.getBlockById(nbt.getInteger("frame"));
-		topMaterial = Block.getBlockById(nbt.getInteger("topMaterial"));
-		bottomMaterial = Block.getBlockById(nbt.getInteger("bottomMaterial"));
-
-		frameMetadata = nbt.getInteger("frameMetadata");
-		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
-		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
+		Triple<IBlockState, IBlockState, IBlockState> triple = CustomDoorItem.readNBT(itemStack.getTagCompound());
+		frame = triple.getLeft();
+		top = triple.getMiddle();
+		bottom = triple.getRight();
 
 		setCentered(shouldCenter());
 	}
@@ -129,27 +85,16 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	{
 		super.readFromNBT(nbt);
 
-		frame = Block.getBlockById(nbt.getInteger("frame"));
-		topMaterial = Block.getBlockById(nbt.getInteger("topMaterial"));
-		bottomMaterial = Block.getBlockById(nbt.getInteger("bottomMaterial"));
-
-		frameMetadata = nbt.getInteger("frameMetadata");
-		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
-		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
+		Triple<IBlockState, IBlockState, IBlockState> triple = CustomDoorItem.readNBT(nbt);
+		frame = triple.getLeft();
+		top = triple.getMiddle();
+		bottom = triple.getRight();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
-
-		nbt.setInteger("frame", Block.getIdFromBlock(frame));
-		nbt.setInteger("topMaterial", Block.getIdFromBlock(topMaterial));
-		nbt.setInteger("bottomMaterial", Block.getIdFromBlock(bottomMaterial));
-
-		nbt.setInteger("frameMetadata", frameMetadata);
-		nbt.setInteger("topMaterialMetadata", topMaterialMetadata);
-		nbt.setInteger("bottomMaterialMetadata", bottomMaterialMetadata);
-
+		CustomDoorItem.writeNBT(nbt, frame, top, bottom);
 	}
 }

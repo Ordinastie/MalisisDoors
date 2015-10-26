@@ -24,145 +24,117 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.core.util.MultiBlock;
-import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.movement.ForcefieldMovement;
-import net.malisis.doors.door.sound.SilentDoorSound;
+import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.multiblock.AABBMultiBlock;
+import net.malisis.doors.MalisisDoors;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
  * @author Ordinastie
  *
  */
-public class ForcefieldTileEntity extends DoorTileEntity implements MultiBlock.IProvider
+public class ForcefieldTileEntity extends TileEntity
 {
-	private MultiBlock multiBlock;
+	private AABBMultiBlock multiBlock;
+	private boolean opened = false;
 
 	public ForcefieldTileEntity()
 	{
-		DoorDescriptor descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMovement(ForcefieldMovement.class));
-		descriptor.setSound(DoorRegistry.getSound(SilentDoorSound.class));
-		descriptor.setDoubleDoor(false);
-		descriptor.setOpeningTime(0);
-		setDescriptor(descriptor);
+
 	}
 
-	private int getOriginMetadata()
-	{
-		if (multiBlock == null)
-			return 0;
-		return getWorld().getBlockMetadata(multiBlock.getX(), multiBlock.getY(), multiBlock.getZ());
-	}
-
-	@Override
-	public boolean isTopBlock(int x, int y, int z)
-	{
-		return false;
-	}
-
-	@Override
-	public int getDirection()
-	{
-		return multiBlock.getDirection().ordinal();
-	}
-
-	@Override
 	public boolean isOpened()
 	{
-		return (getOriginMetadata() & Door.FLAG_OPENED) != 0;
+		return opened;
 	}
 
-	@Override
-	public boolean isReversed()
+	public void switchForcefield()
 	{
-		return false;
+		opened = !opened;
+		worldObj.markBlockForUpdate(pos);
 	}
 
-	@Override
-	public boolean isPowered()
-	{
-		return false;
-	}
-
-	@Override
-	public DoorState getState()
-	{
-		ForcefieldTileEntity te = MultiBlock.getOriginProvider(this);
-		if (te == null)
-			return DoorState.CLOSED;
-
-		if (te != this)
-			return te.getState();
-
-		return super.getState();
-	}
-
-	@Override
-	public void openOrCloseDoor()
-	{
-		ForcefieldTileEntity te = MultiBlock.getOriginProvider(this);
-		if (te == null)
-			return;
-
-		if (te != this)
-		{
-			te.openOrCloseDoor();
-			return;
-		}
-
-		if (getState() != DoorState.CLOSED && getState() != DoorState.OPENED)
-			return;
-
-		super.openOrCloseDoor();
-	}
-
-	@Override
-	public void setMultiBlock(MultiBlock multiBlock)
+	public void setMultiBlock(AABBMultiBlock multiBlock)
 	{
 		this.multiBlock = multiBlock;
 	}
 
-	@Override
-	public MultiBlock getMultiBlock()
+	public AABBMultiBlock getMultiBlock()
 	{
 		return multiBlock;
-	}
-
-	@Override
-	public void setWorldObj(World world)
-	{
-		super.setWorldObj(world);
-		if (multiBlock != null)
-			multiBlock.setWorld(world);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		multiBlock = new MultiBlock(tag);
+
+		opened = tag.getBoolean("opened");
+
+		//LEGACY
+		if (tag.hasKey("multiBlock"))
+			tag = tag.getCompoundTag("multiBlock");
+
+		if (tag.hasKey("minX"))
+		{
+			AxisAlignedBB aabb = AABBUtils.readFromNBT(tag);
+			multiBlock = new AABBMultiBlock(MalisisDoors.Blocks.forcefieldDoor, aabb);
+			multiBlock.setBulkProcess(true, true);
+		}
+
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
+
 		if (multiBlock != null)
-			multiBlock.writeToNBT(tag);
+			AABBUtils.writeToNBT(tag, multiBlock.getBoundingBox());
+
+		tag.setBoolean("opened", opened);
+
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		if (multiBlock != null)
-			return multiBlock.getWorldBounds();
-		return super.getRenderBoundingBox();
+		return TileEntityUtils.getRenderingBounds(this);
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass)
+	{
+		return pass == 1;
+	}
+
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(pos, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	{
+		this.readFromNBT(packet.getNbtCompound());
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		return oldState.getBlock() != newSate.getBlock();
 	}
 
 }

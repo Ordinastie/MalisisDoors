@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door;
 
+import net.malisis.core.block.IRegisterable;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.item.DoorItem;
 import net.malisis.doors.door.movement.IDoorMovement;
@@ -38,11 +39,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import org.apache.commons.lang3.StringUtils;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * @author Ordinastie
@@ -58,8 +58,11 @@ public class DoorDescriptor
 	protected float hardness = 3.0F;
 	protected SoundType soundType = Block.soundTypeWood;
 	protected String name;
-	protected String textureName;
 	protected int autoCloseTime = 0;
+
+	//texture
+	protected String modid;
+	protected String textureName;
 
 	//te
 	protected Class<? extends DoorTileEntity> tileEntityClass = DoorTileEntity.class;
@@ -149,13 +152,19 @@ public class DoorDescriptor
 		this.name = name;
 	}
 
+	public String getModId()
+	{
+		return modid;
+	}
+
 	public String getTextureName()
 	{
 		return textureName != null ? textureName : name;
 	}
 
-	public void setTextureName(String textureName)
+	public void setTextureName(String modid, String textureName)
 	{
+		this.modid = modid;
 		this.textureName = textureName;
 	}
 
@@ -296,6 +305,8 @@ public class DoorDescriptor
 	{
 		if (nbt.hasKey("name"))
 			name = nbt.getString("name");
+		if (nbt.hasKey("modid"))
+			modid = nbt.getString("modid");
 		if (nbt.hasKey("textureName"))
 			textureName = nbt.getString("textureName");
 		if (nbt.hasKey("hardness"))
@@ -355,8 +366,16 @@ public class DoorDescriptor
 		if (block == null || item == null)
 			create();
 
-		GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
-		GameRegistry.registerItem(item, item.getUnlocalizedName());
+		if (block instanceof IRegisterable)
+			((IRegisterable) block).register();
+		else
+			GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
+
+		if (item instanceof IRegisterable)
+			((IRegisterable) item).register();
+		else
+			GameRegistry.registerItem(item, item.getUnlocalizedName());
+
 		if (recipe != null)
 		{
 			if (oredict)

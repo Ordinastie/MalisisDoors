@@ -29,41 +29,27 @@ import java.util.WeakHashMap;
 import lombok.experimental.Delegate;
 import net.malisis.core.MalisisCore;
 import net.malisis.doors.entity.VanishingTileEntity;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.storage.WorldInfo;
 
 public class ProxyAccess
 {
 	private static WeakHashMap<IBlockAccess, IBlockAccess> cache = new WeakHashMap();
-	private static World tmpCache;
 	private static boolean worldInstanciationFailed = false;
 
 	private interface IProxyAccess
 	{
-		public Block getBlock(int x, int y, int z);
+		public IBlockState getBlockState(BlockPos pos);
 
-		public TileEntity getTileEntity(int var1, int var2, int var3);
+		public TileEntity getTileEntity(BlockPos pos);
 
-		public int getBlockMetadata(int x, int y, int z);
-
-		public boolean setBlockMetadataWithNotify(int x, int y, int z, int metadata, int flag);
-
-		public boolean setBlock(int x, int y, int z, Block block, int metadata, int flag);
-
-		public WorldInfo getWorldInfo();
-
-		public WorldInfo getSeed();
-
-		public void calculateInitialSkylight();
-
-		public void calculateInitialWeatherBody();
+		public boolean setBlockState(BlockPos pos, IBlockState state, int flag);
 	}
 
 	public static IBlockAccess get(IBlockAccess world)
@@ -80,9 +66,7 @@ public class ProxyAccess
 					return world;
 				try
 				{
-					tmpCache = (World) world;
 					proxy = new ProxyWorld((World) world);
-					tmpCache = null;
 				}
 				catch (Exception e)
 				{
@@ -98,36 +82,28 @@ public class ProxyAccess
 		return proxy;
 	}
 
-	public static VanishingTileEntity getVanishingTileEntity(IBlockAccess world, int x, int y, int z)
+	public static VanishingTileEntity getVanishingTileEntity(IBlockAccess world, BlockPos pos)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if (te instanceof VanishingTileEntity)
 			return (VanishingTileEntity) te;
 		return null;
 	}
 
-	public static Block getBlock(IBlockAccess world, int x, int y, int z)
+	public static IBlockState getBlockState(IBlockAccess world, BlockPos pos)
 	{
-		VanishingTileEntity te = getVanishingTileEntity(world, x, y, z);
+		VanishingTileEntity te = getVanishingTileEntity(world, pos);
 		if (te != null)
-			return te.copiedBlock != null ? te.copiedBlock : Blocks.air;
-		return world.getBlock(x, y, z);
+			return te.getCopiedState() != null ? te.getCopiedState() : Blocks.air.getDefaultState();
+		return world.getBlockState(pos);
 	}
 
-	public static int getMetadata(IBlockAccess world, int x, int y, int z)
+	public static TileEntity getTileEntity(IBlockAccess world, BlockPos pos)
 	{
-		VanishingTileEntity te = getVanishingTileEntity(world, x, y, z);
+		VanishingTileEntity te = getVanishingTileEntity(world, pos);
 		if (te != null)
-			return te.copiedMetadata;
-		return world.getBlockMetadata(x, y, z);
-	}
-
-	public static TileEntity getTileEntity(IBlockAccess world, int x, int y, int z)
-	{
-		VanishingTileEntity te = getVanishingTileEntity(world, x, y, z);
-		if (te != null)
-			return te.copiedTileEntity;
-		return world.getTileEntity(x, y, z);
+			return te.getCopiedTileEntity();
+		return world.getTileEntity(pos);
 	}
 
 	/**
@@ -144,21 +120,15 @@ public class ProxyAccess
 		}
 
 		@Override
-		public Block getBlock(int x, int y, int z)
+		public IBlockState getBlockState(BlockPos pos)
 		{
-			return ProxyAccess.getBlock(original, x, y, z);
+			return ProxyAccess.getBlockState(original, pos);
 		}
 
 		@Override
-		public TileEntity getTileEntity(int x, int y, int z)
+		public TileEntity getTileEntity(BlockPos pos)
 		{
-			return ProxyAccess.getTileEntity(original, x, y, z);
-		}
-
-		@Override
-		public int getBlockMetadata(int x, int y, int z)
-		{
-			return ProxyAccess.getMetadata(original, x, y, z);
+			return ProxyAccess.getTileEntity(original, pos);
 		}
 	}
 
@@ -172,54 +142,33 @@ public class ProxyAccess
 
 		public ProxyWorld(World world)
 		{
-			super(world.getSaveHandler(), null, new WorldSettings(world.getWorldInfo()), world.provider, (Profiler) null);
+			super(world.getSaveHandler(), world.getWorldInfo(), world.provider, (Profiler) null, world.isRemote);
 			original = world;
-			// reset back the world for the provider
-			provider.worldObj = world;
 		}
 
 		@Override
-		public Block getBlock(int x, int y, int z)
+		public IBlockState getBlockState(BlockPos pos)
 		{
-			return ProxyAccess.getBlock(original, x, y, z);
+			return ProxyAccess.getBlockState(original, pos);
 		}
 
 		@Override
-		public TileEntity getTileEntity(int x, int y, int z)
+		public TileEntity getTileEntity(BlockPos pos)
 		{
-			return ProxyAccess.getTileEntity(original, x, y, z);
+			return ProxyAccess.getTileEntity(original, pos);
 		}
 
 		@Override
-		public int getBlockMetadata(int x, int y, int z)
+		public boolean setBlockState(BlockPos pos, IBlockState state, int flag)
 		{
-			return ProxyAccess.getMetadata(original, x, y, z);
-		}
-
-		@Override
-		public boolean setBlock(int x, int y, int z, Block block, int metadata, int flag)
-		{
-			VanishingTileEntity te = ProxyAccess.getVanishingTileEntity(original, x, y, z);
+			VanishingTileEntity te = ProxyAccess.getVanishingTileEntity(original, pos);
 			if (te != null)
 			{
-				te.copiedBlock = block;
-				te.copiedMetadata = metadata;
+				te.setBlockState(state);
 				return true;
 			}
-			return original.setBlock(x, y, z, block, metadata, flag);
-		}
 
-		@Override
-		public boolean setBlockMetadataWithNotify(int x, int y, int z, int metadata, int flag)
-		{
-			VanishingTileEntity te = ProxyAccess.getVanishingTileEntity(original, x, y, z);
-			if (te != null && te.copiedBlock != null)
-			{
-				te.copiedMetadata = metadata;
-				notifyBlocksOfNeighborChange(x, y, z, te.copiedBlock);
-				return true;
-			}
-			return original.setBlockMetadataWithNotify(x, y, z, metadata, flag);
+			return original.setBlockState(pos, state, flag);
 		}
 
 		@Override
@@ -227,34 +176,6 @@ public class ProxyAccess
 		{
 			return null;
 		}
-
-		@Override
-		public WorldInfo getWorldInfo()
-		{
-			if (original != null)
-				return original.getWorldInfo();
-			// called from within super(), so we can't use original
-			return tmpCache.getWorldInfo();
-
-		}
-
-		@Override
-		public long getSeed()
-		{
-			if (original != null)
-				return original.getSeed();
-
-			// called from within super(), so we can't use original
-			return tmpCache.getSeed();
-		}
-
-		@Override
-		public void calculateInitialSkylight()
-		{}
-
-		@Override
-		public void calculateInitialWeatherBody()
-		{}
 
 		@Override
 		protected int getRenderDistanceChunks()

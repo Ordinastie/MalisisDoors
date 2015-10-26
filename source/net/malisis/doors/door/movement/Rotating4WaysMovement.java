@@ -32,10 +32,10 @@ import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
-import net.malisis.core.util.AABBUtils.Axis;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing.Axis;
 
 /**
  * @author Ordinastie
@@ -45,26 +45,15 @@ public class Rotating4WaysMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (tileEntity.isOpened() && type == BoundingBoxType.COLLISION)
+		if (type == BoundingBoxType.COLLISION)
 			return null;
 
-		if (type == BoundingBoxType.SELECTION && !tileEntity.isOpened())
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-		{
-			AABBUtils.Axis axis = topBlock == !tileEntity.isReversed() ? Axis.X : Axis.Y;
-			int dir = tileEntity.isReversed() ? -1 : 1;
-			AABBUtils.rotate(aabb, dir, axis);
-		}
+		AxisAlignedBB aabb = IDoorMovement.getHalfBoundingBox();
+		Axis axis = topBlock == tileEntity.isHingeLeft() ? Axis.X : Axis.Y;
+		int dir = tileEntity.isHingeLeft() ? -1 : 1;
+		aabb = AABBUtils.rotate(aabb, dir, axis);
 
 		return aabb;
 	}
@@ -72,7 +61,7 @@ public class Rotating4WaysMovement implements IDoorMovement
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
 		float angle = 90;
-		float hingeX = 0.5F - DOOR_WIDTH / 2;
+		float hingeX = -0.5F + DOOR_WIDTH / 2;
 		float hingeY = -0.5F + DOOR_WIDTH / 2;
 		float hingeZ = -0.5F + DOOR_WIDTH / 2;
 		int axisX = 0;
@@ -84,10 +73,10 @@ public class Rotating4WaysMovement implements IDoorMovement
 			hingeY = 1 - hingeY;
 		}
 
-		if (tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 			hingeX = -hingeX;
 
-		if (topBlock != tileEntity.isReversed())
+		if (topBlock == tileEntity.isHingeLeft())
 		{
 			axisX = 1;
 		}

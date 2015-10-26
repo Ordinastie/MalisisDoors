@@ -31,9 +31,9 @@ import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing.Axis;
 
 /**
  * @author Ordinastie
@@ -43,7 +43,7 @@ public class FenceGateMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
 		//never called
 		return null;
@@ -52,11 +52,10 @@ public class FenceGateMovement implements IDoorMovement
 	public Transformation getTransformation(DoorTileEntity tileEntity, boolean left)
 	{
 		boolean reversedOpen = ((tileEntity.getBlockMetadata() >> 1) & 1) == 1;
-		int direction = tileEntity.getDirection();
 
 		float hinge = -0.5F + 0.125F / 2;
 		float angle = 90;
-		if (direction == Door.DIR_NORTH || direction == Door.DIR_SOUTH)
+		if (tileEntity.getDirection().getAxis() == Axis.X)
 			angle = -angle;
 		if (!reversedOpen)
 			angle = -angle;
@@ -80,10 +79,10 @@ public class FenceGateMovement implements IDoorMovement
 		if (doubleDoor != null)
 		{
 			boolean left = true;
-			if (tileEntity.getDirection() == Door.DIR_NORTH || tileEntity.getDirection() == Door.DIR_NORTH)
-				left = tileEntity.zCoord < doubleDoor.zCoord;
+			if (tileEntity.getDirection().getAxis() == Axis.X)
+				left = tileEntity.getPos().getZ() < doubleDoor.getPos().getZ();
 			else
-				left = tileEntity.xCoord > doubleDoor.xCoord;
+				left = tileEntity.getPos().getX() > doubleDoor.getPos().getX();
 			return new Animation[] { new Animation(model, getTransformation(tileEntity, left)) };
 		}
 

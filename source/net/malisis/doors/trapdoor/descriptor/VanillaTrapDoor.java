@@ -38,18 +38,23 @@ import net.minecraft.creativetab.CreativeTabs;
  */
 public class VanillaTrapDoor extends TrapDoorDescriptor
 {
-	public VanillaTrapDoor()
+	public static enum Type
+	{
+		WOOD, IRON
+	}
+
+	public VanillaTrapDoor(Type type)
 	{
 		//Block
 		setOpeningTime(6);
-		setMaterial(Material.wood);
-		setHardness(3.0F);
-		setSoundType(Block.soundTypeWood);
-		setName("trapdoor");
-		setTextureName("trapdoor");
+		setMaterial(type == Type.IRON ? Material.iron : Material.wood);
+		setHardness(type == Type.IRON ? 5.0F : 3.0F);
+		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
+		setName(type == Type.IRON ? "iron_trapdoor" : "trapdoor");
+		setTextureName("minecraft", type == Type.IRON ? "blocks/iron_trapdoor" : "blocks/trapdoor");
 
 		//te
-		setRequireRedstone(false);
+		setRequireRedstone(type == Type.IRON);
 		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 

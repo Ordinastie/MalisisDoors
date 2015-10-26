@@ -24,7 +24,6 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.door.block.Door;
 import net.minecraft.entity.Entity;
 
 /**
@@ -50,28 +49,28 @@ public class SaloonDoorTileEntity extends DoorTileEntity
 		double entityPos = 0;;
 		float tePos = 0;
 
-		switch (Door.intToDir(getDirection()))
+		switch (getDirection())
 		{
 			case NORTH:
 				entityPos = entity.posZ;
-				tePos = zCoord + 0.5F;
+				tePos = pos.getZ() + 0.5F;
 				break;
 			case SOUTH:
 				entityPos = -entity.posZ;
-				tePos = -zCoord - 0.5F;
+				tePos = -pos.getZ() - 0.5F;
 				break;
 			case EAST:
 				entityPos = -entity.posX;
-				tePos = -xCoord - 0.5F;
+				tePos = -pos.getX() - 0.5F;
 				break;
 			case WEST:
 				entityPos = entity.posX;
-				tePos = xCoord + 0.5F;
+				tePos = pos.getX() + 0.5F;
 			default:
 				break;
 		}
 
-		openBackward = entityPos > tePos;
+		openBackward = entityPos < tePos;
 		//	MalisisCore.message(getDirection() + "  = B ? " + openBackward + " (" + entityPos + " > " + (tePos) + ")");
 	}
 

@@ -31,12 +31,10 @@ import net.malisis.core.renderer.animation.transformation.ParallelTransformation
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.MultiBlock;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @author Ordinastie
@@ -45,62 +43,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class RustyHatchMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getClosedBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
 	{
-		if (!(tileEntity instanceof RustyHatchTileEntity))
-			return null;
+		return new AxisAlignedBB(-1, topBlock ? 0.875F : 0, 0, 1, topBlock ? 1 : 0.125F, 2);
+	}
 
-		MultiBlock mb = ((RustyHatchTileEntity) tileEntity).getMultiBlock();
-		if (mb == null)
-			return null;
-
+	@Override
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	{
 		float f = 0.125F;
-		AxisAlignedBB aabb = mb.getWorldBounds();
-		ForgeDirection dir = ForgeDirection.getOrientation(tileEntity.getDirection());
-
-		if (!tileEntity.isOpened())
-		{
-			if (topBlock)
-			{
-				aabb.minY = aabb.minY + 1 - f;
-				aabb.maxY = aabb.minY + f;
-			}
-			else
-			{
-				aabb.minY = aabb.minY + 2;
-				aabb.maxY = aabb.minY + f;
-			}
-		}
-		else
-		{
-			aabb.minX += f;
-			aabb.maxX -= f;
-			aabb.minZ += f;
-			aabb.maxZ -= f;
-
-			if (topBlock)
-			{
-				aabb.minY = aabb.minY + 1;
-				aabb.maxY = aabb.maxY - 2 * f;
-			}
-			else
-			{
-				aabb.minY = aabb.minY + 2 * f;
-				aabb.maxY = aabb.maxY - 1;
-			}
-
-			//MalisisCore.message(dir);
-			if (dir == ForgeDirection.NORTH)
-				aabb.minZ = aabb.maxZ - f;
-			if (dir == ForgeDirection.SOUTH)
-				aabb.maxZ = aabb.minZ + f;
-			if (dir == ForgeDirection.EAST)
-				aabb.maxX = aabb.minX + f;
-			if (dir == ForgeDirection.WEST)
-				aabb.minX = aabb.maxX - f;
-		}
-
-		return aabb;
+		return new AxisAlignedBB(-1 + f, topBlock ? 1 : -2 + 2 * f, f, 1 - f, topBlock ? 3 - 2 * f : 0, 2 * f);
 	}
 
 	private Transformation getDoorTransformation(DoorTileEntity tileEntity)
@@ -110,7 +62,7 @@ public class RustyHatchMovement implements IDoorMovement
 		float offY = f;
 		float toAngle = 90;
 
-		if (!tileEntity.isTopBlock(0, 0, 0))
+		if (!((RustyHatchTileEntity) tileEntity).isTop())
 		{
 			toAngle = -toAngle;
 			offY = -0.5F;

@@ -24,89 +24,51 @@
 
 package net.malisis.doors.door.item;
 
-import net.malisis.core.util.MultiBlock;
+import net.malisis.core.item.MalisisItem;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IItemIconProvider;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.multiblock.AABBMultiBlock;
+import net.malisis.core.util.multiblock.IMultiBlock;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.door.block.Forcefield;
+import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class ForcefieldItem extends Item
+public class ForcefieldItem extends MalisisItem
 {
-	protected IIcon yellowIcon;
-	protected IIcon redIcon;
-	protected IIcon greenIcon;
-	protected IIcon disabledIcon;
+	public static AxisAlignedBB lastAABB;
 
 	public ForcefieldItem()
 	{
-		setUnlocalizedName("forcefieldItem");
+		setName("forcefieldItem");
 		setCreativeTab(MalisisDoors.tab);
-		setMaxDurability(0);
+		setMaxDamage(0);
 	}
 
 	@Override
-	public void registerIcons(IIconRegister register)
+	@SideOnly(Side.CLIENT)
+	public void createIconProvider(Object object)
 	{
-		itemIcon = register.registerIcon(MalisisDoors.modid + ":forcefielditem");
-		yellowIcon = register.registerIcon(MalisisDoors.modid + ":forcefielditem_yellow");
-		redIcon = register.registerIcon(MalisisDoors.modid + ":forcefielditem_red");
-		greenIcon = register.registerIcon(MalisisDoors.modid + ":forcefielditem_green");
-		disabledIcon = register.registerIcon(MalisisDoors.modid + ":forcefielditem_disabled");
-	}
-
-	@Override
-	public IIcon getIcon(ItemStack itemStack, int pass)
-	{
-		if (getEnergy(itemStack) < getMaxEnergy())
-			return disabledIcon;
-		if (!isStartSet(itemStack))
-			return itemIcon;
-
-		MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-		if (mop.typeOfHit != MovingObjectType.BLOCK)
-			return yellowIcon;
-
-		ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
-		ChunkPosition pos = new ChunkPosition(mop.blockX + dir.offsetX, mop.blockY + dir.offsetY, mop.blockZ + dir.offsetZ);
-		ChunkPosition start = getStartPosition(itemStack);
-		if (start.chunkPosY > pos.chunkPosY)
-		{
-			ChunkPosition tmp = start;
-			start = pos;
-			pos = tmp;
-		}
-
-		AxisAlignedBB aabb = getBoundingBox(start, pos);
-		if (aabb.minX < aabb.maxX - 1 && aabb.minY < aabb.maxY - 1 && aabb.minZ < aabb.maxZ - 1)
-			return redIcon;
-
-		int size = getDoorSize(aabb);
-		if (size <= 0 || getEnergy(itemStack) < size * 20)
-			return redIcon;
-
-		return greenIcon;
-
-	}
-
-	@Override
-	public IIcon getIconIndex(ItemStack itemStack)
-	{
-		return getIcon(itemStack, 0);
+		iconProvider = new ForcefieldItemIconProvider();
 	}
 
 	public int getEnergy(ItemStack itemStack)
@@ -119,7 +81,7 @@ public class ForcefieldItem extends Item
 		if (energy < 0)
 			energy = 0;
 		else if (energy > getMaxEnergy())
-			energy = getMaxDurability();
+			energy = getMaxEnergy();
 		getNBT(itemStack).setInteger("energy", energy);
 	}
 
@@ -142,95 +104,88 @@ public class ForcefieldItem extends Item
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (getEnergy(itemStack) < getMaxEnergy())
 			return true;
 
-		ForgeDirection dir = ForgeDirection.getOrientation(side);
-		ChunkPosition pos = new ChunkPosition(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+		pos = pos.offset(side);
 		if (!isStartSet(itemStack))
-		{
-			setStartPosition(itemStack, pos, world.getTotalWorldTime());
-			return true;
-		}
+			return setStartPosition(itemStack, pos, world.getTotalWorldTime());
 
-		ChunkPosition start = getStartPosition(itemStack);
-		if (start.chunkPosY > pos.chunkPosY)
-		{
-			ChunkPosition tmp = start;
-			start = pos;
-			pos = tmp;
-		}
-
+		BlockPos start = getStartPosition(itemStack);
 		AxisAlignedBB aabb = getBoundingBox(start, pos);
-		if (aabb.minX < aabb.maxX - 1 && aabb.minY < aabb.maxY - 1 && aabb.minZ < aabb.maxZ - 1)
-		{
-			clearStartPosition(itemStack);
-			return true;
-		}
+		pos = new BlockPos(aabb.minX, aabb.minY, aabb.minZ);
 
 		int size = getDoorSize(aabb);
 		if (size <= 0 || getEnergy(itemStack) < size * 20)
-		{
-			clearStartPosition(itemStack);
-			return true;
-		}
+			return clearStartPosition(itemStack);
 
-		MultiBlock multiBlock = new MultiBlock(world, (int) aabb.minX, (int) aabb.minY, (int) aabb.minZ);
-		multiBlock.setBlock(MalisisDoors.Blocks.forcefieldDoor);
-		multiBlock.setBounds(aabb.offset(-aabb.minX, -aabb.minY, -aabb.minZ));
-		multiBlock.setDirection(ForgeDirection.UNKNOWN);
-		if (multiBlock.placeBlocks(true))
-			drainEnergy(itemStack, size * 20, world.getTotalWorldTime());
+		if (!player.canPlayerEdit(pos, side, itemStack))
+			return clearStartPosition(itemStack);
 
-		clearStartPosition(itemStack);
-		return true;
+		Forcefield block = MalisisDoors.Blocks.forcefieldDoor;
+		if (!world.canBlockBePlaced(block, pos, false, side, player, itemStack))
+			return clearStartPosition(itemStack);
+
+		IBlockState state = block.getDefaultState().withProperty(IMultiBlock.ORIGIN, true);
+		if (!world.setBlockState(pos, state, 3))
+			return clearStartPosition(itemStack);
+
+		//make sure the right state was set
+		state = world.getBlockState(pos);
+		if (state.getBlock() != block)
+			return clearStartPosition(itemStack);
+
+		AABBMultiBlock multiBlock = new AABBMultiBlock(block, aabb.offset(-pos.getX(), -pos.getY(), -pos.getZ()));
+		multiBlock.setBulkProcess(true, true);
+		ForcefieldTileEntity te = TileEntityUtils.getTileEntity(ForcefieldTileEntity.class, world, pos);
+		if (te != null)
+			te.setMultiBlock(multiBlock);
+
+		//place the multiblock
+		block.onBlockPlacedBy(world, pos, state.withProperty(IMultiBlock.ORIGIN, false), player, itemStack);
+		//TODO: forcefield sound ?
+		//		world.playSoundEffect(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, block.stepSound.getPlaceSound(),
+		//				(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
+		drainEnergy(itemStack, size * 20, world.getTotalWorldTime());
+
+		return clearStartPosition(itemStack);
+	}
+
+	private static AxisAlignedBB getBoundingBox(BlockPos start, BlockPos end)
+	{
+		return new AxisAlignedBB(start, end).offset(.5F, .5F, .5F).expand(.5F, .5F, .5F);
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(World world, int x, int y, int z, EntityPlayer player)
+	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
 
 	protected boolean isStartSet(ItemStack itemStack)
 	{
-		return getNBT(itemStack).hasKey("x");
+		return getNBT(itemStack).hasKey("start");
 	}
 
-	protected void setStartPosition(ItemStack itemStack, ChunkPosition position, long time)
+	protected boolean setStartPosition(ItemStack itemStack, BlockPos pos, long time)
 	{
-		getNBT(itemStack).setInteger("x", position.chunkPosX);
-		getNBT(itemStack).setInteger("y", position.chunkPosY);
-		getNBT(itemStack).setInteger("z", position.chunkPosZ);
+		getNBT(itemStack).setLong("start", pos.toLong());
 		getNBT(itemStack).setLong("time", time);
+		return true;
 	}
 
-	protected ChunkPosition getStartPosition(ItemStack itemStack)
+	protected BlockPos getStartPosition(ItemStack itemStack)
 	{
-		return new ChunkPosition(getNBT(itemStack).getInteger("x"), getNBT(itemStack).getInteger("y"), getNBT(itemStack).getInteger("z"));
+		return BlockPos.fromLong(getNBT(itemStack).getLong("start"));
 	}
 
-	protected void clearStartPosition(ItemStack itemStack)
+	protected boolean clearStartPosition(ItemStack itemStack)
 	{
-		getNBT(itemStack).removeTag("x");
-		getNBT(itemStack).removeTag("y");
-		getNBT(itemStack).removeTag("z");
+		getNBT(itemStack).removeTag("start");
 		getNBT(itemStack).removeTag("time");
-	}
-
-	protected AxisAlignedBB getBoundingBox(ChunkPosition start, ChunkPosition end)
-	{
-		int minX, minY, minZ, maxX, maxY, maxZ;
-		minX = Math.min(start.chunkPosX, end.chunkPosX);
-		maxX = Math.max(start.chunkPosX, end.chunkPosX);
-		minY = Math.min(start.chunkPosY, end.chunkPosY);
-		maxY = Math.max(start.chunkPosY, end.chunkPosY);
-		minZ = Math.min(start.chunkPosZ, end.chunkPosZ);
-		maxZ = Math.max(start.chunkPosZ, end.chunkPosZ);
-
-		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
+		return true;
 	}
 
 	protected int getDoorSize(AxisAlignedBB aabb)
@@ -239,21 +194,14 @@ public class ForcefieldItem extends Item
 		int diffY = (int) (aabb.maxY - aabb.minY);
 		int diffZ = (int) (aabb.maxZ - aabb.minZ);
 
-		if (diffY != 1 && diffX == 1 && diffZ == 1)
-			return -1;
-
-		return diffX * diffY * diffZ;
-	}
-
-	protected ForgeDirection getOrientation(ChunkPosition start, ChunkPosition end)
-	{
-		//East/west
-		if (start.chunkPosX == end.chunkPosX)
-			return start.chunkPosZ < end.chunkPosZ ? ForgeDirection.EAST : ForgeDirection.WEST;
-		else if (start.chunkPosZ == end.chunkPosZ)
-			return start.chunkPosX < end.chunkPosX ? ForgeDirection.NORTH : ForgeDirection.SOUTH;
+		if (diffX == 1 && diffZ != 1)
+			return diffY * diffZ;
+		else if (diffY == 1)
+			return diffX * diffZ;
+		else if (diffZ == 1 && diffX != 1)
+			return diffX * diffY;
 		else
-			return ForgeDirection.UNKNOWN;
+			return -1;
 	}
 
 	@Override
@@ -296,8 +244,57 @@ public class ForcefieldItem extends Item
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack itemStack)
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
 	{
-		return 1;
+		return oldStack == null || newStack == null || oldStack.getItem() != newStack.getItem();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public class ForcefieldItemIconProvider implements IItemIconProvider
+	{
+		protected MalisisIcon itemIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem");
+		protected MalisisIcon yellowIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_yellow");
+		protected MalisisIcon redIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_red");;
+		protected MalisisIcon greenIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_green");;
+		protected MalisisIcon disabledIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_disabled");
+
+		@Override
+		public void registerIcons(TextureMap map)
+		{
+			itemIcon = itemIcon.register(map);
+			yellowIcon = yellowIcon.register(map);
+			redIcon = redIcon.register(map);
+			greenIcon = greenIcon.register(map);
+			disabledIcon = disabledIcon.register(map);
+		}
+
+		@Override
+		public MalisisIcon getIcon()
+		{
+			return itemIcon;
+		}
+
+		@Override
+		public MalisisIcon getIcon(ItemStack itemStack)
+		{
+			if (getEnergy(itemStack) < getMaxEnergy())
+				return disabledIcon;
+			if (!isStartSet(itemStack))
+				return itemIcon;
+
+			MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
+			if (mop.typeOfHit != MovingObjectType.BLOCK)
+				return yellowIcon;
+
+			BlockPos pos = mop.getBlockPos().offset(mop.sideHit);
+			BlockPos start = getStartPosition(itemStack);
+
+			AxisAlignedBB aabb = getBoundingBox(start, pos);
+			int size = getDoorSize(aabb);
+			if (size <= 0 || getEnergy(itemStack) < size * 20)
+				return redIcon;
+
+			return greenIcon;
+		}
 	}
 }

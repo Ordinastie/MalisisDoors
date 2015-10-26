@@ -24,37 +24,48 @@
 
 package net.malisis.doors.door.item;
 
+import java.util.List;
+
 import net.malisis.core.MalisisCore;
+import net.malisis.core.block.IRegisterable;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.renderer.icon.IMetaIconProvider;
 import net.malisis.doors.door.DoorDescriptor;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DoorItem extends ItemDoor
+@MalisisRendered
+public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterable
 {
 	private DoorDescriptor descriptor;
+	@SideOnly(Side.CLIENT)
+	private IIconProvider iconProvider;
 
 	public DoorItem(DoorDescriptor desc)
 	{
-		super(desc.getMaterial());
+		super(desc.getBlock());
 
 		this.descriptor = desc;
 		this.maxStackSize = desc.getMaxStackSize();
 		setUnlocalizedName(desc.getName());
-		setTextureName(desc.getTextureName());
+		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 	}
 
 	public DoorItem()
 	{
-		super(Material.wood);
+		super(null);
 	}
 
 	public DoorDescriptor getDescriptor(ItemStack itemStack)
@@ -63,19 +74,36 @@ public class DoorItem extends ItemDoor
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister)
+	public String getRegistryName()
 	{
-		this.itemIcon = iconRegister.registerIcon(descriptor.getTextureName());
+		return descriptor.getName();
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
+	@SideOnly(Side.CLIENT)
+	public void createIconProvider(Object object)
+	{}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIconProvider getIconProvider()
 	{
-		if (side != 1)
+		if (descriptor == null || !(descriptor.getBlock() instanceof IMetaIconProvider))
+			return null;
+		return ((IMetaIconProvider) descriptor.getBlock()).getIconProvider();
+	}
+
+	@Override
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		if (side != EnumFacing.UP)
 			return false;
 
-		y++;
+		IBlockState state = world.getBlockState(pos);
+
+		if (!state.getBlock().isReplaceable(world, pos))
+			pos = pos.up();
+
 		Block block = getDescriptor(itemStack).getBlock();
 		if (block == null)
 		{
@@ -83,17 +111,25 @@ public class DoorItem extends ItemDoor
 			return false;
 		}
 
-		if (!player.canPlayerEdit(x, y, z, side, itemStack) || !player.canPlayerEdit(x, y + 1, z, side, itemStack))
+		if (!player.canPlayerEdit(pos, side, itemStack) || !player.canPlayerEdit(pos.up(), side, itemStack))
 			return false;
 
-		if (!block.canPlaceBlockAt(world, x, y, z))
+		if (!block.canPlaceBlockAt(world, pos))
 			return false;
 
-		int i1 = MathHelper.floor_double((player.rotationYaw + 180.0F) * 4.0F / 360.0F - 0.5D) & 3;
-		placeDoorBlock(world, x, y, z, i1, block);
-		itemStack.stackSize--;
-
-		block.onBlockPlacedBy(world, x, y, z, player, itemStack);
+		placeDoor(world, pos, EnumFacing.fromAngle(player.rotationYaw), block);
+		--itemStack.stackSize;
+		block.onBlockPlacedBy(world, pos, world.getBlockState(pos), player, itemStack);
 		return true;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
+	{
+		if (stack.getTagCompound() == null)
+			return;
+
+		tooltip.add(EnumChatFormatting.WHITE
+				+ StatCollector.translateToLocal("door_movement." + stack.getTagCompound().getString("movement")));
 	}
 }

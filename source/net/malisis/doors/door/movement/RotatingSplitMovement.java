@@ -32,10 +32,10 @@ import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
-import net.malisis.core.util.AABBUtils.Axis;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing.Axis;
 
 /**
  * @author Ordinastie
@@ -45,24 +45,12 @@ public class RotatingSplitMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && type == BoundingBoxType.COLLISION && !topBlock)
+		if (type == BoundingBoxType.COLLISION && !topBlock)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			AABBUtils.rotate(aabb, topBlock ? 1 : -1, Axis.X);
-
-		return aabb;
+		return AABBUtils.rotate(IDoorMovement.getHalfBoundingBox(), topBlock ? -1 : 1, Axis.X);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)

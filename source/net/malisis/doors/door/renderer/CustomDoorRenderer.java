@@ -24,6 +24,9 @@
 
 package net.malisis.doors.door.renderer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.face.BottomFace;
@@ -31,36 +34,51 @@ import net.malisis.core.renderer.element.face.NorthFace;
 import net.malisis.core.renderer.element.face.SouthFace;
 import net.malisis.core.renderer.element.face.TopFace;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.client.model.TRSRTransformation;
+
+import org.apache.commons.lang3.tuple.Triple;
 
 /**
  * @author Ordinastie
  *
  */
+@SuppressWarnings("deprecation")
 public class CustomDoorRenderer extends DoorRenderer
 {
-	private Block frameBlock;
-	private Block topMaterialBlock;
-	private Block bottomMaterialBlock;
-
-	private int frameMetadata;
-	private int topMaterialMetadata;
-	private int bottomMaterialMetadata;
+	public static CustomDoorRenderer instance = new CustomDoorRenderer();
+	private IBlockState frame;
+	private IBlockState top;
+	private IBlockState bottom;
 
 	protected CustomDoorTileEntity tileEntity;
 
 	private float width;
 
+	private Matrix4f gui = new TRSRTransformation(new Vector3f(0, -0.1F, 0),
+			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -45, 0)), new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
+	private Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0, 0, -0.25F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(
+			90, 0, 0)), new Vector3f(0.3F, 0.3F, 0.3F), null).getMatrix();
+	private Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
+			new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
+
+	public CustomDoorRenderer()
+	{
+		super(false);
+		registerFor(CustomDoorTileEntity.class);
+	}
+
 	@Override
 	protected void initialize()
 	{
+		//TODO: make an OBJ model
 		width = 1.0F / 8.0F;
 		/**
 		 * BOTTOM
@@ -126,18 +144,14 @@ public class CustomDoorRenderer extends DoorRenderer
 	}
 
 	@Override
-	public void render()
+	protected void setItem()
 	{
-		initialize();
-		if (renderType == RenderType.ITEM_INVENTORY)
-		{
-			if (itemStack.stackTagCompound == null)
-				return;
-			renderInventory();
-			return;
-		}
+		Triple<IBlockState, IBlockState, IBlockState> triple = CustomDoorItem.readNBT(itemStack.getTagCompound());
+		frame = triple.getLeft();
+		top = triple.getMiddle();
+		bottom = triple.getRight();
 
-		super.render();
+		setupParams();
 	}
 
 	@Override
@@ -145,109 +159,58 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		super.setTileEntity();
 		this.tileEntity = (CustomDoorTileEntity) super.tileEntity;
+
+		frame = tileEntity.getFrame();
+		top = tileEntity.getTop();
+		bottom = tileEntity.getBottom();
+
+		setupParams();
 	}
 
-	private void setInfos(CustomDoorTileEntity te)
-	{
-		frameBlock = te.getFrame();
-		topMaterialBlock = te.getTopMaterial();
-		bottomMaterialBlock = te.getBottomMaterial();
-
-		frameMetadata = te.getFrameMetadata();
-		topMaterialMetadata = te.getTopMaterialMetadata();
-		bottomMaterialMetadata = te.getBottomMaterialMetadata();
-	}
-
-	private void setInfos(NBTTagCompound nbt)
-	{
-		frameBlock = Block.getBlockById(nbt.getInteger("frame"));
-		topMaterialBlock = Block.getBlockById(nbt.getInteger("topMaterial"));
-		bottomMaterialBlock = Block.getBlockById(nbt.getInteger("bottomMaterial"));
-
-		frameMetadata = nbt.getInteger("frameMetadata");
-		topMaterialMetadata = nbt.getInteger("topMaterialMetadata");
-		bottomMaterialMetadata = nbt.getInteger("bottomMaterialMetadata");
-	}
-
-	@Override
-	protected void setup()
-	{
-		model.resetState();
-
-		if (renderType == RenderType.TESR_WORLD)
-			setInfos(tileEntity);
-		else
-			setInfos(itemStack.stackTagCompound);
-
-		if (frameBlock == null)
-			return;
-
-		setupParams(true);
-		setupParams(false);
-
-		if (renderType == RenderType.TESR_WORLD)
-			super.setup();
-		else
-		{
-			if (itemRenderType == ItemRenderType.INVENTORY)
-			{
-				model.rotate(45, 0, 1, 0, 0, 0, 0);
-				model.scale(0.9F, 0.8F, 1, 0, 0, 0);
-				model.translate(0, -1F, 0);
-			}
-			else if (itemRenderType == ItemRenderType.EQUIPPED_FIRST_PERSON)
-				model.rotate(90, 0, 1, 0, 0, 0, 0);
-			else if (itemRenderType == ItemRenderType.ENTITY)
-			{
-				model.translate(-0.5F, -0.5F, -0.25F);
-				model.scale(0.5F, 0.5F, 0.5F, 0, 0, 0);
-			}
-			else if (itemRenderType == ItemRenderType.EQUIPPED)
-				model.rotate(180, 0, 1, 0, 0, 0, 0);
-		}
-	}
-
-	private void setupParams(boolean topBlock)
+	private void setupParams()
 	{
 		//reset alpha before so it doesn't bleed to the shapes
 		rp.alpha.reset();
 
-		Shape s = model.getShape(topBlock ? "top" : "bottom");
-		rp.icon.set(frameBlock.getIcon(2, frameMetadata));
-		rp.colorMultiplier.set(getColor(frameBlock));
-		s.setParameters("frame", rp, true);
+		rp.icon.set(new VanillaIcon(frame));
+		rp.colorMultiplier.set(getColor(frame));
+		model.getShape("top").setParameters("frame", rp, true);
+		model.getShape("bottom").setParameters("frame", rp, true);
 
-		Block block = topBlock ? topMaterialBlock : bottomMaterialBlock;
-		int meta = topBlock ? topMaterialMetadata : bottomMaterialMetadata;
-		rp.icon.set(block.getIcon(2, meta));
-		rp.colorMultiplier.set(getColor(block));
-		s.setParameters("material", rp, true);
+		rp.icon.set(new VanillaIcon(top));
+		rp.colorMultiplier.set(getColor(top));
+		model.getShape("top").setParameters("material", rp, true);
+
+		rp.icon.set(new VanillaIcon(bottom));
+		rp.colorMultiplier.set(getColor(bottom));
+		model.getShape("bottom").setParameters("material", rp, true);
 
 		//reset the values to default as rp is used for the whole shape
 		rp.icon.reset();
 		rp.colorMultiplier.reset();
 	}
 
-	private int getColor(Block block)
+	private int getColor(IBlockState state)
 	{
-		if (block == Blocks.grass)
+		if (state.getBlock() == Blocks.grass)
 			return 0xFFFFFF;
-		return renderType == RenderType.TESR_WORLD ? block.colorMultiplier(world, x, y, z) : block.getBlockColor();
-	}
-
-	private void renderInventory()
-	{
-		bindTexture(TextureMap.locationBlocksTexture);
-		enableBlending();
-
-		setup();
-
-		model.render(this, rp);
+		return renderType == RenderType.TILE_ENTITY ? state.getBlock().colorMultiplier(world, pos) : state.getBlock().getBlockColor();
 	}
 
 	@Override
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	public Matrix4f getTransform(TransformType tranformType)
 	{
-		return true;
+		switch (tranformType)
+		{
+			case GUI:
+				return gui;
+			case FIRST_PERSON:
+				return firstPerson;
+			case THIRD_PERSON:
+				return thirdPerson;
+			default:
+				return null;
+		}
 	}
+
 }

@@ -46,9 +46,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -166,6 +165,19 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		this.code = code;
 	}
 
+	@Override
+	public MalisisInventory getInventory(Object... data)
+	{
+		return inventory;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public MalisisGui getGui(MalisisInventoryContainer container)
+	{
+		return new DoorFactoryGui(this, container);
+	}
+
 	public void createDoor()
 	{
 		if (getWorld().isRemote)
@@ -192,13 +204,13 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 		else
 		{
 			ItemStack doors = doorEditSlot.extract(ItemUtils.FULL_STACK);
-			NBTTagCompound nbt = doors.stackTagCompound;
+			NBTTagCompound nbt = doors.getTagCompound();
 			if (nbt == null)
 				nbt = new NBTTagCompound();
 
 			buildDescriptor().writeNBT(nbt);
 
-			doors.stackTagCompound = nbt;
+			doors.setTagCompound(nbt);
 
 			outputSlot.insert(doors);
 		}
@@ -243,25 +255,6 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	}
 
 	@Override
-	public MalisisInventory[] getInventories(Object... data)
-	{
-		return new MalisisInventory[] { inventory };
-	}
-
-	@Override
-	public MalisisInventory[] getInventories(ForgeDirection side, Object... data)
-	{
-		return getInventories(data);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public MalisisGui getGui(MalisisInventoryContainer container)
-	{
-		return new DoorFactoryGui(this, container);
-	}
-
-	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
@@ -300,7 +293,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
+		return new S35PacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override

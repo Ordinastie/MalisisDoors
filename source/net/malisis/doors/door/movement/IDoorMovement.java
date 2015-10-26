@@ -28,6 +28,7 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -37,9 +38,28 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public interface IDoorMovement
 {
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type);
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type);
+
+	public default AxisAlignedBB getClosedBoundingBox(DoorTileEntity te, boolean topBlock, BoundingBoxType type)
+	{
+		return IDoorMovement.getFullBoundingBox(topBlock, type);
+	}
 
 	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
 
-	public boolean isSpecial();
+	public default boolean isSpecial()
+	{
+		return false;
+	}
+
+	public static AxisAlignedBB getFullBoundingBox(boolean topBlock, BoundingBoxType type)
+	{
+		return new AxisAlignedBB(0, topBlock && type == BoundingBoxType.SELECTION ? -1 : 0, 0, 1, !topBlock
+				&& type == BoundingBoxType.SELECTION ? 2 : 1, Door.DOOR_WIDTH);
+	}
+
+	public static AxisAlignedBB getHalfBoundingBox()
+	{
+		return new AxisAlignedBB(0, 0, 0, 1, 1, Door.DOOR_WIDTH);
+	}
 }

@@ -49,30 +49,18 @@ public class DoubleSlideMovement implements IDoorMovement
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if ((tileEntity.isReversed() != rightDirection) && tileEntity.isOpened())
+		if (tileEntity.isHingeLeft() == rightDirection)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			aabb.offset(rightDirection ? -1 + DOOR_WIDTH : 1 - DOOR_WIDTH, 0, 0);
-
-		return aabb;
+		return IDoorMovement.getFullBoundingBox(topBlock, type).offset(rightDirection ? -1 + DOOR_WIDTH : 1 - DOOR_WIDTH, 0, 0);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
 		float x = 1 - DOOR_WIDTH;
-		if (tileEntity.isReversed() != rightDirection)
+		if (tileEntity.isHingeLeft() == rightDirection)
 			x -= -1;
 		if (rightDirection)
 			x *= -1;

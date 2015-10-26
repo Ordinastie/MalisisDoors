@@ -24,36 +24,56 @@
 
 package net.malisis.doors.trapdoor.block;
 
+import java.util.List;
+
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.IBoundingBox;
+import net.malisis.core.block.IRegisterable;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.renderer.icon.IMetaIconProvider;
+import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
+import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.RaytraceBlock;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.trapdoor.TrapDoorDescriptor;
+import net.malisis.doors.trapdoor.renderer.TrapDoorRenderer;
 import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author Ordinastie
  *
  */
-public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
+@MalisisRendered(TrapDoorRenderer.class)
+public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IMetaIconProvider, IRegisterable
 {
-	public static final int DIR_SOUTH = 0;
-	public static final int DIR_NORTH = 1;
-	public static final int DIR_EAST = 2;
-	public static final int DIR_WEST = 3;
-
-	public static int renderId = -1;
-
 	private TrapDoorDescriptor descriptor;
+	@SideOnly(Side.CLIENT)
+	private IIconProvider iconProvider;
 
 	public TrapDoor(TrapDoorDescriptor desc)
 	{
@@ -64,8 +84,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		setHardness(desc.getHardness());
 		setStepSound(desc.getSoundType());
 		setUnlocalizedName(desc.getName());
-		setTextureName(desc.getTextureName());
-
 		setCreativeTab(desc.getTab());
 
 		disableStats();
@@ -76,16 +94,32 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		return descriptor;
 	}
 
-	/**
-	 * Called upon block activation (right click on the block.)
-	 */
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ)
+	public String getRegistryName()
+	{
+		return descriptor.getName();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void createIconProvider(Object object)
+	{
+		iconProvider = DefaultIconProvider.from(descriptor.getModId() + ":" + descriptor.getTextureName());
+	}
+
+	@Override
+	public IIconProvider getIconProvider()
+	{
+		return iconProvider;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
 
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null)
 			return true;
 
@@ -100,58 +134,80 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 	}
 
 	@Override
-	public void func_150120_a(World world, int x, int y, int z, boolean opening)
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te != null)
-			te.setPowered(opening);
+		if (world.isRemote)
+			return;
+
+		EnumFacing direction = (EnumFacing) state.getValue(FACING);
+		BlockPos blockPos = pos.offset(((EnumFacing) state.getValue(FACING)).getOpposite());
+
+		if (!(isValidSupportBlock(world.getBlockState(blockPos).getBlock()) || world.isSideSolid(blockPos, direction, true)))
+		{
+			world.setBlockToAir(pos);
+			this.dropBlockAsItem(world, pos, state, 0);
+			return;
+		}
+
+		boolean powered = world.isBlockPowered(pos);
+		if (powered || neighborBlock.canProvidePower())
+		{
+			DoorTileEntity te = Door.getDoor(world, pos);
+			if (te != null)
+				te.setPowered(powered);
+		}
+
+	}
+
+	private static boolean isValidSupportBlock(Block blockIn)
+	{
+		if (disableValidation)
+			return true;
+		return blockIn.getMaterial().isOpaque() && blockIn.isFullCube() || blockIn == Blocks.glowstone || blockIn instanceof BlockSlab
+				|| blockIn instanceof BlockStairs;
 	}
 
 	//#region BoundingBox
-	protected AxisAlignedBB setBlockBounds(AxisAlignedBB aabb)
+
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
 	{
-		if (aabb == null)
+		DoorTileEntity te = Door.getDoor(world, pos);
+		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
-		setBlockBounds((float) aabb.minX, (float) aabb.minY, (float) aabb.minZ, (float) aabb.maxX, (float) aabb.maxY, (float) aabb.maxZ);
+
+		//TODO: closed BB
+		AxisAlignedBB aabb = te.getMovement().getOpenBoundingBox(te, te.isTopBlock(pos), type);
+		aabb = AABBUtils.rotate(aabb, te.getDirection());
+
 		return aabb;
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
+	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return;
-
-		setBlockBounds(te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.RAYTRACE));
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z)
-	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.SELECTION);
-		if (aabb == null)
-			return AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-
-		return aabb.offset(x, y, z);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
+		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
+		{
+			if (aabb != null && mask.intersectsWith(aabb))
+				list.add(aabb);
+		}
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
-		if (te == null || te.isMoving() || te.getMovement() == null)
-			return null;
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.SELECTION);
+		if (ArrayUtils.isEmpty(aabbs) || aabbs[0] == null)
+			return AABBUtils.empty(pos);
 
-		AxisAlignedBB aabb = te.getMovement().getBoundingBox(te, te.isTopBlock(x, y, z), BoundingBoxType.COLLISION);
-		if (aabb == null)
-			return null;
-		return setBlockBounds(aabb.offset(x, y, z));
+		return AABBUtils.offset(pos, aabbs)[0];
+	}
+
+	@Override
+	public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 src, Vec3 dest)
+	{
+		return new RaytraceBlock(world, src, dest, pos).trace();
 	}
 
 	//#end BoudingBox
@@ -164,12 +220,9 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider
 		return te;
 	}
 
-	/**
-	 * The type of render function that is called for this block
-	 */
 	@Override
 	public int getRenderType()
 	{
-		return renderId;
+		return MalisisCore.malisisRenderType;
 	}
 }

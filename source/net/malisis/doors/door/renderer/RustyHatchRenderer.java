@@ -24,22 +24,28 @@
 
 package net.malisis.doors.door.renderer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
+import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.MultiBlock;
+import net.malisis.core.util.multiblock.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.RustyHatch;
+import net.malisis.doors.door.block.RustyHatch.RustyHatchIconProvider;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
-import net.minecraft.client.renderer.DestroyBlockProgress;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -49,21 +55,24 @@ import org.lwjgl.opengl.GL11;
  */
 public class RustyHatchRenderer extends MalisisRenderer
 {
+	public static RustyHatchRenderer instance;
 	private ResourceLocation rl;
 	private MalisisModel model;
 	private Shape frame;
 	private Shape hatch;
 	private Shape handle;
 	private Shape ladder;
+	private RenderParameters rp = new RenderParameters();
 	private AnimationRenderer ar = new AnimationRenderer();
 	private RustyHatchTileEntity tileEntity;
 
 	private boolean topBlock;
-	private ForgeDirection direction;
+	private EnumFacing direction;
 
 	public RustyHatchRenderer()
 	{
-		getBlockDamage = true;
+		registerFor(RustyHatchTileEntity.class);
+		instance = this;
 	}
 
 	@Override
@@ -78,74 +87,62 @@ public class RustyHatchRenderer extends MalisisRenderer
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
+		rp.calculateBrightness.set(false);
+	}
+
+	private void setup(Shape s)
+	{
+		if (topBlock && s != ladder)
+			s.translate(0, 1 - 0.125F, 0);
+
+		if (direction == EnumFacing.SOUTH)
+			s.rotate(-90, 0, 1, 0);
+		else if (direction == EnumFacing.NORTH)
+			s.rotate(90, 0, 1, 0);
+		else if (direction == EnumFacing.WEST)
+			s.rotate(180, 0, 1, 0);
 	}
 
 	@Override
 	public void render()
 	{
-		if (renderType == RenderType.ITEM_INVENTORY)
+		if (renderType == RenderType.ITEM)
 		{
 			renderItem();
 			return;
 		}
 
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
-		if (block == MalisisDoors.Blocks.rustyLadder)
-		{
-			ladder.resetState();
-
-			ForgeDirection dir = ForgeDirection.getOrientation(blockMetadata);
-			switch (dir)
-			{
-				case NORTH:
-					ladder.rotate(-90, 0, 1, 0);
-					break;
-				case SOUTH:
-					ladder.rotate(90, 0, 1, 0);
-					break;
-				case EAST:
-					ladder.rotate(180, 0, 1, 0);
-					break;
-				case WEST:
-				default:
-					break;
-			}
-
-			ladder.translate(-1, 0, 0);
-
-			drawShape(ladder, rp);
-			return;
-		}
-
-		tileEntity = MultiBlock.getOriginProvider(RustyHatchTileEntity.class, world, x, y, z);
+		tileEntity = RustyHatch.getRustyHatch(world, pos);
 		if (tileEntity == null)
 			return;
-		topBlock = tileEntity.isTopBlock(x, y, z);
-		direction = ForgeDirection.getOrientation(tileEntity.getDirection());
 
-		if (renderType == RenderType.ISBRH_WORLD)
+		direction = tileEntity.getDirection();
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		topBlock = tileEntity.isTop();
+		if (renderType == RenderType.BLOCK)
 		{
 			getBlockDamage = true;
 			renderBlock();
 		}
-		else if (renderType == RenderType.TESR_WORLD)
+		else if (renderType == RenderType.TILE_ENTITY)
 			renderTileEntity();
 	}
 
 	private void renderBlock()
 	{
-		if (!MultiBlock.isOrigin(world, x, y, z))
+		if (!MultiBlock.isOrigin(world, pos))
 		{
-			if (!tileEntity.shouldLadder(x, y, z)/* || y == tileEntity.getMultiBlock().getY()*/)
+			if (!tileEntity.shouldLadder(pos)/* || y == tileEntity.getMultiBlock().getY()*/)
 				return;
 			if (ladder == null)
 				return;
 
 			ladder.resetState();
-			ladder.translate(direction.getOpposite().offsetX, topBlock ? -1 : 0, direction.getOpposite().offsetZ);
 			setup(ladder);
+			ladder.translate(-1, topBlock ? -0 : 0, 0);
+			//ladder.translate(direction.getOpposite().getFrontOffsetX(), topBlock ? -1 : 0, direction.getOpposite().getFrontOffsetZ());
 
-			rp.icon.set(((RustyHatch) block).getHandleIcon());
+			rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
 			drawShape(ladder, rp);
 		}
 		else
@@ -154,19 +151,15 @@ public class RustyHatchRenderer extends MalisisRenderer
 				return;
 			frame.resetState();
 			setup(frame);
-			rp.icon.set(Blocks.furnace.getIcon(1, 0));
+			rp.icon.set(new VanillaIcon(Blocks.furnace));
 			drawShape(frame, rp);
 		}
 	}
 
 	private void renderTileEntity()
 	{
-		if (!MultiBlock.isOrigin(world, x, y, z))
-			return;
 		if (hatch == null || handle == null)
 			return;
-
-		tileEntity = (RustyHatchTileEntity) super.tileEntity;
 
 		hatch.resetState();
 		handle.resetState();
@@ -182,67 +175,54 @@ public class RustyHatchRenderer extends MalisisRenderer
 		}
 
 		next(GL11.GL_POLYGON);
-		rp.icon.reset();
+		rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHatchIcon());
 		drawShape(hatch, rp);
 
-		rp.icon.set(((RustyHatch) block).getHandleIcon());
+		rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
 		drawShape(handle, rp);
+	}
+
+	@Override
+	public Matrix4f getTransform(TransformType tranformType)
+	{
+		Matrix4f gui = new TRSRTransformation(new Vector3f(-0.2F, 0.5F, 0.15F),
+				TRSRTransformation.quatFromYXZDegrees(new Vector3f(90, 0, 0)), null, null).getMatrix();
+		Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0.00F, 0, -0.20F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(
+				0, 110, 0)), new Vector3f(-0.5F, 0.5F, 0.5F), null).getMatrix();
+
+		if (tranformType == TransformType.GUI)
+			return gui;
+
+		return super.getTransform(tranformType);
+		//		switch (itemRenderType)
+		//		{
+		//			case INVENTORY:
+		//				handle.translate(0.20F, 0, 0.15F);
+		//				handle.rotate(90, 0, 0, 1);
+		//				break;
+		//			case EQUIPPED:
+		//				handle.translate(-0.5F, -.75F, 0);
+		//				handle.rotate(100, 0, 0, 1);
+		//				break;
+		//			case EQUIPPED_FIRST_PERSON:
+		//				handle.translate(0, -0.1F, -0.2F);
+		//				handle.rotate(90, 0, 0, 1);
+		//			default:
+		//				break;
+		//		}
 	}
 
 	private void renderItem()
 	{
 		bindTexture(TextureMap.locationBlocksTexture);
-		handle.resetState();
-		handle.scale(1.5F);
-		switch (itemRenderType)
-		{
-			case INVENTORY:
-				handle.translate(0.20F, 0, 0.15F);
-				handle.rotate(90, 0, 0, 1);
-				break;
-			case EQUIPPED:
-				handle.translate(-0.5F, -.75F, 0);
-				handle.rotate(100, 0, 0, 1);
-				break;
-			case EQUIPPED_FIRST_PERSON:
-				handle.translate(0, -0.1F, -0.2F);
-				handle.rotate(90, 0, 0, 1);
-			default:
-				break;
-		}
+		//MalisisCore.message(item.getUnlocalizedName());
+		Shape shape = item == MalisisDoors.Items.rustyHandle ? handle : ladder;
+		shape.resetState();
+		shape.scale(1.5F);
 
-		rp.icon.set(MalisisDoors.Blocks.rustyHatch.getHandleIcon());
-		drawShape(handle, rp);
+		RustyHatchIconProvider iconProvider = (RustyHatchIconProvider) MalisisDoors.Blocks.rustyHatch.getIconProvider();
+		rp.icon.set(iconProvider.getHandleIcon());
+		//rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
+		drawShape(shape, rp);
 	}
-
-	private void setup(Shape s)
-	{
-		if (topBlock)
-			s.translate(0, 1 - 0.125F, 0);
-
-		if (direction == ForgeDirection.SOUTH)
-			s.rotate(-90, 0, 1, 0);
-		else if (direction == ForgeDirection.NORTH)
-			s.rotate(90, 0, 1, 0);
-		else if (direction == ForgeDirection.WEST)
-			s.rotate(180, 0, 1, 0);
-	}
-
-	@Override
-	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
-	{
-		if (!(world.getTileEntity(dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ()) instanceof RustyHatchTileEntity))
-			return false;
-
-		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
-		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
-				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return false;
-	}
-
 }

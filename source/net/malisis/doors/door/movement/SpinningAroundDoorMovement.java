@@ -24,7 +24,6 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.block.Door.*;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
@@ -50,21 +49,12 @@ public class SpinningAroundDoorMovement implements IDoorMovement
 	private Scale scaleTop = new Scale(0, 0, 0).offset(0, 1, 0);
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && type != BoundingBoxType.RAYTRACE)
+		if (type == BoundingBoxType.COLLISION)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		return aabb;
+		return IDoorMovement.getFullBoundingBox(topBlock, type);
 	}
 
 	@Override
@@ -73,7 +63,7 @@ public class SpinningAroundDoorMovement implements IDoorMovement
 		boolean doubleDoor = tileEntity.getDoubleDoor() != null;
 		boolean closed = tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED;
 		int ot = tileEntity.getDescriptor().getOpeningTime();
-		float offsetX = doubleDoor ? (tileEntity.isReversed() ? 0.5F : -0.5F) : 0;
+		float offsetX = doubleDoor ? (tileEntity.isHingeLeft() ? -0.5F : 0.5F) : 0;
 
 		rotBot.offset(offsetX, 0.5F, 0);
 		rotBot.reversed(closed);

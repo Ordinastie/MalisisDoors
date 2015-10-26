@@ -46,39 +46,26 @@ public class RotateAndSlideMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			AABBUtils.rotate(aabb, tileEntity.isReversed() ? -1 : 1);
-
-		return aabb;
+		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), tileEntity.isHingeLeft() ? -1 : 1);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
 		int ot = tileEntity.getDescriptor().getOpeningTime() / 2;
-		float angle = -90;
-		float hinge = 0.5F - DOOR_WIDTH / 2;
-		float hingeZ = -0.5F + DOOR_WIDTH / 2;
-		float tr = 1 - DOOR_WIDTH;
+		float angle = 90;
+		float hinge = -0.5F + DOOR_WIDTH / 2;
+		float tr = -1 + DOOR_WIDTH;
 
-		if (tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 		{
 			hinge = -hinge;
 			angle = -angle;
 			tr = -tr;
 		}
 
-		Transformation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(hinge, 0, hingeZ).forTicks(ot);
+		Transformation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(hinge, 0, -0.5F + DOOR_WIDTH / 2).forTicks(ot);
 		Transformation translation = new Translation(tr, 0, 0).forTicks(ot);
 
 		Transformation transformation = new ChainedTransformation(rotation, translation);

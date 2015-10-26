@@ -39,7 +39,7 @@ import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
@@ -49,26 +49,11 @@ public class CurtainMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-		{
-			if (tileEntity.isReversed())
-				aabb.maxX = DOOR_WIDTH;
-			else
-				aabb.minX = 1 - DOOR_WIDTH;
-		}
-
-		return aabb;
+		AxisAlignedBB aabb = IDoorMovement.getFullBoundingBox(topBlock, type);
+		return new AxisAlignedBB(tileEntity.isHingeLeft() ? 1 - DOOR_WIDTH : aabb.minX, aabb.minY, aabb.minZ,
+				tileEntity.isHingeLeft() ? aabb.maxX : DOOR_WIDTH, aabb.maxY, aabb.maxZ);
 	}
 
 	@Override
@@ -76,12 +61,12 @@ public class CurtainMovement implements IDoorMovement
 	{
 		float x = 1 - Door.DOOR_WIDTH;
 		String dir = "west";
-		ForgeDirection fd = ForgeDirection.WEST;
-		if (tileEntity.isReversed())
+		EnumFacing fd = EnumFacing.WEST;
+		if (!tileEntity.isHingeLeft())
 		{
 			x = -1 + Door.DOOR_WIDTH;
 			dir = "east";
-			fd = ForgeDirection.EAST;
+			fd = EnumFacing.EAST;
 		}
 
 		Translation translation = new Translation(x, 0, 0);

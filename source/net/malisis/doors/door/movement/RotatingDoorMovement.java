@@ -42,39 +42,25 @@ import net.minecraft.util.AxisAlignedBB;
  */
 public class RotatingDoorMovement implements IDoorMovement
 {
-
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			AABBUtils.rotate(aabb, tileEntity.isReversed() ? -1 : 1);
-
-		return aabb;
+		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), tileEntity.isHingeLeft() ? -1 : 1);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
-		float angle = 90;
-		float hingeX = 0.5F - DOOR_WIDTH / 2;
-		float hingeZ = -0.5F + DOOR_WIDTH / 2;
+		float angle = -90;
+		float hingeX = -0.5F + DOOR_WIDTH / 2;
 
-		if (tileEntity.isReversed())
+		if (tileEntity.isHingeLeft())
 		{
 			hingeX = -hingeX;
-			angle = -90;
+			angle = -angle;
 		}
 
 		Rotation rotation = new Rotation(angle);
-		rotation.aroundAxis(0, 1, 0).offset(hingeX, 0, hingeZ);
+		rotation.aroundAxis(0, 1, 0).offset(hingeX, 0, -0.5F + DOOR_WIDTH / 2);
 		rotation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 		rotation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 

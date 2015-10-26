@@ -24,22 +24,34 @@
 
 package net.malisis.doors.renderer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.client.model.TRSRTransformation;
 
 /**
  * @author Ordinastie
  *
  */
+@SuppressWarnings("deprecation")
 public class RustyLadderRenderer extends MalisisRenderer
 {
 	private Shape ladder;
+	private RenderParameters rp;
+	private Matrix4f gui = new TRSRTransformation(new Vector3f(0, 0.1F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 45, 0)),
+			new Vector3f(1.5F, 1.5F, 1.5F), null).getMatrix();
+	private Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0.00F, 0, -0.20F),
+			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 110, 0)), new Vector3f(-0.5F, 0.5F, 0.5F), null).getMatrix();
 
 	@Override
 	protected void initialize()
@@ -50,6 +62,30 @@ public class RustyLadderRenderer extends MalisisRenderer
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
+		rp.calculateBrightness.set(false);
+	}
+
+	@Override
+	public Matrix4f getTransform(TransformType tranformType)
+	{
+		if (tranformType == TransformType.GUI)
+			return gui;
+		else if (tranformType == TransformType.THIRD_PERSON)
+			return thirdPerson;
+
+		return super.getTransform(tranformType);
+		//			if (itemRenderType == ItemRenderType.INVENTORY)
+		//			{
+		//				ladder.rotate(-45, 0, 1, 0);
+		//				ladder.scale(1.5F);
+		//				ladder.translate(0, .15F, 0);
+		//			}
+		//			else if (itemRenderType == ItemRenderType.ENTITY)
+		//			{
+		//				ladder.translate(-1, 0, -0.5F);
+		//				ladder.scale(1.5F);
+		//			}
+
 	}
 
 	@Override
@@ -57,42 +93,19 @@ public class RustyLadderRenderer extends MalisisRenderer
 	{
 		ladder.resetState();
 
-		ForgeDirection dir = ForgeDirection.getOrientation(blockMetadata);
-		switch (dir)
+		if (renderType == RenderType.BLOCK)
 		{
-			case NORTH:
+			EnumFacing dir = IBlockDirectional.getDirection(blockState);
+			if (dir == EnumFacing.NORTH)
 				ladder.rotate(-90, 0, 1, 0);
-				break;
-			case SOUTH:
+			else if (dir == EnumFacing.SOUTH)
 				ladder.rotate(90, 0, 1, 0);
-				break;
-			case EAST:
+			else if (dir == EnumFacing.EAST)
 				ladder.rotate(180, 0, 1, 0);
-				break;
-			case WEST:
-			default:
-				break;
-		}
-
-		if (renderType == RenderType.ITEM_INVENTORY)
-		{
-			if (itemRenderType == ItemRenderType.INVENTORY)
-			{
-				ladder.rotate(-45, 0, 1, 0);
-				ladder.scale(1.5F);
-				ladder.translate(0, .15F, 0);
-			}
-			else if (itemRenderType == ItemRenderType.ENTITY)
-			{
-				ladder.translate(-1, 0, -0.5F);
-				ladder.scale(1.5F);
-			}
 		}
 
 		ladder.translate(-1, 0, 0);
 
 		drawShape(ladder, rp);
-		return;
 	}
-
 }

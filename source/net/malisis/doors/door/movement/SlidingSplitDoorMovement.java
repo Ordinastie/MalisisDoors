@@ -42,24 +42,12 @@ import net.minecraft.util.AxisAlignedBB;
 public class SlidingSplitDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && !topBlock)
+		if (!topBlock)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (!tileEntity.isOpened() && type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			aabb.offset(0, topBlock ? 1 - DOOR_WIDTH : -1, 0);
-
-		return aabb;
+		return IDoorMovement.getHalfBoundingBox().offset(0, 1 - DOOR_WIDTH, 0);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity, boolean top)

@@ -33,11 +33,10 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.block.CarriageDoor;
-import net.malisis.doors.door.block.Door;
+import net.malisis.doors.door.block.CarriageDoor.CarriageDoorIconProvider;
 import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
-import net.minecraft.client.renderer.DestroyBlockProgress;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -47,19 +46,22 @@ import org.lwjgl.opengl.GL11;
  */
 public class CarriageDoorRenderer extends MalisisRenderer
 {
+	private CarriageDoor block;
+	private CarriageDoorTileEntity tileEntity;
+
 	private ResourceLocation rl;
 	private MalisisModel model;
 	private Shape frame;
 	private Shape doorLeft;
 	private Shape doorRight;
+	private RenderParameters rp;
 	private AnimationRenderer ar = new AnimationRenderer();
-	private CarriageDoorTileEntity tileEntity;
 
-	private ForgeDirection direction;
+	private EnumFacing direction;
 
 	public CarriageDoorRenderer()
 	{
-		getBlockDamage = true;
+		registerFor(CarriageDoorTileEntity.class);
 	}
 
 	@Override
@@ -73,30 +75,33 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
+		rp.calculateAOColor.set(false);
+		rp.calculateBrightness.set(false);
 	}
 
 	@Override
 	public void render()
 	{
+		block = (CarriageDoor) super.block;
+		tileEntity = (CarriageDoorTileEntity) super.tileEntity;
 		if (super.tileEntity == null)
 			return;
 
-		tileEntity = (CarriageDoorTileEntity) super.tileEntity;
-		direction = Door.intToDir(tileEntity.getDirection());
 		setup();
 
-		if (renderType == RenderType.ISBRH_WORLD)
+		if (renderType == RenderType.BLOCK)
 		{
-			getBlockDamage = true;
 			renderBlock();
+			//	drawShape(new Cube(), rp);
 		}
-		else if (renderType == RenderType.TESR_WORLD)
+
+		else if (renderType == RenderType.TILE_ENTITY)
 			renderTileEntity();
 	}
 
 	private void renderBlock()
 	{
-		rp.icon.set(((CarriageDoor) block).getFrameIcon());
+		rp.icon.set(((CarriageDoorIconProvider) block.getIconProvider()).getFrameIcon());
 		drawShape(frame, rp);
 	}
 
@@ -111,39 +116,23 @@ public class CarriageDoorRenderer extends MalisisRenderer
 		}
 
 		next(GL11.GL_POLYGON);
-		rp.icon.reset();
+		rp.icon.set(((CarriageDoorIconProvider) block.getIconProvider()).getDoorIcon());
 		drawShape(doorLeft, rp);
 		drawShape(doorRight, rp);
 	}
 
 	private void setup()
 	{
+		direction = tileEntity.getDirection();
+
 		model.resetState();
-		if (direction == ForgeDirection.SOUTH)
+		if (direction == EnumFacing.NORTH)
 			model.rotate(180, 0, 1, 0, 0, 0, 0);
-		else if (direction == ForgeDirection.EAST)
-			model.rotate(-90, 0, 1, 0, 0, 0, 0);
-		else if (direction == ForgeDirection.WEST)
+		else if (direction == EnumFacing.EAST)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
+		else if (direction == EnumFacing.WEST)
+			model.rotate(-90, 0, 1, 0, 0, 0, 0);
 
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 	}
-
-	@Override
-	protected boolean isCurrentBlockDestroyProgress(DestroyBlockProgress dbp)
-	{
-		//		MultiBlock mb = MultiBlock.getMultiBlock(world, dbp.getPartialBlockX(), dbp.getPartialBlockY(), dbp.getPartialBlockZ());
-		//		return mb != null && mb.getX() == tileEntity.getMultiBlock().getX() && mb.getY() == tileEntity.getMultiBlock().getY()
-		//				&& mb.getZ() == tileEntity.getMultiBlock().getZ();
-		//TODO:
-		//return super.isCurrentBlockDestroyProgress(dbp);
-		return true;
-	}
-
-	@Override
-	public boolean shouldRender3DInInventory(int modelId)
-	{
-		return false;
-	}
-
 }

@@ -42,26 +42,13 @@ import net.minecraft.util.AxisAlignedBB;
 public class SlidingUpDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		if (tileEntity.isOpened() && !topBlock)
+		if (!topBlock)
 			return null;
 
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-			if (tileEntity.isOpened())
-				aabb.offset(0, 1, 0);
-		}
-
-		if (tileEntity.isOpened())
-			aabb.offset(0, 1 - DOOR_WIDTH, 0);
-
-		return aabb;
+		//force type to SELECTION for the offset to work
+		return IDoorMovement.getFullBoundingBox(topBlock, BoundingBoxType.SELECTION).offset(0, 2 - DOOR_WIDTH, 0);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)

@@ -30,12 +30,14 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.door.DoorState;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.IDoorMovement;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
-import net.malisis.doors.trapdoor.block.TrapDoor;
+import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
@@ -44,36 +46,16 @@ import net.minecraft.util.AxisAlignedBB;
 public class TrapDoorMovement implements IDoorMovement
 {
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		int dir = tileEntity.getDirection();
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float X = 1;
-		float Y = 1;
-		float Z = 1;
+		AxisAlignedBB aabb = new AxisAlignedBB(0, 0, 0, 1, Door.DOOR_WIDTH, 1);
+		boolean top = ((TrapDoorTileEntity) tileEntity).isTop();
+		if (top)
+			aabb = aabb.offset(0, 1 - Door.DOOR_WIDTH, 0);
+		if (tileEntity.isOpened())
+			aabb = AABBUtils.rotate(aabb, top ? 1 : -1, EnumFacing.Axis.X);
 
-		if (!tileEntity.isOpened())
-		{
-			if (topBlock)
-				y = 1 - Door.DOOR_WIDTH;
-			else
-				Y = Door.DOOR_WIDTH;
-		}
-		else
-		{
-			if (dir == TrapDoor.DIR_NORTH)
-				Z = Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_SOUTH)
-				z = 1 - Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_EAST)
-				x = 1 - Door.DOOR_WIDTH;
-			if (dir == TrapDoor.DIR_WEST)
-				X = Door.DOOR_WIDTH;
-		}
-
-		return AxisAlignedBB.getBoundingBox(x, y, z, X, Y, Z);
+		return aabb;
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
@@ -81,7 +63,7 @@ public class TrapDoorMovement implements IDoorMovement
 		float f = 0.5F - Door.DOOR_WIDTH / 2;
 		float fromAngle = 0, toAngle = 90;
 
-		if (tileEntity.isTopBlock(0, 0, 0))
+		if (((TrapDoorTileEntity) tileEntity).isTop())
 			toAngle = -toAngle;
 
 		if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)

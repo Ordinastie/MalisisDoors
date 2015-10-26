@@ -24,7 +24,6 @@
 
 package net.malisis.doors.door.movement;
 
-import static net.malisis.doors.door.block.Door.*;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
@@ -44,28 +43,14 @@ public class RotateAroundMovement implements IDoorMovement
 {
 
 	@Override
-	public AxisAlignedBB getBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(0, 0, 0, 1, 1, DOOR_WIDTH);
-		if (type == BoundingBoxType.SELECTION)
-		{
-			if (!topBlock)
-				aabb.maxY++;
-			else
-				aabb.minY--;
-		}
-
-		if (tileEntity.isOpened())
-			AABBUtils.rotate(aabb, tileEntity.isReversed() ? -1 : 1);
-
-		return aabb;
+		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), tileEntity.isHingeLeft() ? -1 : 1);
 	}
 
 	private Transformation getTransformation(DoorTileEntity tileEntity)
 	{
-		float angle = -90;
-		if (tileEntity.isReversed())
-			angle = -angle;
+		float angle = tileEntity.isHingeLeft() ? -90 : 90;
 
 		Transformation transformation = new Rotation(angle).aroundAxis(0, 1, 0);
 		transformation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);

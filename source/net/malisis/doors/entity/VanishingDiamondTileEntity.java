@@ -35,39 +35,39 @@ import net.malisis.core.inventory.MalisisSlot;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.gui.VanishingDiamondGui;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.eventbus.Subscribe;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
-public class VanishingDiamondTileEntity extends VanishingTileEntity implements IInventoryProvider
+public class VanishingDiamondTileEntity extends VanishingTileEntity implements IInventoryProvider, IUpdatePlayerListBox
 {
 	protected MalisisInventory inventory;
 	protected MalisisSlot slot;
 	protected int changedPowerStateTimer;
-	protected HashMap<ForgeDirection, DirectionState> directionStates = new HashMap<>();
+	protected HashMap<EnumFacing, DirectionState> directionStates = new HashMap<>();
 
 	public VanishingDiamondTileEntity()
 	{
-		super(VanishingBlock.typeDiamondFrame);
+		super(VanishingBlock.Type.DIAMOND);
 		inventory = new MalisisInventory(this, 1);
 		inventory.setInventoryStackLimit(1);
 
 		slot = inventory.getSlot(0);
 		slot.register(this);
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for (EnumFacing dir : EnumFacing.VALUES)
 			directionStates.put(dir, new DirectionState(dir));
 	}
 
@@ -83,7 +83,7 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 			return false;
 
 		changedPowerStateTimer = 0;
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for (EnumFacing dir : EnumFacing.VALUES)
 		{
 			directionStates.get(dir).resetPropagationState();
 			directionStates.get(dir).propagateState(changedPowerStateTimer);
@@ -92,27 +92,40 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 		return true;
 	}
 
-	public DirectionState getDirectionState(ForgeDirection dir)
+	public DirectionState getDirectionState(EnumFacing dir)
 	{
 		return directionStates.get(dir);
 	}
 
 	@Override
-	public void updateEntity()
+	public MalisisInventory getInventory(Object... data)
+	{
+		return inventory;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public MalisisGui getGui(MalisisInventoryContainer container)
+	{
+		return new VanishingDiamondGui(this, container);
+	}
+
+	@Override
+	public void update()
 	{
 		changedPowerStateTimer++;
 
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for (EnumFacing dir : EnumFacing.VALUES)
 			directionStates.get(dir).propagateState(changedPowerStateTimer);
 
-		super.updateEntity();
+		super.update();
 	}
 
 	@Subscribe
 	public void onSlotChanged(InventoryEvent.SlotChanged event)
 	{
-		setBlock(event.getSlot().getItemStack(), null, 0, 0.5F, 0.5F, 0.5F);
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		setBlockState(event.getSlot().getItemStack(), null, EnumFacing.UP, 0.5F, 0.5F, 0.5F);
+		worldObj.markBlockForUpdate(pos);
 	}
 
 	@Override
@@ -125,7 +138,7 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 		for (int i = 0; i < dirList.tagCount(); ++i)
 		{
 			NBTTagCompound tag = dirList.getCompoundTagAt(i);
-			ForgeDirection dir = ForgeDirection.getOrientation(tag.getInteger("direction"));
+			EnumFacing dir = EnumFacing.getFront(tag.getInteger("direction"));
 			directionStates.get(dir).readFromNBT(tag);
 		}
 	}
@@ -137,7 +150,7 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 		inventory.writeToNBT(nbt);
 
 		NBTTagList dirList = new NBTTagList();
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+		for (EnumFacing dir : EnumFacing.VALUES)
 			dirList.appendTag(directionStates.get(dir).writeToNBT(new NBTTagCompound()));
 
 		nbt.setTag("Directions", dirList);
@@ -150,40 +163,21 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 		TileEntityUtils.updateGui(this);
 	}
 
-	@Override
-	public MalisisInventory[] getInventories(Object... data)
-	{
-		return new MalisisInventory[] { inventory };
-	}
-
-	@Override
-	public MalisisInventory[] getInventories(ForgeDirection side, Object... data)
-	{
-		return getInventories(data);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public MalisisGui getGui(MalisisInventoryContainer container)
-	{
-		return new VanishingDiamondGui(this, container);
-	}
-
 	public class DirectionState
 	{
-		public ForgeDirection direction;
+		public EnumFacing direction;
 		public boolean shouldPropagate;
 		public int delay;
 		public boolean inversed;
 		public boolean propagated;
 
-		public DirectionState(ForgeDirection direction, boolean shouldPropagate, int delay, boolean inversed)
+		public DirectionState(EnumFacing direction, boolean shouldPropagate, int delay, boolean inversed)
 		{
 			this.direction = direction;
 			update(shouldPropagate, delay, inversed);
 		}
 
-		public DirectionState(ForgeDirection direction)
+		public DirectionState(EnumFacing direction)
 		{
 			this(direction, false, 0, false);
 		}
@@ -205,10 +199,9 @@ public class VanishingDiamondTileEntity extends VanishingTileEntity implements I
 			if (!shouldPropagate || propagated || timer < delay)
 				return false;
 
-			Block block = worldObj.getBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
-			if (block instanceof VanishingBlock)
-				((VanishingBlock) block).setPowerState(worldObj, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord
-						+ direction.offsetZ, inversed ? !powered : powered);
+			IBlockState state = worldObj.getBlockState(pos.offset(direction));
+			if (state.getBlock() instanceof VanishingBlock)
+				((VanishingBlock) state.getBlock()).setPowerState(worldObj, pos.offset(direction), inversed ? !powered : powered);
 			propagated = true;
 
 			return false;

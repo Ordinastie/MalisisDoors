@@ -1,132 +1,121 @@
 package net.malisis.doors.block;
 
-import static net.minecraftforge.common.util.ForgeDirection.*;
-
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.MalisisBlock;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class PlayerSensor extends Block
+public class PlayerSensor extends MalisisBlock implements IBlockDirectional
 {
-	public static int FLAG_POWERED = 8;
+	public static PropertyBool POWERED = PropertyBool.create("powered");
 
 	public PlayerSensor()
 	{
 		super(Material.circuits);
 		setCreativeTab(MalisisDoors.tab);
-		setUnlocalizedName("player_sensor");
-	}
+		setName("player_sensor");
+		setTexture(MalisisDoors.modid + ":blocks/player_sensor");
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		this.blockIcon = iconRegister.registerIcon(MalisisDoors.modid + ":" + (this.getUnlocalizedName().substring(5)));
+		setDefaultState(getDefaultState().withProperty(POWERED, false));
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public PropertyDirection getPropertyDirection()
 	{
-		return false;
+		return IBlockDirectional.ALL;
 	}
 
 	@Override
-	public boolean renderAsNormalBlock()
+	protected BlockState createBlockState()
 	{
-		return false;
+		return new BlockState(this, IBlockDirectional.ALL, POWERED);
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
+	public EnumFacing getPlacingDirection(EnumFacing side, EntityLivingBase placer)
 	{
-		return null;
+		return side;
 	}
 
 	@Override
-	public boolean canPlaceBlockOnSide(World world, int x, int y, int z, int d)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
 	{
-		ForgeDirection dir = ForgeDirection.getOrientation(d);
-		return world.isSideSolid(x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ, dir);
+		if (type == BoundingBoxType.COLLISION)
+			return null;
+
+		float f = 0.125F;
+		switch (IBlockDirectional.getDirection(world, pos))
+		{
+			case DOWN:
+				return new AxisAlignedBB(0.5F - f, 1 - f / 2, 0.5F - f, 0.5F + f, 1, 0.5F + f);
+			case UP:
+				return new AxisAlignedBB(0.5F - f, 0, 0.5F - f, 0.5F + f, f / 2, 0.5F + f);
+			default:
+				return new AxisAlignedBB(f, f, 0, 1 - f, 2 * f, f);
+		}
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World world, int x, int y, int z)
+	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side)
 	{
-		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-			if (world.isSideSolid(x - dir.offsetX, y - dir.offsetY, z + dir.offsetZ, dir))
+		side = side.getOpposite();
+		return world.isSideSolid(pos.offset(side), side);
+	}
+
+	@Override
+	public boolean canPlaceBlockAt(World world, BlockPos pos)
+	{
+		for (EnumFacing side : EnumFacing.values())
+			if (world.isSideSolid(pos.offset(side), side))
 				return true;
 
 		return false;
 	}
 
 	@Override
-	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		return side + (world.getBlockMetadata(x, y, z) & FLAG_POWERED);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-	{
-		float f = 0.125F;
-		ForgeDirection dir = getDirection(world, x, y, z);
-
-		if (dir == EAST)
-			setBlockBounds(0, f, f, f, 2.0F * f, 1.0F - f);
-		else if (dir == WEST)
-			setBlockBounds(1 - f, f, f, 1, 2 * f, 1 - f);
-		else if (dir == SOUTH)
-			setBlockBounds(f, f, 0, 1 - f, 2 * f, f);
-		else if (dir == NORTH)
-			setBlockBounds(f, f, 1 - f, 1 - f, 2 * f, 1);
-		else if (dir == DOWN)
-			setBlockBounds(0.5F - f, 1 - f / 2, 0.5F - f, 0.5F + f, 1, 0.5F + f);
-		else if (dir == UP)
-			setBlockBounds(0.5F - f, 0, 0.5F - f, 0.5F + f, f / 2, 0.5F + f);
-	}
-
-	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
-	{
-		ForgeDirection dir = getDirection(world, x, y, z);
-
-		if (!world.isSideSolid(x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ, dir))
+		EnumFacing dir = IBlockDirectional.getDirection(world, pos).getOpposite();
+		if (!world.isSideSolid(pos.offset(dir), dir))
 		{
-			dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-			world.setBlockToAir(x, y, z);
+			dropBlockAsItem(world, pos, getDefaultState(), 0);
+			world.setBlockToAir(pos);
 		}
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		if (isPowered(metadata))
-			this.notifyPower(world, x, y, z);
-
-		super.breakBlock(world, x, y, z, block, metadata);
+		if (isPowered(state))
+			notifyPower(world, pos, state);
 	}
 
 	@Override
-	public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side)
+	public int isProvidingWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		return isPowered(world.getBlockMetadata(x, y, z)) ? 15 : 0;
+		return isPowered(state) ? 15 : 0;
 	}
 
 	@Override
-	public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side)
+	public int isProvidingStrongPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
-		if (isPowered(world.getBlockMetadata(x, y, z)) && getDirection(world, x, y, z).ordinal() == side)
+		if (isPowered(state) && IBlockDirectional.getDirection(world, pos) == side)
 			return 15;
 		return 0;
 
@@ -139,131 +128,113 @@ public class PlayerSensor extends Block
 	}
 
 	@Override
-	public void onBlockAdded(World world, int x, int y, int z)
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
-		world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
+		world.scheduleBlockUpdate(pos, this, 5, 0);
 	}
 
-	private AxisAlignedBB getDetectionBox(World world, int x, int y, int z)
+	public AxisAlignedBB getDetectionBox(IBlockAccess world, BlockPos pos)
 	{
-		ForgeDirection dir = getDirection(world, x, y, z);
-		double x1 = x, x2 = x;
-		double z1 = z, z2 = z;
+		EnumFacing dir = IBlockDirectional.getDirection(world, pos);
+		double x1 = pos.getX(), x2 = pos.getX();
+		double z1 = pos.getZ(), z2 = pos.getZ();
 		int yOffset = 1;
 		int factor = -1;
 
-		if (dir == EAST)
+		if (dir == EnumFacing.EAST)
 		{
 			x1 -= 1;
 			x2 += 2;
 			z2 += 1;
 		}
-		else if (dir == WEST)
+		else if (dir == EnumFacing.WEST)
 		{
 			x1 -= 1;
 			x2 += 2;
 			z2 += 1;
 		}
-		else if (dir == NORTH)
+		else if (dir == EnumFacing.NORTH)
 		{
 			x2 += 1;
 			z1 -= 1;
 			z2 += 2;
 		}
-		else if (dir == SOUTH)
+		else if (dir == EnumFacing.SOUTH)
 		{
 			x2 += 1;
 			z1 -= 1;
 			z2 += 2;
 		}
-		else if (dir == UP)
+		else if (dir == EnumFacing.UP)
 		{
 			x2 += 1;
 			z2 += 1;
 			factor = 1;
 		}
-		else if (dir == DOWN)
+		else if (dir == EnumFacing.DOWN)
 		{
 			x2 += 1;
 			z2 += 1;
 		}
 
-		boolean isAir = world.isAirBlock(x, y + 1 * factor, z);
+		boolean isAir = world.isAirBlock(pos.up(factor));
 		while (isAir && yOffset < 6)
-			isAir = world.isAirBlock(x, y + (factor * yOffset++), z);
+			isAir = world.isAirBlock(pos.up(factor * yOffset++));
 
-		int y2 = Math.max(y, y + (factor * yOffset));
-		y = Math.min(y, y + (factor * yOffset));
-		AxisAlignedBB aabb = AxisAlignedBB.getBoundingBox(x1, y, z1, x2, y2, z2);
-		return aabb;
+		return new AxisAlignedBB(x1, pos.getY(), z1, x2, pos.up(factor * yOffset++).getY(), z2);
 	}
 
-	/**
-	 * Ticks the block if it's been scheduled
-	 */
 	@Override
-	public void updateTick(World world, int x, int y, int z, Random rand)
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
 	{
-		if (!world.isRemote)
+		boolean powered = isPowered(state);
+		if (world.isRemote)
+			return;
+
+		world.scheduleBlockUpdate(pos, this, 5, 0);
+
+		List list = world.getEntitiesWithinAABB(EntityPlayer.class, this.getDetectionBox(world, pos));
+		boolean gettingPowered = list != null && !list.isEmpty();
+
+		if (powered != gettingPowered)
 		{
-			world.scheduleBlockUpdate(x, y, z, this, tickRate(world));
-
-			List list = world.getEntitiesWithinAABB(EntityPlayer.class, this.getDetectionBox(world, x, y, z));
-			int metadata = world.getBlockMetadata(x, y, z);
-
-			if (list != null && !list.isEmpty())
-			{
-				if (isPowered(metadata)) //already active
-					return;
-
-				metadata |= FLAG_POWERED;
-				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
-				notifyPower(world, x, y, z);
-			}
-			else if ((metadata & 8) != 0) // active
-			{
-				metadata &= ~FLAG_POWERED;
-				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
-				notifyPower(world, x, y, z);
-			}
-
+			world.setBlockState(pos, state.withProperty(POWERED, gettingPowered));
+			notifyPower(world, pos, state);
 		}
 	}
 
-	/**
-	 * Sets the block's bounds for rendering it as an item
-	 */
+	private void notifyPower(World world, BlockPos pos, IBlockState state)
+	{
+		world.notifyNeighborsOfStateChange(pos, this);
+		world.notifyNeighborsOfStateChange(pos.offset(IBlockDirectional.getDirection(state).getOpposite()), this);
+	}
+
 	@Override
-	public void setBlockBoundsForItemRender()
+	public boolean isOpaqueCube()
 	{
-		float f = 0.125F;
-		this.setBlockBounds(f, 0.5F - f, 0.5F - f, 1.0F - f, 0.5F + f, 0.5F + f);
+		return false;
 	}
 
-	private void notifyPower(World world, int x, int y, int z)
-	{
-		world.notifyBlocksOfNeighborChange(x, y, z, this);
-
-		ForgeDirection dir = getDirection(world, x, y, z);
-		world.notifyBlocksOfNeighborChange(x - dir.offsetX, y - dir.offsetY, z - dir.offsetZ, this);
-	}
-
-	/**
-	 * How many world ticks before ticking
-	 */
 	@Override
-	public int tickRate(World par1World)
+	public boolean isFullCube()
 	{
-		return 5;
+		return false;
 	}
 
-	public static boolean isPowered(int metadata)
+	public static boolean isPowered(IBlockState state)
 	{
-		return (metadata & FLAG_POWERED) != 0;
+		return (boolean) state.getValue(POWERED);
 	}
 
-	public static ForgeDirection getDirection(IBlockAccess world, int x, int y, int z)
+	@Override
+	public IBlockState getStateFromMeta(int meta)
 	{
-		return ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) & 7);
+		return super.getStateFromMeta(meta).withProperty(POWERED, (meta & 8) != 0);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		return super.getMetaFromState(state) + (isPowered(state) ? 8 : 0);
 	}
 }
