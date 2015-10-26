@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = "1.7.10-1.10"
+version = "1.7.10-1.10.1"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
@@ -36,7 +36,7 @@ sourceSets
 dependencies
 {
 	compile 'org.projectlombok:lombok:1.14.8'
-	compile 'net.malisis:malisiscore:1.7.10-0.12.9:dev'	
+	compile 'net.malisis:malisiscore:1.7.10-0.12.10:dev'	
 }
 
 // because the normal output has been made to be obfuscated
