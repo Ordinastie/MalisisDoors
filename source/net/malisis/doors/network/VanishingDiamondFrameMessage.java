@@ -25,17 +25,10 @@
 package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
-
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import net.malisis.core.client.gui.component.UIComponent;
-import net.malisis.core.client.gui.component.interaction.UICheckBox;
-import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.network.MalisisMessage;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -50,6 +43,11 @@ import cpw.mods.fml.relauncher.Side;
 @MalisisMessage
 public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDiamondFrameMessage.Packet, IMessage>
 {
+	public static enum DataType
+	{
+		PROPAGATION, DELAY, INVERSED, DURATION;
+	}
+
 	public VanishingDiamondFrameMessage()
 	{
 		MalisisDoors.network.registerMessage(this, VanishingDiamondFrameMessage.Packet.class, Side.SERVER);
@@ -59,58 +57,59 @@ public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDi
 	public IMessage onMessage(Packet message, MessageContext ctx)
 	{
 		World world = ctx.getServerHandler().playerEntity.worldObj;
-		TileEntity te = world.getTileEntity(message.x, message.y, message.z);
-		if (te == null || !(te instanceof VanishingDiamondTileEntity))
+		VanishingDiamondTileEntity te = TileEntityUtils.getTileEntity(VanishingDiamondTileEntity.class, world, message.x, message.y,
+				message.z);
+		if (te == null)
 			return null;
 
-		((VanishingDiamondTileEntity) te).setDuration(message.duration);
-		for (int i = 0; i < 6; i++)
-			((VanishingDiamondTileEntity) te).getDirectionState(ForgeDirection.getOrientation(i)).update(message.shouldPropagate[i],
-					message.delays[i], message.inverses[i]);
+		switch (message.type)
+		{
+			case PROPAGATION:
+				te.getDirectionState(message.facing).shouldPropagate = message.checked;
+				break;
+			case DELAY:
+				te.getDirectionState(message.facing).delay = message.time;
+				break;
+			case INVERSED:
+				te.getDirectionState(message.facing).inversed = message.checked;
+				break;
+			case DURATION:
+				te.setDuration(message.time);
+				break;
+		}
 		world.markBlockForUpdate(message.x, message.y, message.z);
 
 		return null;
 	}
 
-	public static void sendConfiguration(VanishingDiamondTileEntity te, int duration, HashMap<ForgeDirection, UIComponent[]> config)
+	public static void sendConfiguration(VanishingDiamondTileEntity te, ForgeDirection facing, DataType type, int time, boolean checked)
 	{
-		Packet packet = new Packet(te.xCoord, te.yCoord, te.zCoord, duration);
-		for (Entry<ForgeDirection, UIComponent[]> entry : config.entrySet())
-		{
-			boolean shouldPropagate = ((UICheckBox) entry.getValue()[0]).isChecked();
-			int delay = Integer.valueOf(((UITextField) entry.getValue()[1]).getText());
-			boolean inversed = ((UICheckBox) entry.getValue()[2]).isChecked();
-
-			packet.setConfig(entry.getKey().ordinal(), shouldPropagate, delay, inversed);
-		}
-
+		Packet packet = new Packet(te.xCoord, te.yCoord, te.zCoord, type, facing, time, checked);
 		MalisisDoors.network.sendToServer(packet);
 	}
 
 	public static class Packet implements IMessage
 	{
-		protected int x, y, z;
-		protected int duration;
-		protected boolean[] shouldPropagate = new boolean[6];
-		protected int[] delays = new int[6];
-		protected boolean[] inverses = new boolean[6];
+		protected int x;
+		protected int y;
+		protected int z;
+		protected DataType type;
+		protected ForgeDirection facing;
+		protected int time;
+		protected boolean checked;
 
 		public Packet()
 		{}
 
-		public Packet(int x, int y, int z, int duration)
+		public Packet(int x, int y, int z, DataType type, ForgeDirection facing, int time, boolean checked)
 		{
 			this.x = x;
 			this.y = y;
 			this.z = z;
-			this.duration = duration;
-		}
-
-		public void setConfig(int dir, boolean shouldPropagate, int delay, boolean inversed)
-		{
-			this.shouldPropagate[dir] = shouldPropagate;
-			this.delays[dir] = delay;
-			this.inverses[dir] = inversed;
+			this.type = type;
+			this.facing = facing;
+			this.time = time;
+			this.checked = checked;
 		}
 
 		@Override
@@ -119,13 +118,13 @@ public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDi
 			x = buf.readInt();
 			y = buf.readInt();
 			z = buf.readInt();
-			duration = buf.readInt();
-			for (int i = 0; i < 6; i++)
-			{
-				shouldPropagate[i] = buf.readBoolean();
-				delays[i] = buf.readInt();
-				inverses[i] = buf.readBoolean();
-			}
+			type = DataType.values()[buf.readByte()];
+			if (type != DataType.DURATION)
+				facing = ForgeDirection.values()[buf.readByte()];
+			if (type == DataType.PROPAGATION || type == DataType.INVERSED)
+				checked = buf.readBoolean();
+			else
+				time = buf.readInt();
 		}
 
 		@Override
@@ -134,16 +133,14 @@ public class VanishingDiamondFrameMessage implements IMessageHandler<VanishingDi
 			buf.writeInt(x);
 			buf.writeInt(y);
 			buf.writeInt(z);
-			buf.writeInt(duration);
-			for (int i = 0; i < 6; i++)
-			{
-				buf.writeBoolean(shouldPropagate[i]);
-				buf.writeInt(delays[i]);
-				buf.writeBoolean(inverses[i]);
-			}
-
+			buf.writeByte(type.ordinal());
+			if (type != DataType.DURATION)
+				buf.writeByte(facing.ordinal());
+			if (type == DataType.PROPAGATION || type == DataType.INVERSED)
+				buf.writeBoolean(checked);
+			else
+				buf.writeInt(time);
 		}
-
 	}
 
 }

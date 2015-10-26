@@ -25,7 +25,6 @@
 package net.malisis.doors.gui;
 
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.MalisisGui;
@@ -43,7 +42,11 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingDiamondTileEntity.DirectionState;
 import net.malisis.doors.network.VanishingDiamondFrameMessage;
+import net.malisis.doors.network.VanishingDiamondFrameMessage.DataType;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -81,20 +84,19 @@ public class VanishingDiamondGui extends MalisisGui
 			int y = i * 14 + 30;
 			UICheckBox cb = new UICheckBox(this, dir.name());
 			cb.setPosition(2, y).setChecked(state.shouldPropagate).register(this);
+			cb.attachData(Pair.of(dir, DataType.PROPAGATION));
 
-			UIContainer cbCont = new UIContainer(this, 70, 12);
-			cbCont.setPosition(55, y);
-
-			UITextField textField = new UITextField(this, "" + state.delay).setSize(27, 0).setPosition(0, 0)
+			UITextField textField = new UITextField(this, "" + state.delay).setSize(27, 0).setPosition(55, y)
 					.setDisabled(!state.shouldPropagate).register(this);
+			textField.attachData(Pair.of(dir, DataType.DELAY));
 
-			UICheckBox invCb = new UICheckBox(this).setPosition(50, 0).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
+			UICheckBox invCb = new UICheckBox(this).setPosition(105, y).setDisabled(!state.shouldPropagate).setChecked(state.inversed)
 					.register(this);
-			cbCont.add(textField);
-			cbCont.add(invCb);
+			invCb.attachData(Pair.of(dir, DataType.INVERSED));
 
 			window.add(cb);
-			window.add(cbCont);
+			window.add(textField);
+			window.add(invCb);
 
 			configs.put(dir, new UIComponent[] { cb, textField, invCb });
 
@@ -104,6 +106,7 @@ public class VanishingDiamondGui extends MalisisGui
 		UIContainer cont = new UIContainer<UIContainer>(this, 50, 60).setPosition(0, 40, Anchor.RIGHT);
 
 		duration = new UITextField(this, null).setSize(30, 0).setPosition(0, 10, Anchor.CENTER).register(this);
+		duration.attachData(Pair.of(null, DataType.DURATION));
 		cont.add(new UILabel(this, "Duration").setPosition(0, 0, Anchor.CENTER));
 		cont.add(duration);
 
@@ -123,29 +126,12 @@ public class VanishingDiamondGui extends MalisisGui
 	}
 
 	@Subscribe
-	public void onChecked(UICheckBox.CheckEvent event)
+	public void onConfigChanged(ComponentEvent.ValueChange event)
 	{
-		for (Entry<ForgeDirection, UIComponent[]> entry : configs.entrySet())
-		{
-			if (entry.getValue()[0] == event.getComponent())
-			{
-				entry.getValue()[1].setDisabled(!event.isChecked()); // Textfield
-				entry.getValue()[2].setDisabled(!event.isChecked()); // Checkbox
-			}
-		}
-
-		updateConfig();
-	}
-
-	@Subscribe
-	public void onTextChanged(ComponentEvent.ValueChange<UITextField, String> event)
-	{
-		updateConfig();
-	}
-
-	public void updateConfig()
-	{
-		VanishingDiamondFrameMessage.sendConfiguration(tileEntity, Integer.parseInt(duration.getText()), configs);
+		Pair<ForgeDirection, DataType> data = (Pair<ForgeDirection, DataType>) event.getComponent().getData();
+		int time = event.getComponent() instanceof UITextField ? NumberUtils.toInt((String) event.getNewValue()) : 0;
+		boolean checked = event.getComponent() instanceof UICheckBox ? (boolean) event.getNewValue() : false;
+		VanishingDiamondFrameMessage.sendConfiguration(tileEntity, data.getLeft(), data.getRight(), time, checked);
 	}
 
 	@Override
