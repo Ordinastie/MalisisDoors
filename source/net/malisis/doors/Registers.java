@@ -30,14 +30,10 @@ import net.malisis.core.MalisisCore;
 import net.malisis.core.MalisisRegistry;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.util.replacement.ReplacementTool;
-import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
-import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.RustyLadder;
-import net.malisis.doors.block.VanishingBlock;
-import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.CustomDoor;
@@ -64,12 +60,8 @@ import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.malisis.doors.door.tileentity.ForcefieldTileEntity;
 import net.malisis.doors.door.tileentity.RustyHatchTileEntity;
 import net.malisis.doors.door.tileentity.SaloonDoorTileEntity;
-import net.malisis.doors.entity.BlockMixerTileEntity;
 import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.entity.GarageDoorTileEntity;
-import net.malisis.doors.entity.MixedBlockTileEntity;
-import net.malisis.doors.entity.VanishingDiamondTileEntity;
-import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.trapdoor.block.TrapDoor;
 import net.malisis.doors.trapdoor.descriptor.SlidingTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.VanillaTrapDoor;
@@ -106,12 +98,6 @@ public class Registers
 		registerCamoFenceGate();
 
 		registerPlayerSensor();
-
-		if (MalisisDoorsSettings.enableVanishingBlocks.get())
-			registerVanishingBlock();
-
-		if (MalisisDoorsSettings.enableMixedBlocks.get())
-			registerMixedBlock();
 
 		registerGarageDoor();
 
@@ -308,42 +294,6 @@ public class Registers
 		// Sensor recipe
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(playerSensor), "ABA", "CCC", 'A', Items.iron_ingot, 'B', Items.redstone,
 				'C', "blockGlassColorless"));
-	}
-
-	private static void registerVanishingBlock()
-	{
-		vanishingBlock = new VanishingBlock();
-		vanishingBlock.register();
-		vanishingDiamondBlock = new VanishingDiamondBlock();
-		vanishingDiamondBlock.register();
-
-		// Vanishing Block Recipes
-		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 0), "ABA", "BCB", "ABA", 'A', Items.redstone, 'B', Items.stick, 'C',
-				Items.ender_pearl);
-		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 1), "ABA", "BCB", "ABA", 'A', Items.redstone, 'B', Items.iron_ingot, 'C',
-				Items.ender_pearl);
-		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 2), "ABA", "BCB", "ABA", 'A', Items.redstone, 'B', Items.gold_ingot, 'C',
-				Items.ender_pearl);
-		GameRegistry.addRecipe(new ItemStack(vanishingBlock, 4, 3), "ABA", "BCB", "ABA", 'A', Items.redstone, 'B', Items.diamond, 'C',
-				Items.ender_pearl);
-
-		GameRegistry.registerTileEntity(VanishingTileEntity.class, "vanishingTileEntity");
-		GameRegistry.registerTileEntity(VanishingDiamondTileEntity.class, "vanishingDiamondTileEntity");
-
-	}
-
-	private static void registerMixedBlock()
-	{
-		blockMixer = new BlockMixer();
-		blockMixer.register();
-		mixedBlock = new MixedBlock();
-		mixedBlock.register();
-
-		// Block Mixer recipe
-		GameRegistry.addRecipe(new ItemStack(blockMixer), "AAA", "B B", "AAA", 'A', Items.iron_ingot, 'B', Blocks.piston);
-
-		GameRegistry.registerTileEntity(BlockMixerTileEntity.class, "blockMixerTileEntity");
-		GameRegistry.registerTileEntity(MixedBlockTileEntity.class, "mixedBlockTileEntity");
 	}
 
 	private static void registerGarageDoor()

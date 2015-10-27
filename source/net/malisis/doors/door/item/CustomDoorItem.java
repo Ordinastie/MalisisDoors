@@ -32,7 +32,6 @@ import net.malisis.core.renderer.icon.IIconProvider;
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.MBlockState;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
@@ -140,7 +139,7 @@ public class CustomDoorItem extends DoorItem
 			return true;
 
 		Block block = Block.getBlockFromItem(itemStack.getItem());
-		return block != null && !(block instanceof MixedBlock) && block.getRenderType() != -1;
+		return block != null && !block.getUnlocalizedName().equals("tile.mixed_block") && block.getRenderType() != -1;
 	}
 
 	@Override

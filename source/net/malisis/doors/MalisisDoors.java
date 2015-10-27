@@ -7,14 +7,10 @@ import net.malisis.core.configuration.Settings;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.renderer.font.MalisisFont;
-import net.malisis.doors.block.BlockMixer;
 import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
-import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.RustyLadder;
-import net.malisis.doors.block.VanishingBlock;
-import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.Door;
@@ -149,10 +145,6 @@ public class MalisisDoors implements IMalisisMod
 		//MalisisDoors blocks
 		public static PlayerSensor playerSensor;
 		public static DoorFactory doorFactory;
-		public static BlockMixer blockMixer;
-		public static MixedBlock mixedBlock;
-		public static VanishingBlock vanishingBlock;
-		public static VanishingDiamondBlock vanishingDiamondBlock;
 		public static RustyLadder rustyLadder;
 	}
 

@@ -53,6 +53,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
+@SuppressWarnings("deprecation")
 public class RustyHatchRenderer extends MalisisRenderer
 {
 	public static RustyHatchRenderer instance;
