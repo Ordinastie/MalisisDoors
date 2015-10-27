@@ -78,6 +78,14 @@ public class VanishingTileEntity extends TileEntity
 		this.frameType = frameType;
 	}
 
+	@Override
+	public void setWorldObj(World world)
+	{
+		worldObj = world;
+		if (copiedTileEntity != null)
+			copiedTileEntity.setWorldObj(((World) ProxyAccess.get(getWorld())));
+	}
+
 	public int getDuration()
 	{
 		return duration;
