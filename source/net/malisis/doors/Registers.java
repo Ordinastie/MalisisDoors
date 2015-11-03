@@ -32,7 +32,6 @@ import net.malisis.core.item.MalisisItem;
 import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.GarageDoor;
-import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.CarriageDoor;
@@ -72,7 +71,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class Registers
 {
@@ -96,8 +94,6 @@ public class Registers
 		registerTrapDoors();
 
 		registerCamoFenceGate();
-
-		registerPlayerSensor();
 
 		registerGarageDoor();
 
@@ -284,16 +280,6 @@ public class Registers
 		camoFenceGate = new FenceGate(FenceGate.Type.CAMO);
 		camoFenceGate.register();
 		GameRegistry.addRecipe(new ItemStack(camoFenceGate), "ABC", 'A', acaciaFenceGate, 'B', jungleFenceGate, 'C', birchFenceGate);
-	}
-
-	private static void registerPlayerSensor()
-	{
-		playerSensor = new PlayerSensor();
-		playerSensor.register();
-
-		// Sensor recipe
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(playerSensor), "ABA", "CCC", 'A', Items.iron_ingot, 'B', Items.redstone,
-				'C', "blockGlassColorless"));
 	}
 
 	private static void registerGarageDoor()
