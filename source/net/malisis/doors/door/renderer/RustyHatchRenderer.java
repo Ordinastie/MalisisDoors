@@ -70,6 +70,11 @@ public class RustyHatchRenderer extends MalisisRenderer
 	private boolean topBlock;
 	private EnumFacing direction;
 
+	private Matrix4f gui = new TRSRTransformation(new Vector3f(-0.2F, 0.5F, 0.15F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(90,
+			0, 0)), null, null).getMatrix();
+	private Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0.0F, 0.15F, -0.25F),
+			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -45, 0)), new Vector3f(0.25F, 0.25F, 0.25F), null).getMatrix();
+
 	public RustyHatchRenderer()
 	{
 		registerFor(RustyHatchTileEntity.class);
@@ -186,31 +191,12 @@ public class RustyHatchRenderer extends MalisisRenderer
 	@Override
 	public Matrix4f getTransform(TransformType tranformType)
 	{
-		Matrix4f gui = new TRSRTransformation(new Vector3f(-0.2F, 0.5F, 0.15F),
-				TRSRTransformation.quatFromYXZDegrees(new Vector3f(90, 0, 0)), null, null).getMatrix();
-		Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0.00F, 0, -0.20F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(
-				0, 110, 0)), new Vector3f(-0.5F, 0.5F, 0.5F), null).getMatrix();
-
 		if (tranformType == TransformType.GUI)
 			return gui;
+		if (tranformType == TransformType.THIRD_PERSON)
+			return thirdPerson;
 
-		return super.getTransform(tranformType);
-		//		switch (itemRenderType)
-		//		{
-		//			case INVENTORY:
-		//				handle.translate(0.20F, 0, 0.15F);
-		//				handle.rotate(90, 0, 0, 1);
-		//				break;
-		//			case EQUIPPED:
-		//				handle.translate(-0.5F, -.75F, 0);
-		//				handle.rotate(100, 0, 0, 1);
-		//				break;
-		//			case EQUIPPED_FIRST_PERSON:
-		//				handle.translate(0, -0.1F, -0.2F);
-		//				handle.rotate(90, 0, 0, 1);
-		//			default:
-		//				break;
-		//		}
+		return null;
 	}
 
 	private void renderItem()
