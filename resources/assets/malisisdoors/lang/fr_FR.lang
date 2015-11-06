@@ -1,3 +1,5 @@
+itemGroup.malisisdoors=MalisisDoors
+
 item.wood_sliding_door.name=Porte vitrée en bois
 item.iron_sliding_door.name=Porte vitrée en fer
 item.jail_door.name=Porte de prison
@@ -17,14 +19,6 @@ item.door_acacia.name=Porte en bois d'acacia
 item.door_dark_oak.name=Porte en bois de chêne noir
 item.saloon.name=Porte de saloon
 
-
-tile.player_sensor.name=Detecteur de joueur
-tile.vanishing_block_wood.name=Cadre de disparition en bois
-tile.vanishing_block_iron.name=Cadre de disparition en fer
-tile.vanishing_block_gold.name=Cadre de disparition en or
-tile.vanishing_block_diamond.name=Cadre de disparition en diamant
-tile.block_mixer.name=Mixeur de blocs
-tile.mixed_block.name=Bloc mixé
 tile.garage_door.name=Porte de garage
 tile.jail_door.name=Porte de prison
 tile.laboratory_door.name=Porte de laboratoire
@@ -55,27 +49,6 @@ config.title=Configuration de MalisisDoors
 config.modifyVanillaDoors=Activer l'amélioration des portes vanilla.
 config.modifyVanillaDoors.comment1=Active l'animation des portes, trappes et portillons.
 config.modifyVanillaDoors.comment2=Les blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
-
-config.enableMixedBlocks=Activer le Mixeur de blocs et les blocs mixés
-
-config.simpleMixedBlockRendering=Activer le rendu simplifié des blocs mixés
-config.simpleMixedBlockRendering.comment1=Active un rendu moins avancé pour les blocs mixés.
-config.simpleMixedBlockRendering.comment2=Activez cette option si des problèmes de rendu sont visible pour ces blocs.
-
-config.enableVanishingBlocks=Activer les cadres de disparition
-
-config.enableVanishingGlitch=Activer l'animation d'instabilité des cadres de disparition
-config.enableVanishingGlitch.comment=Les cadres deviennent instables et changent temporairement de dimension.
-
-config.vanishingGlitchChance=Fréquence d'instabilité des cadres de disparition
-config.vanishingGlitchChance.comment=A quelle fréquence les cadres deviennent instable.
-
-config.enhancedMixedBlockPlacement=Utiliser l'amélioration de placement des blocs mixés
-config.enhancedMixedBlockPlacement.comment1=Base le placement du bloc en fonction de la direction de la vue plutot que la face visée. 
-config.enhancedMixedBlockPlacement.comment2=Utiliser la touche "S'accroupir" pour inverser la position du bloc.
-
-config.enableCamoFenceGate=Activer le camo pour les portillons
-config.enableCamoFenceGate.comment=Permet aux portillons d'utiliser la texture des blocs qui l'entourent. 
 
 
 door_movement.rotating_door=Tournante
@@ -124,6 +97,3 @@ gui.door_factory.bottom_material=Matériau bas
 gui.door_factory.door_edit_slot=Porte à modifier
 gui.door_factory.create_door=Créer la porte
 gui.door_factory.edit_door=Modifier la porte
-
-gui.block_mixer.simple_rendering=Rendu simplifié
-gui.block_mixer.simple_rendering_tooltip=Nécessite une mise à jour de tronçons pour les blocs du monde

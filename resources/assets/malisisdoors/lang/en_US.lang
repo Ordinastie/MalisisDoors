@@ -1,4 +1,4 @@
-itemGroup.malisisdoors=Malisis'Doors
+itemGroup.malisisdoors=MalisisDoors
 
 item.wood_sliding_door.name=Wooden Glass Door
 item.iron_sliding_door.name=Iron Glass Door
@@ -19,14 +19,6 @@ item.door_acacia.name=Acacia Door
 item.door_dark_oak.name=Dark Oak Door
 item.saloon.name=Saloon Door
 
-
-tile.player_sensor.name=Player Sensor
-tile.vanishing_block_wood.name=Wooden Vanishing Frame
-tile.vanishing_block_iron.name=Iron Vanishing Frame
-tile.vanishing_block_gold.name=Gold Vanishing Frame
-tile.vanishing_block_diamond.name=Diamond Vanishing Frame
-tile.block_mixer.name=Block Mixer
-tile.mixed_block.name=Mixed Block
 tile.garage_door.name=Garage Door
 tile.jail_door.name=Jail Door
 tile.laboratory_door.name=Laboratory Door
@@ -58,27 +50,6 @@ config.modifyVanillaDoors=Enable vanilla doors improvement
 config.modifyVanillaDoors.comment1=Enables the animations for doors, fence gates and trap doors.
 config.modifyVanillaDoors.comment2=This replaces the doors entirely so conflicts may arise if another mod tries to modify them too.
 
-config.enableMixedBlocks=Enable Block Mixer and Mixed Blocks
-
-config.simpleMixedBlockRendering=Simple Mixed Blocks rendering
-config.simpleMixedBlockRendering.comment1=Enables less fancy rendering for Mixed Blocks.
-config.simpleMixedBlockRendering.comment2=Enable this option if you experience z-fighting issue or glitched rendering.
-
-config.enableVanishingBlocks=Enable Vanishing Frames
-
-config.enableVanishingGlitch=Enable Vanishing Frames glitch animation
-config.enableVanishingGlitch.comment=Frames randomly become unstable and are temporarily out of this dimension.
- 
-config.vanishingGlitchChance=Vanishing Frames glitch frequency
-config.vanishingGlitchChance.comment=How often the frame become unstable.
-
-config.enhancedMixedBlockPlacement=Use enhanced mixed block placement
-config.enhancedMixedBlockPlacement.comment1=Allows to place the block base on where you look instead of the side you're placing it on.
-config.enhancedMixedBlockPlacement.comment2=Use sneak key to inverse the block placement.
-
-config.enableCamoFenceGate=Enable camo Fence Gates
-config.enableCamoFenceGate.comment=Enables Fence Gate to use the texture of the blocks surrounding them. 
-
 
 door_movement.rotating_door=Rotating
 door_movement.sliding_door=Sliding on the side
@@ -98,7 +69,6 @@ door_movement.double_slide_left=Double sliding left
 door_movement.double_slide_right=Double sliding right
 door_movement.double_rotate_left=Double rotating left
 door_movement.double_rotate_right=Double rotating right
-
 
 
 gui.door_factory.tab_properties=Properties
@@ -127,6 +97,3 @@ gui.door_factory.bottom_material=Bottom block material
 gui.door_factory.door_edit_slot=Door to modify
 gui.door_factory.create_door=Create door
 gui.door_factory.edit_door=Modify door
-
-gui.block_mixer.simple_rendering=Simple rendering
-gui.block_mixer.simple_rendering_tooltip=In world blocks require chunk update to take effect.
