@@ -32,10 +32,10 @@ import net.malisis.core.renderer.icon.IMetaIconProvider;
 import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
 import net.malisis.core.util.EntityUtils;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.iconprovider.CamoFenceGateIconProvider;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
-import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
@@ -43,8 +43,10 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -122,12 +124,21 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		super.onBlockPlacedBy(world, pos, state, placer, stack);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
+		if (te != null)
+			te.updateAll();
+	}
+
+	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
 
-		DoorTileEntity te = Door.getDoor(world, pos);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null)
 			return true;
 
@@ -153,11 +164,11 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	@Override
 	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
-		DoorTileEntity te = Door.getDoor(world, pos);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null)
 			return;
 
-		//	((FenceGateTileEntity) te).updateCamo(world, pos);
+		te.updateAll();
 
 		if (world.isBlockIndirectlyGettingPowered(pos) != 0 || state.getBlock().canProvidePower())
 			te.setPowered(te.isPowered());
@@ -166,7 +177,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state)
 	{
-		DoorTileEntity te = Door.getDoor(world, pos);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null || te.isMoving() || te.isOpened())
 			return null;
 

@@ -63,10 +63,10 @@ public class CamoFenceGateIconProvider implements IBlockIconProvider
 		if (te == null)
 			return getIcon();
 
-		IBlockState neighborState = te.getNeighborsState();
-		if (neighborState == null)
+		IBlockState camoState = te.getCamoState();
+		if (camoState == null)
 			return getIcon();
 
-		return new VanillaIcon(neighborState);
+		return new VanillaIcon(camoState);
 	}
 }

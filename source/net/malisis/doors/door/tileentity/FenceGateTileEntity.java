@@ -31,15 +31,23 @@ import net.malisis.doors.door.movement.FenceGateMovement;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * @author Ordinastie
  */
 public class FenceGateTileEntity extends DoorTileEntity
 {
+	private IBlockState camoState;
+	private int camoColor;
+	private boolean isWall;
+
 	public FenceGateTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
@@ -53,13 +61,70 @@ public class FenceGateTileEntity extends DoorTileEntity
 		return worldObj.getBlockState(pos);
 	}
 
+	public IBlockState getCamoState()
+	{
+		return camoState;
+	}
+
+	public int getCamoColor()
+	{
+		return camoColor;
+	}
+
+	public boolean isWall()
+	{
+		return isWall;
+	}
+
 	@Override
 	public EnumFacing getDirection()
 	{
 		return (EnumFacing) getBlockState().getValue(BlockTrapDoor.FACING);
 	}
 
-	public boolean isWall()
+	public void updateAll()
+	{
+		Pair<IBlockState, Integer> pair = updateCamo();
+		camoState = pair.getLeft();
+		camoColor = pair.getRight();
+		isWall = updateWall();
+
+		worldObj.markBlockForUpdate(pos);
+	}
+
+	private Pair<IBlockState, Integer> updateCamo()
+	{
+		EnumFacing dir = getDirection().rotateY();
+
+		BlockPos p = pos.offset(dir);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, p);
+		if (isMatchingDoubleDoor(te))
+			p = p.offset(dir);
+
+		IBlockState state1 = worldObj.getBlockState(p);
+		int color1 = state1.getBlock().colorMultiplier(worldObj, p);
+		if (state1.getBlock().isAir(worldObj, p))
+			return Pair.of(getBlockState(), -1);
+
+		dir = dir.getOpposite();
+		p = pos.offset(dir);
+
+		te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, p);
+		if (isMatchingDoubleDoor(te))
+			p = p.offset(dir);
+
+		IBlockState state2 = worldObj.getBlockState(p);
+		int color2 = state2.getBlock().colorMultiplier(worldObj, p);
+		if (state1.getBlock().isAir(worldObj, p))
+			return Pair.of(getBlockState(), -1);
+
+		if (!state1.equals(state2) || color1 != color2)
+			return Pair.of(getBlockState(), -1);
+
+		return Pair.of(state1, color1);
+	}
+
+	private boolean updateWall()
 	{
 		EnumFacing dir = getDirection().rotateY();
 		IBlockState state = worldObj.getBlockState(pos.offset(dir));
@@ -71,23 +136,6 @@ public class FenceGateTileEntity extends DoorTileEntity
 		return false;
 	}
 
-	public IBlockState getNeighborsState()
-	{
-		EnumFacing dir = getDirection().rotateY();
-
-		IBlockState state1 = worldObj.getBlockState(pos.offset(dir));
-		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, pos.offset(dir));
-		if (isMatchingDoubleDoor(te))
-			state1 = worldObj.getBlockState(pos.offset(dir, 2));
-
-		IBlockState state2 = worldObj.getBlockState(pos.offset(dir.getOpposite()));
-		te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, pos.offset(dir.getOpposite()));
-		if (isMatchingDoubleDoor(te))
-			state2 = worldObj.getBlockState(pos.offset(dir.getOpposite(), 2));
-
-		return state1.equals(state2) && state1.getBlock() != Blocks.air ? state1 : null;
-	}
-
 	@Override
 	public FenceGateTileEntity getDoubleDoor()
 	{
@@ -95,13 +143,13 @@ public class FenceGateTileEntity extends DoorTileEntity
 			return null;
 
 		EnumFacing dir = getDirection().rotateY();
-		TileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, pos.offset(dir));
-		if (te != null && isMatchingDoubleDoor((FenceGateTileEntity) te))
-			return (FenceGateTileEntity) te;
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, pos.offset(dir));
+		if (te != null && isMatchingDoubleDoor(te))
+			return te;
 
 		te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, pos.offset(dir.getOpposite()));
-		if (te != null && isMatchingDoubleDoor((FenceGateTileEntity) te))
-			return (FenceGateTileEntity) te;
+		if (te instanceof FenceGateTileEntity && isMatchingDoubleDoor(te))
+			return te;
 
 		return null;
 	}
@@ -125,8 +173,23 @@ public class FenceGateTileEntity extends DoorTileEntity
 	}
 
 	@Override
+	public void update()
+	{
+		if (camoState == null)
+			updateAll();
+		super.update();
+	}
+
+	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return new AxisAlignedBB(pos, pos.add(1, 1, 1));
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	{
+		super.onDataPacket(net, packet);
+		updateAll();
 	}
 }

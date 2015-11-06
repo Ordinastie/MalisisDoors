@@ -141,7 +141,7 @@ public class FenceGateRenderer extends DoorRenderer
 			model.translate(0, -.19F, 0);
 
 		//rp.icon.set(tileEntity.getCamoIcon());
-		//rp.colorMultiplier.set(tileEntity.getCamoColor());
+		rp.colorMultiplier.set(tileEntity.getCamoColor());
 		//rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 	}
 
