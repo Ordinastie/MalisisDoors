@@ -24,28 +24,31 @@
 
 package net.malisis.doors.door.tileentity;
 
-import net.malisis.doors.MalisisDoorsSettings;
+import net.malisis.core.util.BlockPos;
+import net.malisis.core.util.BlockState;
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.FenceGateMovement;
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * @author Ordinastie
  */
 public class FenceGateTileEntity extends DoorTileEntity
 {
-	private Block camoBlock = Blocks.planks;
-	private int camoMeta = 0;
-	private boolean isCamo = false;
-	private boolean isWall = false;
+	private BlockState camoState;
+	private int camoColor;
+	private boolean isWall;
 
 	public FenceGateTileEntity()
 	{
@@ -54,27 +57,84 @@ public class FenceGateTileEntity extends DoorTileEntity
 		setDescriptor(descriptor);
 	}
 
+	public BlockState getCamoState()
+	{
+		return camoState;
+	}
+
+	public int getCamoColor()
+	{
+		return camoColor;
+	}
+
 	public boolean isWall()
 	{
 		return isWall;
 	}
 
-	public IIcon getCamoIcon()
+	public void updateAll()
 	{
-		return camoBlock.getIcon(2, camoMeta);
+		Pair<BlockState, Integer> pair = updateCamo();
+		camoState = pair.getLeft();
+		camoColor = pair.getRight();
+		isWall = updateWall();
+
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 
-	public int getCamoColor()
+	private Pair<BlockState, Integer> updateCamo()
 	{
-		int ox = 0;
-		int oz = 0;
+		ForgeDirection dir = getDirection() == 0 || getDirection() == 2 ? ForgeDirection.EAST : ForgeDirection.NORTH;
+		BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
 
-		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
-			oz = 1;
-		else
-			ox = 1;
+		BlockPos p = pos.offset(dir);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, p);
+		if (te != null && isMatchingDoubleDoor(te))
+			p = p.offset(dir);
 
-		return isCamo ? camoBlock.colorMultiplier(getWorld(), xCoord - ox, yCoord, zCoord - oz) : 0xFFFFFF;
+		BlockState state1 = new BlockState(worldObj, p);
+		int color1 = state1.getBlock().colorMultiplier(worldObj, p.getX(), p.getY(), p.getZ());
+		if (state1.getBlock().isAir(worldObj, p.getX(), p.getY(), p.getZ()))
+			return Pair.of(new BlockState(worldObj, pos), -1);
+
+		dir = dir.getOpposite();
+		p = pos.offset(dir);
+
+		te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, worldObj, p);
+		if (te != null && isMatchingDoubleDoor(te))
+			p = p.offset(dir);
+
+		BlockState state2 = new BlockState(worldObj, p);
+		int color2 = state2.getBlock().colorMultiplier(worldObj, p.getX(), p.getY(), p.getZ());
+		if (state1.getBlock().isAir(worldObj, p.getX(), p.getY(), p.getZ()))
+			return Pair.of(new BlockState(worldObj, pos), -1);
+
+		if (state1.getBlock() != state2.getBlock() || state1.getMetadata() != state2.getMetadata() || color1 != color2)
+			return Pair.of(new BlockState(worldObj, pos), -1);
+
+		return Pair.of(state1, color1);
+	}
+
+	private boolean updateWall()
+	{
+		ForgeDirection dir = getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH ? ForgeDirection.EAST : ForgeDirection.NORTH;
+		BlockPos pos = new BlockPos(xCoord, yCoord, zCoord);
+
+		BlockState state = new BlockState(worldObj, pos.offset(dir));
+		if (state.getBlock() == Blocks.cobblestone_wall)
+			return true;
+		state = new BlockState(worldObj, pos.offset(dir.getOpposite()));
+		if (state.getBlock() == Blocks.cobblestone_wall)
+			return true;
+		return false;
+	}
+
+	public IIcon getCamoIcon()
+	{
+		if (camoState == null)
+			return getBlockType().getIcon(0, 0);
+
+		return camoState.getBlock().getIcon(0, 0);
 	}
 
 	/**
@@ -142,72 +202,10 @@ public class FenceGateTileEntity extends DoorTileEntity
 		return AxisAlignedBB.getBoundingBox(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
-	public void updateCamo(World world, int x, int y, int z)
-	{
-		int ox = 0;
-		int oz = 0;
-
-		if (getDirection() == Door.DIR_NORTH || getDirection() == Door.DIR_SOUTH)
-			oz = 1;
-		else
-			ox = 1;
-
-		Block b1 = world.getBlock(xCoord - ox, y, zCoord - oz);
-		Block b2 = world.getBlock(xCoord + ox, y, zCoord + oz);
-		int meta1 = world.getBlockMetadata(xCoord - ox, y, zCoord - oz);
-		int meta2 = world.getBlockMetadata(xCoord + ox, y, zCoord + oz);
-
-		isWall = (b1 == Blocks.cobblestone_wall || b2 == Blocks.cobblestone_wall);
-
-		if (MalisisDoorsSettings.enableCamoFenceGate.get() && b1 == b2 && meta1 == meta2 && (isWall || b1.renderAsNormalBlock())
-				&& !b1.isAir(world, this.xCoord - ox, y, this.zCoord - oz))
-		{
-			isCamo = true;
-			camoBlock = b1;
-			camoMeta = meta1;
-
-		}
-		else
-		{
-			isCamo = false;
-			camoBlock = Blocks.planks;
-			camoMeta = 0;
-		}
-
-		//world.notifyBlockChange(xCoord, yCoord, zCoord, getBlockType());
-		world.markBlockForUpdate(x, y, z);
-	}
-
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
-		super.readFromNBT(nbt);
-		isWall = nbt.getBoolean("isWall");
-
-		int blockID = nbt.getInteger("camoBlock");
-		if (blockID == 0 || !MalisisDoorsSettings.enableCamoFenceGate.get())
-		{
-			isCamo = false;
-			camoBlock = Blocks.planks;
-			camoMeta = 0;
-
-		}
-		else
-		{
-			isCamo = nbt.getBoolean("isCamo");
-			camoBlock = Block.getBlockById(blockID);
-			camoMeta = nbt.getInteger("camoMeta");
-		}
+		super.onDataPacket(net, packet);
+		updateAll();
 	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setBoolean("isCamo", isCamo);
-		nbt.setInteger("camoBlock", Block.blockRegistry.getIDForObject(camoBlock));
-		nbt.setInteger("camoMeta", camoMeta);
-		nbt.setBoolean("isWall", isWall);
-	}
-
 }

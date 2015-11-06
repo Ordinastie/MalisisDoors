@@ -29,29 +29,105 @@ package net.malisis.doors.door.block;
  *
  */
 
+import static net.malisis.doors.MalisisDoors.Blocks.*;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 {
+	public static enum Type
+	{
+		//{"oak", "spruce", "birch", "jungle", "acacia", "big_oak"};
+		//@formatter:off
+		OAK("fenceGate", 0),
+		ACACIA("acaciaFenceGate", 4),
+		BIRCH("birchFenceGate", 2),
+		DARK_OAK("darkOakFenceGate", 5),
+		JUNGLE("jungleFenceGate", 3),
+		SPRUCE("spruceFenceGate", 1),
+		CAMO("camoFenceGate", 0);
+
+		//@formatter:on
+		private int type;
+		private String name;
+
+		private Type(String name, int type)
+		{
+			this.name = name;
+			this.type = type;
+		}
+	}
+
+	private Type type;
+	private IIcon camoIcon;
 	public static int renderId = -1;
 
-	public FenceGate()
+	public FenceGate(Type type)
 	{
+		this.type = type;
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setStepSound(soundTypeWood);
-		setUnlocalizedName("fenceGate");
+		setUnlocalizedName(type.name);
+
+		if (type != Type.OAK)
+			setCreativeTab(MalisisDoors.tab);
+	}
+
+	public FenceGate register()
+	{
+		GameRegistry.registerBlock(this, type.name);
+		if (type == Type.CAMO)
+			GameRegistry.addRecipe(new ItemStack(this), "ABC", 'A', acaciaFenceGate, 'B', jungleFenceGate, 'C', birchFenceGate);
+		else
+			GameRegistry.addRecipe(new ItemStack(this), "ABA", "ABA", 'A', Items.stick, 'B', new ItemStack(Blocks.planks, 1, type.type));
+		return this;
+	}
+
+	@Override
+	public void registerIcons(IIconRegister register)
+	{
+		if (type == Type.CAMO)
+			camoIcon = new MalisisIcon(MalisisDoors.modid + ":camo_fencegate").register((TextureMap) register);
+	}
+
+	@Override
+	public IIcon getIcon(int side, int meta)
+	{
+		return type == Type.CAMO ? camoIcon : Blocks.planks.getIcon(side, type.type);
+	}
+
+	@Override
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
+	{
+		if (type != Type.CAMO)
+			return super.getIcon(world, x, y, z, side);
+
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, x, y, z);
+		if (te == null)
+			return super.getIcon(world, x, y, z, side);
+
+		return te.getCamoIcon();
 	}
 
 	@Override
@@ -61,11 +137,11 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 		if (world.isRemote)
 			return;
 
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, x, y, z);
 		if (te == null)
 			return;
 
-		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
+		te.updateAll();
 	}
 
 	/**
@@ -108,11 +184,11 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
 	{
-		DoorTileEntity te = Door.getDoor(world, x, y, z);
+		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, x, y, z);
 		if (te == null)
 			return;
 
-		((FenceGateTileEntity) te).updateCamo(world, x, y, z);
+		te.updateAll();
 
 		if (world.isBlockIndirectlyGettingPowered(x, y, z) || block.canProvidePower())
 			te.setPowered(te.isPowered());

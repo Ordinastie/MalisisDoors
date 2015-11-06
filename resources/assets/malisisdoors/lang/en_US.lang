@@ -50,6 +50,15 @@ tile.iron_trapdoor.name=Iron Trapdoor
 tile.sliding_trapdoor.name=Sliding Trapdoor
 tile.saloon.name=Saloon Door
 
+tile.fenceGate.name=Oak Fence Gate
+tile.spruceFenceGate.name=Spruce Fence Gate
+tile.birchFenceGate.name=Birch Fence Gate
+tile.jungleFenceGate.name=Jungle Fence Gate
+tile.darkOakFenceGate.name=Dark Oak Fence Gate
+tile.acaciaFenceGate.name=Acacia Fence Gate
+tile.camoFenceGate.name=Camo Fence Gate
+
+
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
 config.title=MalisisDoors' configuration

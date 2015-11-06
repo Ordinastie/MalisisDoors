@@ -24,15 +24,13 @@
 
 package net.malisis.doors.door.renderer;
 
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
-import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
 
 /**
  * @author Ordinastie
@@ -90,9 +88,21 @@ public class FenceGateRenderer extends DoorRenderer
 		if (tileEntity.isWall())
 			model.translate(0, -.19F, 0);
 
-		rp.icon.set(tileEntity.getCamoIcon());
 		rp.colorMultiplier.set(tileEntity.getCamoColor());
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, x, y, z));
+	}
+
+	@Override
+	public void render()
+	{
+		if (renderType == RenderType.ISBRH_INVENTORY)
+		{
+			model.resetState();
+			model.rotate(90, 0, 1, 0, 0, 0, 0);
+			model.render(this, rp);
+			return;
+		}
+		super.render();
 	}
 
 	@Override
@@ -110,12 +120,6 @@ public class FenceGateRenderer extends DoorRenderer
 		}
 
 		model.render(this, rp);
-	}
-
-	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
-	{
-		renderer.renderBlockAsItem(ReplacementTool.orignalBlock(block), 0, 1);
 	}
 
 	@Override

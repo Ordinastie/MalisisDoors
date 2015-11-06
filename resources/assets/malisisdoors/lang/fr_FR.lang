@@ -48,6 +48,15 @@ tile.iron_tropdoor.name=Trappe en fer
 tile.sliding_trapdoor.name=Trappe coulissante
 tile.saloon.name=Porte de saloon
 
+tile.fenceGate.name=Portillon en bois de chêne
+tile.spruceFenceGate.name=Portillon en bois de sapin
+tile.birchFenceGate.name=Portillon en bois de bouleau
+tile.jungleFenceGate.name=Portillon en bois d'acajou
+tile.darkOakFenceGate.name=Portillon en bois de chêne noir
+tile.acaciaFenceGate.name=Portillon en bois d'acacia
+tile.camoFenceGate.name=Portillon camouflée
+
+
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
 config.title=Configuration de MalisisDoors

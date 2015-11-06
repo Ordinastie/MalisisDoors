@@ -14,6 +14,7 @@ import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.item.ForcefieldItem;
@@ -98,6 +99,15 @@ public class MalisisDoors implements IMalisisMod
 		public static Block doorDarkOak;
 		public static Block doorJungle;
 		public static Block doorSpruce;
+
+		public static FenceGate oakFenceGate;
+		public static FenceGate acaciaFenceGate;
+		public static FenceGate birchFenceGate;
+		public static FenceGate darkOakFenceGate;
+		public static FenceGate jungleFenceGate;
+		public static FenceGate spruceFenceGate;
+		public static FenceGate camoFenceGate;
+
 		public static Block woodSlidingDoor;
 		public static Block ironSlidingDoor;
 		public static PlayerSensor playerSensor;

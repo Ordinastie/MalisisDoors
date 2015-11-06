@@ -39,6 +39,7 @@ import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.block.CarriageDoor;
 import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.FenceGate;
+import net.malisis.doors.door.block.FenceGate.Type;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
 import net.malisis.doors.door.block.SaloonDoorBlock;
@@ -99,6 +100,8 @@ public class Registers
 
 		registerSaloonDoor();
 
+		registerFenceGates();
+
 		registerTrapDoors();
 
 		registerPlayerSensor();
@@ -147,8 +150,8 @@ public class Registers
 
 	private static void registerVanillaFenceGate()
 	{
-		FenceGate fenceGate = new FenceGate();
-		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "field_150396_be", fenceGate, Blocks.fence_gate);
+		oakFenceGate = new FenceGate(Type.OAK);
+		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "field_150396_be", oakFenceGate, Blocks.fence_gate);
 		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 	}
 
@@ -226,6 +229,16 @@ public class Registers
 		desc.register();
 
 		GameRegistry.registerTileEntity(SaloonDoorTileEntity.class, "saloonDoorTileEntity");
+	}
+
+	private static void registerFenceGates()
+	{
+		acaciaFenceGate = new FenceGate(FenceGate.Type.ACACIA).register();
+		birchFenceGate = new FenceGate(FenceGate.Type.BIRCH).register();
+		darkOakFenceGate = new FenceGate(FenceGate.Type.DARK_OAK).register();
+		jungleFenceGate = new FenceGate(FenceGate.Type.JUNGLE).register();
+		spruceFenceGate = new FenceGate(FenceGate.Type.SPRUCE).register();
+		camoFenceGate = new FenceGate(FenceGate.Type.CAMO).register();
 	}
 
 	private static void registerTrapDoors()
