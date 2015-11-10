@@ -22,57 +22,51 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.iconprovider;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.doors.DoorDescriptor;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class SaloonDoorIconProvider implements IBlockIconProvider
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
+	private MalisisIcon itemIcon;
+	private MalisisIcon blockIcon;
 
-	public DigicodeGui(DoorTileEntity te)
+	public SaloonDoorIconProvider(DoorDescriptor descriptor)
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		String modid = descriptor.getModId();
+		String name = descriptor.getTextureName();
+
+		itemIcon = new MalisisIcon(modid + ":items/" + name);
+		blockIcon = new MalisisIcon(modid + ":blocks/" + name);
 	}
 
 	@Override
-	public void construct()
+	public void registerIcons(TextureMap map)
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
+		itemIcon = itemIcon.register(map);
+		blockIcon = blockIcon.register(map);
 	}
 
 	@Override
-	protected void keyTyped(char keyChar, int keyCode)
+	public MalisisIcon getIcon()
 	{
-		super.keyTyped(keyChar, keyCode);
+		return itemIcon;
+	}
 
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+	@Override
+	public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	{
+		return blockIcon;
 	}
 }

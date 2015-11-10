@@ -22,57 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.SlidingDoorMovement;
+import net.malisis.doors.sound.ShojiDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class ShojiDoor extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public ShojiDoor()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
-	}
+		//Block
+		setMaterial(Material.wood);
+		setHardness(1.0F);
+		setSoundType(Block.soundTypeCloth);
+		setName("shoji_door");
+		setTextureName(MalisisDoors.modid, "shoji_door");
 
-	@Override
-	public void construct()
-	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		//te
+		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
+		setSound(DoorRegistry.getSound(ShojiDoorSound.class));
+		setOpeningTime(20);
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		//Item
+		setTab(MalisisDoors.tab);
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		//recipe
+		setRecipe("AB", "AB", "AB", 'A', Blocks.planks, 'B', Items.paper);
 	}
 }

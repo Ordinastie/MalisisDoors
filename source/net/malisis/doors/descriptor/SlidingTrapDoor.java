@@ -22,57 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.TrapDoorDescriptor;
+import net.malisis.doors.movement.SlidingTrapDoorMovement;
+import net.malisis.doors.sound.PneumaticSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class SlidingTrapDoor extends TrapDoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public SlidingTrapDoor()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
-	}
+		//Block
+		setOpeningTime(12);
+		setMaterial(Material.iron);
+		setHardness(4.0F);
+		setSoundType(Block.soundTypeMetal);
+		setName("sliding_trapdoor");
+		setTextureName(MalisisDoors.modid, "blocks/sliding_trapdoor");
 
-	@Override
-	public void construct()
-	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		//te
+		setRequireRedstone(false);
+		setMovement(DoorRegistry.getMovement(SlidingTrapDoorMovement.class));
+		setSound(DoorRegistry.getSound(PneumaticSound.class));
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		//item
+		setTab(MalisisDoors.tab);
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		//recipe
+		setRecipe("ABB", "ABB", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
 	}
 }

@@ -50,10 +50,10 @@ import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateC
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorRegistry;
-import net.malisis.doors.entity.DoorFactoryTileEntity;
 import net.malisis.doors.network.DoorFactoryMessage;
+import net.malisis.doors.tileentity.DoorFactoryTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 

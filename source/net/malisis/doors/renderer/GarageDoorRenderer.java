@@ -38,9 +38,9 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.EnumFacingUtils;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.DoorState;
-import net.malisis.doors.entity.GarageDoorTileEntity;
+import net.malisis.doors.tileentity.GarageDoorTileEntity;
 import net.minecraft.util.EnumFacing;
 
 /**

@@ -22,57 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.SlidingDoorMovement;
+import net.malisis.doors.sound.GlassDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class GlassDoor extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public GlassDoor(Material material)
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
-	}
+		boolean wood = material == Material.wood;
+		//Block
+		setMaterial(material);
+		setHardness(wood ? 2.0F : 3.0F);
+		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
+		setName(wood ? "wood_sliding_door" : "iron_sliding_door");
+		setTextureName(MalisisDoors.modid, wood ? "sliding_door_wood" : "sliding_door_iron");
 
-	@Override
-	public void construct()
-	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		//te
+		setRequireRedstone(!wood);
+		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
+		setSound(DoorRegistry.getSound(GlassDoorSound.class));
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		//Item
+		setTab(MalisisDoors.tab);
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		//recipe
+		setOreDictRecipe("AB", "AB", "AB", 'A', wood ? Blocks.planks : Items.iron_ingot, 'B', "blockGlassColorless");
 	}
 }

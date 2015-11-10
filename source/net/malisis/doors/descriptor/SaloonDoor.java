@@ -22,57 +22,50 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.SaloonDoorMovement;
+import net.malisis.doors.sound.SilentDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class SaloonDoor extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public SaloonDoor()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		//Block
+		setMaterial(Material.wood);
+		setHardness(2.5F);
+		setSoundType(Block.soundTypeWood);
+		setName("saloon");
+		setTextureName(MalisisDoors.modid, "saloon_door");
+
+		//TileEntity
+		setOpeningTime(40);
+		setDoubleDoor(true);
+		setMovement(DoorRegistry.getMovement(SaloonDoorMovement.class));
+		setSound(DoorRegistry.getSound(SilentDoorSound.class));
+
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//Recipe
+		setRecipe("AA", "BB", "AA", 'A', Blocks.planks, 'B', Items.stick);
 	}
 
 	@Override
-	public void construct()
+	public void setTextureName(String modid, String textureName)
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		this.modid = modid;
+		this.textureName = textureName;
 	}
 }

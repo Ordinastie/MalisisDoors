@@ -22,57 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.CurtainMovement;
+import net.malisis.doors.sound.SilentDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class Curtain extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public Curtain()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		//Block
+		setMaterial(Material.cloth);
+		setHardness(2.0F);
+		setSoundType(Block.soundTypeCloth);
+		setName("curtain");
+		setTextureName(MalisisDoors.modid, "curtain");
+
+		//TileEntity
+		setOpeningTime(6);
+		setDoubleDoor(true);
+		setMovement(DoorRegistry.getMovement(CurtainMovement.class));
+		setSound(DoorRegistry.getSound(SilentDoorSound.class));
+
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//Recipe
+		setRecipe("AA", "AA", "AA", 'A', Blocks.wool);
 	}
 
-	@Override
-	public void construct()
-	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
-	}
 }

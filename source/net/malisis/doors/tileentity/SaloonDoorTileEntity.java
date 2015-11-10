@@ -22,57 +22,64 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.tileentity;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.minecraft.entity.Entity;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class SaloonDoorTileEntity extends DoorTileEntity
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
+	private boolean openBackward = false;
 
-	public DigicodeGui(DoorTileEntity te)
+	public boolean isBackward()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		return openBackward;
 	}
 
-	@Override
-	public void construct()
+	public void setBackward(boolean backward)
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
+		this.openBackward = backward;
 	}
 
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
+	public void setOpenDirection(Entity entity)
 	{
-		super.keyTyped(keyChar, keyCode);
+		double entityPos = 0;;
+		float tePos = 0;
 
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
+		switch (getDirection())
 		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
+			case NORTH:
+				entityPos = entity.posZ;
+				tePos = pos.getZ() + 0.5F;
+				break;
+			case SOUTH:
+				entityPos = -entity.posZ;
+				tePos = -pos.getZ() - 0.5F;
+				break;
+			case EAST:
+				entityPos = -entity.posX;
+				tePos = -pos.getX() - 0.5F;
+				break;
+			case WEST:
+				entityPos = entity.posX;
+				tePos = pos.getX() + 0.5F;
+			default:
+				break;
 		}
+
+		openBackward = entityPos < tePos;
+		//	MalisisCore.message(getDirection() + "  = B ? " + openBackward + " (" + entityPos + " > " + (tePos) + ")");
+	}
+
+	@Override
+	public DoorTileEntity getDoubleDoor()
+	{
+		SaloonDoorTileEntity te = (SaloonDoorTileEntity) super.getDoubleDoor();
+		if (te != null)
+			te.setBackward(openBackward);
+		return te;
 	}
 }

@@ -22,57 +22,42 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.SlidingSplitDoorMovement;
+import net.malisis.doors.sound.PneumaticSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class FactoryDoor extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public FactoryDoor()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
-	}
+		//Block
+		setMaterial(Material.iron);
+		setHardness(4.0F);
+		setSoundType(Block.soundTypeMetal);
+		setName("factory_door");
+		setTextureName(MalisisDoors.modid, "factory_door");
 
-	@Override
-	public void construct()
-	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		//TileEntity
+		setOpeningTime(12);
+		setDoubleDoor(true);
+		setMovement(DoorRegistry.getMovement(SlidingSplitDoorMovement.class));
+		setSound(DoorRegistry.getSound(PneumaticSound.class));
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		//Item
+		setTab(MalisisDoors.tab);
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		//Recipe
+		setRecipe("AA", "BB", "AA", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
 	}
 }
