@@ -22,57 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.descriptor;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.TrapDoorDescriptor;
+import net.malisis.doors.movement.TrapDoorMovement;
+import net.malisis.doors.sound.VanillaDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class VanillaTrapDoor extends TrapDoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public static enum Type
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		WOOD, IRON
 	}
 
-	@Override
-	public void construct()
+	public VanillaTrapDoor(Type type)
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		//Block
+		setOpeningTime(6);
+		setMaterial(type == Type.IRON ? Material.iron : Material.wood);
+		setHardness(type == Type.IRON ? 5.0F : 3.0F);
+		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
+		setName(type == Type.IRON ? "iron_trapdoor" : "trapdoor");
+		setTextureName("minecraft", type == Type.IRON ? "blocks/iron_trapdoor" : "blocks/trapdoor");
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		//te
+		setRequireRedstone(type == Type.IRON);
+		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
+		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		//item
+		setTab(CreativeTabs.tabRedstone);
 	}
 }

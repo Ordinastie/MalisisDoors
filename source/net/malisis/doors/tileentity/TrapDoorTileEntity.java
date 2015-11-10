@@ -22,57 +22,45 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.tileentity;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.core.util.AABBUtils;
+import net.minecraft.block.BlockTrapDoor;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class TrapDoorTileEntity extends DoorTileEntity
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public TrapDoorTileEntity()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		openProperty = BlockTrapDoor.OPEN;
 	}
 
 	@Override
-	public void construct()
+	public IBlockState getBlockState()
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
+		return worldObj.getBlockState(pos);
 	}
 
 	@Override
-	protected void keyTyped(char keyChar, int keyCode)
+	public EnumFacing getDirection()
 	{
-		super.keyTyped(keyChar, keyCode);
+		return (EnumFacing) getBlockState().getValue(BlockTrapDoor.FACING);
+	}
 
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+	public boolean isTop()
+	{
+		return getBlockState().getValue(BlockTrapDoor.HALF) == BlockTrapDoor.DoorHalf.TOP;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return AABBUtils.identity(pos);
 	}
 }

@@ -22,57 +22,35 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.malisis.core.block.IRegisterable;
+import net.malisis.doors.block.TrapDoor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class TrapDoorDescriptor extends DoorDescriptor
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	@Override
+	public void create()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		block = new TrapDoor(this);
 	}
 
 	@Override
-	public void construct()
+	public DoorDescriptor register()
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		if (block == null)
+			create();
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
+		((IRegisterable) block).register();
+		if (recipe != null)
+			GameRegistry.addRecipe(new ItemStack(block, numCrafted), recipe);
 
-		addToScreen(window);
-
-		registerKeyListener(digicode);
-	}
-
-	@Override
-	protected void keyTyped(char keyChar, int keyCode)
-	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		return this;
 	}
 }

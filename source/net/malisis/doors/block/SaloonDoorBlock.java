@@ -24,19 +24,14 @@
 
 package net.malisis.doors.block;
 
-import net.malisis.core.block.IBlockDirectional;
-import net.malisis.core.block.MalisisBlock;
-import net.malisis.core.inventory.IInventoryProvider;
-import net.malisis.core.inventory.MalisisInventory;
-import net.malisis.core.renderer.icon.provider.SidesIconProvider;
-import net.malisis.core.util.TileEntityUtils;
-import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.tileentity.DoorFactoryTileEntity;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.iconprovider.SaloonDoorIconProvider;
+import net.malisis.doors.renderer.SaloonDoorRenderer;
+import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -48,52 +43,57 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
+@MalisisRendered(SaloonDoorRenderer.class)
+public class SaloonDoorBlock extends Door
 {
-	public DoorFactory()
+	public SaloonDoorBlock(DoorDescriptor desc)
 	{
-		super(Material.iron);
-		setCreativeTab(MalisisDoors.tab);
-		setName("door_factory");
-		setHardness(3.0F);
+		super(desc);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void createIconProvider(Object object)
 	{
-		SidesIconProvider ip = new SidesIconProvider(MalisisDoors.modid + ":blocks/door_factory_side");
-		ip.setSideIcon(EnumFacing.SOUTH, MalisisDoors.modid + ":blocks/door_factory");
-		iconProvider = ip;
+		iconProvider = new SaloonDoorIconProvider(descriptor);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (world.isRemote)
-			return true;
-
-		if (player.isSneaking())
-			return false;
-
-		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
-		MalisisInventory.open((EntityPlayerMP) player, te);
 		return true;
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
-		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
-		if (provider != null)
-			provider.breakInventories(world, pos);
-		super.breakBlock(world, pos, state);
+		if (!(entity instanceof EntityPlayer))
+			return;
+
+		SaloonDoorTileEntity te = (SaloonDoorTileEntity) getDoor(world, pos);
+		if (te == null)
+			return;
+
+		if (te.getDescriptor() == null)
+			return;
+
+		if (te.isMoving())
+			return;
+
+		te.setOpenDirection(entity);
+
+		if (world.isRemote)
+			return;
+
+		te.openOrCloseDoor();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new DoorFactoryTileEntity();
-	}
+		if (isTop(state))
+			return null;
 
+		return new SaloonDoorTileEntity();
+	}
 }

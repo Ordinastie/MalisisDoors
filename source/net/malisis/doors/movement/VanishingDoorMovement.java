@@ -22,57 +22,45 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.movement;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
+import net.malisis.core.block.BoundingBoxType;
+import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.animation.transformation.AlphaTransform;
+import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
+import net.minecraft.util.AxisAlignedBB;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class VanishingDoorMovement implements IDoorMovement
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
 
-	public DigicodeGui(DoorTileEntity te)
+	@Override
+	public AxisAlignedBB getOpenBoundingBox(DoorTileEntity tileEntity, boolean topBlock, BoundingBoxType type)
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		if (type == BoundingBoxType.COLLISION)
+			return null;
+
+		return IDoorMovement.getFullBoundingBox(topBlock, type);
 	}
 
 	@Override
-	public void construct()
+	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
-
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
+		AlphaTransform alpha = new AlphaTransform(255, 0);
+		alpha.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
+		alpha.forTicks(tileEntity.getDescriptor().getOpeningTime());
+		return new Animation[] { new Animation(rp, alpha) };
 	}
 
 	@Override
-	protected void keyTyped(char keyChar, int keyCode)
+	public boolean isSpecial()
 	{
-		super.keyTyped(keyChar, keyCode);
-
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
-		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
-		}
+		return false;
 	}
 }

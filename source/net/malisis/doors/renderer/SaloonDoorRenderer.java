@@ -22,57 +22,59 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.gui;
+package net.malisis.doors.renderer;
 
-import net.malisis.core.client.gui.Anchor;
-import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
-import net.malisis.doors.network.DigicodeMessage;
-import net.malisis.doors.tileentity.DoorTileEntity;
+import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.tileentity.SaloonDoorTileEntity;
+import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author Ordinastie
  *
  */
-public class DigicodeGui extends MalisisGui
+public class SaloonDoorRenderer extends DoorRenderer
 {
-	DoorTileEntity te;
-	Digicode digicode;
-	String expected;
-
-	public DigicodeGui(DoorTileEntity te)
+	public SaloonDoorRenderer()
 	{
-		this.te = te;
-		expected = te.getDescriptor().getCode();
+		super(false);
+		registerFor(SaloonDoorTileEntity.class);
 	}
 
 	@Override
-	public void construct()
+	protected void initialize()
 	{
-		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
+		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid + ":models/saloon_door.obj");
+		model = new MalisisModel(rl);
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
-		window.add(digicode);
-
-		addToScreen(window);
-
-		registerKeyListener(digicode);
+		initParams();
 	}
 
 	@Override
-	protected void keyTyped(char keyChar, int keyCode)
+	protected void renderTileEntity()
 	{
-		super.keyTyped(keyChar, keyCode);
+		initialize();
+		enableBlending();
+		ar.setStartTime(tileEntity.getTimer().getStart());
 
-		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_NUMPADENTER)
+		setup();
+
+		if (!tileEntity.isHingeLeft())
+			model.rotate(180, 0, 1, 0, 0, 0, 0);
+
+		if (tileEntity.getMovement() != null)
 		{
-			if (digicode.isValidCode())
-			{
-				close();
-				DigicodeMessage.send(te);
-			}
+			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			ar.animate(anims);
 		}
+
+		next(GL11.GL_POLYGON);
+		//model.render(this, rp);
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		model.render(this, rp);
 	}
+
 }
