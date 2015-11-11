@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.7.10-1.10"
+version = "1.8-2.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
@@ -35,8 +35,8 @@ sourceSets
 
 dependencies
 {
-	compile 'org.projectlombok:lombok:1.14.8'
-	compile 'net.malisis:malisiscore:1.7.10-0.12.9:dev'	
+	compile 'net.malisis:malisiscore:1.8-1.0.0:dev'
+	//compile files('../MalisisCore/build/libs/malisiscore-1.8-1.0.0-SNAPSHOT-dev.jar')	
 }
 
 // because the normal output has been made to be obfuscated
@@ -52,7 +52,7 @@ artifacts {
 }
 
 minecraft {
-	version = "1.7.10-10.13.2.1342-1.7.10"
+	version = "1.8-11.14.3.1487"
 	if(file("../../run").exists()) 	{
 		runDir = "../../run/assets"
 	}
@@ -62,7 +62,7 @@ minecraft {
 	
 	replace '${version}', project.version
     replaceIn "MalisisDoors.java"
-    mappings = "stable_12"
+    mappings = "snapshot_20150711"
 }
 
 processResources
