@@ -118,7 +118,7 @@ uploadArchives()
 					{
 						name project.archivesBaseName
 						packaging 'jar'
-						description 'Animations for doors, new ones, mixed blocks and vanishing blocks.'
+						description 'Animations for doors, new doors, trapdoors, fence gates.'
 						url 'https://github.com/Ordinastie/MalisisDoors'
 						scm 
 						{
