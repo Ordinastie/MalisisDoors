@@ -52,6 +52,7 @@ import net.malisis.doors.descriptor.SlidingTrapDoor;
 import net.malisis.doors.descriptor.VanillaDoor;
 import net.malisis.doors.descriptor.VanillaTrapDoor;
 import net.malisis.doors.descriptor.VanillaTrapDoor.Type;
+import net.malisis.doors.descriptor.WoodTrapDoor;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.item.ForcefieldItem;
@@ -272,6 +273,11 @@ public class Registers
 		DoorDescriptor desc = new SlidingTrapDoor().register();
 		slidingTrapDoor = (TrapDoor) desc.getBlock();
 		slidingTrapDoorItem = desc.getItem();
+
+		for (WoodTrapDoor.Type type : WoodTrapDoor.Type.values())
+		{
+			desc = new WoodTrapDoor(type).register();
+		}
 	}
 
 	private static void registerCamoFenceGate()

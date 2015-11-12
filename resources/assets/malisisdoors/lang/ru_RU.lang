@@ -42,6 +42,11 @@ tile.iron_trapdoor.name=Железный люк
 tile.sliding_trapdoor.name=Задвижной люк
 tile.saloon.name=Дверь салуна
 
+
+
+
+
+
 malisisdoors.command.usage=Используйте /malisisdoors <команда>, где "команда" - это "config" или "version"
 
 config.title=Настройки MalisisDoors

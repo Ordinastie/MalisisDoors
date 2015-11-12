@@ -42,6 +42,11 @@ tile.rustyLadder.name=生锈铁梯
 
 
 
+
+
+
+
+
 malisisdoors.command.usage=使用指令/malisisdoors <command>需在command处键入配置名或版本
 
 config.title=MalisisDoors模组配置

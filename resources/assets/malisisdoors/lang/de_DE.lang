@@ -42,6 +42,11 @@ tile.rustyLadder.name=Rostige Leiter
 
 
  
+ 
+ 
+ 
+ 
+ 
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
 config.title=MalisisDoors - Konfiguration

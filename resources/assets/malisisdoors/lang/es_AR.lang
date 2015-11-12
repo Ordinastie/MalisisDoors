@@ -42,6 +42,11 @@ tile.shoji_door.name=Puerta Shoji
 
 
 
+
+
+
+
+
 malisisdoors.command.usage=Use /malisisdoors command con el argumento config o version
 
 config.title=Configuración de MalisisDoors
