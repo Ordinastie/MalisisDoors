@@ -73,6 +73,7 @@ import net.malisis.doors.item.VanishingBlockItem;
 import net.malisis.doors.trapdoor.descriptor.IronTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.SlidingTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.VanillaTrapDoor;
+import net.malisis.doors.trapdoor.descriptor.WoodTrapDoor;
 import net.malisis.doors.trapdoor.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -252,6 +253,11 @@ public class Registers
 		desc = new SlidingTrapDoor().register();
 		slidingTrapDoor = desc.getBlock();
 		slidingTrapDoorItem = desc.getItem();
+
+		for (WoodTrapDoor.Type type : WoodTrapDoor.Type.values())
+		{
+			desc = new WoodTrapDoor(type).register();
+		}
 	}
 
 	private static void registerPlayerSensor()

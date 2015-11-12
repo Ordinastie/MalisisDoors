@@ -44,7 +44,7 @@ tile.door_birch.name=Porte en bois de bouleau
 tile.door_jungle.name=Porte en bois d'acajou
 tile.door_acacia.name=Porte en bois d'acacia
 tile.door_dark_oak.name=Porte en bois de chêne noir
-tile.iron_tropdoor.name=Trappe en fer
+tile.iron_trapdoor.name=Trappe en fer
 tile.sliding_trapdoor.name=Trappe coulissante
 tile.saloon.name=Porte de saloon
 
@@ -55,6 +55,12 @@ tile.jungleFenceGate.name=Portillon en bois d'acajou
 tile.darkOakFenceGate.name=Portillon en bois de chêne noir
 tile.acaciaFenceGate.name=Portillon en bois d'acacia
 tile.camoFenceGate.name=Portillon camouflée
+
+tile.trapdoor_acacia.name=Trappe en bois d'acacia
+tile.trapdoor_birch.name=Trappe en bois de bouleau
+tile.trapdoor_dark_oak.name=Trappe en bois de chêne noir
+tile.trapdoor_jungle.name=Trappe en bois d'acajou
+tile.trapdoor_spruce.name=Trappe en bois de sapin
 
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version

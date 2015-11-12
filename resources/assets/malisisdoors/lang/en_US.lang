@@ -58,6 +58,12 @@ tile.darkOakFenceGate.name=Dark Oak Fence Gate
 tile.acaciaFenceGate.name=Acacia Fence Gate
 tile.camoFenceGate.name=Camo Fence Gate
 
+tile.trapdoor_acacia.name=Acacia Trapdoor
+tile.trapdoor_birch.name=Birch Trapdoor
+tile.trapdoor_dark_oak.name=Dark Oak Trapdoor
+tile.trapdoor_jungle.name=Jungle Trapdoor
+tile.trapdoor_spruce.name=Spruce Trapdoor
+
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
