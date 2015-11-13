@@ -113,7 +113,8 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 		if (side == EnumFacing.UP || side == EnumFacing.DOWN)
 			return false;
 
-		return world.getBlockState(pos.offset(side.getOpposite())).getBlock().isSideSolid(world, pos, side);
+		pos = pos.offset(side.getOpposite());
+		return world.getBlockState(pos).getBlock().isSideSolid(world, pos, side);
 	}
 
 	@Override
