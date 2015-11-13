@@ -39,6 +39,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -63,6 +64,12 @@ public class Forcefield extends MalisisBlock implements IMultiBlock
 		setStepSound(soundTypePiston);
 		setName("forcefieldDoor");
 		setTexture(MalisisDoors.modid + ":blocks/forcefield");
+	}
+
+	@Override
+	public Class<? extends ItemBlock> getItemClass()
+	{
+		return null;
 	}
 
 	@Override
