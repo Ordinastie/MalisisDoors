@@ -175,7 +175,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	@Override
 	public void update()
 	{
-		if (camoState == null)
+		if (worldObj.isRemote && camoState == null)
 			updateAll();
 		super.update();
 	}
