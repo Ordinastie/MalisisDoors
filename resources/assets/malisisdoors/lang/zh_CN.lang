@@ -9,9 +9,25 @@ item.custom_door.name=自定义门
 item.shoji_door.name=障子门
 item.rustyHatch.name=生锈舱门
 item.rustyHandle.name=生锈手轮
-item.curtain.name=幕布
 item.carriage_door.name=宅门
 item.forcefieldItem.name=力场控制器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -29,10 +45,26 @@ tile.shoji_door.name=障子门
 tile.wood_sliding_door.name=木框玻璃门
 tile.iron_sliding_door.name=铁框玻璃门
 tile.rustyHatch.name=生锈舱门
-tile.curtain.name=幕布
 tile.carriage_door.name=宅门
 tile.forcefieldDoor.name=力场
 tile.rustyLadder.name=生锈铁梯
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

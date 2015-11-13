@@ -69,6 +69,7 @@ import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -251,9 +252,8 @@ public class Registers
 		shojiDoorItem = (DoorItem) desc.getItem();
 
 		//Curtains
-		desc = new Curtain().register();
-		curtains = (Door) desc.getBlock();
-		curtainsItem = (DoorItem) desc.getItem();
+		for (EnumDyeColor color : EnumDyeColor.values())
+			new Curtain(color).register();
 	}
 
 	private static void registerSaloonDoor()

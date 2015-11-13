@@ -9,9 +9,25 @@ item.custom_door.name=Eigene Tür
 item.shoji_door.name=Shoji-Schiebetür
 item.rustyHatch.name=Rostige Luke
 item.rustyHandle.name=Rostiger Griff
-item.curtain.name=Gardine
 item.carriage_door.name=Kutschentor
 item.forcefieldItem.name=Kraftfeldregler
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -29,7 +45,6 @@ tile.shoji_door.name=Shoji-Schiebetür
 tile.wood_sliding_door.name=Holz-Schiebetür
 tile.iron_sliding_door.name=Eisen-Schiebetür
 tile.rustyHatch.name=Rostige Luke
-tile.curtain.name=Gardine
 tile.carriage_door.name=Wagentor
 tile.forcefieldDoor.name=Forcefield
 tile.rustyLadder.name=Rostige Leiter
@@ -41,6 +56,23 @@ tile.rustyLadder.name=Rostige Leiter
 
 
 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  

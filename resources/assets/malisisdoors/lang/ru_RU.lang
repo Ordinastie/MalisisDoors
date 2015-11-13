@@ -9,7 +9,6 @@ item.custom_door.name=Пользовательская дверь
 item.shoji_door.name=Дверь Сёдзи
 item.rustyHatch.name=Ржавый люк
 item.rustyHandle.name=Ржавый вентиль
-item.curtain.name=Занавеска
 item.carriage_door.name=Дверь-фрейм
 item.forcefieldItem.name=Контроллер силового поля
 item.door_spruce.name=Дверь из ели
@@ -18,6 +17,23 @@ item.door_jungle.name=Дверь из тропического дерева
 item.door_acacia.name=Дверь из акации
 item.door_dark_oak.name=Дверь из тёмного дуба
 item.saloon.name=Дверь салуна
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 tile.garage_door.name=Гаражная дверь
 tile.jail_door.name=Тюремная дверь
@@ -29,7 +45,6 @@ tile.shoji_door.name=Дверь Сёдзи
 tile.wood_sliding_door.name=Деревянная стеклянная дверь
 tile.iron_sliding_door.name=Железная стеклянная дверь
 tile.rustyHatch.name=Ржавый люк
-tile.curtain.name=Занавеска
 tile.carriage_door.name=Дверь-фрейм
 tile.forcefieldDoor.name=Силовое поле
 tile.rustyLadder.name=Ржавая лестница
@@ -41,6 +56,23 @@ tile.door_dark_oak.name=Дверь из тёмного дуба
 tile.iron_trapdoor.name=Железный люк
 tile.sliding_trapdoor.name=Задвижной люк
 tile.saloon.name=Дверь салуна
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
