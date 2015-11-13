@@ -32,6 +32,7 @@ import net.malisis.doors.door.sound.SilentDoorSound;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author Ordinastie
@@ -39,14 +40,14 @@ import net.minecraft.init.Blocks;
  */
 public class Curtain extends DoorDescriptor
 {
-	public Curtain()
+	public Curtain(String color, int meta)
 	{
 		//Block
 		setMaterial(Material.cloth);
 		setHardness(2.0F);
 		setSoundType(Block.soundTypeCloth);
-		setName("curtain");
-		setTextureName(MalisisDoors.modid + ":curtain");
+		setName("curtain_" + color);
+		setTextureName(MalisisDoors.modid + ":curtains/curtain_" + color);
 
 		//TileEntity
 		setOpeningTime(6);
@@ -58,7 +59,7 @@ public class Curtain extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe("AA", "AA", "AA", 'A', Blocks.wool);
+		setRecipe("AA", "AA", "AA", 'A', new ItemStack(Blocks.wool, 1, meta));
 	}
 
 }

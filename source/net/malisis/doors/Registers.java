@@ -80,6 +80,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -215,9 +216,8 @@ public class Registers
 		shojiDoorItem = desc.getItem();
 
 		//Curtains
-		desc = new Curtain().register();
-		curtains = desc.getBlock();
-		curtainsItem = desc.getItem();
+		for (int i = 0; i < ItemDye.dyeIcons.length; i++)
+			new Curtain(ItemDye.dyeIcons[i], ~i & 15).register();
 	}
 
 	private static void registerSaloonDoor()
