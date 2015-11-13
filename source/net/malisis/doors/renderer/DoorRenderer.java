@@ -173,9 +173,6 @@ public class DoorRenderer extends MalisisRenderer
 
 	protected void renderItem()
 	{
-		if (itemStack.getTagCompound() == null)
-			return;
-
 		enableBlending();
 		model.render(this, rp);
 
