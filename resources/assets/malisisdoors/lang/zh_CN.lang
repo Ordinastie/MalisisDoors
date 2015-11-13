@@ -139,12 +139,12 @@ door_movement.rotate_around=自由旋转
 door_movement.rotate_slide=旋转和滑动
 door_movement.rotate_place=旋转和替换
 door_movement.vanishing_door=消失
-door_movement.spinning_door=Spinning
-door_movement.spinning_around_door=Vortex
-door_movement.double_slide_left=Double sliding left
-door_movement.double_slide_right=Double sliding right
-door_movement.double_rotate_left=Double rotating left
-door_movement.double_rotate_right=Double rotating right
+door_movement.spinning_door=飞旋
+door_movement.spinning_around_door=漩涡
+door_movement.double_slide_left=双滑门(左)
+door_movement.double_slide_right=双滑门(右)
+door_movement.double_rotate_left=折叠门(左)
+door_movement.double_rotate_right=折叠门(右)
 
 
 
