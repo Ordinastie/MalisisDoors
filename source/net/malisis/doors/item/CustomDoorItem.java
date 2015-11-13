@@ -175,8 +175,8 @@ public class CustomDoorItem extends DoorItem
 			frame = Blocks.planks.getDefaultState();
 		if (top == null)
 			top = Blocks.glass.getDefaultState();
-		if (top == null)
-			top = Blocks.glass.getDefaultState();
+		if (bottom == null)
+			bottom = Blocks.glass.getDefaultState();
 
 		return new ImmutableTriple<IBlockState, IBlockState, IBlockState>(frame, top, bottom);
 	}
