@@ -58,7 +58,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 	{
 		rl = new ResourceLocation[50];
 		for (int i = 0; i < 50; i++)
-			rl[i] = new ResourceLocation(String.format(MalisisDoors.modid + ":textures/blocks/forcefield%02d.png", i));
+			rl[i] = new ResourceLocation(String.format(MalisisDoors.modid + ":textures/blocks/forcefield/forcefield%02d.png", i));
 
 		Shape shape = new Shape(new NorthFace());
 		shape.scale(1, 1, 0);
