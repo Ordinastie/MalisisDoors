@@ -28,6 +28,7 @@ import java.util.List;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
+import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.IIconProvider;
 import net.malisis.core.renderer.icon.IMetaIconProvider;
@@ -45,7 +46,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@MalisisRendered
+@MalisisRendered(item = DefaultRenderer.Item.class)
 public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterable
 {
 	private DoorDescriptor descriptor;
