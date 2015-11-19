@@ -84,7 +84,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 
 	public void updateAll()
 	{
-		if (worldObj.isRemote)
+		if (!worldObj.isRemote)
 			return;
 
 		Pair<IBlockState, Integer> pair = updateCamo();
