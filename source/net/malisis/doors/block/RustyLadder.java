@@ -74,6 +74,14 @@ public class RustyLadder extends MalisisBlock implements IBlockDirectional
 	}
 
 	@Override
+	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
+	{
+		if (side == EnumFacing.UP || side == EnumFacing.DOWN)
+			return false;
+		return worldIn.isSideSolid(pos.offset(side.getOpposite()), side, true);
+	}
+
+	@Override
 	public boolean canPlaceBlockAt(World world, BlockPos pos)
 	{
 		return world.isSideSolid(pos.west(), EnumFacing.EAST, true) || world.isSideSolid(pos.east(), EnumFacing.WEST, true)
