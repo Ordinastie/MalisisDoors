@@ -74,6 +74,9 @@ public class FenceGateTileEntity extends DoorTileEntity
 
 	public void updateAll()
 	{
+		if (worldObj.isRemote)
+			return;
+
 		Pair<BlockState, Integer> pair = updateCamo();
 		camoState = pair.getLeft();
 		camoColor = pair.getRight();
