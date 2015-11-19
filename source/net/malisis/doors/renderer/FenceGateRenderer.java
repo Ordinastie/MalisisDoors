@@ -116,6 +116,7 @@ public class FenceGateRenderer extends DoorRenderer
 	{
 		if (renderType == RenderType.ITEM)
 		{
+			rp.reset();
 			model.resetState();
 			model.render(this, rp);
 			return;
@@ -141,8 +142,11 @@ public class FenceGateRenderer extends DoorRenderer
 			model.translate(0, -.19F, 0);
 
 		//rp.icon.set(tileEntity.getCamoIcon());
+		rp.interpolateUV.set(false);
 		rp.colorMultiplier.set(tileEntity.getCamoColor());
-		//rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.useEnvironmentBrightness.set(false);
+		rp.calculateAOColor.set(false);
+		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 	}
 
 	@Override

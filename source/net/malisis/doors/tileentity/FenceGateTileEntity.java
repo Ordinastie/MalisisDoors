@@ -45,8 +45,8 @@ import org.apache.commons.lang3.tuple.Pair;
 public class FenceGateTileEntity extends DoorTileEntity
 {
 	private IBlockState camoState;
-	private int camoColor;
-	private boolean isWall;
+	private int camoColor = -1;
+	private boolean isWall = false;
 
 	public FenceGateTileEntity()
 	{
@@ -84,6 +84,9 @@ public class FenceGateTileEntity extends DoorTileEntity
 
 	public void updateAll()
 	{
+		if (worldObj.isRemote)
+			return;
+
 		Pair<IBlockState, Integer> pair = updateCamo();
 		camoState = pair.getLeft();
 		camoColor = pair.getRight();
@@ -170,14 +173,6 @@ public class FenceGateTileEntity extends DoorTileEntity
 			return false;
 
 		return true;
-	}
-
-	@Override
-	public void update()
-	{
-		if (worldObj.isRemote && camoState == null)
-			updateAll();
-		super.update();
 	}
 
 	@Override
