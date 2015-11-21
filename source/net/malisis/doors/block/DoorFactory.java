@@ -26,7 +26,6 @@ package net.malisis.doors.block;
 
 import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
-import net.malisis.core.inventory.IInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.renderer.icon.provider.SidesIconProvider;
 import net.malisis.core.util.TileEntityUtils;
@@ -76,7 +75,7 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IB
 		if (player.isSneaking())
 			return false;
 
-		IInventoryProvider te = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
+		DoorFactoryTileEntity te = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, pos);
 		MalisisInventory.open((EntityPlayerMP) player, te);
 		return true;
 	}
@@ -84,7 +83,7 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IB
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		IInventoryProvider provider = TileEntityUtils.getTileEntity(IInventoryProvider.class, world, pos);
+		DoorFactoryTileEntity provider = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, pos);
 		if (provider != null)
 			provider.breakInventories(world, pos);
 		super.breakBlock(world, pos, state);

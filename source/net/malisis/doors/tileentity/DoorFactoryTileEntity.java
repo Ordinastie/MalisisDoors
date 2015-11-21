@@ -25,7 +25,7 @@
 package net.malisis.doors.tileentity;
 
 import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.inventory.IInventoryProvider;
+import net.malisis.core.inventory.IInventoryProvider.IDirectInventoryProvider;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.inventory.MalisisSlot;
@@ -53,7 +53,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvider
+public class DoorFactoryTileEntity extends TileEntity implements IDirectInventoryProvider
 {
 	private MalisisInventory inventory;
 	private IDoorMovement doorMovement;
@@ -166,7 +166,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IInventoryProvi
 	}
 
 	@Override
-	public MalisisInventory getInventory(Object... data)
+	public MalisisInventory getInventory()
 	{
 		return inventory;
 	}
