@@ -128,6 +128,7 @@ public class Registers
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
+		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 	}
 
 	private static void registerVanillaDoors()
@@ -154,7 +155,6 @@ public class Registers
 	{
 		oakFenceGate = new FenceGate(Type.OAK);
 		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "field_150396_be", oakFenceGate, Blocks.fence_gate);
-		GameRegistry.registerTileEntity(FenceGateTileEntity.class, "fenceGateTileEntity");
 	}
 
 	private static void registerWoodDoors()
