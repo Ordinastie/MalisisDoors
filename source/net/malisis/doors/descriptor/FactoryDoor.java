@@ -47,6 +47,7 @@ public class FactoryDoor extends DoorDescriptor
 		setSoundType(Block.soundTypeMetal);
 		setName("factory_door");
 		setTextureName(MalisisDoors.modid, "factory_door");
+		setNumCrafted(3);
 
 		//TileEntity
 		setOpeningTime(12);

@@ -48,6 +48,7 @@ public class ShojiDoor extends DoorDescriptor
 		setSoundType(Block.soundTypeCloth);
 		setName("shoji_door");
 		setTextureName(MalisisDoors.modid, "shoji_door");
+		setNumCrafted(3);
 
 		//te
 		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));

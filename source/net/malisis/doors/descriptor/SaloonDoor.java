@@ -48,6 +48,7 @@ public class SaloonDoor extends DoorDescriptor
 		setSoundType(Block.soundTypeWood);
 		setName("saloon");
 		setTextureName(MalisisDoors.modid, "saloon_door");
+		setNumCrafted(3);
 
 		//TileEntity
 		setOpeningTime(40);

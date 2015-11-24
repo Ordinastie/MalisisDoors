@@ -70,6 +70,7 @@ public class VanillaDoor extends DoorDescriptor
 		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
 		setName(type.name);
 		setTextureName("minecraft", type.texture);
+		setNumCrafted(3);
 
 		//te
 		setRequireRedstone(type == Type.IRON);
