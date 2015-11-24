@@ -80,7 +80,7 @@ public class FenceGateMovement implements IDoorMovement
 		if (doubleDoor != null)
 		{
 			boolean left = true;
-			if (tileEntity.getDirection() == Door.DIR_NORTH || tileEntity.getDirection() == Door.DIR_NORTH)
+			if (tileEntity.getDirection() == Door.DIR_NORTH || tileEntity.getDirection() == Door.DIR_SOUTH)
 				left = tileEntity.zCoord < doubleDoor.zCoord;
 			else
 				left = tileEntity.xCoord > doubleDoor.xCoord;
