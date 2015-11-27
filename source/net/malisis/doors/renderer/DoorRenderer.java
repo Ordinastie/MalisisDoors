@@ -33,9 +33,11 @@ import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.ITransformable;
+import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.BlockDoor;
@@ -166,6 +168,23 @@ public class DoorRenderer extends MalisisRenderer
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		drawShape(model.getShape("top"), rp);
 		set(pos.down());
+	}
+
+	@Override
+	protected boolean shouldRenderFace(Face face, RenderParameters params)
+	{
+		if (block != Blocks.doorOak && block != Blocks.doorAcacia && block != Blocks.doorBirch && block != Blocks.doorDarkOak
+				&& block != Blocks.doorJungle && block != Blocks.doorSpruce && block != Blocks.doorIron)
+			return super.shouldRenderFace(face, params);
+
+		boolean top = blockState.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.UPPER;
+		if (!top && face.name().equals("Top"))
+			return false;
+
+		if (top && face.name().equals("Bottom"))
+			return false;
+
+		return super.shouldRenderFace(face, params);
 	}
 
 	protected void setItem()
