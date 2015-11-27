@@ -27,6 +27,10 @@ package net.malisis.doors.renderer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
@@ -36,15 +40,22 @@ import net.malisis.core.renderer.animation.transformation.ITransformable;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
+import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors.Blocks;
+import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
+import net.malisis.doors.iconprovider.DoorIconProvider;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.BlockDoor;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+@SuppressWarnings("deprecation")
 public class DoorRenderer extends MalisisRenderer
 {
 	protected DoorTileEntity tileEntity;
@@ -57,6 +68,13 @@ public class DoorRenderer extends MalisisRenderer
 	protected Shape shape;
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
+
+	protected Matrix4f gui = new TRSRTransformation(new Vector3f(.15F, -0.2F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90,
+			0)), new Vector3f(.75F, .75F, .75F), null).getMatrix();
+	protected Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0, 0, -0.25F),
+			TRSRTransformation.quatFromYXZDegrees(new Vector3f(90, 0, 0)), new Vector3f(0.3F, 0.3F, 0.3F), null).getMatrix();
+	protected Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
+			new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
 
 	public DoorRenderer()
 	{
@@ -97,6 +115,31 @@ public class DoorRenderer extends MalisisRenderer
 	}
 
 	@Override
+	public boolean isGui3d()
+	{
+		return MalisisDoorsSettings.use3DItems.get();
+	}
+
+	@Override
+	public Matrix4f getTransform(TransformType tranformType)
+	{
+		if (!isGui3d())
+			return DefaultRenderer.item.getTransform(tranformType);
+
+		switch (tranformType)
+		{
+			case GUI:
+				return gui;
+			case FIRST_PERSON:
+				return firstPerson;
+			case THIRD_PERSON:
+				return thirdPerson;
+			default:
+				return null;
+		}
+	}
+
+	@Override
 	public void render()
 	{
 		if (renderType == RenderType.BLOCK)
@@ -110,9 +153,14 @@ public class DoorRenderer extends MalisisRenderer
 			renderTileEntity();
 		}
 
-		//not used for regular doors
 		if (renderType == RenderType.ITEM)
 		{
+			if (!isGui3d())
+			{
+				DefaultRenderer.item.setTransformType(tranformType);
+				DefaultRenderer.item.renderItem(itemStack, partialTick);
+				return;
+			}
 			setItem();
 			setup();
 			renderItem();
@@ -160,9 +208,11 @@ public class DoorRenderer extends MalisisRenderer
 		}
 
 		//model.render(this, rp);
+		topBlock = false;
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		drawShape(model.getShape("bottom"), rp);
 
+		topBlock = true;
 		set(pos.up());
 		set(blockState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
@@ -177,24 +227,43 @@ public class DoorRenderer extends MalisisRenderer
 				&& block != Blocks.doorJungle && block != Blocks.doorSpruce && block != Blocks.doorIron)
 			return super.shouldRenderFace(face, params);
 
-		boolean top = blockState.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.UPPER;
-		if (!top && face.name().equals("Top"))
+		if (!topBlock && face.name().equals("Top"))
 			return false;
 
-		if (top && face.name().equals("Bottom"))
+		if (topBlock && face.name().equals("Bottom"))
 			return false;
 
 		return super.shouldRenderFace(face, params);
 	}
 
 	protected void setItem()
-	{}
+	{
+		direction = EnumFacing.SOUTH;
+		hingeLeft = true;
+	}
 
 	protected void renderItem()
 	{
 		enableBlending();
-		model.render(this, rp);
+		topBlock = false;
+		drawShape(model.getShape("bottom"), rp);
+		topBlock = true;
+		drawShape(model.getShape("top"), rp);
 
 		return;
 	}
+
+	@Override
+	protected MalisisIcon getIcon(Face face, RenderParameters params)
+	{
+		if (params.icon.get() != null)
+			return params.icon.get();
+
+		IIconProvider iconProvider = getIconProvider(params);
+		if (!(iconProvider instanceof DoorIconProvider))
+			return super.getIcon(face, params);
+
+		return ((DoorIconProvider) iconProvider).getIcon(topBlock, hingeLeft, params.textureSide.get());
+	}
+
 }

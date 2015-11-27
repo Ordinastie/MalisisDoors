@@ -88,6 +88,7 @@ config.modifyVanillaDoors.comment1=启用门,栅栏门和陷阱门的动画.
 config.modifyVanillaDoors.comment2=这会完全替换掉门,所以当其他模组试图修改它们时可能会有冲突.
 
 
+
 door_movement.rotating_door=旋转
 door_movement.sliding_door=侧向滑动
 door_movement.sliding_up_door=上滑

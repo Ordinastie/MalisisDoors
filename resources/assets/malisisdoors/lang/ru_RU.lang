@@ -88,6 +88,7 @@ config.modifyVanillaDoors.comment1=Включает анимацию для дв
 config.modifyVanillaDoors.comment2=Это полностью заменит двери, так что могут появиться конфликты, если другой мод попытается изменить их.
 
 
+
 door_movement.rotating_door=Вращение
 door_movement.sliding_door=Сдвиг в сторону
 door_movement.sliding_up_door=Сдвиг вверх

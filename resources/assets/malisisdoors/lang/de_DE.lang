@@ -88,6 +88,7 @@ config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter
 config.modifyVanillaDoors.comment2=Dies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
  
  
+ 
 door_movement.rotating_door=Aufschwingend
 door_movement.sliding_door=Auflgeitend
 door_movement.sliding_up_door=Aufgleitend (hoch)

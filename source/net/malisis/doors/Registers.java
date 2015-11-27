@@ -56,6 +56,7 @@ import net.malisis.doors.descriptor.WoodTrapDoor;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.item.ForcefieldItem;
+import net.malisis.doors.item.SaloonDoorItem;
 import net.malisis.doors.tileentity.CarriageDoorTileEntity;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
@@ -260,7 +261,7 @@ public class Registers
 	{
 		DoorDescriptor desc = new SaloonDoor();
 		saloonDoor = new SaloonDoorBlock(desc);
-		saloonDoorItem = new DoorItem(desc);
+		saloonDoorItem = new SaloonDoorItem(desc);
 
 		desc.set(saloonDoor, saloonDoorItem);
 		desc.register();

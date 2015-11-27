@@ -102,6 +102,12 @@ public class FenceGateRenderer extends DoorRenderer
 	}
 
 	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
+
+	@Override
 	public Matrix4f getTransform(TransformType tranformType)
 	{
 		if (tranformType == TransformType.FIRST_PERSON)

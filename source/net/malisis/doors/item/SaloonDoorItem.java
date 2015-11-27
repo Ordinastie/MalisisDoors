@@ -22,31 +22,21 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors;
+package net.malisis.doors.item;
 
-import java.io.File;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.renderer.SaloonDoorRenderer;
 
-import net.malisis.core.configuration.ConfigurationSetting;
-import net.malisis.core.configuration.Settings;
-import net.malisis.core.configuration.setting.BooleanSetting;
-import net.malisis.core.configuration.setting.Setting;
-
-public class MalisisDoorsSettings extends Settings
+/**
+ * @author Ordinastie
+ *
+ */
+@MalisisRendered(SaloonDoorRenderer.class)
+public class SaloonDoorItem extends DoorItem
 {
-	@ConfigurationSetting
-	public static Setting<Boolean> modifyVanillaDoors = new BooleanSetting("config.modifyVanillaDoors", true);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3DItems = new BooleanSetting("config.use3DItems", false);
-
-	public MalisisDoorsSettings(File file)
+	public SaloonDoorItem(DoorDescriptor desc)
 	{
-		super(file);
-	}
-
-	@Override
-	protected void initSettings()
-	{
-		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
+		super(desc);
 	}
 }

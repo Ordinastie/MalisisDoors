@@ -24,9 +24,6 @@
 
 package net.malisis.doors.renderer;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.face.BottomFace;
@@ -40,9 +37,7 @@ import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -50,7 +45,7 @@ import org.apache.commons.lang3.tuple.Triple;
  * @author Ordinastie
  *
  */
-@SuppressWarnings("deprecation")
+
 public class CustomDoorRenderer extends DoorRenderer
 {
 	public static CustomDoorRenderer instance = new CustomDoorRenderer();
@@ -61,13 +56,6 @@ public class CustomDoorRenderer extends DoorRenderer
 	protected CustomDoorTileEntity tileEntity;
 
 	private float width;
-
-	private Matrix4f gui = new TRSRTransformation(new Vector3f(0, -0.1F, 0),
-			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -45, 0)), new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
-	private Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0, 0, -0.25F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(
-			90, 0, 0)), new Vector3f(0.3F, 0.3F, 0.3F), null).getMatrix();
-	private Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
-			new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
 
 	public CustomDoorRenderer()
 	{
@@ -144,6 +132,12 @@ public class CustomDoorRenderer extends DoorRenderer
 	}
 
 	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
+
+	@Override
 	protected void setItem()
 	{
 		Triple<IBlockState, IBlockState, IBlockState> triple = CustomDoorItem.readNBT(itemStack.getTagCompound());
@@ -196,21 +190,4 @@ public class CustomDoorRenderer extends DoorRenderer
 			return 0xFFFFFF;
 		return renderType == RenderType.TILE_ENTITY ? state.getBlock().colorMultiplier(world, pos) : state.getBlock().getBlockColor();
 	}
-
-	@Override
-	public Matrix4f getTransform(TransformType tranformType)
-	{
-		switch (tranformType)
-		{
-			case GUI:
-				return gui;
-			case FIRST_PERSON:
-				return firstPerson;
-			case THIRD_PERSON:
-				return thirdPerson;
-			default:
-				return null;
-		}
-	}
-
 }

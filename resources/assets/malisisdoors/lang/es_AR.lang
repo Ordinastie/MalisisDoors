@@ -88,6 +88,7 @@ config.modifyVanillaDoors.comment1=Permitir animaciones para puertas, puertas de
 config.modifyVanillaDoors.comment2=Esto reemplaza completamente las puertas; pueden surgir conflictos si otro mod trata de modificarlas también.
 
 
+
 door_movement.rotating_door=Rotación
 door_movement.sliding_door=Desplazamiento hacia el costado
 door_movement.sliding_up_door=Desplazamiento hacia arriba

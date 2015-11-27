@@ -24,6 +24,8 @@
 
 package net.malisis.doors.renderer;
 
+import javax.vecmath.Matrix4f;
+
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
@@ -34,12 +36,14 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
  *
  */
+@SuppressWarnings("deprecation")
 public class TrapDoorRenderer extends DoorRenderer
 {
 	public static TrapDoorRenderer instance = new TrapDoorRenderer();
@@ -76,6 +80,18 @@ public class TrapDoorRenderer extends DoorRenderer
 		slidingTrapDoorModel.storeState();
 
 		initParams();
+	}
+
+	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
+
+	@Override
+	public Matrix4f getTransform(TransformType tranformType)
+	{
+		return null;
 	}
 
 	@Override

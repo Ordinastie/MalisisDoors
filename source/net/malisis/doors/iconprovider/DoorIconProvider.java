@@ -29,14 +29,9 @@ import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.block.Door;
 import net.malisis.doors.descriptor.VanillaDoor;
-import net.malisis.doors.tileentity.DoorTileEntity;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.IBlockAccess;
 
 /**
  * @author Ordinastie
@@ -105,34 +100,29 @@ public class DoorIconProvider implements IBlockIconProvider
 		return itemIcon;
 	}
 
-	@Override
-	public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	public MalisisIcon getIcon(boolean isTop, boolean isHingeLeft, EnumFacing side)
 	{
-		DoorTileEntity te = Door.getDoor(world, pos);
-		if (te == null)
-			return itemIcon;
-
 		boolean flipH = false;
 		boolean flipV = false;
 
 		switch (side)
 		{
 			case WEST:
-				side = te.isHingeLeft() ? EnumFacing.WEST : EnumFacing.EAST;
+				side = isHingeLeft ? EnumFacing.WEST : EnumFacing.EAST;
 				break;
 			case EAST:
-				side = te.isHingeLeft() ? EnumFacing.EAST : EnumFacing.WEST;
+				side = isHingeLeft ? EnumFacing.EAST : EnumFacing.WEST;
 				break;
 			case UP:
 			case DOWN:
-				flipV = te.isHingeLeft();
+				flipV = isHingeLeft;
 			case NORTH:
 			case SOUTH:
-				flipH = te.isHingeLeft();
+				flipH = isHingeLeft;
 				break;
 		}
 
-		MalisisIcon icon = te.isTopBlock(pos) ? iconTop[side.getIndex()] : iconBottom[side.getIndex()];
+		MalisisIcon icon = isTop ? iconTop[side.getIndex()] : iconBottom[side.getIndex()];
 		icon.flip(flipH, flipV);
 
 		return icon;

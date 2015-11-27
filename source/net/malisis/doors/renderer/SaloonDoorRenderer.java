@@ -24,11 +24,14 @@
 
 package net.malisis.doors.renderer;
 
+import javax.vecmath.Vector3f;
+
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -51,12 +54,14 @@ public class SaloonDoorRenderer extends DoorRenderer
 		model = new MalisisModel(rl);
 
 		initParams();
+
+		gui = new TRSRTransformation(new Vector3f(.0F, -0.28F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
+				new Vector3f(1F, 1F, 1F), null).getMatrix();
 	}
 
 	@Override
 	protected void renderTileEntity()
 	{
-		initialize();
 		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
@@ -77,4 +82,10 @@ public class SaloonDoorRenderer extends DoorRenderer
 		model.render(this, rp);
 	}
 
+	@Override
+	protected void renderItem()
+	{
+		next(GL11.GL_POLYGON);
+		model.render(this, rp);
+	}
 }
