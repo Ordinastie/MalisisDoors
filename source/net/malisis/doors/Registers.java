@@ -284,7 +284,8 @@ public class Registers
 	{
 		camoFenceGate = new FenceGate(FenceGate.Type.CAMO);
 		camoFenceGate.register();
-		GameRegistry.addRecipe(new ItemStack(camoFenceGate), "ABC", 'A', acaciaFenceGate, 'B', jungleFenceGate, 'C', birchFenceGate);
+		GameRegistry.addRecipe(new ItemStack(camoFenceGate), "ABC", 'A', Blocks.acacia_fence_gate, 'B', Blocks.jungle_fence_gate, 'C',
+				Blocks.birch_fence_gate);
 	}
 
 	private static void registerGarageDoor()
