@@ -74,7 +74,7 @@ public class DoorDescriptor
 
 	//item
 	protected CreativeTabs tab;
-	protected int maxStackSize = 1;
+	protected int maxStackSize = 64;
 
 	//recipe
 	protected Object[] recipe;
