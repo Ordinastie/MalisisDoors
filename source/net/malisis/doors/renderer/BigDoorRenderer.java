@@ -30,11 +30,12 @@ import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
+import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.block.CarriageDoor;
-import net.malisis.doors.block.CarriageDoor.CarriageDoorIconProvider;
-import net.malisis.doors.tileentity.CarriageDoorTileEntity;
+import net.malisis.doors.block.BigDoor;
+import net.malisis.doors.block.BigDoor.BigDoorIconProvider;
+import net.malisis.doors.tileentity.BigDoorTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -44,10 +45,10 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class CarriageDoorRenderer extends MalisisRenderer
+public class BigDoorRenderer extends MalisisRenderer
 {
-	private CarriageDoor block;
-	private CarriageDoorTileEntity tileEntity;
+	private BigDoor block;
+	private BigDoorTileEntity tileEntity;
 
 	private ResourceLocation rl;
 	private MalisisModel model;
@@ -59,15 +60,15 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 	private EnumFacing direction;
 
-	public CarriageDoorRenderer()
+	public BigDoorRenderer()
 	{
-		registerFor(CarriageDoorTileEntity.class);
+		registerFor(BigDoorTileEntity.class);
 	}
 
 	@Override
 	protected void initialize()
 	{
-		rl = new ResourceLocation(MalisisDoors.modid, "models/carriagedoor.obj");
+		rl = new ResourceLocation(MalisisDoors.modid, "models/big_door.obj");
 		model = new MalisisModel(rl);
 		frame = model.getShape("Frame");
 		doorLeft = model.getShape("Left");
@@ -82,8 +83,8 @@ public class CarriageDoorRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		block = (CarriageDoor) super.block;
-		tileEntity = (CarriageDoorTileEntity) super.tileEntity;
+		block = (BigDoor) super.block;
+		tileEntity = (BigDoorTileEntity) super.tileEntity;
 		if (super.tileEntity == null)
 			return;
 
@@ -91,6 +92,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 		if (renderType == RenderType.BLOCK)
 		{
+			//initialize();
 			renderBlock();
 			//	drawShape(new Cube(), rp);
 		}
@@ -101,7 +103,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 	private void renderBlock()
 	{
-		rp.icon.set(((CarriageDoorIconProvider) block.getIconProvider()).getFrameIcon());
+		rp.icon.set(new VanillaIcon(tileEntity.getFrameState()));
 		drawShape(frame, rp);
 	}
 
@@ -116,7 +118,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 		}
 
 		next(GL11.GL_POLYGON);
-		rp.icon.set(((CarriageDoorIconProvider) block.getIconProvider()).getDoorIcon());
+		rp.icon.set(((BigDoorIconProvider) block.getIconProvider()).getDoorIcon());
 		drawShape(doorLeft, rp);
 		drawShape(doorRight, rp);
 	}

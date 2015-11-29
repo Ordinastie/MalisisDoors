@@ -52,7 +52,7 @@ import net.malisis.doors.movement.SpinningDoorMovement;
 import net.malisis.doors.movement.TrapDoorMovement;
 import net.malisis.doors.movement.VanishingDoorMovement;
 import net.malisis.doors.movement.VaultDoorMovement;
-import net.malisis.doors.sound.CarriageDoorSound;
+import net.malisis.doors.sound.BigDoorSound;
 import net.malisis.doors.sound.GlassDoorSound;
 import net.malisis.doors.sound.IDoorSound;
 import net.malisis.doors.sound.JailDoorSound;
@@ -108,7 +108,7 @@ public class DoorRegistry
 		registerSound("pneumatic_door", new PneumaticSound());
 		registerSound("shoji_door", new ShojiDoorSound());
 		registerSound("rusty_hatch", new RustyHatchSound());
-		registerSound("carriage_door", new CarriageDoorSound());
+		registerSound("carriage_door", new BigDoorSound());
 	}
 
 	//#region Movements

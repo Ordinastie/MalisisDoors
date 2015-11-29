@@ -10,6 +10,7 @@ item.shoji_door.name=Дверь Сёдзи
 item.rustyHatch.name=Ржавый люк
 item.rustyHandle.name=Ржавый вентиль
 item.carriage_door.name=Дверь-фрейм
+
 item.forcefieldItem.name=Контроллер силового поля
 item.door_spruce.name=Дверь из ели
 item.door_birch.name=Дверь из берёзы
@@ -46,6 +47,7 @@ tile.wood_sliding_door.name=Деревянная стеклянная дверь
 tile.iron_sliding_door.name=Железная стеклянная дверь
 tile.rustyHatch.name=Ржавый люк
 tile.carriage_door.name=Дверь-фрейм
+
 tile.forcefieldDoor.name=Силовое поле
 tile.rustyLadder.name=Ржавая лестница
 tile.door_spruce.name=Дверь из ели

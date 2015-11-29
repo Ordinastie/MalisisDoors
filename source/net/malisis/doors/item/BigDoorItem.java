@@ -22,27 +22,21 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.sound;
+package net.malisis.doors.item;
 
-import net.malisis.doors.DoorState;
-import net.malisis.doors.MalisisDoors;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 
 /**
  * @author Ordinastie
  *
  */
-public class CarriageDoorSound implements IDoorSound
+public class BigDoorItem extends ItemBlock
 {
-	@Override
-	public String getSoundPath(DoorState state)
+
+	public BigDoorItem(Block block)
 	{
-		if (state == DoorState.CLOSED)
-			return MalisisDoors.modid + ":carriage_closed";
-		else if (state == DoorState.OPENING)
-			return MalisisDoors.modid + ":carriage_opening";
-		else if (state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":carriage_closing";
-		return null;
+		super(block);
 	}
 
 }

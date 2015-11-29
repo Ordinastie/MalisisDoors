@@ -32,26 +32,45 @@ import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.movement.CarriageDoorMovement;
-import net.malisis.doors.sound.CarriageDoorSound;
+import net.malisis.doors.sound.BigDoorSound;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Ordinastie
  *
  */
-public class CarriageDoorTileEntity extends DoorTileEntity
+public class BigDoorTileEntity extends DoorTileEntity
 {
-	public CarriageDoorTileEntity()
+	private IBlockState frameState;
+
+	public BigDoorTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
 		descriptor.setMovement(DoorRegistry.getMovement(CarriageDoorMovement.class));
-		descriptor.setSound(DoorRegistry.getSound(CarriageDoorSound.class));
+		descriptor.setSound(DoorRegistry.getSound(BigDoorSound.class));
 		descriptor.setDoubleDoor(false);
 		descriptor.setOpeningTime(20);
 		setDescriptor(descriptor);
+
+		frameState = Blocks.quartz_block.getDefaultState();
+	}
+
+	public IBlockState getFrameState()
+	{
+		return frameState;
+	}
+
+	public void setFrameState(IBlockState state)
+	{
+		if (state != null)
+			frameState = state;
 	}
 
 	@Override
@@ -110,5 +129,21 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return TileEntityUtils.getRenderingBounds(this);
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		MBlockState.toNBT(nbt, frameState);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+
+		frameState = Objects.firstNonNull(MBlockState.fromNBT(nbt), Blocks.quartz_block.getDefaultState());
 	}
 }

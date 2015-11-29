@@ -7,7 +7,7 @@ import net.malisis.core.configuration.Settings;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.renderer.font.MalisisFont;
-import net.malisis.doors.block.CarriageDoor;
+import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.block.DoorFactory;
@@ -133,7 +133,8 @@ public class MalisisDoors implements IMalisisMod
 		//Special doors
 		public static CustomDoor customDoor;
 		public static SaloonDoorBlock saloonDoor;
-		public static CarriageDoor carriageDoor;
+		public static BigDoor carriageDoor;
+		public static BigDoor medievalDoor;
 
 		public static TrapDoor slidingTrapDoor;
 		public static FenceGate camoFenceGate;
@@ -169,7 +170,6 @@ public class MalisisDoors implements IMalisisMod
 		//Special door items
 		public static CustomDoorItem customDoorItem;
 		public static DoorItem saloonDoorItem;
-		public static DoorItem carriageDoorItem;
 
 		public static Item slidingTrapDoorItem;
 
