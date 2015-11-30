@@ -8,6 +8,7 @@ item.shoji_door.name=Porte Shoji
 item.rustyHatch.name=Trappe Rouillée
 item.rustyHandle.name=Poignée Rouillée
 item.carriage_door.name=Porte cochère
+item.medieval_door.name=Porte médiévale
 item.forcefieldItem.name=Contrôleur de champs de force
 item.door_spruce.name=Porte en bois de sapin
 item.door_birch.name=Porte en bois de bouleau
@@ -51,6 +52,7 @@ tile.custom_door.name=Porte personnalisée
 tile.shoji_door.name=Porte Shoji
 tile.rustyHatch.name=Trappe Rouillée
 tile.carriage_door.name=Porte cochère
+tile.medieval_door.name=Porte médiévale
 tile.forcefieldDoor.name=Champs de force
 tile.rustyLadder.name=Echelle rouillée
 tile.door_spruce.name=Porte en bois de sapin
@@ -160,7 +162,7 @@ gui.door_factory.door_sound.glass_door=Porte vitrée
 gui.door_factory.door_sound.jail_door=Porte de prison
 gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
 gui.door_factory.door_sound.shoji_door=Porte Shoji
-gui.door_factory.door_sound.carriage_door=Porte cochère
+gui.door_factory.door_sound.carriage_door=Grande Porte
 
 
 gui.door_factory.frame_type=Type de cadre

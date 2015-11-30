@@ -33,7 +33,7 @@ import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.doors.door.DoorDescriptor;
 import net.malisis.doors.door.DoorRegistry;
 import net.malisis.doors.door.DoorState;
-import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.BigDoor;
 import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.sound.CarriageDoorSound;
@@ -42,17 +42,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import com.google.common.base.Objects;
+
 /**
  * @author Ordinastie
  *
  */
-public class CarriageDoorTileEntity extends DoorTileEntity
+public class BigDoorTileEntity extends DoorTileEntity
 {
 	private boolean delete = false;
 	private boolean processed = true;
 	private ForgeDirection direction = ForgeDirection.NORTH;
 
-	public CarriageDoorTileEntity()
+	private BlockState frameState;
+
+	public BigDoorTileEntity()
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
 		descriptor.setMovement(DoorRegistry.getMovement(CarriageDoorMovement.class));
@@ -60,6 +64,19 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 		descriptor.setDoubleDoor(false);
 		descriptor.setOpeningTime(20);
 		setDescriptor(descriptor);
+
+		frameState = new BlockState(Blocks.quartz_block);
+	}
+
+	public BlockState getFrameState()
+	{
+		return frameState;
+	}
+
+	public void setFrameState(BlockState state)
+	{
+		if (state != null)
+			frameState = state;
 	}
 
 	@Override
@@ -132,12 +149,21 @@ public class CarriageDoorTileEntity extends DoorTileEntity
 			processed = false;
 		}
 
+		frameState = Objects.firstNonNull(BlockState.fromNBT(tag), new BlockState(Blocks.quartz_block));
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+
+		BlockState.toNBT(nbt, frameState);
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return ((CarriageDoor) getBlockType()).getBoundingBox(getWorld(), xCoord, yCoord, zCoord, BoundingBoxType.RENDER)[0].offset(xCoord,
+		return ((BigDoor) getBlockType()).getBoundingBox(getWorld(), xCoord, yCoord, zCoord, BoundingBoxType.RENDER)[0].offset(xCoord,
 				yCoord, zCoord);
 	}
 

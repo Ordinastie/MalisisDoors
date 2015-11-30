@@ -36,7 +36,7 @@ import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
 import net.malisis.doors.door.DoorDescriptor;
-import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.BigDoor;
 import net.malisis.doors.door.block.CustomDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.FenceGate.Type;
@@ -55,7 +55,7 @@ import net.malisis.doors.door.descriptor.WoodDoor;
 import net.malisis.doors.door.item.CustomDoorItem;
 import net.malisis.doors.door.item.DoorItem;
 import net.malisis.doors.door.item.ForcefieldItem;
-import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
+import net.malisis.doors.door.tileentity.BigDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
@@ -70,6 +70,7 @@ import net.malisis.doors.entity.VanishingDiamondTileEntity;
 import net.malisis.doors.entity.VanishingTileEntity;
 import net.malisis.doors.item.MixedBlockBlockItem;
 import net.malisis.doors.item.VanishingBlockItem;
+import net.malisis.doors.recipe.BigDoorRecipe;
 import net.malisis.doors.trapdoor.descriptor.IronTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.SlidingTrapDoor;
 import net.malisis.doors.trapdoor.descriptor.VanillaTrapDoor;
@@ -122,7 +123,7 @@ public class Registers
 
 		registerRustyHatch();
 
-		registerCarriageDoor();
+		registerBigDoors();
 
 		registerForcefieldDoor();
 
@@ -365,16 +366,18 @@ public class Registers
 		GameRegistry.addRecipe(new ItemStack(rustyLadder), "AAA", 'A', Items.iron_ingot);
 	}
 
-	private static void registerCarriageDoor()
+	private static void registerBigDoors()
 	{
-		carriageDoor = new CarriageDoor();
+		carriageDoor = new BigDoor(BigDoor.Type.CARRIAGE);
 		carriageDoor.register();
 
-		carriageDoorItem = Item.getItemFromBlock(carriageDoor);
+		medievalDoor = new BigDoor(BigDoor.Type.MEDIEVAL);
+		medievalDoor.register();
 
-		GameRegistry.registerTileEntity(CarriageDoorTileEntity.class, "carriageDoorTileEntity");
-		GameRegistry.addRecipe(new ItemStack(carriageDoor), "AAA", "ABA", "ABA", 'A', Blocks.quartz_block, 'B', Items.wooden_door);
+		GameRegistry.registerTileEntityWithAlternatives(BigDoorTileEntity.class, "bigDoorTileEntity", "carriageDoorTileEntity");
 
+		GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.CARRIAGE));
+		GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.MEDIEVAL));
 	}
 
 	private static void registerForcefieldDoor()

@@ -8,17 +8,17 @@ import net.malisis.doors.block.MixedBlock;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.BigDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.RustyHatch;
-import net.malisis.doors.door.renderer.CarriageDoorRenderer;
+import net.malisis.doors.door.renderer.BigDoorRenderer;
 import net.malisis.doors.door.renderer.CustomDoorRenderer;
 import net.malisis.doors.door.renderer.DoorRenderer;
 import net.malisis.doors.door.renderer.FenceGateRenderer;
 import net.malisis.doors.door.renderer.ForcefieldRenderer;
 import net.malisis.doors.door.renderer.RustyHatchRenderer;
 import net.malisis.doors.door.renderer.SaloonDoorRenderer;
-import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
+import net.malisis.doors.door.tileentity.BigDoorTileEntity;
 import net.malisis.doors.door.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.door.tileentity.DoorTileEntity;
 import net.malisis.doors.door.tileentity.FenceGateTileEntity;
@@ -83,8 +83,8 @@ public class ClientProxy implements IProxy
 		rlr.registerFor(Item.getItemFromBlock(rustyLadder));
 
 		//carriage doors
-		CarriageDoorRenderer cardr = new CarriageDoorRenderer();
-		cardr.registerFor(CarriageDoor.class, CarriageDoorTileEntity.class);
+		BigDoorRenderer cardr = new BigDoorRenderer();
+		cardr.registerFor(BigDoor.class, BigDoorTileEntity.class);
 
 		//forcefield doors
 		ForcefieldRenderer ffr = new ForcefieldRenderer();

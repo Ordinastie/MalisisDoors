@@ -24,6 +24,7 @@
 
 package net.malisis.doors.door.block;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.util.AABBUtils;
@@ -35,16 +36,17 @@ import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.core.util.chunkcollision.IChunkCollidable;
 import net.malisis.core.util.chunklistener.IBlockListener;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
+import net.malisis.doors.MalisisDoors.Items;
+import net.malisis.doors.door.tileentity.BigDoorTileEntity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -53,39 +55,48 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author Ordinastie
  *
  */
-public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener
+public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener
 {
-	protected IIcon frameIcon;
+	public enum Type
+	{
+		CARRIAGE("carriage_door", net.minecraft.init.Items.wooden_door), MEDIEVAL("medieval_door", Items.doorSpruceItem);
+
+		public String name;
+		public Item door;
+
+		private Type(String name, Item door)
+		{
+			this.name = name;
+			this.door = door;
+		}
+	}
+
 	public static int renderId;
-
+	public static int renderPass = -1;
 	private AxisAlignedBB defaultBoundingBox = AxisAlignedBB.getBoundingBox(0, 0, 1 - Door.DOOR_WIDTH, 4, 5, 1);
+	private Type type;
 
-	public CarriageDoor()
+	public BigDoor(Type type)
 	{
 		super(Material.wood);
+		this.type = type;
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setStepSound(soundTypeStone);
-		setUnlocalizedName("carriage_door");
+		setUnlocalizedName(type.name);
 		setCreativeTab(MalisisDoors.tab);
 	}
 
 	@Override
 	public void registerIcons(IIconRegister register)
 	{
-		blockIcon = register.registerIcon(MalisisDoors.modid + ":carriage_door");
-		frameIcon = register.registerIcon(MalisisDoors.modid + ":carriage_frame");
-	}
-
-	public IIcon getFrameIcon()
-	{
-		return frameIcon;
+		blockIcon = register.registerIcon(MalisisDoors.modid + ":" + type.name);
 	}
 
 	@Override
 	public String getItemIconName()
 	{
-		return MalisisDoors.modid + ":carriage_item";
+		return MalisisDoors.modid + ":" + type.name + "_item";
 	}
 
 	@Override
@@ -106,6 +117,10 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 		world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
 
 		ChunkCollision.get().replaceBlocks(world, new BlockState(world, x, y, z));
+
+		BigDoorTileEntity te = TileEntityUtils.getTileEntity(BigDoorTileEntity.class, world, x, y, z);
+		if (te != null)
+			te.setFrameState(BlockState.fromNBT(itemStack.getTagCompound()));
 	}
 
 	@Override
@@ -114,7 +129,7 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 		if (world.isRemote)
 			return true;
 
-		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
+		BigDoorTileEntity te = TileEntityUtils.getTileEntity(BigDoorTileEntity.class, world, x, y, z);
 		if (te == null)
 			return true;
 
@@ -132,7 +147,7 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 	@Override
 	public AxisAlignedBB[] getBoundingBox(IBlockAccess world, int x, int y, int z, BoundingBoxType type)
 	{
-		CarriageDoorTileEntity te = TileEntityUtils.getTileEntity(CarriageDoorTileEntity.class, world, x, y, z);
+		BigDoorTileEntity te = TileEntityUtils.getTileEntity(BigDoorTileEntity.class, world, x, y, z);
 		if (te == null)
 			return AABBUtils.identities();
 
@@ -162,7 +177,7 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-		return new CarriageDoorTileEntity();
+		return new BigDoorTileEntity();
 	}
 
 	@Override
@@ -181,6 +196,20 @@ public class CarriageDoor extends MalisisBlock implements ITileEntityProvider, I
 	public int getRenderType()
 	{
 		return renderId;
+	}
+
+	@Override
+	public int getRenderBlockPass()
+	{
+		return 1;
+	}
+
+	@Override
+	public boolean canRenderInPass(int pass)
+	{
+		renderPass = pass;
+		MalisisCore.message(pass);
+		return true;
 	}
 
 	@Override

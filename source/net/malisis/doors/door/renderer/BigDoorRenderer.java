@@ -31,10 +31,11 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.BlockState;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.BigDoor;
 import net.malisis.doors.door.block.Door;
-import net.malisis.doors.door.tileentity.CarriageDoorTileEntity;
+import net.malisis.doors.door.tileentity.BigDoorTileEntity;
 import net.minecraft.client.renderer.DestroyBlockProgress;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -45,7 +46,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class CarriageDoorRenderer extends MalisisRenderer
+public class BigDoorRenderer extends MalisisRenderer
 {
 	private ResourceLocation rl;
 	private MalisisModel model;
@@ -53,11 +54,11 @@ public class CarriageDoorRenderer extends MalisisRenderer
 	private Shape doorLeft;
 	private Shape doorRight;
 	private AnimationRenderer ar = new AnimationRenderer();
-	private CarriageDoorTileEntity tileEntity;
+	private BigDoorTileEntity tileEntity;
 
 	private ForgeDirection direction;
 
-	public CarriageDoorRenderer()
+	public BigDoorRenderer()
 	{
 		getBlockDamage = true;
 	}
@@ -65,7 +66,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 	@Override
 	protected void initialize()
 	{
-		rl = new ResourceLocation(MalisisDoors.modid, "models/carriagedoor.obj");
+		rl = new ResourceLocation(MalisisDoors.modid, "models/big_door.obj");
 		model = new MalisisModel(rl);
 		frame = model.getShape("Frame");
 		doorLeft = model.getShape("Left");
@@ -81,7 +82,7 @@ public class CarriageDoorRenderer extends MalisisRenderer
 		if (super.tileEntity == null)
 			return;
 
-		tileEntity = (CarriageDoorTileEntity) super.tileEntity;
+		tileEntity = (BigDoorTileEntity) super.tileEntity;
 		direction = Door.intToDir(tileEntity.getDirection());
 		setup();
 
@@ -96,7 +97,14 @@ public class CarriageDoorRenderer extends MalisisRenderer
 
 	private void renderBlock()
 	{
-		rp.icon.set(((CarriageDoor) block).getFrameIcon());
+		BlockState state = tileEntity.getFrameState();
+		if (!state.getBlock().canRenderInPass(BigDoor.renderPass))
+			return;
+
+		set(state.getBlock(), state.getMetadata());
+		//rp.icon.set(state.getBlock().getIcon(1, state.getMetadata()));
+		rp.icon.reset();
+		rp.useWorldSensitiveIcon.set(false);
 		drawShape(frame, rp);
 	}
 

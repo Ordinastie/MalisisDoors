@@ -13,7 +13,7 @@ import net.malisis.doors.block.PlayerSensor;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.VanishingBlock;
 import net.malisis.doors.block.VanishingDiamondBlock;
-import net.malisis.doors.door.block.CarriageDoor;
+import net.malisis.doors.door.block.BigDoor;
 import net.malisis.doors.door.block.FenceGate;
 import net.malisis.doors.door.block.ForcefieldDoor;
 import net.malisis.doors.door.block.RustyHatch;
@@ -124,7 +124,8 @@ public class MalisisDoors implements IMalisisMod
 		public static Block shojiDoor;
 		public static RustyHatch rustyHatch;
 		public static Block curtains;
-		public static CarriageDoor carriageDoor;
+		public static BigDoor carriageDoor;
+		public static BigDoor medievalDoor;
 		public static ForcefieldDoor forcefieldDoor;
 		public static RustyLadder rustyLadder;
 		public static Block ironTrapDoor;
