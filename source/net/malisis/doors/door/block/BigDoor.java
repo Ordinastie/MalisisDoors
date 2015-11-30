@@ -24,7 +24,6 @@
 
 package net.malisis.doors.door.block;
 
-import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.util.AABBUtils;
@@ -208,7 +207,6 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	public boolean canRenderInPass(int pass)
 	{
 		renderPass = pass;
-		MalisisCore.message(pass);
 		return true;
 	}
 
