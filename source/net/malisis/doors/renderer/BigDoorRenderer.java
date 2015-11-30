@@ -36,6 +36,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.BigDoor.BigDoorIconProvider;
 import net.malisis.doors.tileentity.BigDoorTileEntity;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -103,7 +104,13 @@ public class BigDoorRenderer extends MalisisRenderer
 
 	private void renderBlock()
 	{
-		rp.icon.set(new VanillaIcon(tileEntity.getFrameState()));
+		IBlockState state = tileEntity.getFrameState();
+
+		if (!state.getBlock().canRenderInLayer(getRenderLayer()))
+			return;
+
+		rp.icon.set(new VanillaIcon(state));
+		set(state);
 		drawShape(frame, rp);
 	}
 
