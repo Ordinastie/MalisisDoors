@@ -1,12 +1,12 @@
 [
 {
   "modid": "malisisdoors",
-  "name": "Malisis' Doors",
+  "name": "MalisisDoors",
   "description": "Better doors!",
   "version": "${version}",
   "logoFile": "malisisdoors.png",
   "mcversion": "${mcversion}",
-  "url": "http://github.com/ordinastie",
+  "url": "http://github.com/Ordinastie/MalisisDoors",
   "updateUrl": "",
   "authors": [ "Ordinastie" ],
   "parent":"",
