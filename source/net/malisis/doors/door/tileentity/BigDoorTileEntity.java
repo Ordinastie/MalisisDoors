@@ -38,6 +38,7 @@ import net.malisis.doors.door.block.Door;
 import net.malisis.doors.door.movement.CarriageDoorMovement;
 import net.malisis.doors.door.sound.CarriageDoorSound;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -135,6 +136,15 @@ public class BigDoorTileEntity extends DoorTileEntity
 			return;
 		}
 		super.updateEntity();
+	}
+
+	public ItemStack getDroppedItemStack()
+	{
+		ItemStack itemStack = new ItemStack(getBlockType());
+		NBTTagCompound nbt = new NBTTagCompound();
+		BlockState.toNBT(nbt, frameState);
+		itemStack.setTagCompound(nbt);
+		return itemStack;
 	}
 
 	@Override
