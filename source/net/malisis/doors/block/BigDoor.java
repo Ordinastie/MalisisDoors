@@ -24,6 +24,9 @@
 
 package net.malisis.doors.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBlockDirectional;
@@ -156,6 +159,24 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new BigDoorTileEntity();
+	}
+
+	@Override
+	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	{
+		if (!player.capabilities.isCreativeMode)
+		{
+			BigDoorTileEntity te = TileEntityUtils.getTileEntity(BigDoorTileEntity.class, world, pos);
+			if (te != null)
+				spawnAsEntity(world, pos, te.getDroppedItemStack());
+		}
+		return super.removedByPlayer(world, pos, player, willHarvest);
+	}
+
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	{
+		return new ArrayList<ItemStack>();
 	}
 
 	@Override

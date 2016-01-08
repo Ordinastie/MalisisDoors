@@ -35,6 +35,7 @@ import net.malisis.doors.movement.CarriageDoorMovement;
 import net.malisis.doors.sound.BigDoorSound;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -123,6 +124,15 @@ public class BigDoorTileEntity extends DoorTileEntity
 		super.setDoorState(newState);
 		if (getWorld() != null && moving && !this.moving)
 			ChunkCollision.get().replaceBlocks(getWorld(), state);
+	}
+
+	public ItemStack getDroppedItemStack()
+	{
+		ItemStack itemStack = new ItemStack(getBlockType());
+		NBTTagCompound nbt = new NBTTagCompound();
+		MBlockState.toNBT(nbt, frameState);
+		itemStack.setTagCompound(nbt);
+		return itemStack;
 	}
 
 	@Override
