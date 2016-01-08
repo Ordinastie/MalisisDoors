@@ -35,7 +35,7 @@ import net.malisis.core.renderer.icon.IIconProvider;
 import net.malisis.core.renderer.icon.IMetaIconProvider;
 import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
 import net.malisis.core.util.AABBUtils;
-import net.malisis.core.util.RaytraceBlock;
+import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.renderer.TrapDoorRenderer;
