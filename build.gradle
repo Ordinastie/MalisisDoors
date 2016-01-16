@@ -15,11 +15,17 @@ buildscript {
     }
 }
 
+plugins
+{
+	id "com.matthewprenger.cursegradle" version "1.0.7"
+}
+
+
 apply plugin: 'forge'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.8-2.2.0"
+version = "1.8-2.3.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
@@ -35,8 +41,8 @@ sourceSets
 
 dependencies
 {
-	compile 'net.malisis:malisiscore:1.8-1.2.0:dev'
-	//compile files('../MalisisCore/build/libs/malisiscore-1.8-1.2.0-dev.jar')	
+	compile 'net.malisis:malisiscore:1.8-1.3.0:dev'
+	//compile files('../MalisisCore/build/libs/malisiscore-1.8-1.3.0-dev.jar')	
 }
 
 // because the normal output has been made to be obfuscated
@@ -85,7 +91,7 @@ uploadArchives()
 {
 	//dependsOn reobf
 	
-	if (project.mavenUrl != null) 
+	if (project.hasProperty('mavenUrl'))
 	{
 		repositories 
 		{
@@ -154,8 +160,20 @@ uploadArchives()
 			}
 		}
 	}
-	else 
-	{
-		logger.log(LogLevel.ERROR, 'No upload url (project.mavenUrl) defined!');
+}
+
+if (project.hasProperty('curseapi')) {
+	curseforge {
+		apiKey = curseapi
+		project {
+			id = '223891'
+			releaseType = 'release'
+					
+			addArtifact deobfJar
+			
+			relations {
+				requiredLibrary 'malisiscore'
+			}
+		}
 	}
 }
