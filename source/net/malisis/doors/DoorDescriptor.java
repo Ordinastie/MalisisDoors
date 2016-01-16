@@ -50,6 +50,11 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DoorDescriptor
 {
+	public static enum RedstoneBehavior
+	{
+		STANDARD, REDSTONE_ONLY, REDSTONE_LOCK, HAND_ONLY
+	}
+
 	protected Block block;
 	protected Item item;
 
@@ -70,7 +75,7 @@ public class DoorDescriptor
 	protected IDoorSound sound;
 	protected int openingTime = 6;
 	protected boolean doubleDoor = true;
-	protected boolean requireRedstone = false;
+	protected RedstoneBehavior redstoneBehavior = RedstoneBehavior.STANDARD;
 
 	//item
 	protected CreativeTabs tab;
@@ -218,14 +223,14 @@ public class DoorDescriptor
 		this.doubleDoor = doubleDoor;
 	}
 
-	public boolean requireRedstone()
+	public RedstoneBehavior getRedstoneBehavior()
 	{
-		return requireRedstone;
+		return redstoneBehavior;
 	}
 
-	public void setRequireRedstone(boolean requireRedstone)
+	public void setRedstoneBehavior(RedstoneBehavior redstoneBehavior)
 	{
-		this.requireRedstone = requireRedstone;
+		this.redstoneBehavior = redstoneBehavior;
 	}
 
 	public int getAutoCloseTime()
@@ -321,8 +326,11 @@ public class DoorDescriptor
 			setSound(DoorRegistry.getSound(nbt.getString("sound")));
 		if (nbt.hasKey("openingTime"))
 			setOpeningTime(nbt.getInteger("openingTime"));
+		//LEGACY
 		if (nbt.hasKey("redstone"))
-			setRequireRedstone(nbt.getBoolean("redstone"));
+			setRedstoneBehavior(nbt.getBoolean("redstone") ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
+		if (nbt.hasKey("redstoneBehavior"))
+			setRedstoneBehavior(RedstoneBehavior.values()[nbt.getInteger("redstoneBehavior")]);
 		if (nbt.hasKey("doubleDoor"))
 			setDoubleDoor(nbt.getBoolean("doubleDoor"));
 		if (nbt.hasKey("autoCloseTime"))
@@ -340,7 +348,7 @@ public class DoorDescriptor
 		if (getSound() != null)
 			nbt.setString("sound", DoorRegistry.getId(getSound()));
 		nbt.setInteger("openingTime", getOpeningTime());
-		nbt.setBoolean("redstone", requireRedstone());
+		nbt.setInteger("redstoneBehavior", getRedstoneBehavior().ordinal());
 		nbt.setBoolean("doubleDoor", isDoubleDoor());
 		nbt.setInteger("autoCloseTime", getAutoCloseTime());
 		if (hasCode())

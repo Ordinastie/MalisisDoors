@@ -52,7 +52,7 @@ public class GlassDoor extends DoorDescriptor
 		setNumCrafted(3);
 
 		//te
-		setRequireRedstone(!wood);
+		setRedstoneBehavior(wood ? RedstoneBehavior.STANDARD : RedstoneBehavior.REDSTONE_ONLY);
 		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
 		setSound(DoorRegistry.getSound(GlassDoorSound.class));
 

@@ -50,6 +50,7 @@ import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateC
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.network.DoorFactoryMessage;
@@ -59,6 +60,7 @@ import net.minecraft.util.StatCollector;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -77,7 +79,7 @@ public class DoorFactoryGui extends MalisisGui
 	private UISelect<String> selDoorMovement;
 	private UITextField tfOpenTime;
 	private UITextField tfAutoCloseTime;
-	private UICheckBox cbRedstone;
+	private UISelect<RedstoneBehavior> selRedstone;
 	private UICheckBox cbDoubleDoor;
 	private UISelect<String> selDoorSound;
 	private UIRadioButton rbCreate;
@@ -98,7 +100,7 @@ public class DoorFactoryGui extends MalisisGui
 	@Override
 	public void construct()
 	{
-		UIWindow window = new UIWindow(this, "tile.door_factory.name", UIPlayerInventory.INVENTORY_WIDTH + 10, 240);
+		UIWindow window = new UIWindow(this, "tile.door_factory.name", UIPlayerInventory.INVENTORY_WIDTH + 80, 240);
 
 		UIContainer propContainer = getPropertiesContainer();
 		UIContainer matContainer = getMaterialsContainer();
@@ -151,8 +153,11 @@ public class DoorFactoryGui extends MalisisGui
 
 		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
 		tfAutoCloseTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 26, Anchor.RIGHT).register(this);
-		cbRedstone = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
-		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 50, Anchor.RIGHT).register(this);
+		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
+
+		selRedstone = new UISelect<RedstoneBehavior>(this, 100, Lists.newArrayList(RedstoneBehavior.values()));
+		selRedstone.setPosition(0, 50, Anchor.RIGHT);
+		selRedstone.setLabelPattern("gui.door_factory.redstone_behavior.%s").register(this);
 
 		selDoorSound = new UISelect<String>(this, 100, getSortedList(DoorRegistry.listSounds().keySet(), "gui.door_factory.door_sound."));
 		selDoorSound.setPosition(0, 62, Anchor.RIGHT);
@@ -161,15 +166,15 @@ public class DoorFactoryGui extends MalisisGui
 		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
 		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, 16));
 		propContainer.add(new UILabel(this, "gui.door_factory.door_auto_close_time").setPosition(0, 28));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_require_redstone").setPosition(0, 40));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 52));
+		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 40));
+		propContainer.add(new UILabel(this, "gui.door_factory.redstone_behavior").setPosition(0, 52));
 		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, 64));
 
 		propContainer.add(selDoorMovement);
 		propContainer.add(tfOpenTime);
 		propContainer.add(tfAutoCloseTime);
-		propContainer.add(cbRedstone);
 		propContainer.add(cbDoubleDoor);
+		propContainer.add(selRedstone);
 		propContainer.add(selDoorSound);
 
 		return propContainer;
@@ -244,7 +249,7 @@ public class DoorFactoryGui extends MalisisGui
 		selDoorMovement.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorMovement()));
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		tfAutoCloseTime.setText(Integer.toString(tileEntity.getAutoCloseTime()));
-		cbRedstone.setChecked(tileEntity.requireRedstone());
+		selRedstone.select(tileEntity.getRedstoneBehavior());
 		cbDoubleDoor.setChecked(tileEntity.isDoubleDoor());
 		selDoorSound.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorSound()));
 	}
@@ -252,24 +257,22 @@ public class DoorFactoryGui extends MalisisGui
 	@Subscribe
 	public void onCheckedEvent(UICheckBox.CheckEvent event)
 	{
-		if (event.getComponent() == cbRedstone)
-			tileEntity.setRequireRedstone(event.isChecked());
-		else
-			tileEntity.setDoubleDoor(event.isChecked());
-
+		tileEntity.setDoubleDoor(event.isChecked());
 		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
 
 	@Subscribe
-	public void onSelectEvent(UISelect.SelectEvent<String> event)
+	public void onSelectEvent(UISelect.SelectEvent<?> event)
 	{
 		if (event.getNewValue() == null)
 			return;
 
-		if (event.getComponent() == selDoorMovement)
-			tileEntity.setDoorMovement(DoorRegistry.getMovement(event.getNewValue()));
-		else
-			tileEntity.setDoorSound(DoorRegistry.getSound(event.getNewValue()));
+		if (event.getComponent() == selRedstone)
+			tileEntity.setRedstoneBehavior((RedstoneBehavior) event.getNewValue());
+		else if (event.getComponent() == selDoorMovement)
+			tileEntity.setDoorMovement(DoorRegistry.getMovement((String) event.getNewValue()));
+		else if (event.getComponent() == selDoorSound)
+			tileEntity.setDoorSound(DoorRegistry.getSound((String) event.getNewValue()));
 
 		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}

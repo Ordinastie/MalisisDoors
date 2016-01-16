@@ -37,6 +37,7 @@ import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.renderer.TrapDoorRenderer;
 import net.malisis.doors.tileentity.DoorTileEntity;
@@ -125,8 +126,12 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		if (te.getDescriptor() == null)
 			return true;
 
-		if (te.getDescriptor().requireRedstone())
+		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_ONLY)
 			return true;
+
+		//Not possible to set redstone behavior for trapdoors
+		//		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK && te.isPowered())
+		//			return true;
 
 		te.openOrCloseDoor();
 		return true;
@@ -148,10 +153,17 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 			return;
 		}
 
+		DoorTileEntity te = Door.getDoor(world, pos);
+
+		//Not possible to set redstone behavior for trapdoors
+		//		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.HAND_ONLY
+		//				|| te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK)
+		//			return;
+
 		boolean powered = world.isBlockPowered(pos);
 		if (powered || neighborBlock.canProvidePower())
 		{
-			DoorTileEntity te = Door.getDoor(world, pos);
+
 			if (te != null)
 				te.setPowered(powered);
 		}

@@ -28,6 +28,7 @@ import io.netty.buffer.ByteBuf;
 import net.malisis.core.network.IMalisisMessageHandler;
 import net.malisis.core.network.MalisisMessage;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
@@ -65,7 +66,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 			te.setDoorSound(DoorRegistry.getSound(message.sound));
 			te.setOpeningTime(message.openTime);
 			te.setAutoCloseTime(message.autoCloseTime);
-			te.setRequireRedstone(message.redstone);
+			te.setRedstoneBehavior(RedstoneBehavior.values()[message.redstoneBehavior]);
 			te.setDoubleDoor(message.doubleDoor);
 			te.setCode(message.code);
 		}
@@ -99,7 +100,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 		private String sound;
 		private int openTime;
 		private int autoCloseTime;
-		private boolean redstone;
+		private int redstoneBehavior;
 		private boolean doubleDoor;
 		private String code;
 
@@ -122,7 +123,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 			this.sound = sound;
 			this.openTime = te.getOpeningTime();
 			this.autoCloseTime = te.getAutoCloseTime();
-			this.redstone = te.requireRedstone();
+			this.redstoneBehavior = te.getRedstoneBehavior().ordinal();
 			this.doubleDoor = te.isDoubleDoor();
 			this.code = te.getCode();
 		}
@@ -143,7 +144,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 					sound = null;
 				openTime = buf.readInt();
 				autoCloseTime = buf.readInt();
-				redstone = buf.readBoolean();
+				redstoneBehavior = buf.readInt();
 				doubleDoor = buf.readBoolean();
 				code = ByteBufUtils.readUTF8String(buf);
 			}
@@ -161,7 +162,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 				ByteBufUtils.writeUTF8String(buf, sound != null ? sound : "");
 				buf.writeInt(openTime);
 				buf.writeInt(autoCloseTime);
-				buf.writeBoolean(redstone);
+				buf.writeInt(redstoneBehavior);
 				buf.writeBoolean(doubleDoor);
 				ByteBufUtils.writeUTF8String(buf, code != null ? code : "");
 			}

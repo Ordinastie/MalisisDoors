@@ -37,6 +37,7 @@ import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.gui.DigicodeGui;
 import net.malisis.doors.iconprovider.DoorIconProvider;
@@ -161,8 +162,17 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 		if (world.isRemote)
 			return true;
 
-		if (te.getDescriptor().requireRedstone())
+		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_ONLY)
 			return true;
+
+		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK)
+		{
+			if (te.isPowered())
+				return true;
+			DoorTileEntity door = te.getDoubleDoor();
+			if (door != null && door.isPowered())
+				return true;
+		}
 
 		if (te.getDescriptor().getAutoCloseTime() > 0 && !te.isOpened())
 			world.scheduleBlockUpdate(pos, this, te.getDescriptor().getAutoCloseTime() + te.getDescriptor().getOpeningTime(), 0);
@@ -186,7 +196,10 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 		if (te.getDescriptor().hasCode())
 			return;
 
-		if (te.getDescriptor().requireRedstone())
+		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_ONLY)
+			return;
+
+		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK && te.isPowered())
 			return;
 
 		if (opening == te.isOpened())
@@ -230,9 +243,12 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 			else
 			{
 				//handle redstone interactions
-
 				DoorTileEntity te = getDoor(world, pos);
 				if (te == null)
+					return;
+
+				if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.HAND_ONLY
+						|| te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK)
 					return;
 
 				//digicode doors can only be opened by hand

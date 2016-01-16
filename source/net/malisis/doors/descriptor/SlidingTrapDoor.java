@@ -50,7 +50,6 @@ public class SlidingTrapDoor extends TrapDoorDescriptor
 		setTextureName(MalisisDoors.modid, "blocks/sliding_trapdoor");
 
 		//te
-		setRequireRedstone(false);
 		setMovement(DoorRegistry.getMovement(SlidingTrapDoorMovement.class));
 		setSound(DoorRegistry.getSound(PneumaticSound.class));
 

@@ -73,7 +73,7 @@ public class VanillaDoor extends DoorDescriptor
 		setNumCrafted(3);
 
 		//te
-		setRequireRedstone(type == Type.IRON);
+		setRedstoneBehavior(type == Type.IRON ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
 		setMovement(DoorRegistry.getMovement(RotatingDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 

@@ -72,7 +72,6 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 		setTextureName(MalisisDoors.modid, "blocks/" + type.name);
 
 		//te
-		setRequireRedstone(false);
 		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 

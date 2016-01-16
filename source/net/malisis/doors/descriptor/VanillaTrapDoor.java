@@ -54,7 +54,7 @@ public class VanillaTrapDoor extends TrapDoorDescriptor
 		setTextureName("minecraft", type == Type.IRON ? "blocks/iron_trapdoor" : "blocks/trapdoor");
 
 		//te
-		setRequireRedstone(type == Type.IRON);
+		setRedstoneBehavior(type == Type.IRON ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
 		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
 		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
 

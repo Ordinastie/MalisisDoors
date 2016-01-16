@@ -119,7 +119,7 @@ gui.door_factory.rb_edit=Modifier
 gui.door_factory.door_movement=Mouvement
 gui.door_factory.door_open_time=Temps d'ouverture
 gui.door_factory.door_auto_close_time=Delai de fermeture
-gui.door_factory.door_require_redstone=Nécessite redstone
+gui.door_factory.redstone_behavior=Comportement redstone
 gui.door_factory.door_double_door=Double porte
 gui.door_factory.door_sound=Type de son
 gui.door_factory.door_sound.silent_door=Silencieux
@@ -130,6 +130,10 @@ gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
 gui.door_factory.door_sound.shoji_door=Porte Shoji
 gui.door_factory.door_sound.carriage_door=Grande porte
 
+gui.door_factory.redstone_behavior.STANDARD=Standard
+gui.door_factory.redstone_behavior.REDSTONE_ONLY=Redstone seulement 
+gui.door_factory.redstone_behavior.REDSTONE_LOCK=Verrouillage redstone
+gui.door_factory.redstone_behavior.HAND_ONLY=Manuellement seulement
 
 gui.door_factory.frame_type=Type de cadre
 gui.door_factory.top_material=Matériau haut

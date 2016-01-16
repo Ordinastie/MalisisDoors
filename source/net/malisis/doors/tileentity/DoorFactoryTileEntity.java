@@ -32,6 +32,7 @@ import net.malisis.core.inventory.MalisisSlot;
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.gui.DoorFactoryGui;
@@ -60,7 +61,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 	private IDoorSound doorSound;
 	private int openingTime = 6;
 	private int autoCloseTime = 0;
-	private boolean requireRedstone = false;
+	private RedstoneBehavior redstoneBehavior = RedstoneBehavior.STANDARD;
 	private boolean doubleDoor = true;
 	private String code;
 
@@ -135,14 +136,14 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		this.autoCloseTime = autoCloseTime;
 	}
 
-	public boolean requireRedstone()
+	public RedstoneBehavior getRedstoneBehavior()
 	{
-		return requireRedstone;
+		return redstoneBehavior;
 	}
 
-	public void setRequireRedstone(boolean requireRedstone)
+	public void setRedstoneBehavior(RedstoneBehavior redstoneBehavior)
 	{
-		this.requireRedstone = requireRedstone;
+		this.redstoneBehavior = redstoneBehavior;
 	}
 
 	public boolean isDoubleDoor()
@@ -247,7 +248,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		desc.setSound(getDoorSound());
 		desc.setOpeningTime(getOpeningTime());
 		desc.setAutoCloseTime(getAutoCloseTime());
-		desc.setRequireRedstone(requireRedstone());
+		desc.setRedstoneBehavior(getRedstoneBehavior());
 		desc.setDoubleDoor(isDoubleDoor());
 		desc.setCode(getCode());
 
@@ -267,7 +268,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 			nbt.setString("doorSound", DoorRegistry.getId(doorSound));
 		nbt.setInteger("openingTime", openingTime);
 		nbt.setInteger("autoCloseTime", autoCloseTime);
-		nbt.setBoolean("requireRedstone", requireRedstone);
+		nbt.setInteger("redstoneBehavior", getRedstoneBehavior().ordinal());
 		nbt.setBoolean("doubleDoor", doubleDoor);
 
 		inventory.writeToNBT(nbt);
@@ -282,7 +283,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		doorSound = DoorRegistry.getSound(nbt.getString("doorSound"));
 		openingTime = nbt.getInteger("openingTime");
 		autoCloseTime = nbt.getInteger("autoCloseTime");
-		requireRedstone = nbt.getBoolean("requireRedstone");
+		redstoneBehavior = RedstoneBehavior.values()[nbt.getInteger("redstoneBehavior")];
 		doubleDoor = nbt.getBoolean("doubleDoor");
 
 		inventory.readFromNBT(nbt);
