@@ -25,8 +25,10 @@
 package net.malisis.doors.block;
 
 import net.malisis.core.block.BoundingBoxType;
-import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.block.component.DirectionalComponent;
+import net.malisis.core.block.component.PowerComponent;
+import net.malisis.core.block.component.PowerComponent.Type;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
@@ -36,8 +38,6 @@ import net.malisis.doors.tileentity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
@@ -55,10 +55,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class GarageDoor extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
+public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 {
-	public static PropertyBool POWERED = PropertyBool.create("powered");
-
 	public GarageDoor()
 	{
 		super(Material.wood);
@@ -67,13 +65,8 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider, IBl
 		setHardness(2.0F);
 		setStepSound(soundTypeWood);
 
-		setDefaultState(getDefaultState().withProperty(POWERED, false));
-	}
-
-	@Override
-	protected BlockState createBlockState()
-	{
-		return new BlockState(this, HORIZONTAL, POWERED);
+		addComponent(new DirectionalComponent());
+		addComponent(new PowerComponent(Type.REDSTONE));
 	}
 
 	@Override
@@ -124,18 +117,6 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider, IBl
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new GarageDoorTileEntity();
-	}
-
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{
-		return super.getStateFromMeta(meta).withProperty(POWERED, (meta & 8) != 0);
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return super.getMetaFromState(state) + ((boolean) state.getValue(POWERED) ? 8 : 0);
 	}
 
 	@Override

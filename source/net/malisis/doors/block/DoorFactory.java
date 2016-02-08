@@ -24,8 +24,8 @@
 
 package net.malisis.doors.block;
 
-import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.renderer.icon.provider.SidesIconProvider;
 import net.malisis.core.util.TileEntityUtils;
@@ -47,7 +47,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
-public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IBlockDirectional
+public class DoorFactory extends MalisisBlock implements ITileEntityProvider
 {
 	public DoorFactory()
 	{
@@ -55,6 +55,8 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider, IB
 		setCreativeTab(MalisisDoors.tab);
 		setName("door_factory");
 		setHardness(3.0F);
+
+		addComponent(new DirectionalComponent());
 	}
 
 	@Override

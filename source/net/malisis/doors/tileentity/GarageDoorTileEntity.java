@@ -26,11 +26,11 @@ package net.malisis.doors.tileentity;
 
 import java.util.Set;
 
-import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.component.DirectionalComponent;
+import net.malisis.core.block.component.PowerComponent;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorState;
-import net.malisis.doors.block.GarageDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -50,7 +50,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return IBlockDirectional.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(worldObj, pos);
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	@Override
 	public boolean isPowered()
 	{
-		return (boolean) worldObj.getBlockState(pos).getValue(GarageDoor.POWERED);
+		return PowerComponent.isPowered(worldObj, pos);
 	}
 
 	public GarageDoorTileEntity getDoor(EnumFacing dir)
@@ -121,7 +121,8 @@ public class GarageDoorTileEntity extends DoorTileEntity
 			return;
 		}
 
-		if ((boolean) worldObj.getBlockState(pos).getValue(GarageDoor.POWERED) == powered && !isMoving())
+		boolean isPowered = PowerComponent.isPowered(worldObj, pos);
+		if (isPowered == powered && !isMoving())
 			return;
 
 		if ((state == DoorState.OPENING && powered) || (state == DoorState.CLOSING && !powered))
@@ -131,7 +132,8 @@ public class GarageDoorTileEntity extends DoorTileEntity
 		for (GarageDoorTileEntity te : getDoors())
 		{
 			te.setDoorState(newState);
-			worldObj.setBlockState(te.getPos(), worldObj.getBlockState(te.getPos()).withProperty(GarageDoor.POWERED, powered));
+			worldObj.setBlockState(te.getPos(),
+					worldObj.getBlockState(pos).withProperty(PowerComponent.getProperty(getBlockType()), powered));
 		}
 
 		EnumFacing dir = getDirection().rotateY();

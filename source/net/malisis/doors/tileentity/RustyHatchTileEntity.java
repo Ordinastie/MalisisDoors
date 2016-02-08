@@ -24,7 +24,7 @@
 
 package net.malisis.doors.tileentity;
 
-import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.DoorState;
@@ -70,7 +70,7 @@ public class RustyHatchTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return IBlockDirectional.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(worldObj, pos);
 	}
 
 	@Override

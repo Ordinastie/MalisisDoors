@@ -30,16 +30,17 @@ import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
-import net.malisis.core.util.multiblock.IMultiBlock;
 import net.malisis.core.util.multiblock.MultiBlock;
+import net.malisis.core.util.multiblock.MultiBlockComponent;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoors.Items;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -53,7 +54,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  *
  */
-public class Forcefield extends MalisisBlock implements IMultiBlock
+public class Forcefield extends MalisisBlock
 {
 
 	public Forcefield()
@@ -64,25 +65,26 @@ public class Forcefield extends MalisisBlock implements IMultiBlock
 		setStepSound(soundTypePiston);
 		setName("forcefieldDoor");
 		setTexture(MalisisDoors.modid + ":blocks/forcefield");
+
+		addComponent(new MultiBlockComponent(this::getMultiBlock));
 	}
 
 	@Override
-	public Class<? extends ItemBlock> getItemClass()
+	public Item getItem(Block block)
 	{
 		return null;
 	}
 
-	@Override
-	public EnumFacing getPlacingDirection(EnumFacing side, EntityLivingBase placer)
-	{
-		return EnumFacing.SOUTH;
-	}
-
-	@Override
 	public AABBMultiBlock getMultiBlock(IBlockAccess world, BlockPos pos, IBlockState state, ItemStack itemStack)
 	{
 		ForcefieldTileEntity te = getForcefield(world, pos);
 		return te != null ? te.getMultiBlock() : null;
+	}
+
+	//@Override
+	public EnumFacing getPlacingDirection(EnumFacing side, EntityLivingBase placer)
+	{
+		return EnumFacing.SOUTH;
 	}
 
 	@Override
@@ -138,24 +140,23 @@ public class Forcefield extends MalisisBlock implements IMultiBlock
 	@Override
 	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
-		ForcefieldTileEntity te = TileEntityUtils.getTileEntity(ForcefieldTileEntity.class, world, pos);
-		if (te == null || te.getMultiBlock() == null)
-			world.setBlockToAir(pos);
-		else
-			te.getMultiBlock().breakBlocks(world, pos, getDefaultState());
+		MultiBlock multiBlock = MultiBlockComponent.getMultiBlock(world, pos, world.getBlockState(pos), null);
+		if (multiBlock != null)
+			multiBlock.breakBlocks(world, pos, getDefaultState()); //use default state because no rotation
+		world.setBlockToAir(pos);
 		return true;
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
-		return IMultiBlock.isOrigin(state);
+		return MultiBlockComponent.isOrigin(state);
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return IMultiBlock.isOrigin(state) ? new ForcefieldTileEntity() : null;
+		return MultiBlockComponent.isOrigin(state) ? new ForcefieldTileEntity() : null;
 	}
 
 	@Override

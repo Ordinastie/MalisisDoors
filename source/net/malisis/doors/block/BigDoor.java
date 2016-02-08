@@ -29,8 +29,8 @@ import java.util.List;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
-import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.MalisisIcon;
@@ -67,7 +67,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 @MalisisRendered(block = BigDoorRenderer.class, item = DefaultRenderer.Item.class)
-public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener, IBlockDirectional
+public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener
 {
 	public enum Type
 	{
@@ -95,6 +95,8 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		setStepSound(soundTypeStone);
 		setName(type.name);
 		setCreativeTab(MalisisDoors.tab);
+
+		addComponent(new DirectionalComponent());
 	}
 
 	@Override

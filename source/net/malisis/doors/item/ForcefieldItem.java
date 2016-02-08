@@ -29,7 +29,7 @@ import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.icon.provider.IItemIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
-import net.malisis.core.util.multiblock.IMultiBlock;
+import net.malisis.core.util.multiblock.MultiBlockComponent;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Forcefield;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
@@ -128,7 +128,7 @@ public class ForcefieldItem extends MalisisItem
 		if (!world.canBlockBePlaced(block, pos, false, side, player, itemStack))
 			return clearStartPosition(itemStack);
 
-		IBlockState state = block.getDefaultState().withProperty(IMultiBlock.ORIGIN, true);
+		IBlockState state = block.getDefaultState().withProperty(MultiBlockComponent.ORIGIN, true);
 		if (!world.setBlockState(pos, state, 3))
 			return clearStartPosition(itemStack);
 
@@ -144,7 +144,7 @@ public class ForcefieldItem extends MalisisItem
 			te.setMultiBlock(multiBlock);
 
 		//place the multiblock
-		block.onBlockPlacedBy(world, pos, state.withProperty(IMultiBlock.ORIGIN, false), player, itemStack);
+		block.onBlockPlacedBy(world, pos, state.withProperty(MultiBlockComponent.ORIGIN, false), player, itemStack);
 		//TODO: forcefield sound ?
 		//		world.playSoundEffect(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, block.stepSound.getPlaceSound(),
 		//				(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);

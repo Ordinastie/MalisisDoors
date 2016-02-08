@@ -27,7 +27,7 @@ package net.malisis.doors.renderer;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
@@ -95,7 +95,7 @@ public class RustyLadderRenderer extends MalisisRenderer
 
 		if (renderType == RenderType.BLOCK)
 		{
-			EnumFacing dir = IBlockDirectional.getDirection(blockState);
+			EnumFacing dir = DirectionalComponent.getDirection(blockState);
 			if (dir == EnumFacing.NORTH)
 				ladder.rotate(-90, 0, 1, 0);
 			else if (dir == EnumFacing.SOUTH)

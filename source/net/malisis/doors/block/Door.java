@@ -52,7 +52,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -105,7 +104,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public Class<? extends ItemBlock> getItemClass()
+	public Item getItem(Block block)
 	{
 		return null;
 	}

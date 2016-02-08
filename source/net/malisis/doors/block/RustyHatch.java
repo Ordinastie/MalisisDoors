@@ -27,7 +27,6 @@ package net.malisis.doors.block;
 import java.util.List;
 
 import net.malisis.core.block.BoundingBoxType;
-import net.malisis.core.block.IBlockDirectional;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
@@ -36,21 +35,20 @@ import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
-import net.malisis.core.util.multiblock.IMultiBlock;
 import net.malisis.core.util.multiblock.MultiBlock;
+import net.malisis.core.util.multiblock.MultiBlockComponent;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.RustyHatchRenderer;
 import net.malisis.doors.tileentity.RustyHatchTileEntity;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -64,12 +62,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Ordinastie
  *
  */
 @MalisisRendered(block = RustyHatchRenderer.class, item = DefaultRenderer.Item.class)
-public class RustyHatch extends MalisisBlock implements IMultiBlock
+public class RustyHatch extends MalisisBlock
 {
 	private AABBMultiBlock bottomMultiBlock = new AABBMultiBlock(this, new AxisAlignedBB(-1, -2, 0, 1, 1, 2));
 	private AABBMultiBlock topMultiBlock = new AABBMultiBlock(this, new AxisAlignedBB(-1, 0, 0, 1, 3, 2));
@@ -85,6 +85,8 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 		setCreativeTab(MalisisDoors.tab);
 
 		bottomMultiBlock.setBulkProcess(true, true);
+
+		addComponent(new MultiBlockComponent((world, pos, state, itemStack) -> isTop(state) ? topMultiBlock : bottomMultiBlock));
 		topMultiBlock.setBulkProcess(true, true);
 	}
 
@@ -96,15 +98,9 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 	}
 
 	@Override
-	protected BlockState createBlockState()
+	protected List<IProperty> getProperties()
 	{
-		return new BlockState(this, IBlockDirectional.HORIZONTAL, IMultiBlock.ORIGIN, TOP);
-	}
-
-	@Override
-	public MultiBlock getMultiBlock(IBlockAccess world, BlockPos pos, IBlockState state, ItemStack itemStack)
-	{
-		return (boolean) state.getValue(TOP) ? topMultiBlock : bottomMultiBlock;
+		return Lists.newArrayList(TOP);
 	}
 
 	@Override
@@ -120,7 +116,7 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 	@Override
 	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return getDefaultState().withProperty(ORIGIN, true).withProperty(HORIZONTAL, facing).withProperty(TOP, hitY > 0.5F);
+		return super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(TOP, hitY > 0.5F);
 	}
 
 	@Override
@@ -191,13 +187,13 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
-		return IMultiBlock.isOrigin(state);
+		return MultiBlockComponent.isOrigin(state);
 	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return IMultiBlock.isOrigin(state) ? new RustyHatchTileEntity() : null;
+		return MultiBlockComponent.isOrigin(state) ? new RustyHatchTileEntity() : null;
 	}
 
 	@Override
@@ -232,6 +228,11 @@ public class RustyHatch extends MalisisBlock implements IMultiBlock
 	public boolean isFullCube()
 	{
 		return false;
+	}
+
+	public static boolean isTop(IBlockState state)
+	{
+		return (boolean) state.getValue(TOP);
 	}
 
 	public static RustyHatchTileEntity getRustyHatch(IBlockAccess world, BlockPos pos)

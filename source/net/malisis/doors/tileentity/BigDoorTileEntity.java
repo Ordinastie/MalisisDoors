@@ -24,7 +24,7 @@
 
 package net.malisis.doors.tileentity;
 
-import net.malisis.core.block.IBlockDirectional;
+import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.util.MBlockState;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.chunkcollision.ChunkCollision;
@@ -77,7 +77,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return IBlockDirectional.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(worldObj, pos);
 	}
 
 	@Override
