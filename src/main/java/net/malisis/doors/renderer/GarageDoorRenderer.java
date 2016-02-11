@@ -77,6 +77,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
 		rp.useWorldSensitiveIcon.set(false);
+
 	}
 
 	@Override
@@ -125,6 +126,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 				chained.reversed(true);
 
 			rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+			rp.rotateIcon.set(false);
 
 			ar.animate(shape, chained);
 			drawShape(shape, rp);
