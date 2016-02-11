@@ -94,7 +94,9 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	@Override
 	public void setPowered(boolean powered)
 	{
-		if (isOpened() == powered && !isMoving())
+		if (isMoving())
+			return;
+		if (isOpened() == powered)
 			return;
 		if ((state == DoorState.OPENING && powered) || (state == DoorState.CLOSING && !powered))
 			return;
