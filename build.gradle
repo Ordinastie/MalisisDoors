@@ -25,7 +25,7 @@ apply plugin: 'forge'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.8-2.4.1"
+version = "1.8.9-3.0.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
@@ -49,7 +49,9 @@ artifacts {
 }
 
 minecraft {
-	version = "1.8-11.14.3.1487"
+	version = "1.8.9-11.15.1.1722"
+    runDir = "run"
+    
 	if(file("../../run").exists()) 	{
 		runDir = "../../run/assets"
 	}
@@ -59,7 +61,6 @@ minecraft {
 	
 	replace '${version}', project.version
     replaceIn "MalisisDoors.java"
-    mappings = "snapshot_20150711"
 }
 
 processResources
