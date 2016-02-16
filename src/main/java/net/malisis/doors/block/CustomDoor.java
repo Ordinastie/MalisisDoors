@@ -65,7 +65,7 @@ public class CustomDoor extends Door
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return "customDoor";
 	}

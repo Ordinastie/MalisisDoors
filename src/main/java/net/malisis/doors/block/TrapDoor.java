@@ -95,7 +95,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return descriptor.getName();
 	}

@@ -82,7 +82,7 @@ public class CustomDoorItem extends DoorItem
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return "customDoorItem";
 	}

@@ -38,11 +38,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -51,7 +51,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Ordinastie
  *
  */
-public class DoorTileEntity extends TileEntity implements IUpdatePlayerListBox
+public class DoorTileEntity extends TileEntity implements ITickable
 {
 	protected DoorDescriptor descriptor;
 	protected int lastMetadata = -1;
@@ -137,7 +137,7 @@ public class DoorTileEntity extends TileEntity implements IUpdatePlayerListBox
 	public boolean isOpened()
 	{
 		IBlockState state = getBlockState();
-		return state != null && (boolean) state.getValue(BlockDoor.OPEN);
+		return state != null && state.getValue(BlockDoor.OPEN);
 	}
 
 	public boolean isHingeLeft()

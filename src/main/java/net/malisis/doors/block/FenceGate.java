@@ -71,7 +71,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 		DARK_OAK("darkOakFenceGate", EnumType.DARK_OAK),
 		JUNGLE("jungleFenceGate", EnumType.JUNGLE),
 		SPRUCE("spruceFenceGate", EnumType.SPRUCE),
-		CAMO("camoFenceGate", null);
+		CAMO("camoFenceGate", EnumType.OAK); //OAK to prevent NPE
 		//@formatter:on
 		private EnumType type;
 		private String name;
@@ -89,6 +89,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 
 	public FenceGate(Type type)
 	{
+		super(type.type);
 		this.type = type;
 		setHardness(2.0F);
 		setResistance(5.0F);
@@ -100,7 +101,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return type.name;
 	}

@@ -110,7 +110,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return descriptor.getName();
 	}

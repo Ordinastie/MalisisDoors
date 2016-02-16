@@ -75,7 +75,7 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 	}
 
 	@Override
-	public String getRegistryName()
+	public String getName()
 	{
 		return descriptor.getName();
 	}
