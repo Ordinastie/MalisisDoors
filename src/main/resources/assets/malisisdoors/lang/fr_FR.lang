@@ -63,6 +63,7 @@ tile.trapdoor_birch.name=Trappe en bois de bouleau
 tile.trapdoor_dark_oak.name=Trappe en bois de chêne noir
 tile.trapdoor_jungle.name=Trappe en bois d'acajou
 tile.trapdoor_spruce.name=Trappe en bois de sapin
+tile.camoFenceGate.name=Portillon camouflé
 
 tile.curtain_white.name=Rideau Blanc
 tile.curtain_orange.name=Rideau Orange
