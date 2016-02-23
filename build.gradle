@@ -30,23 +30,17 @@ group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conven
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
 
+// Extended project information
+ext.projectName = 'MalisisDoors'
+ext.url = 'http://github.com/Ordinastie/MalisisCore'
+
 dependencies
 {
 	//compile 'net.malisis:malisiscore:1.8-1.4.0:dev'
 	compile files('../MalisisCore/build/libs/malisiscore-1.8.9-2.0.0-dev.jar')	
 }
 
-// because the normal output has been made to be obfuscated
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    from sourceSets.main.allJava
-    classifier = 'dev'
-}
 
-
-artifacts {
-    archives deobfJar
-}
 
 minecraft {
 	version = "1.8.9-11.15.1.1722"
@@ -89,6 +83,21 @@ def commonManifest = {
 }
 jar.manifest commonManifest
 
+// because the normal output has been made to be obfuscated
+task deobfJar(type: Jar) {
+	manifest commonManifest
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+    classifier = 'dev'
+}
+
+
+
+artifacts {
+    archives deobfJar
+}
+
+/*
 uploadArchives() 
 {
 	//dependsOn reobf
@@ -163,6 +172,7 @@ uploadArchives()
 		}
 	}
 }
+*/
 
 if (project.hasProperty('curseapi')) {
 	curseforge {
