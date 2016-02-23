@@ -32,7 +32,7 @@ libsDirName = "../releases"
 
 // Extended project information
 ext.projectName = 'MalisisDoors'
-ext.url = 'http://github.com/Ordinastie/MalisisCore'
+ext.url = 'http://github.com/Ordinastie/MalisisDoors'
 
 dependencies
 {
@@ -97,82 +97,6 @@ artifacts {
     archives deobfJar
 }
 
-/*
-uploadArchives() 
-{
-	//dependsOn reobf
-	
-	if (project.hasProperty('mavenUrl'))
-	{
-		repositories 
-		{
-			logger.info('Publishing to files server')
-			mavenDeployer 
-			{
-				repository(url: project.mavenUrl) 
-				{
-					authentication(userName: project.mavenUser, password: project.mavenPassword)
-				}
-				
-				addFilter('deobf') 
-				{
-					artifact, file -> artifact.attributes['classifier'] == 'dev'
-				}				
-				pom('deobf').version = project.version
-				
-				addFilter('universal') 
-				{
-					artifact, file -> artifact.attributes['classifier'] == null
-				}
-				pom('universal').version = project.version
-				
-				pom 
-				{
-					groupId = project.group
-					version = project.version
-					artifactId = project.archivesBaseName
-					project 
-					{
-						name project.archivesBaseName
-						packaging 'jar'
-						description 'Animations for doors, new doors, trapdoors, fence gates.'
-						url 'https://github.com/Ordinastie/MalisisDoors'
-						scm 
-						{
-							url 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
-							connection 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
-							developerConnection 'scm:git:git@github.com:Ordinastie/MalisisDoors.git'
-						}
-						issueManagement 
-						{
-							system 'github'
-							url 'https://github.com/Ordinastie/MalisisDoors/issues'
-						}
-						licenses 
-						{
-							license 
-							{
-								name 'MIT'
-								url 'http://opensource.org/licenses/MIT'
-								distribution 'repo'
-							}
-						}
-						developers 
-						{
-							developer 
-							{
-								id 'Ordinastie'
-								name 'Ordinastie'
-								roles { role 'developer' }
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-*/
 
 if (project.hasProperty('curseapi')) {
 	curseforge {
@@ -182,6 +106,7 @@ if (project.hasProperty('curseapi')) {
 			releaseType = 'release'
 					
 			addArtifact deobfJar
+			addArtifact sourceJar
 			
 			relations {
 				requiredLibrary 'malisiscore'
