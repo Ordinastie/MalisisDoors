@@ -63,6 +63,7 @@ tile.trapdoor_birch.name=Birch Trapdoor
 tile.trapdoor_dark_oak.name=Dark Oak Trapdoor
 tile.trapdoor_jungle.name=Jungle Trapdoor
 tile.trapdoor_spruce.name=Spruce Trapdoor
+tile.camoFenceGate.name=Camo Fence Gate
 
 tile.curtain_white.name=White Curtain
 tile.curtain_orange.name=Orange Curtain
