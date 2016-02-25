@@ -243,7 +243,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 			{
 				//handle redstone interactions
 				DoorTileEntity te = getDoor(world, pos);
-				if (te == null)
+				if (te == null || te.getDescriptor() == null)
 					return;
 
 				if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.HAND_ONLY
