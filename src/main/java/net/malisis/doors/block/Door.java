@@ -243,7 +243,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 			{
 				//handle redstone interactions
 				DoorTileEntity te = getDoor(world, pos);
-				if (te == null)
+				if (te == null || te.getDescriptor() == null)
 					return;
 
 				if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.HAND_ONLY
@@ -251,7 +251,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 					return;
 
 				//digicode doors can only be opened by hand
-				if (te.getDescriptor() != null && te.getDescriptor().hasCode())
+				if (te.getDescriptor().hasCode())
 					return;
 
 				boolean powered = te.isPowered();
@@ -259,9 +259,6 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 					te.setPowered(powered);
 
 				//center check
-				if (te.getDescriptor() == null)
-					return;
-
 				boolean centered = te.shouldCenter();
 				DoorTileEntity dd = te.getDoubleDoor();
 				if (dd != null)
