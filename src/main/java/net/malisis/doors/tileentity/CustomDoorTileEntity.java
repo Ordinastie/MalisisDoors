@@ -27,6 +27,7 @@ package net.malisis.doors.tileentity;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -38,9 +39,9 @@ import org.apache.commons.lang3.tuple.Triple;
  */
 public class CustomDoorTileEntity extends DoorTileEntity
 {
-	private IBlockState frame;
-	private IBlockState top;
-	private IBlockState bottom;
+	private IBlockState frame = Blocks.planks.getDefaultState();
+	private IBlockState top = Blocks.glass.getDefaultState();
+	private IBlockState bottom = Blocks.glass.getDefaultState();
 
 	//#region Getters/setters
 	public IBlockState getFrame()

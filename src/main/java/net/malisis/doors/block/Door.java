@@ -27,6 +27,7 @@ package net.malisis.doors.block;
 import java.util.List;
 import java.util.Random;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.block.IRegisterable;
@@ -411,7 +412,14 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 		if (isTop(state))
 			pos = pos.down();
 
-		return TileEntityUtils.getTileEntity(DoorTileEntity.class, world, pos);
+		DoorTileEntity te = TileEntityUtils.getTileEntity(DoorTileEntity.class, world, pos);
+		if (te != null && te.getWorld() == null && world instanceof World)
+		{
+			MalisisCore.log.error("[MalisisDoors] DoorTileEntity found without a world!");
+			te.setPos(pos);
+			te.setWorldObj((World) world);
+		}
+		return te;
 	}
 
 	public static boolean isTop(IBlockState state)
