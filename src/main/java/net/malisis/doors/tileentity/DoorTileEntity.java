@@ -118,7 +118,7 @@ public class DoorTileEntity extends TileEntity implements IUpdatePlayerListBox
 	public IBlockState getBlockState()
 	{
 		IBlockState state = worldObj.getBlockState(pos);
-		if (state.getBlock() != getBlockType())
+		if (state.getBlock() != getBlockType() || getBlockType() == null)
 			return null;
 
 		return state.getBlock().getActualState(state, worldObj, pos);
