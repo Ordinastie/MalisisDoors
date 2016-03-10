@@ -56,7 +56,7 @@ public class SpinningDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
 		float angle = tileEntity.isHingeLeft() ? 720 : -720;
 		boolean closed = tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED;
@@ -79,7 +79,7 @@ public class SpinningDoorMovement implements IDoorMovement
 		ParallelTransformation bot = new ParallelTransformation(rotBot, scaleBot);
 		ParallelTransformation top = new ParallelTransformation(rotTop, scaleTop);
 
-		return new Animation[] { new Animation(model.getShape("bottom"), bot), new Animation(model.getShape("top"), top) };
+		return new Animation[] { new Animation<>(model.getShape("bottom"), bot), new Animation<>(model.getShape("top"), top) };
 	}
 
 	@Override

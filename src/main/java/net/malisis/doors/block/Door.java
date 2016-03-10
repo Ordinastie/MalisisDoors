@@ -322,7 +322,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
 	{
 		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))

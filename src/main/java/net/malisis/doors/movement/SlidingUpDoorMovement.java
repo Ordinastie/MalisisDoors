@@ -28,7 +28,6 @@ import static net.malisis.doors.block.Door.*;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
@@ -51,7 +50,7 @@ public class SlidingUpDoorMovement implements IDoorMovement
 		return IDoorMovement.getFullBoundingBox(topBlock, BoundingBoxType.SELECTION).offset(0, 2 - DOOR_WIDTH, 0);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private Translation getTransformation(DoorTileEntity tileEntity)
 	{
 		Translation translation = new Translation(0, 0, 0, 0, 2 - DOOR_WIDTH, 0);
 		translation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
@@ -61,9 +60,9 @@ public class SlidingUpDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

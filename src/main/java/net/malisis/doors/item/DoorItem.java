@@ -125,7 +125,7 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List tooltip, boolean advanced)
+	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
 	{
 		if (stack.getTagCompound() == null)
 			return;

@@ -28,7 +28,6 @@ import static net.malisis.doors.block.Door.*;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
@@ -50,7 +49,7 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 		return IDoorMovement.getHalfBoundingBox().offset(0, 1 - DOOR_WIDTH, 0);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity, boolean top)
+	private Translation getTransformation(DoorTileEntity tileEntity, boolean top)
 	{
 		Translation translation = new Translation(0, 0, 0, 0, top ? 1 - DOOR_WIDTH : -1.1F, 0);
 		translation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
@@ -60,10 +59,10 @@ public class SlidingSplitDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
-				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+		return new Animation[] { new Animation<>(model.getShape("top"), getTransformation(tileEntity, true)),
+				new Animation<>(model.getShape("bottom"), getTransformation(tileEntity, false)) };
 	}
 
 	@Override

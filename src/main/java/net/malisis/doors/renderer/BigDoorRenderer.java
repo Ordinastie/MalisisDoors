@@ -46,10 +46,9 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class BigDoorRenderer extends MalisisRenderer
+public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 {
 	private BigDoor block;
-	private BigDoorTileEntity tileEntity;
 
 	private ResourceLocation rl;
 	private MalisisModel model;
@@ -85,8 +84,7 @@ public class BigDoorRenderer extends MalisisRenderer
 	public void render()
 	{
 		block = (BigDoor) super.block;
-		tileEntity = (BigDoorTileEntity) super.tileEntity;
-		if (super.tileEntity == null)
+		if (tileEntity == null)
 			return;
 
 		setup();
@@ -120,7 +118,7 @@ public class BigDoorRenderer extends MalisisRenderer
 
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
 

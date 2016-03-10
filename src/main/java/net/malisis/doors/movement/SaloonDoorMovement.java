@@ -66,7 +66,7 @@ public class SaloonDoorMovement implements IDoorMovement
 		return aabb;
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private ChainedTransformation getTransformation(DoorTileEntity tileEntity)
 	{
 		float f = 1 / 16F;
 		float angle = -90;
@@ -110,9 +110,9 @@ public class SaloonDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

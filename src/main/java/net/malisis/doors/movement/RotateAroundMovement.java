@@ -28,7 +28,6 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.DoorState;
@@ -48,20 +47,20 @@ public class RotateAroundMovement implements IDoorMovement
 		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), tileEntity.isHingeLeft() ? -1 : 1);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private Rotation getTransformation(DoorTileEntity tileEntity)
 	{
 		float angle = tileEntity.isHingeLeft() ? -90 : 90;
 
-		Transformation transformation = new Rotation(angle).aroundAxis(0, 1, 0);
+		Rotation transformation = new Rotation(angle).aroundAxis(0, 1, 0);
 		transformation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 
 		return transformation.forTicks(tileEntity.getDescriptor().getOpeningTime());
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

@@ -28,7 +28,6 @@ import static net.malisis.doors.block.Door.*;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
@@ -64,7 +63,7 @@ public class Sliding4WaysMovement implements IDoorMovement
 		return aabb;
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
+	private Translation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
 		float dir = -1 + DOOR_WIDTH;
 		float toX = 0;
@@ -85,10 +84,10 @@ public class Sliding4WaysMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
-				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+		return new Animation[] { new Animation<>(model.getShape("top"), getTransformation(tileEntity, true)),
+				new Animation<>(model.getShape("bottom"), getTransformation(tileEntity, false)) };
 	}
 
 	@Override

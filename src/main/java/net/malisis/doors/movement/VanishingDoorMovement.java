@@ -50,12 +50,12 @@ public class VanishingDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
 		AlphaTransform alpha = new AlphaTransform(255, 0);
 		alpha.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 		alpha.forTicks(tileEntity.getDescriptor().getOpeningTime());
-		return new Animation[] { new Animation(rp, alpha) };
+		return new Animation[] { new Animation<>(rp, alpha) };
 	}
 
 	@Override

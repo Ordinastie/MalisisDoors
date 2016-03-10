@@ -35,6 +35,7 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.TRSRTransformation;
@@ -44,7 +45,7 @@ import net.minecraftforge.client.model.TRSRTransformation;
  *
  */
 @SuppressWarnings("deprecation")
-public class RustyLadderRenderer extends MalisisRenderer
+public class RustyLadderRenderer extends MalisisRenderer<TileEntity>
 {
 	private Shape ladder;
 	private RenderParameters rp;

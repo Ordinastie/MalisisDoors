@@ -170,7 +170,7 @@ public class Registers
 
 		if (MalisisCore.isClient())
 		{
-			MalisisRegistry.registerItemModel(doorOakItem, "minecraft", "wooden_door");
+			MalisisRegistry.registerItemModel(doorOakItem, "minecraft", "oak_door");
 			MalisisRegistry.registerItemModel(doorAcaciaItem, "minecraft", "acacia_door");
 			MalisisRegistry.registerItemModel(doorBirchItem, "minecraft", "birch_door");
 			MalisisRegistry.registerItemModel(doorDarkOakItem, "minecraft", "dark_oak_door");

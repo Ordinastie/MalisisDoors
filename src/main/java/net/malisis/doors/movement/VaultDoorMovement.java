@@ -29,7 +29,6 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.block.Door;
@@ -58,7 +57,7 @@ public class VaultDoorMovement implements IDoorMovement
 		return IDoorMovement.getHalfBoundingBox().offset(x, y, 0);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
+	private Rotation getTransformation(DoorTileEntity tileEntity, boolean topBlock)
 	{
 		float angle = -90;
 		float hinge = -0.5F + Door.DOOR_WIDTH / 2;
@@ -79,10 +78,10 @@ public class VaultDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model.getShape("top"), getTransformation(tileEntity, true)),
-				new Animation(model.getShape("bottom"), getTransformation(tileEntity, false)) };
+		return new Animation[] { new Animation<>(model.getShape("top"), getTransformation(tileEntity, true)),
+				new Animation<>(model.getShape("bottom"), getTransformation(tileEntity, false)) };
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class SaloonDoorRenderer extends DoorRenderer
 
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
 

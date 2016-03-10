@@ -55,7 +55,7 @@ public class RustyHatchMovement implements IDoorMovement
 		return new AxisAlignedBB(-1 + f, topBlock ? 1 : -2 + 2 * f, f, 1 - f, topBlock ? 3 - 2 * f : 0, 2 * f);
 	}
 
-	private Transformation getDoorTransformation(DoorTileEntity tileEntity)
+	private Rotation getDoorTransformation(DoorTileEntity tileEntity)
 	{
 		float f = -0.5F + 0.125F;
 		float offX = f;
@@ -80,7 +80,7 @@ public class RustyHatchMovement implements IDoorMovement
 		return rotation;
 	}
 
-	private Transformation getHandleTransformation(DoorTileEntity tileEntity)
+	private Rotation getHandleTransformation(DoorTileEntity tileEntity)
 	{
 		int t = tileEntity.getDescriptor().getOpeningTime() / 2;
 		Rotation rotation = new Rotation(400).aroundAxis(0, 1, 0).offset(0.5F, 0, 0.5F).movement(Transformation.SINUSOIDAL);
@@ -92,11 +92,12 @@ public class RustyHatchMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		Transformation transform = new ParallelTransformation(getDoorTransformation(tileEntity), getHandleTransformation(tileEntity));
-		return new Animation[] { new Animation(model.getShape("door"), getDoorTransformation(tileEntity)),
-				new Animation(model.getShape("handle"), transform) };
+		ParallelTransformation transform = new ParallelTransformation(getDoorTransformation(tileEntity),
+				getHandleTransformation(tileEntity));
+		return new Animation[] { new Animation<>(model.getShape("door"), getDoorTransformation(tileEntity)),
+				new Animation<>(model.getShape("handle"), transform) };
 	}
 
 	@Override

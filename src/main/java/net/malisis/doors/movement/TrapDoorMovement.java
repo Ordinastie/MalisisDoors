@@ -28,7 +28,6 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.DoorState;
@@ -57,7 +56,7 @@ public class TrapDoorMovement implements IDoorMovement
 		return aabb;
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private Rotation getTransformation(DoorTileEntity tileEntity)
 	{
 		float f = 0.5F - Door.DOOR_WIDTH / 2;
 		float fromAngle = 0, toAngle = 90;
@@ -76,9 +75,9 @@ public class TrapDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

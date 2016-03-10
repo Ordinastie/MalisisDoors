@@ -53,8 +53,6 @@ public class CustomDoorRenderer extends DoorRenderer
 	private IBlockState top;
 	private IBlockState bottom;
 
-	protected CustomDoorTileEntity tileEntity;
-
 	private float width;
 
 	public CustomDoorRenderer()
@@ -152,7 +150,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	protected void setTileEntity()
 	{
 		super.setTileEntity();
-		this.tileEntity = (CustomDoorTileEntity) super.tileEntity;
+		CustomDoorTileEntity tileEntity = (CustomDoorTileEntity) this.tileEntity;
 
 		frame = tileEntity.getFrame();
 		top = tileEntity.getTop();

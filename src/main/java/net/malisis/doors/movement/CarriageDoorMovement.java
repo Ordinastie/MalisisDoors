@@ -28,7 +28,6 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.block.Door;
@@ -52,7 +51,7 @@ public class CarriageDoorMovement implements IDoorMovement
 	 * @param b
 	 * @return
 	 */
-	private Transformation getRotation(DoorTileEntity tileEntity, boolean right)
+	private Rotation getRotation(DoorTileEntity tileEntity, boolean right)
 	{
 		float fz = 0.5F - Door.DOOR_WIDTH / 2;
 		float fx = 0;
@@ -71,10 +70,10 @@ public class CarriageDoorMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model.getShape("left"), getRotation(tileEntity, false)),
-				new Animation(model.getShape("right"), getRotation(tileEntity, true)) };
+		return new Animation[] { new Animation<>(model.getShape("left"), getRotation(tileEntity, false)),
+				new Animation<>(model.getShape("right"), getRotation(tileEntity, true)) };
 	}
 
 	@Override

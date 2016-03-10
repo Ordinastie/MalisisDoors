@@ -57,7 +57,7 @@ public class CurtainMovement implements IDoorMovement
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
 		float x = 1 - Door.DOOR_WIDTH;
 		String dir = "west";
@@ -82,10 +82,10 @@ public class CurtainMovement implements IDoorMovement
 		List<MergedVertex> vertexes = top.getMergedVertexes("bottom", dir);
 		vertexes.addAll(bottom.getMergedVertexes(fd));
 
-		Animation[] anims = new Animation[vertexes.size()];
+		Animation<?>[] anims = new Animation[vertexes.size()];
 		int i = 0;
 		for (MergedVertex mv : vertexes)
-			anims[i++] = new Animation(mv, translation);
+			anims[i++] = new Animation<>(mv, translation);
 
 		return anims;
 	}

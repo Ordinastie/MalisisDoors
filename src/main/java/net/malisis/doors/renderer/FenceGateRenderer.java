@@ -27,8 +27,11 @@ package net.malisis.doors.renderer;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import net.malisis.core.renderer.MalisisRenderer;
+import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
@@ -42,9 +45,12 @@ import net.minecraftforge.client.model.TRSRTransformation;
  *
  */
 @SuppressWarnings("deprecation")
-public class FenceGateRenderer extends DoorRenderer
+public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 {
-	protected FenceGateTileEntity tileEntity;
+	private MalisisModel model;
+	private RenderParameters rp;
+	protected AnimationRenderer ar = new AnimationRenderer();
+
 	//    "display": {
 	//        "thirdperson": {
 	//            "rotation": [ 0, -90, 170 ],
@@ -64,7 +70,6 @@ public class FenceGateRenderer extends DoorRenderer
 
 	public FenceGateRenderer()
 	{
-		super(false);
 		registerFor(FenceGateTileEntity.class);
 	}
 
@@ -101,6 +106,17 @@ public class FenceGateRenderer extends DoorRenderer
 		initParams();
 	}
 
+	protected void initParams()
+	{
+		rp = new RenderParameters();
+		rp.renderAllFaces.set(true);
+		rp.calculateAOColor.set(false);
+		rp.useBlockBounds.set(false);
+		rp.useEnvironmentBrightness.set(false);
+		rp.calculateBrightness.set(false);
+		rp.interpolateUV.set(false);
+	}
+
 	@Override
 	public boolean isGui3d()
 	{
@@ -120,6 +136,16 @@ public class FenceGateRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
+		if (renderType == RenderType.BLOCK)
+			return;
+
+		rp.icon.set(null);
+		if (renderType == RenderType.TILE_ENTITY)
+		{
+			setup();
+			renderTileEntity();
+		}
+
 		if (renderType == RenderType.ITEM)
 		{
 			rp.reset();
@@ -127,21 +153,12 @@ public class FenceGateRenderer extends DoorRenderer
 			model.render(this, rp);
 			return;
 		}
-		super.render();
 	}
 
-	@Override
-	protected void setTileEntity()
-	{
-		super.setTileEntity();
-		this.tileEntity = (FenceGateTileEntity) super.tileEntity;
-	}
-
-	@Override
 	protected void setup()
 	{
 		model.resetState();
-		if (direction.getAxis() == Axis.X)
+		if (tileEntity.getDirection().getAxis() == Axis.X)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
 
 		if (tileEntity.isWall())
@@ -155,7 +172,6 @@ public class FenceGateRenderer extends DoorRenderer
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 	}
 
-	@Override
 	protected void renderTileEntity()
 	{
 		enableBlending();
@@ -165,7 +181,7 @@ public class FenceGateRenderer extends DoorRenderer
 
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
 

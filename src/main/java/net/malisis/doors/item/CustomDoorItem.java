@@ -149,7 +149,7 @@ public class CustomDoorItem extends DoorItem
 	}
 
 	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List tooltip, boolean advancedTooltip)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List<String> tooltip, boolean advancedTooltip)
 	{
 		super.addInformation(itemStack, player, tooltip, advancedTooltip);
 		if (itemStack.getTagCompound() == null)
@@ -178,7 +178,7 @@ public class CustomDoorItem extends DoorItem
 		if (bottom == null)
 			bottom = Blocks.glass.getDefaultState();
 
-		return new ImmutableTriple<IBlockState, IBlockState, IBlockState>(frame, top, bottom);
+		return new ImmutableTriple<>(frame, top, bottom);
 	}
 
 	public static NBTTagCompound writeNBT(NBTTagCompound nbt, IBlockState frame, IBlockState top, IBlockState bottom)

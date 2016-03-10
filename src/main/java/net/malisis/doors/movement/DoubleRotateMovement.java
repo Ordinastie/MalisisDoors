@@ -30,7 +30,6 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
@@ -60,7 +59,7 @@ public class DoubleRotateMovement implements IDoorMovement
 		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), rightDirection ? 1 : -1);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private Animation<?> getAnimation(DoorTileEntity tileEntity, MalisisModel model)
 	{
 		boolean reversed = tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED;
 		int ot = tileEntity.getDescriptor().getOpeningTime();
@@ -90,16 +89,17 @@ public class DoubleRotateMovement implements IDoorMovement
 			if (rightDirection)
 				x *= -1;
 			Translation translation = new Translation(0, 0, 0, x, 0, 0).reversed(reversed).forTicks(ot);
-			return new ParallelTransformation(translation, rotation).forTicks(ot);
+			return new Animation<>(model, new ParallelTransformation(translation, rotation).forTicks(ot));
 		}
 
-		return rotation;
+		return new Animation<>(model, rotation);
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		Animation animation = new Animation(model, getTransformation(tileEntity));
+		//if we return just the transformation and not the animation, the generic can't be inferred.
+		Animation<?> animation = getAnimation(tileEntity, model);
 		if ((tileEntity.isHingeLeft() == rightDirection) && tileEntity.getState() == DoorState.OPENED)
 			animation.setRender(true, false);
 		return new Animation[] { animation };

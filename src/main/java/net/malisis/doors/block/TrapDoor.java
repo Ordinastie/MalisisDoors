@@ -143,8 +143,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		if (world.isRemote)
 			return;
 
-		EnumFacing direction = (EnumFacing) state.getValue(FACING);
-		BlockPos blockPos = pos.offset(((EnumFacing) state.getValue(FACING)).getOpposite());
+		EnumFacing direction = state.getValue(FACING);
+		BlockPos blockPos = pos.offset(state.getValue(FACING).getOpposite());
 
 		if (!(isValidSupportBlock(world.getBlockState(blockPos).getBlock()) || world.isSideSolid(blockPos, direction, true)))
 		{
@@ -195,7 +195,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
 	{
 		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))

@@ -30,7 +30,6 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
@@ -55,24 +54,24 @@ public class RotateAndPlaceMovement implements IDoorMovement
 		return aabb;
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private ChainedTransformation getTransformation(DoorTileEntity tileEntity)
 	{
 		int ot = tileEntity.getDescriptor().getOpeningTime() / 2;
 		float angle = tileEntity.isHingeLeft() ? 90 : -90;
 
-		Transformation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(0, 0, -0.5F).forTicks(ot);
-		Transformation translation = new Translation(0, 0, 0.5F - DOOR_WIDTH).forTicks(ot);
+		Rotation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(0, 0, -0.5F).forTicks(ot);
+		Translation translation = new Translation(0, 0, 0.5F - DOOR_WIDTH).forTicks(ot);
 
-		Transformation transformation = new ChainedTransformation(rotation, translation);
+		ChainedTransformation transformation = new ChainedTransformation(rotation, translation);
 		transformation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 
 		return transformation;
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

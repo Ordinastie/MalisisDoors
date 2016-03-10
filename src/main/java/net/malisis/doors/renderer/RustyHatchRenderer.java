@@ -54,7 +54,7 @@ import org.lwjgl.opengl.GL11;
  *
  */
 @SuppressWarnings("deprecation")
-public class RustyHatchRenderer extends MalisisRenderer
+public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 {
 	public static RustyHatchRenderer instance;
 	private ResourceLocation rl;
@@ -176,7 +176,7 @@ public class RustyHatchRenderer extends MalisisRenderer
 
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
 

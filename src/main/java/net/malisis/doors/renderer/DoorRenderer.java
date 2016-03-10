@@ -56,16 +56,14 @@ import net.minecraftforge.client.model.TRSRTransformation;
 import org.apache.commons.lang3.ArrayUtils;
 
 @SuppressWarnings("deprecation")
-public class DoorRenderer extends MalisisRenderer
+public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 {
-	protected DoorTileEntity tileEntity;
-	protected MalisisModel model;
 	protected EnumFacing direction;
 	protected boolean opened;
 	protected boolean hingeLeft;
 	protected boolean topBlock;
 
-	protected Shape shape;
+	protected MalisisModel model;
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
 
@@ -93,7 +91,6 @@ public class DoorRenderer extends MalisisRenderer
 		Shape top = new Shape(bottom);
 		top.translate(0, 1, 0);
 
-		shape = bottom;
 		model = new MalisisModel();
 		model.addShape("bottom", bottom);
 		model.addShape("top", top);
@@ -183,8 +180,6 @@ public class DoorRenderer extends MalisisRenderer
 
 	protected void setTileEntity()
 	{
-		this.tileEntity = (DoorTileEntity) super.tileEntity;
-
 		direction = tileEntity.getDirection();
 		opened = tileEntity.isOpened();
 		hingeLeft = tileEntity.isHingeLeft();
@@ -201,7 +196,7 @@ public class DoorRenderer extends MalisisRenderer
 		List<ITransformable> toRender = new ArrayList<>();
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			toRender = ar.animate(anims);
 			if (!ArrayUtils.isEmpty(anims) && toRender.size() == 0)
 				return;

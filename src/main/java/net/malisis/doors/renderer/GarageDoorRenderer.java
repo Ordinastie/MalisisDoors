@@ -33,7 +33,6 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
@@ -47,7 +46,7 @@ import net.minecraft.util.EnumFacing;
  * @author Ordinastie
  *
  */
-public class GarageDoorRenderer extends MalisisRenderer
+public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 {
 	private GarageDoorTileEntity tileEntity;
 	protected EnumFacing direction;
@@ -83,7 +82,7 @@ public class GarageDoorRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		tileEntity = (GarageDoorTileEntity) super.tileEntity;
+		tileEntity = super.tileEntity;
 		if (tileEntity == null || !tileEntity.isTop())
 			return;
 
@@ -112,16 +111,16 @@ public class GarageDoorRenderer extends MalisisRenderer
 			int delta = tileEntity.getPos().getY() - pos.getY();
 			int delta2 = doors.size() - (delta + 1);
 
-			Transformation verticalAnim = new Translation(0, -delta, 0, 0, 0, 0).forTicks(t * delta, 0);
+			Translation verticalAnim = new Translation(0, -delta, 0, 0, 0, 0).forTicks(t * delta, 0);
 			//@formatter:off
-			Transformation topRotate = new ParallelTransformation(
+			ParallelTransformation topRotate = new ParallelTransformation(
 					new Translation(0, 1, 0).forTicks(t, 0),
 					new Rotation(0, -90).aroundAxis(1, 0, 0).offset(-0.5F, -0.5F, 0).forTicks(t, 0)
 			);
 			//@formatter:on
-			Transformation horizontalAnim = new Translation(0, 0, 0, 0, delta2, 0).forTicks(t * delta2, 0);
+			Translation horizontalAnim = new Translation(0, 0, 0, 0, delta2, 0).forTicks(t * delta2, 0);
 
-			Transformation chained = new ChainedTransformation(verticalAnim, topRotate, horizontalAnim);
+			ChainedTransformation chained = new ChainedTransformation(verticalAnim, topRotate, horizontalAnim);
 			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 				chained.reversed(true);
 

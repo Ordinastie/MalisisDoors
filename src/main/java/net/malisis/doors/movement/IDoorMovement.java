@@ -45,7 +45,7 @@ public interface IDoorMovement
 		return IDoorMovement.getFullBoundingBox(topBlock, type);
 	}
 
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp);
 
 	public default boolean isSpecial()
 	{

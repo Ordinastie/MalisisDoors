@@ -26,9 +26,11 @@ package net.malisis.doors.renderer;
 
 import javax.vecmath.Matrix4f;
 
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
@@ -44,16 +46,17 @@ import net.minecraft.util.EnumFacing;
  *
  */
 @SuppressWarnings("deprecation")
-public class TrapDoorRenderer extends DoorRenderer
+public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 {
 	public static TrapDoorRenderer instance = new TrapDoorRenderer();
-	RenderParameters rpTop;
-	MalisisModel trapDoorModel;
-	MalisisModel slidingTrapDoorModel;
+
+	private MalisisModel trapDoorModel;
+	private MalisisModel slidingTrapDoorModel;
+	private RenderParameters rp;
+	private AnimationRenderer ar = new AnimationRenderer();
 
 	public TrapDoorRenderer()
 	{
-		super(false);
 		registerFor(TrapDoorTileEntity.class);
 	}
 
@@ -82,6 +85,17 @@ public class TrapDoorRenderer extends DoorRenderer
 		initParams();
 	}
 
+	protected void initParams()
+	{
+		rp = new RenderParameters();
+		rp.renderAllFaces.set(true);
+		rp.calculateAOColor.set(false);
+		rp.useBlockBounds.set(false);
+		rp.useEnvironmentBrightness.set(false);
+		rp.calculateBrightness.set(false);
+		rp.interpolateUV.set(false);
+	}
+
 	@Override
 	public boolean isGui3d()
 	{
@@ -97,27 +111,29 @@ public class TrapDoorRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-		initialize();
 		if (renderType == RenderType.BLOCK)
 			return;
 
-		if (renderType == RenderType.ITEM)
+		MalisisModel model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
+		model.resetState();
+
+		if (renderType == RenderType.TILE_ENTITY)
 		{
-			model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
-			model.resetState();
-			model.render(this, rp);
+			setup(model);
+			renderTileEntity(model);
 			return;
 		}
 
-		super.render();
+		if (renderType == RenderType.ITEM)
+		{
+			model.render(this, rp);
+			return;
+		}
 	}
 
-	@Override
-	protected void setup()
+	protected void setup(MalisisModel model)
 	{
-		model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
-		model.resetState();
-
+		EnumFacing direction = tileEntity.getDirection();
 		float angle = 0;
 		if (direction == EnumFacing.SOUTH)
 			angle = 180;
@@ -127,30 +143,22 @@ public class TrapDoorRenderer extends DoorRenderer
 			angle = 270;
 		model.rotate(angle, 0, 1, 0, 0, 0, 0);
 
-		if (((TrapDoorTileEntity) tileEntity).isTop())
+		if (tileEntity.isTop())
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
 
 		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
 		model.getShape("shape").deductParameters();
 	}
 
-	@Override
-	protected void renderTileEntity()
+	protected void renderTileEntity(MalisisModel model)
 	{
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
-		setup();
-
 		if (tileEntity.getMovement() != null)
 		{
-			Animation[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
+			Animation<?>[] anims = tileEntity.getMovement().getAnimations(tileEntity, model, rp);
 			ar.animate(anims);
 		}
-
-		//Shape s = model.getShape("shape");
-		//		Face f = s.getFace(Face.nameFromDirection(EnumFacing.UP));
-		//		s.applyMatrix();
-		//		f.getParameters().aoMatrix.set(f.calculateAoMatrix(EnumFacing.UP));
 
 		model.render(this, rp);
 	}

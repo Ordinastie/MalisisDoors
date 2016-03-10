@@ -30,7 +30,6 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.Rotation;
-import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
@@ -51,7 +50,7 @@ public class RotateAndSlideMovement implements IDoorMovement
 		return AABBUtils.rotate(IDoorMovement.getFullBoundingBox(topBlock, type), tileEntity.isHingeLeft() ? -1 : 1);
 	}
 
-	private Transformation getTransformation(DoorTileEntity tileEntity)
+	private ChainedTransformation getTransformation(DoorTileEntity tileEntity)
 	{
 		int ot = tileEntity.getDescriptor().getOpeningTime() / 2;
 		float angle = 90;
@@ -65,19 +64,19 @@ public class RotateAndSlideMovement implements IDoorMovement
 			tr = -tr;
 		}
 
-		Transformation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(hinge, 0, -0.5F + DOOR_WIDTH / 2).forTicks(ot);
-		Transformation translation = new Translation(tr, 0, 0).forTicks(ot);
+		Rotation rotation = new Rotation(angle).aroundAxis(0, 1, 0).offset(hinge, 0, -0.5F + DOOR_WIDTH / 2).forTicks(ot);
+		Translation translation = new Translation(tr, 0, 0).forTicks(ot);
 
-		Transformation transformation = new ChainedTransformation(rotation, translation);
+		ChainedTransformation transformation = new ChainedTransformation(rotation, translation);
 		transformation.reversed(tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED);
 
 		return transformation;
 	}
 
 	@Override
-	public Animation[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
+	public Animation<?>[] getAnimations(DoorTileEntity tileEntity, MalisisModel model, RenderParameters rp)
 	{
-		return new Animation[] { new Animation(model, getTransformation(tileEntity)) };
+		return new Animation[] { new Animation<>(model, getTransformation(tileEntity)) };
 	}
 
 	@Override

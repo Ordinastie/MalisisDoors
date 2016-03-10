@@ -98,7 +98,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	protected List<IProperty> getProperties()
+	protected List<IProperty<?>> getProperties()
 	{
 		return Lists.newArrayList(TOP);
 	}
@@ -158,7 +158,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List list, Entity collidingEntity)
+	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
 	{
 		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
@@ -205,7 +205,7 @@ public class RustyHatch extends MalisisBlock
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return super.getMetaFromState(state) + ((boolean) state.getValue(TOP) ? 4 : 0);
+		return super.getMetaFromState(state) + (state.getValue(TOP) ? 4 : 0);
 	}
 
 	@Override
@@ -232,7 +232,7 @@ public class RustyHatch extends MalisisBlock
 
 	public static boolean isTop(IBlockState state)
 	{
-		return (boolean) state.getValue(TOP);
+		return state.getValue(TOP);
 	}
 
 	public static RustyHatchTileEntity getRustyHatch(IBlockAccess world, BlockPos pos)

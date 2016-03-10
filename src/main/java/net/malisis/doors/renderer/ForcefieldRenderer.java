@@ -42,7 +42,7 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-public class ForcefieldRenderer extends MalisisRenderer
+public class ForcefieldRenderer extends MalisisRenderer<ForcefieldTileEntity>
 {
 	protected static ResourceLocation[] rl;
 	protected ForcefieldTileEntity tileEntity;
@@ -113,7 +113,7 @@ public class ForcefieldRenderer extends MalisisRenderer
 	@Override
 	public void render()
 	{
-		tileEntity = (ForcefieldTileEntity) super.tileEntity;
+		tileEntity = super.tileEntity;
 		if (tileEntity == null || tileEntity.isOpened())
 			return;
 
