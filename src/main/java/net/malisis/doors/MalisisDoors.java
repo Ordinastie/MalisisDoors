@@ -18,9 +18,12 @@ import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.SaloonDoorBlock;
 import net.malisis.doors.block.TrapDoor;
+import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.item.ForcefieldItem;
+import net.malisis.doors.item.SaloonDoorItem;
+import net.malisis.doors.item.VerticalHatchItem;
 import net.malisis.doors.renderer.ForcefieldRenderer;
 import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.RustyHatchRenderer;
@@ -135,6 +138,7 @@ public class MalisisDoors implements IMalisisMod
 		public static SaloonDoorBlock saloonDoor;
 		public static BigDoor carriageDoor;
 		public static BigDoor medievalDoor;
+		public static VerticalHatchDoor verticalHatch;
 
 		public static TrapDoor slidingTrapDoor;
 		public static FenceGate camoFenceGate;
@@ -169,7 +173,8 @@ public class MalisisDoors implements IMalisisMod
 
 		//Special door items
 		public static CustomDoorItem customDoorItem;
-		public static DoorItem saloonDoorItem;
+		public static SaloonDoorItem saloonDoorItem;
+		public static VerticalHatchItem verticalHatchItem;
 
 		public static Item slidingTrapDoorItem;
 

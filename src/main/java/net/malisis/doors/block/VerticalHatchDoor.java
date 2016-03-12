@@ -22,34 +22,37 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors;
+package net.malisis.doors.block;
 
-import java.io.File;
+import net.malisis.core.MalisisCore;
+import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.renderer.VerticalHatchRenderer;
 
-import net.malisis.core.configuration.ConfigurationSetting;
-import net.malisis.core.configuration.Settings;
-import net.malisis.core.configuration.setting.BooleanSetting;
-import net.malisis.core.configuration.setting.Setting;
-
-public class MalisisDoorsSettings extends Settings
+/**
+ * @author Ordinastie
+ *
+ */
+@MalisisRendered(VerticalHatchRenderer.class)
+public class VerticalHatchDoor extends Door
 {
-	@ConfigurationSetting
-	public static Setting<Boolean> modifyVanillaDoors = new BooleanSetting("config.modifyVanillaDoors", true);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3DItems = new BooleanSetting("config.use3DItems", false);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3branchgHandle = new BooleanSetting("config.use3BranchHandle", false);
-
-	public MalisisDoorsSettings(File file)
+	public VerticalHatchDoor(DoorDescriptor desc)
 	{
-		super(file);
+		super(desc);
 	}
 
 	@Override
-	protected void initSettings()
+	public void createIconProvider(Object object)
 	{
-		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
+		iconProvider = DefaultIconProvider.from(MalisisDoors.modid + ":blocks/verticalHatch");
 	}
+
+	@Override
+	public int getRenderType()
+	{
+		return MalisisCore.malisisRenderType;
+	}
+
 }

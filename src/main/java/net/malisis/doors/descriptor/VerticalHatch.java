@@ -22,34 +22,45 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors;
+package net.malisis.doors.descriptor;
 
-import java.io.File;
+import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.movement.VerticalHatchMovement;
+import net.malisis.doors.sound.RustyHatchSound;
+import net.malisis.doors.tileentity.VerticalHatchTileEntity;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.init.Items;
 
-import net.malisis.core.configuration.ConfigurationSetting;
-import net.malisis.core.configuration.Settings;
-import net.malisis.core.configuration.setting.BooleanSetting;
-import net.malisis.core.configuration.setting.Setting;
-
-public class MalisisDoorsSettings extends Settings
+/**
+ * @author Ordinastie
+ *
+ */
+public class VerticalHatch extends DoorDescriptor
 {
-	@ConfigurationSetting
-	public static Setting<Boolean> modifyVanillaDoors = new BooleanSetting("config.modifyVanillaDoors", true);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3DItems = new BooleanSetting("config.use3DItems", false);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3branchgHandle = new BooleanSetting("config.use3BranchHandle", false);
-
-	public MalisisDoorsSettings(File file)
+	public VerticalHatch()
 	{
-		super(file);
+		//Block
+		setMaterial(Material.iron);
+		setHardness(3.5F);
+		setSoundType(Block.soundTypeMetal);
+		setName("verticalHatch");
+		setTextureName(MalisisDoors.modid, "verticalHatch");
+
+		//TileEntity
+		setOpeningTime(60);
+		setDoubleDoor(false);
+		setMovement(DoorRegistry.getMovement(VerticalHatchMovement.class));
+		setSound(DoorRegistry.getSound(RustyHatchSound.class));
+		setTileEntityClass(VerticalHatchTileEntity.class);
+
+		//Item
+		setTab(MalisisDoors.tab);
+
+		//Recipe
+		setRecipe("AA ", "AAA", "AA ", 'A', Items.iron_ingot);
 	}
 
-	@Override
-	protected void initSettings()
-	{
-		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
-	}
 }

@@ -172,6 +172,9 @@ public class DoorRenderer extends MalisisRenderer
 	{
 		model.resetState();
 
+		if (tileEntity != null && tileEntity.isCentered())
+			model.translate(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
+
 		if (direction == EnumFacing.NORTH)
 			model.rotate(180, 0, 1, 0, 0, 0, 0);
 		if (direction == EnumFacing.WEST)
@@ -188,9 +191,6 @@ public class DoorRenderer extends MalisisRenderer
 		direction = tileEntity.getDirection();
 		opened = tileEntity.isOpened();
 		hingeLeft = tileEntity.isHingeLeft();
-
-		if (tileEntity.isCentered())
-			model.translate(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
 	}
 
 	protected void renderTileEntity()
