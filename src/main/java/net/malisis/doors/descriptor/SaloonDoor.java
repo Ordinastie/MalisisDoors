@@ -62,11 +62,4 @@ public class SaloonDoor extends DoorDescriptor
 		//Recipe
 		setRecipe("AA", "BB", "AA", 'A', Blocks.planks, 'B', Items.stick);
 	}
-
-	@Override
-	public void setTextureName(String modid, String textureName)
-	{
-		this.modid = modid;
-		this.textureName = textureName;
-	}
 }

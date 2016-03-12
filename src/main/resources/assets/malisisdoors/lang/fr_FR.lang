@@ -18,6 +18,7 @@ item.door_jungle.name=Porte en bois d'acajou
 item.door_acacia.name=Porte en bois d'acacia
 item.door_dark_oak.name=Porte en bois de chêne noir
 item.saloon.name=Porte de saloon
+item.verticalHatch.name=Porte renforcée
 
 item.curtain_white.name=Rideau Blanc
 item.curtain_orange.name=Rideau Orange
@@ -64,6 +65,7 @@ tile.trapdoor_dark_oak.name=Trappe en bois de chêne noir
 tile.trapdoor_jungle.name=Trappe en bois d'acajou
 tile.trapdoor_spruce.name=Trappe en bois de sapin
 tile.camoFenceGate.name=Portillon camouflé
+tile.verticalHatch.name=Porte renforcée
 
 tile.curtain_white.name=Rideau Blanc
 tile.curtain_orange.name=Rideau Orange

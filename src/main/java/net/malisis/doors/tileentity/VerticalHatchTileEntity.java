@@ -22,34 +22,14 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors;
+package net.malisis.doors.tileentity;
 
-import java.io.File;
 
-import net.malisis.core.configuration.ConfigurationSetting;
-import net.malisis.core.configuration.Settings;
-import net.malisis.core.configuration.setting.BooleanSetting;
-import net.malisis.core.configuration.setting.Setting;
-
-public class MalisisDoorsSettings extends Settings
+/**
+ * @author Ordinastie
+ *
+ */
+public class VerticalHatchTileEntity extends DoorTileEntity
 {
-	@ConfigurationSetting
-	public static Setting<Boolean> modifyVanillaDoors = new BooleanSetting("config.modifyVanillaDoors", true);
 
-	@ConfigurationSetting
-	public static Setting<Boolean> use3DItems = new BooleanSetting("config.use3DItems", false);
-
-	@ConfigurationSetting
-	public static Setting<Boolean> use3branchgHandle = new BooleanSetting("config.use3BranchHandle", false);
-
-	public MalisisDoorsSettings(File file)
-	{
-		super(file);
-	}
-
-	@Override
-	protected void initSettings()
-	{
-		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
-	}
 }

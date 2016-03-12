@@ -18,6 +18,7 @@ item.door_jungle.name=Jungle Door
 item.door_acacia.name=Acacia Door
 item.door_dark_oak.name=Dark Oak Door
 item.saloon.name=Saloon Door
+item.verticalHatch.name=Reinforced Door
 
 item.curtain_white.name=White Curtain
 item.curtain_orange.name=Orange Curtain
@@ -64,6 +65,7 @@ tile.trapdoor_dark_oak.name=Dark Oak Trapdoor
 tile.trapdoor_jungle.name=Jungle Trapdoor
 tile.trapdoor_spruce.name=Spruce Trapdoor
 tile.camoFenceGate.name=Camo Fence Gate
+tile.verticalHatch.name=Reinforced Door
 
 tile.curtain_white.name=White Curtain
 tile.curtain_orange.name=Orange Curtain

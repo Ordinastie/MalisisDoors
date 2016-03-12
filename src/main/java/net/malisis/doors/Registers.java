@@ -41,6 +41,7 @@ import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.SaloonDoorBlock;
 import net.malisis.doors.block.TrapDoor;
+import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.descriptor.Curtain;
 import net.malisis.doors.descriptor.FactoryDoor;
 import net.malisis.doors.descriptor.GlassDoor;
@@ -52,11 +53,13 @@ import net.malisis.doors.descriptor.SlidingTrapDoor;
 import net.malisis.doors.descriptor.VanillaDoor;
 import net.malisis.doors.descriptor.VanillaTrapDoor;
 import net.malisis.doors.descriptor.VanillaTrapDoor.Type;
+import net.malisis.doors.descriptor.VerticalHatch;
 import net.malisis.doors.descriptor.WoodTrapDoor;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.item.ForcefieldItem;
 import net.malisis.doors.item.SaloonDoorItem;
+import net.malisis.doors.item.VerticalHatchItem;
 import net.malisis.doors.recipe.BigDoorRecipe;
 import net.malisis.doors.tileentity.BigDoorTileEntity;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
@@ -68,6 +71,7 @@ import net.malisis.doors.tileentity.GarageDoorTileEntity;
 import net.malisis.doors.tileentity.RustyHatchTileEntity;
 import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
+import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -91,6 +95,8 @@ public class Registers
 		registerCustomDoor();
 
 		registerSaloonDoor();
+
+		registerVerticalHatch();
 
 		registerBigDoors();
 
@@ -268,6 +274,18 @@ public class Registers
 		desc.register();
 
 		GameRegistry.registerTileEntity(SaloonDoorTileEntity.class, "saloonDoorTileEntity");
+	}
+
+	private static void registerVerticalHatch()
+	{
+		DoorDescriptor desc = new VerticalHatch();
+		verticalHatch = new VerticalHatchDoor(desc);
+		verticalHatchItem = new VerticalHatchItem(desc);
+
+		desc.set(verticalHatch, verticalHatchItem);
+		desc.register();
+
+		GameRegistry.registerTileEntity(VerticalHatchTileEntity.class, "verticalHatchTileEntity");
 	}
 
 	private static void registerTrapDoors()
