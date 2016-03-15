@@ -25,7 +25,7 @@ apply plugin: 'forge'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.8-2.5.0"
+version = "1.8-2.5.1"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 libsDirName = "../releases"
