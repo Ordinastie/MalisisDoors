@@ -102,6 +102,12 @@ public class VerticalHatchRenderer extends DoorRenderer
 	}
 
 	@Override
+	public boolean isGui3d()
+	{
+		return true;
+	}
+
+	@Override
 	protected void renderItem()
 	{
 		next(GL11.GL_POLYGON);
