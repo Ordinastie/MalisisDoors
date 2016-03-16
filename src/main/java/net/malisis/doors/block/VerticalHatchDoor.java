@@ -30,6 +30,8 @@ import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.VerticalHatchRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -44,6 +46,7 @@ public class VerticalHatchDoor extends Door
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void createIconProvider(Object object)
 	{
 		iconProvider = DefaultIconProvider.from(MalisisDoors.modid + ":blocks/verticalHatch");
