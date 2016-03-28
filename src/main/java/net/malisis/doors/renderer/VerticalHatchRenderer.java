@@ -66,7 +66,6 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-		initialize();
 		if (renderType == RenderType.BLOCK)
 		{
 			if (!Door.isTop(blockState))
