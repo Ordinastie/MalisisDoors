@@ -25,8 +25,8 @@
 package net.malisis.doors.renderer;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
+import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
@@ -35,16 +35,15 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.tileentity.FenceGateTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraftforge.client.model.TRSRTransformation;
 
 /**
  * @author Ordinastie
  *
  */
-@SuppressWarnings("deprecation")
 public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 {
 	private MalisisModel model;
@@ -63,10 +62,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 	//            "scale": [ 1, 1, 1 ]
 	//        }
 
-	protected Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(0, 0.09375F, -0.171875F),
-			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -90, 170)), new Vector3f(0.375F, 0.375F, 0.375F), null).getMatrix();
-	protected Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)), null, null)
-			.getMatrix();
+	private Matrix4f gui = new TransformBuilder().translate(0, -0.05F, 0).rotate(30, 45, 0).scale(.8F).get();
 
 	public FenceGateRenderer()
 	{
@@ -126,11 +122,13 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 	@Override
 	public Matrix4f getTransform(TransformType tranformType)
 	{
-		if (tranformType == TransformType.FIRST_PERSON)
-			return firstPerson;
-		if (tranformType == TransformType.THIRD_PERSON)
-			return thirdPerson;
-		return null;
+		switch (tranformType)
+		{
+			case GUI:
+				return gui;
+			default:
+				return DefaultRenderer.block.getTransform(tranformType);
+		}
 	}
 
 	@Override
@@ -169,7 +167,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 		rp.colorMultiplier.set(tileEntity.getCamoColor());
 		rp.useEnvironmentBrightness.set(false);
 		rp.calculateAOColor.set(false);
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 	}
 
 	protected void renderTileEntity()

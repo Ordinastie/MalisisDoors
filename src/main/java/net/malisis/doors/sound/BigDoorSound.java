@@ -24,8 +24,10 @@
 
 package net.malisis.doors.sound;
 
+import net.malisis.core.MalisisRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
@@ -33,16 +35,28 @@ import net.malisis.doors.MalisisDoors;
  */
 public class BigDoorSound implements IDoorSound
 {
+	private SoundEvent opening;
+	private SoundEvent closing;
+	private SoundEvent closed;
+
 	@Override
-	public String getSoundPath(DoorState state)
+	public void register()
 	{
-		if (state == DoorState.CLOSED)
-			return MalisisDoors.modid + ":carriage_closed";
-		else if (state == DoorState.OPENING)
-			return MalisisDoors.modid + ":carriage_opening";
-		else if (state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":carriage_closing";
-		return null;
+		opening = MalisisRegistry.registerSound(MalisisDoors.modid, "carriage_opening");
+		closing = MalisisRegistry.registerSound(MalisisDoors.modid, "carriage_closing");
+		closed = MalisisRegistry.registerSound(MalisisDoors.modid, "carriage_closed");
 	}
 
+	@Override
+	public SoundEvent getSound(DoorState state)
+	{
+		if (state == DoorState.OPENING)
+			return opening;
+		else if (state == DoorState.CLOSING)
+			return closing;
+		else if (state == DoorState.CLOSED)
+			return closed;
+
+		return null;
+	}
 }

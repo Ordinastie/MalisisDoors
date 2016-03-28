@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.SaloonDoorMovement;
 import net.malisis.doors.sound.SilentDoorSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -45,7 +45,7 @@ public class SaloonDoor extends DoorDescriptor
 		//Block
 		setMaterial(Material.wood);
 		setHardness(2.5F);
-		setSoundType(Block.soundTypeWood);
+		setSoundType(SoundType.WOOD);
 		setName("saloon");
 		setTextureName(MalisisDoors.modid, "saloon_door");
 		setNumCrafted(3);

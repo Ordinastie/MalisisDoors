@@ -27,8 +27,8 @@ package net.malisis.doors.tileentity;
 import net.malisis.core.util.AABBUtils;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 
 /**
  * @author Ordinastie

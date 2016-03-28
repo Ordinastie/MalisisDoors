@@ -25,7 +25,6 @@
 package net.malisis.doors.renderer;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
@@ -35,6 +34,7 @@ import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.core.util.multiblock.MultiBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.RustyHatch;
@@ -45,7 +45,6 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -53,7 +52,6 @@ import org.lwjgl.opengl.GL11;
  * @author Ordinastie
  *
  */
-@SuppressWarnings("deprecation")
 public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 {
 	public static RustyHatchRenderer instance;
@@ -70,10 +68,8 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	private boolean topBlock;
 	private EnumFacing direction;
 
-	private Matrix4f gui = new TRSRTransformation(new Vector3f(-0.2F, 0.5F, 0.15F), TRSRTransformation.quatFromYXZDegrees(new Vector3f(90,
-			0, 0)), null, null).getMatrix();
-	private Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0.0F, 0.15F, -0.25F),
-			TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, -45, 0)), new Vector3f(0.25F, 0.25F, 0.25F), null).getMatrix();
+	private Matrix4f gui = new TransformBuilder().translate(-0.2F, 0.5F, 0.15F).rotate(90, 0, 0).get();
+	private Matrix4f thirdPerson = new TransformBuilder().translate(0, 0.15F, -0.25F).rotate(0, -45, 0).scale(0.25F).get();
 
 	public RustyHatchRenderer()
 	{
@@ -123,7 +119,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 			return;
 
 		direction = tileEntity.getDirection();
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		topBlock = tileEntity.isTop();
 		if (renderType == RenderType.BLOCK)
 		{
@@ -191,12 +187,16 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	@Override
 	public Matrix4f getTransform(TransformType tranformType)
 	{
-		if (tranformType == TransformType.GUI)
-			return gui;
-		if (tranformType == TransformType.THIRD_PERSON)
-			return thirdPerson;
-
-		return null;
+		switch (tranformType)
+		{
+			case GUI:
+				return gui;
+			case THIRD_PERSON_RIGHT_HAND:
+			case THIRD_PERSON_LEFT_HAND:
+				return thirdPerson;
+			default:
+				return null;
+		}
 	}
 
 	private void renderItem()

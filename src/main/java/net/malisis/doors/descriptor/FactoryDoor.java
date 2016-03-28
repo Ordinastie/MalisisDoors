@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.SlidingSplitDoorMovement;
 import net.malisis.doors.sound.PneumaticSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 
@@ -44,7 +44,7 @@ public class FactoryDoor extends DoorDescriptor
 		//Block
 		setMaterial(Material.iron);
 		setHardness(4.0F);
-		setSoundType(Block.soundTypeMetal);
+		setSoundType(SoundType.METAL);
 		setName("factory_door");
 		setTextureName(MalisisDoors.modid, "factory_door");
 		setNumCrafted(3);

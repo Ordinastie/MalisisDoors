@@ -30,10 +30,10 @@ import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.movement.IDoorMovement;
 import net.malisis.doors.movement.RotatingDoorMovement;
 import net.malisis.doors.sound.IDoorSound;
-import net.malisis.doors.sound.VanillaDoorSound;
+import net.malisis.doors.sound.WoodenDoorSound;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.Block.SoundType;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -61,7 +61,7 @@ public class DoorDescriptor
 	//block
 	protected Material material = Material.wood;
 	protected float hardness = 3.0F;
-	protected SoundType soundType = Block.soundTypeWood;
+	protected SoundType soundType = SoundType.WOOD;
 	protected String name;
 	protected int autoCloseTime = 0;
 
@@ -92,7 +92,7 @@ public class DoorDescriptor
 	public DoorDescriptor()
 	{
 		movement = DoorRegistry.getMovement(RotatingDoorMovement.class);
-		sound = DoorRegistry.getSound(VanillaDoorSound.class);
+		sound = DoorRegistry.getSound(WoodenDoorSound.class);
 	}
 
 	public DoorDescriptor(NBTTagCompound nbt)
@@ -102,7 +102,7 @@ public class DoorDescriptor
 		else
 		{
 			movement = DoorRegistry.getMovement(RotatingDoorMovement.class);
-			sound = DoorRegistry.getSound(VanillaDoorSound.class);
+			sound = DoorRegistry.getSound(WoodenDoorSound.class);
 		}
 	}
 

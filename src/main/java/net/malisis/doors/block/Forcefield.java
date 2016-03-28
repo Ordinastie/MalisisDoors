@@ -26,6 +26,8 @@ package net.malisis.doors.block;
 
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
+import net.malisis.core.renderer.DefaultRenderer;
+import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
@@ -36,6 +38,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoors.Items;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,10 +46,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -54,6 +58,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  *
  */
+@MalisisRendered(DefaultRenderer.Null.class)
 public class Forcefield extends MalisisBlock
 {
 
@@ -62,7 +67,7 @@ public class Forcefield extends MalisisBlock
 		super(Material.anvil);
 		setResistance(60000000);
 		setBlockUnbreakable();
-		setStepSound(soundTypePiston);
+		setSoundType(SoundType.ANVIL);
 		setName("forcefieldDoor");
 		setTexture(MalisisDoors.modid + ":blocks/forcefield");
 
@@ -94,9 +99,9 @@ public class Forcefield extends MalisisBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (!EntityUtils.isEquipped(player, MalisisDoors.Items.forcefieldItem))
+		if (!EntityUtils.isEquipped(player, MalisisDoors.Items.forcefieldItem, hand))
 			return true;
 
 		ForcefieldTileEntity te = getForcefield(world, pos);
@@ -106,7 +111,7 @@ public class Forcefield extends MalisisBlock
 		if (player.isSneaking())
 		{
 			te.getMultiBlock().breakBlocks(world, pos, getDefaultState());
-			MalisisDoors.Items.forcefieldItem.setEnergy(player.getCurrentEquippedItem(), 0);
+			MalisisDoors.Items.forcefieldItem.setEnergy(player.getHeldItem(hand), 0);
 		}
 		else
 			te.switchForcefield();
@@ -115,7 +120,7 @@ public class Forcefield extends MalisisBlock
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		ForcefieldTileEntity te = getForcefield(world, pos);
 		if (te == null || te.getMultiBlock() == null || type == BoundingBoxType.RAYTRACE)
@@ -138,7 +143,7 @@ public class Forcefield extends MalisisBlock
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		MultiBlock multiBlock = MultiBlockComponent.getMultiBlock(world, pos, world.getBlockState(pos), null);
 		if (multiBlock != null)
@@ -160,27 +165,21 @@ public class Forcefield extends MalisisBlock
 	}
 
 	@Override
-	public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
 		return new ItemStack(Items.forcefieldItem);
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return -1;
 	}
 
 	public static ForcefieldTileEntity getForcefield(IBlockAccess world, BlockPos pos)

@@ -25,21 +25,27 @@
 package net.malisis.doors.sound;
 
 import net.malisis.doors.DoorState;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
  *
  */
-public class VanillaDoorSound implements IDoorSound
+//Vanilla wooden trapdoor
+public class WoodenTrapDoorSound implements IDoorSound
 {
+	@Override
+	public void register()
+	{}
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public SoundEvent getSound(DoorState state)
 	{
 		if (state == DoorState.OPENING)
-			return "random.door_open";
+			return SoundEvents.block_wooden_trapdoor_open;
 		if (state == DoorState.CLOSED)
-			return "random.door_close";
+			return SoundEvents.block_wooden_trapdoor_close;
 
 		return null;
 	}

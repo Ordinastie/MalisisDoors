@@ -27,8 +27,9 @@ package net.malisis.doors.descriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.movement.TrapDoorMovement;
-import net.malisis.doors.sound.VanillaDoorSound;
-import net.minecraft.block.Block;
+import net.malisis.doors.sound.IronTrapDoorSound;
+import net.malisis.doors.sound.WoodenTrapDoorSound;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 
@@ -45,18 +46,20 @@ public class VanillaTrapDoor extends TrapDoorDescriptor
 
 	public VanillaTrapDoor(Type type)
 	{
+		boolean iron = type == Type.IRON;
+
 		//Block
 		setOpeningTime(6);
-		setMaterial(type == Type.IRON ? Material.iron : Material.wood);
-		setHardness(type == Type.IRON ? 5.0F : 3.0F);
-		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
-		setName(type == Type.IRON ? "iron_trapdoor" : "trapdoor");
-		setTextureName("minecraft", type == Type.IRON ? "blocks/iron_trapdoor" : "blocks/trapdoor");
+		setMaterial(iron ? Material.iron : Material.wood);
+		setHardness(iron ? 5.0F : 3.0F);
+		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
+		setName(iron ? "iron_trapdoor" : "trapdoor");
+		setTextureName("minecraft", iron ? "blocks/iron_trapdoor" : "blocks/trapdoor");
 
 		//te
-		setRedstoneBehavior(type == Type.IRON ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
+		setRedstoneBehavior(iron ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
 		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
-		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		setSound(DoorRegistry.getSound(iron ? IronTrapDoorSound.class : WoodenTrapDoorSound.class));
 
 		//item
 		setTab(CreativeTabs.tabRedstone);

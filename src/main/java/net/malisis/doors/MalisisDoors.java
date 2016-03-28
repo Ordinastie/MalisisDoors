@@ -25,7 +25,6 @@ import net.malisis.doors.item.ForcefieldItem;
 import net.malisis.doors.item.SaloonDoorItem;
 import net.malisis.doors.item.VerticalHatchItem;
 import net.malisis.doors.renderer.ForcefieldRenderer;
-import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.renderer.RustyHatchRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -94,7 +93,6 @@ public class MalisisDoors implements IMalisisMod
 		if (MalisisCore.isClient())
 		{
 			new ForcefieldRenderer();
-			new GarageDoorRenderer();
 
 			MalisisRegistry.registerItemRenderer(Items.rustyHandle, RustyHatchRenderer.instance);
 

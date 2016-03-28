@@ -24,17 +24,15 @@
 
 package net.malisis.doors.renderer;
 
-import javax.vecmath.Vector3f;
-
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -59,8 +57,8 @@ public class VerticalHatchRenderer extends DoorRenderer
 
 		initParams();
 
-		gui = new TRSRTransformation(new Vector3f(.0F, -0.28F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
-				new Vector3f(.75F, .75F, .75F), null).getMatrix();
+		gui = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, 0, 0).scale(.7F, .45F, 1).get();
+		firstPerson = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, -45, 0).scale(.5F).get();
 	}
 
 	@Override
@@ -95,7 +93,7 @@ public class VerticalHatchRenderer extends DoorRenderer
 
 		next(GL11.GL_POLYGON);
 		//model.render(this, rp);
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		drawShape(model.getShape("Door"), rp);
 		drawShape(model.getShape(MalisisDoorsSettings.use3branchgHandle.get() ? "Handle3" : "Handle4"), rp);
 	}

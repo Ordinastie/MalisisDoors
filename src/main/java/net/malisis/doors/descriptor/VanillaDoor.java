@@ -27,8 +27,9 @@ package net.malisis.doors.descriptor;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.movement.RotatingDoorMovement;
-import net.malisis.doors.sound.VanillaDoorSound;
-import net.minecraft.block.Block;
+import net.malisis.doors.sound.IronDoorSound;
+import net.malisis.doors.sound.WoodenDoorSound;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 
@@ -63,19 +64,20 @@ public class VanillaDoor extends DoorDescriptor
 
 	public VanillaDoor(Type type)
 	{
+		boolean iron = type == Type.IRON;
 		//Block
 		setOpeningTime(6);
-		setMaterial(type == Type.IRON ? Material.iron : Material.wood);
-		setHardness(type == Type.IRON ? 5.0F : 3.0F);
-		setSoundType(type == Type.IRON ? Block.soundTypeMetal : Block.soundTypeWood);
+		setMaterial(iron ? Material.iron : Material.wood);
+		setHardness(iron ? 5.0F : 3.0F);
+		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
 		setName(type.name);
 		setTextureName("minecraft", type.texture);
 		setNumCrafted(3);
 
 		//te
-		setRedstoneBehavior(type == Type.IRON ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
+		setRedstoneBehavior(iron ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
 		setMovement(DoorRegistry.getMovement(RotatingDoorMovement.class));
-		setSound(DoorRegistry.getSound(VanillaDoorSound.class));
+		setSound(DoorRegistry.getSound(iron ? IronDoorSound.class : WoodenDoorSound.class));
 
 		//item
 		setTab(CreativeTabs.tabRedstone);

@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.ShojiDoorSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -45,7 +45,7 @@ public class ShojiDoor extends DoorDescriptor
 		//Block
 		setMaterial(Material.wood);
 		setHardness(1.0F);
-		setSoundType(Block.soundTypeCloth);
+		setSoundType(SoundType.CLOTH);
 		setName("shoji_door");
 		setTextureName(MalisisDoors.modid, "shoji_door");
 		setNumCrafted(3);

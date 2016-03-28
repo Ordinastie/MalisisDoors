@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
@@ -43,6 +42,7 @@ import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.icon.IIconProvider;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
@@ -51,11 +51,9 @@ import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.model.TRSRTransformation;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-@SuppressWarnings("deprecation")
 public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 {
 	protected EnumFacing direction;
@@ -67,12 +65,9 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
 
-	protected Matrix4f gui = new TRSRTransformation(new Vector3f(.15F, -0.2F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90,
-			0)), new Vector3f(.75F, .75F, .75F), null).getMatrix();
-	protected Matrix4f thirdPerson = new TRSRTransformation(new Vector3f(-0, 0, -0.25F),
-			TRSRTransformation.quatFromYXZDegrees(new Vector3f(90, 0, 0)), new Vector3f(0.3F, 0.3F, 0.3F), null).getMatrix();
-	protected Matrix4f firstPerson = new TRSRTransformation(null, TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
-			new Vector3f(0.9F, 0.8F, 1), null).getMatrix();
+	protected Matrix4f gui = new TransformBuilder().translate(.15F, -0.2F, 0).rotate(0, 90, 0).scale(.75F).get();
+	protected Matrix4f thirdPerson = new TransformBuilder().translate(0, 0, -0.25F).rotate(90, 0, 0).scale(0.3F, 0.3F, 0.3F).get();
+	protected Matrix4f firstPerson = new TransformBuilder().rotate(0, 90, 0).scale(0.9F, 0.8F, 1).get();
 
 	public DoorRenderer()
 	{
@@ -127,9 +122,11 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 		{
 			case GUI:
 				return gui;
-			case FIRST_PERSON:
+			case FIRST_PERSON_RIGHT_HAND:
+			case FIRST_PERSON_LEFT_HAND:
 				return firstPerson;
-			case THIRD_PERSON:
+			case THIRD_PERSON_RIGHT_HAND:
+			case THIRD_PERSON_LEFT_HAND:
 				return thirdPerson;
 			default:
 				return null;
@@ -204,13 +201,13 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 
 		//model.render(this, rp);
 		topBlock = false;
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		drawShape(model.getShape("bottom"), rp);
 
 		topBlock = true;
 		set(pos.up());
 		set(blockState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		drawShape(model.getShape("top"), rp);
 		set(pos.down());
 	}

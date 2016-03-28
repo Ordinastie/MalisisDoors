@@ -24,7 +24,6 @@
 
 package net.malisis.doors.block;
 
-import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.IIconProvider;
@@ -42,15 +41,18 @@ import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -93,7 +95,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 		this.type = type;
 		setHardness(2.0F);
 		setResistance(5.0F);
-		setStepSound(soundTypeWood);
+		setSoundType(SoundType.WOOD);
 		setUnlocalizedName(type.name);
 
 		if (type == Type.CAMO)
@@ -134,7 +136,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -171,18 +173,18 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 
 		te.updateAll();
 
-		if (world.isBlockIndirectlyGettingPowered(pos) != 0 || state.getBlock().canProvidePower())
+		if (world.isBlockIndirectlyGettingPowered(pos) != 0 || neighborBlock.getDefaultState().canProvidePower())
 			te.setPowered(te.isPowered());
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos)
 	{
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null || te.isMoving() || te.isOpened())
 			return null;
 
-		return super.getCollisionBoundingBox(world, pos, state);
+		return super.getCollisionBoundingBox(state, world, pos);
 	}
 
 	@Override
@@ -192,8 +194,8 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	@Override
-	public int getRenderType()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return MalisisCore.malisisRenderType;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 }

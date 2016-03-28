@@ -40,11 +40,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -104,10 +106,10 @@ public class ForcefieldItem extends MalisisItem
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (getEnergy(itemStack) < getMaxEnergy())
-			return true;
+			return EnumActionResult.FAIL;
 
 		pos = pos.offset(side);
 		if (!isStartSet(itemStack))
@@ -159,7 +161,7 @@ public class ForcefieldItem extends MalisisItem
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player)
+	public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{
 		return true;
 	}
@@ -169,11 +171,11 @@ public class ForcefieldItem extends MalisisItem
 		return getNBT(itemStack).hasKey("start");
 	}
 
-	protected boolean setStartPosition(ItemStack itemStack, BlockPos pos, long time)
+	protected EnumActionResult setStartPosition(ItemStack itemStack, BlockPos pos, long time)
 	{
 		getNBT(itemStack).setLong("start", pos.toLong());
 		getNBT(itemStack).setLong("time", time);
-		return true;
+		return EnumActionResult.SUCCESS;
 	}
 
 	protected BlockPos getStartPosition(ItemStack itemStack)
@@ -181,11 +183,11 @@ public class ForcefieldItem extends MalisisItem
 		return BlockPos.fromLong(getNBT(itemStack).getLong("start"));
 	}
 
-	protected boolean clearStartPosition(ItemStack itemStack)
+	protected EnumActionResult clearStartPosition(ItemStack itemStack)
 	{
 		getNBT(itemStack).removeTag("start");
 		getNBT(itemStack).removeTag("time");
-		return true;
+		return EnumActionResult.SUCCESS;
 	}
 
 	protected int getDoorSize(AxisAlignedBB aabb)
@@ -282,11 +284,11 @@ public class ForcefieldItem extends MalisisItem
 			if (!isStartSet(itemStack))
 				return itemIcon;
 
-			MovingObjectPosition mop = Minecraft.getMinecraft().objectMouseOver;
-			if (mop.typeOfHit != MovingObjectType.BLOCK)
+			RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
+			if (result.typeOfHit != RayTraceResult.Type.BLOCK)
 				return yellowIcon;
 
-			BlockPos pos = mop.getBlockPos().offset(mop.sideHit);
+			BlockPos pos = result.getBlockPos().offset(result.sideHit);
 			BlockPos start = getStartPosition(itemStack);
 
 			AxisAlignedBB aabb = getBoundingBox(start, pos);

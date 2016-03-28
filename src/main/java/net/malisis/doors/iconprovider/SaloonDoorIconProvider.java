@@ -29,8 +29,8 @@ import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 /**

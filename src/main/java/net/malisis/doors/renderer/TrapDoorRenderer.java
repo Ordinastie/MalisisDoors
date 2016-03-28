@@ -35,6 +35,7 @@ import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
@@ -45,7 +46,6 @@ import net.minecraft.util.EnumFacing;
  * @author Ordinastie
  *
  */
-@SuppressWarnings("deprecation")
 public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 {
 	public static TrapDoorRenderer instance = new TrapDoorRenderer();
@@ -54,6 +54,12 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	private MalisisModel slidingTrapDoorModel;
 	private RenderParameters rp;
 	private AnimationRenderer ar = new AnimationRenderer();
+
+	private Matrix4f firstPersonRightHand = new TransformBuilder().translate(0, 0.25F, 0).rotate(0, 45, 0).scale(0.4F).get();
+	private Matrix4f firstPersonLeftHand = new TransformBuilder().translate(0, 0.25F, 0).rotate(0, 225, 0).scale(0.4F).get();
+	private Matrix4f thirdPerson = new TransformBuilder().translate(0, .17F, .12F).rotateAfter(75, 45, 0).scale(0.375F).get();
+	private Matrix4f ground = new TransformBuilder().scale(0.25F).get();
+	private Matrix4f gui = new TransformBuilder().rotate(30, 225, 0).scale(0.625F).get();
 
 	public TrapDoorRenderer()
 	{
@@ -102,10 +108,44 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 		return true;
 	}
 
+	//    "display": {
+	//        "thirdperson_righthand": {
+	//            "rotation": [ 75, 45, 0 ],
+	//            "translation": [ 0, 2.5, 2],
+	//            "scale": [ 0.375, 0.375, 0.375 ]
+	//        },
+	//        "firstperson_righthand": {
+	//            "rotation": [ 0, 45, 0 ],
+	//            "translation": [ 0, 4.2, 0 ],
+	//            "scale": [ 0.40, 0.40, 0.40 ]
+	//        },
+	//        "firstperson_lefthand": {
+	//            "rotation": [ 0, 225, 0 ],
+	//            "translation": [ 0, 4.2, 0 ],
+	//            "scale": [ 0.40, 0.40, 0.40 ]
+	//        }
+	//    }
 	@Override
 	public Matrix4f getTransform(TransformType tranformType)
 	{
-		return null;
+
+		switch (tranformType)
+		{
+			case FIRST_PERSON_LEFT_HAND:
+				return firstPersonLeftHand;
+			case FIRST_PERSON_RIGHT_HAND:
+				return firstPersonRightHand;
+			case THIRD_PERSON_LEFT_HAND:
+			case THIRD_PERSON_RIGHT_HAND:
+				return thirdPerson;
+			case GROUND:
+				return ground;
+			case GUI:
+				return gui;
+			default:
+				return null;
+
+		}
 	}
 
 	@Override
@@ -146,7 +186,7 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 		if (tileEntity.isTop())
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
 
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		model.getShape("shape").deductParameters();
 	}
 

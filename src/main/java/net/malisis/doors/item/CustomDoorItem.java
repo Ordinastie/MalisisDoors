@@ -36,7 +36,6 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.CustomDoorRenderer;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -45,6 +44,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumBlockRenderType;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
@@ -138,8 +138,9 @@ public class CustomDoorItem extends DoorItem
 		if (!frame && itemsAllowed.get(itemStack.getItem()) != null)
 			return true;
 
-		Block block = Block.getBlockFromItem(itemStack.getItem());
-		return block != null && !block.getUnlocalizedName().equals("tile.mixed_block") && block.getRenderType() != -1;
+		IBlockState state = ItemUtils.getStateFromItemStack(itemStack);
+		return state != null && !state.getBlock().getUnlocalizedName().equals("tile.mixed_block")
+				&& state.getRenderType() == EnumBlockRenderType.MODEL;
 	}
 
 	@Override

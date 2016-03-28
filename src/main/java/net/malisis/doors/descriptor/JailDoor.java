@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.JailDoorSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 
@@ -44,7 +44,7 @@ public class JailDoor extends DoorDescriptor
 		//Block
 		setMaterial(Material.iron);
 		setHardness(5.0F);
-		setSoundType(Block.soundTypeMetal);
+		setSoundType(SoundType.METAL);
 		setName("jail_door");
 		setTextureName(MalisisDoors.modid, "jail_door");
 		setNumCrafted(3);

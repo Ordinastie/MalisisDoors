@@ -31,8 +31,8 @@ import net.malisis.core.renderer.animation.transformation.Rotation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.tileentity.DoorTileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
 
 /**
  * @author Ordinastie

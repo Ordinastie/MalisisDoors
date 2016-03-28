@@ -31,9 +31,10 @@ import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.RustyLadderRenderer;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,7 +57,7 @@ public class RustyLadder extends MalisisBlock
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		if (type == BoundingBoxType.COLLISION)
 			return null;
@@ -66,8 +67,8 @@ public class RustyLadder extends MalisisBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
+	public BlockRenderLayer getBlockLayer()
 	{
-		return EnumWorldBlockLayer.CUTOUT;
+		return BlockRenderLayer.CUTOUT;
 	}
 }

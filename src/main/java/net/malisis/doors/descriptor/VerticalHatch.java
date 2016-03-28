@@ -30,7 +30,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.VerticalHatchMovement;
 import net.malisis.doors.sound.RustyHatchSound;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
 
@@ -45,7 +45,7 @@ public class VerticalHatch extends DoorDescriptor
 		//Block
 		setMaterial(Material.iron);
 		setHardness(3.5F);
-		setSoundType(Block.soundTypeMetal);
+		setSoundType(SoundType.METAL);
 		setName("verticalHatch");
 		setTextureName(MalisisDoors.modid, "verticalHatch");
 

@@ -38,10 +38,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -95,10 +97,10 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (side != EnumFacing.UP)
-			return false;
+			return EnumActionResult.FAIL;
 
 		IBlockState state = world.getBlockState(pos);
 
@@ -109,19 +111,19 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 		if (block == null)
 		{
 			MalisisCore.log.error("Can't place Door : block is null for " + itemStack);
-			return false;
+			return EnumActionResult.FAIL;
 		}
 
 		if (!player.canPlayerEdit(pos, side, itemStack) || !player.canPlayerEdit(pos.up(), side, itemStack))
-			return false;
+			return EnumActionResult.FAIL;
 
 		if (!block.canPlaceBlockAt(world, pos))
-			return false;
+			return EnumActionResult.FAIL;
 
-		placeDoor(world, pos, EnumFacing.fromAngle(player.rotationYaw), block);
+		placeDoor(world, pos, EnumFacing.fromAngle(player.rotationYaw), block, false);
 		--itemStack.stackSize;
 		block.onBlockPlacedBy(world, pos, world.getBlockState(pos), player, itemStack);
-		return true;
+		return EnumActionResult.SUCCESS;
 	}
 
 	@Override
@@ -130,7 +132,6 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 		if (stack.getTagCompound() == null)
 			return;
 
-		tooltip.add(EnumChatFormatting.WHITE
-				+ StatCollector.translateToLocal("door_movement." + stack.getTagCompound().getString("movement")));
+		tooltip.add(TextFormatting.WHITE + I18n.translateToLocal("door_movement." + stack.getTagCompound().getString("movement")));
 	}
 }

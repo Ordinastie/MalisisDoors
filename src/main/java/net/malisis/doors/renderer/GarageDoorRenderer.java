@@ -26,7 +26,6 @@ package net.malisis.doors.renderer;
 
 import java.util.Set;
 
-import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.animation.AnimationRenderer;
@@ -38,7 +37,7 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.EnumFacingUtils;
 import net.malisis.doors.DoorState;
-import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.GarageDoorTileEntity;
 import net.minecraft.util.EnumFacing;
 
@@ -48,7 +47,6 @@ import net.minecraft.util.EnumFacing;
  */
 public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 {
-	private GarageDoorTileEntity tileEntity;
 	protected EnumFacing direction;
 	protected boolean opened;
 	protected boolean topBlock;
@@ -65,7 +63,7 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 	@Override
 	protected void initialize()
 	{
-		shape = new Cube().setBounds(MalisisDoors.Blocks.garageDoor.getBoundingBox(null, null, BoundingBoxType.RENDER));
+		shape = new Cube().setBounds(0, 0, 0.5F - Door.DOOR_WIDTH / 2, 1, 1, 0.5F + Door.DOOR_WIDTH / 2);
 		shape.storeState();
 
 		rp = new RenderParameters();
@@ -82,7 +80,6 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 	@Override
 	public void render()
 	{
-		tileEntity = super.tileEntity;
 		if (tileEntity == null || !tileEntity.isTop())
 			return;
 
@@ -124,7 +121,7 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 			if (tileEntity.getState() == DoorState.CLOSING || tileEntity.getState() == DoorState.CLOSED)
 				chained.reversed(true);
 
-			rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+			rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 			rp.rotateIcon.set(false);
 
 			ar.animate(shape, chained);

@@ -37,7 +37,7 @@ import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.DoorTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 
 /**
  * @author Ordinastie

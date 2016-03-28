@@ -85,9 +85,9 @@ public class Registers
 	{
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 		{
-			registerVanillaDoors();
-			registerVanillaTrapDoor();
-			registerVanillaFenceGate();
+			//registerVanillaDoors();
+			//registerVanillaTrapDoor();
+			//registerVanillaFenceGate();
 		}
 
 		registerDoors();
@@ -123,7 +123,6 @@ public class Registers
 		oakDoor.create();
 		doorOak = (Door) oakDoor.getBlock();
 		doorOakItem = (DoorItem) oakDoor.getItem();
-
 		ReplacementTool.replaceVanillaItem(324, "wooden_door", "oak_door", "field_179570_aq", oakDoor.getItem(), Items.oak_door);
 		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "oak_door", "field_180413_ao", oakDoor.getBlock(), Blocks.oak_door);
 

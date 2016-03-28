@@ -26,7 +26,6 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
-import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.block.IRegisterable;
@@ -43,20 +42,20 @@ import net.malisis.doors.renderer.TrapDoorRenderer;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -82,7 +81,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		this.descriptor = desc;
 
 		setHardness(desc.getHardness());
-		setStepSound(desc.getSoundType());
+		setSoundType(desc.getSoundType());
 		setUnlocalizedName(desc.getName());
 		setCreativeTab(desc.getTab());
 
@@ -114,7 +113,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -143,45 +142,22 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		if (world.isRemote)
 			return;
 
-		EnumFacing direction = state.getValue(FACING);
-		BlockPos blockPos = pos.offset(state.getValue(FACING).getOpposite());
-
-		if (!(isValidSupportBlock(world.getBlockState(blockPos).getBlock()) || world.isSideSolid(blockPos, direction, true)))
-		{
-			world.setBlockToAir(pos);
-			this.dropBlockAsItem(world, pos, state, 0);
-			return;
-		}
-
-		DoorTileEntity te = Door.getDoor(world, pos);
-
-		//Not possible to set redstone behavior for trapdoors
-		//		if (te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.HAND_ONLY
-		//				|| te.getDescriptor().getRedstoneBehavior() == RedstoneBehavior.REDSTONE_LOCK)
-		//			return;
+		//Note : redstone behavior is disabled for trapdoors
 
 		boolean powered = world.isBlockPowered(pos);
-		if (powered || neighborBlock.canProvidePower())
+		if (powered || neighborBlock.getDefaultState().canProvidePower())
 		{
-
+			DoorTileEntity te = Door.getDoor(world, pos);
 			if (te != null)
 				te.setPowered(powered);
 		}
 
 	}
 
-	private static boolean isValidSupportBlock(Block blockIn)
-	{
-		if (disableValidation)
-			return true;
-		return blockIn.getMaterial().isOpaque() && blockIn.isFullCube() || blockIn == Blocks.glowstone || blockIn instanceof BlockSlab
-				|| blockIn instanceof BlockStairs;
-	}
-
 	//#region BoundingBox
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null || te.isMoving() || te.getMovement() == null)
@@ -195,9 +171,9 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity entity)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
 		{
 			if (aabb != null && mask.intersectsWith(aabb))
@@ -206,9 +182,9 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.SELECTION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.SELECTION);
 		if (ArrayUtils.isEmpty(aabbs) || aabbs[0] == null)
 			return AABBUtils.empty(pos);
 
@@ -216,9 +192,9 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 src, Vec3 dest)
+	public RayTraceResult collisionRayTrace(IBlockState blockState, World world, BlockPos pos, Vec3d start, Vec3d end)
 	{
-		return new RaytraceBlock(world, src, dest, pos).trace();
+		return new RaytraceBlock(world, start, end, pos).trace();
 	}
 
 	//#end BoudingBox
@@ -232,8 +208,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	public int getRenderType()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return MalisisCore.malisisRenderType;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 }

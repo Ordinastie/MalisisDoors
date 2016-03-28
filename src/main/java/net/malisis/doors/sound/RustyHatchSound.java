@@ -24,8 +24,10 @@
 
 package net.malisis.doors.sound;
 
+import net.malisis.core.MalisisRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
@@ -33,14 +35,23 @@ import net.malisis.doors.MalisisDoors;
  */
 public class RustyHatchSound implements IDoorSound
 {
+	private SoundEvent open;
+	private SoundEvent close;
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public void register()
+	{
+		open = MalisisRegistry.registerSound(MalisisDoors.modid, "rustyhatch_open");
+		close = MalisisRegistry.registerSound(MalisisDoors.modid, "rustyhatch_close");
+	}
+
+	@Override
+	public SoundEvent getSound(DoorState state)
 	{
 		if (state == DoorState.OPENING)
-			return MalisisDoors.modid + ":rustyhatch_open";
+			return open;
 		else if (state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":rustyhatch_close";
+			return close;
 		return null;
 	}
 

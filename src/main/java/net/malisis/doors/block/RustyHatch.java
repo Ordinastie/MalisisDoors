@@ -41,6 +41,7 @@ import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.RustyHatchRenderer;
 import net.malisis.doors.tileentity.RustyHatchTileEntity;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -49,12 +50,14 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -80,7 +83,7 @@ public class RustyHatch extends MalisisBlock
 		super(Material.iron);
 		setHardness(3.0F);
 		setResistance(10000);
-		setStepSound(soundTypeMetal);
+		setSoundType(SoundType.METAL);
 		setName("rustyHatch");
 		setCreativeTab(MalisisDoors.tab);
 
@@ -110,7 +113,7 @@ public class RustyHatch extends MalisisBlock
 			return false;
 
 		pos = pos.offset(side.getOpposite());
-		return world.getBlockState(pos).getBlock().isSideSolid(world, pos, side);
+		return world.getBlockState(pos).isSideSolid(world, pos, side);
 	}
 
 	@Override
@@ -120,7 +123,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -134,7 +137,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		RustyHatchTileEntity te = getRustyHatch(world, pos);
 		if (te == null || te.getMovement() == null)
@@ -158,9 +161,9 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
 		{
 			if (aabb != null && mask.intersectsWith(aabb))
@@ -169,9 +172,9 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.SELECTION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.SELECTION);
 		if (ArrayUtils.isEmpty(aabbs) || aabbs[0] == null)
 			return AABBUtils.empty(pos);
 
@@ -179,7 +182,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 src, Vec3 dest)
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d src, Vec3d dest)
 	{
 		return new RaytraceBlock(world, src, dest, pos).trace();
 	}
@@ -209,7 +212,7 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public boolean isLadder(IBlockAccess world, BlockPos pos, EntityLivingBase entity)
+	public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)
 	{
 		RustyHatchTileEntity te = getRustyHatch(world, pos);
 		if (te == null)
@@ -219,13 +222,13 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}

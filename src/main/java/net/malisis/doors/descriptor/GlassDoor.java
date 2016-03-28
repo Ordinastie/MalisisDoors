@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.GlassDoorSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -46,7 +46,7 @@ public class GlassDoor extends DoorDescriptor
 		//Block
 		setMaterial(material);
 		setHardness(wood ? 2.0F : 3.0F);
-		setSoundType(wood ? Block.soundTypeWood : Block.soundTypeMetal);
+		setSoundType(wood ? SoundType.WOOD : SoundType.METAL);
 		setName(wood ? "wood_sliding_door" : "iron_sliding_door");
 		setTextureName(MalisisDoors.modid, wood ? "sliding_door_wood" : "sliding_door_iron");
 		setNumCrafted(3);

@@ -25,12 +25,15 @@
 package net.malisis.doors.sound;
 
 import net.malisis.doors.DoorState;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public interface IDoorSound
 {
-	public String getSoundPath(DoorState state);
+	public void register();
+
+	public SoundEvent getSound(DoorState state);
 }

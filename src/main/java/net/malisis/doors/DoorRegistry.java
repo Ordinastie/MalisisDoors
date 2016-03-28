@@ -56,12 +56,15 @@ import net.malisis.doors.movement.VerticalHatchMovement;
 import net.malisis.doors.sound.BigDoorSound;
 import net.malisis.doors.sound.GlassDoorSound;
 import net.malisis.doors.sound.IDoorSound;
+import net.malisis.doors.sound.IronDoorSound;
+import net.malisis.doors.sound.IronTrapDoorSound;
 import net.malisis.doors.sound.JailDoorSound;
 import net.malisis.doors.sound.PneumaticSound;
 import net.malisis.doors.sound.RustyHatchSound;
 import net.malisis.doors.sound.ShojiDoorSound;
 import net.malisis.doors.sound.SilentDoorSound;
-import net.malisis.doors.sound.VanillaDoorSound;
+import net.malisis.doors.sound.WoodenDoorSound;
+import net.malisis.doors.sound.WoodenTrapDoorSound;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
@@ -104,7 +107,10 @@ public class DoorRegistry
 		registerMovement("vertical_hatch", new VerticalHatchMovement());
 
 		registerSound("silent_door", new SilentDoorSound());
-		registerSound("vanilla_door", new VanillaDoorSound());
+		registerSound("vanilla_door", new WoodenDoorSound());
+		registerSound("iron_door", new IronDoorSound());
+		registerSound("wooden_trapdoor", new WoodenTrapDoorSound());
+		registerSound("iron_trapdoor", new IronTrapDoorSound());
 		registerSound("glass_door", new GlassDoorSound());
 		registerSound("jail_door", new JailDoorSound());
 		registerSound("pneumatic_door", new PneumaticSound());
@@ -206,13 +212,14 @@ public class DoorRegistry
 	/**
 	 * Registers a new Sound type
 	 *
-	 * @param Sound
+	 * @param sound
 	 */
-	public static void registerSound(String id, IDoorSound Sound)
+	public static void registerSound(String id, IDoorSound sound)
 	{
 		if (sounds.get(id) != null)
 			throw new IllegalArgumentException(String.format("Door Sound %s already in registry", id));
-		sounds.put(id, Sound);
+		sound.register();
+		sounds.put(id, sound);
 	}
 
 	/**

@@ -26,7 +26,6 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
-import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
@@ -44,6 +43,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.BigDoorRenderer;
 import net.malisis.doors.tileentity.BigDoorTileEntity;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -52,10 +52,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -93,7 +95,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		this.type = type;
 		setHardness(5.0F);
 		setResistance(10.0F);
-		setStepSound(soundTypeStone);
+		setSoundType(SoundType.STONE);
 		setName(type.name);
 		setCreativeTab(MalisisDoors.tab);
 
@@ -120,7 +122,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -134,7 +136,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public AxisAlignedBB[] getBoundingBoxes(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB[] getBoundingBoxes(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		if (type == BoundingBoxType.PLACEDBOUNDINGBOX)
 			return new AxisAlignedBB[] { defaultBoundingBox };
@@ -165,7 +167,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
 		if (!player.capabilities.isCreativeMode)
 		{
@@ -173,7 +175,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 			if (te != null)
 				spawnAsEntity(world, pos, te.getDroppedItemStack());
 		}
-		return super.removedByPlayer(world, pos, player, willHarvest);
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
 	@Override
@@ -183,25 +185,25 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public int getRenderType()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return MalisisCore.malisisRenderType;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public boolean canRenderInLayer(EnumWorldBlockLayer layer)
+	public boolean canRenderInLayer(BlockRenderLayer layer)
 	{
 		return true;
 	}

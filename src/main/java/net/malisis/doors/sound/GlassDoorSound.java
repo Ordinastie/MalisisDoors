@@ -24,21 +24,30 @@
 
 package net.malisis.doors.sound;
 
+import net.malisis.core.MalisisRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class GlassDoorSound implements IDoorSound
 {
+	private SoundEvent slidingDoorSound;
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public void register()
+	{
+		slidingDoorSound = MalisisRegistry.registerSound(MalisisDoors.modid, "slidingdooro");
+	}
+
+	@Override
+	public SoundEvent getSound(DoorState state)
 	{
 		if (state == DoorState.OPENING || state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":slidingdooro";
+			return slidingDoorSound;
 
 		return null;
 	}

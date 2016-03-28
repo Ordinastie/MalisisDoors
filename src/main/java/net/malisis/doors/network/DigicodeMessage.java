@@ -30,7 +30,7 @@ import net.malisis.core.network.MalisisMessage;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.DoorTileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

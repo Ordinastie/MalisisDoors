@@ -140,6 +140,6 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 		else if (direction == EnumFacing.WEST)
 			model.rotate(-90, 0, 1, 0, 0, 0, 0);
 
-		rp.brightness.set(block.getMixedBrightnessForBlock(world, pos));
+		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 	}
 }

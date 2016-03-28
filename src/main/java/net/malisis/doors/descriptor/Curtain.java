@@ -29,7 +29,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.movement.CurtainMovement;
 import net.malisis.doors.sound.SilentDoorSound;
-import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
@@ -46,7 +46,7 @@ public class Curtain extends DoorDescriptor
 		//Block
 		setMaterial(Material.cloth);
 		setHardness(2.0F);
-		setSoundType(Block.soundTypeCloth);
+		setSoundType(SoundType.CLOTH);
 		setName("curtain_" + color.getName());
 		setTextureName(MalisisDoors.modid, "curtains/curtain_" + color.getName());
 		setNumCrafted(3);

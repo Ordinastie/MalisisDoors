@@ -24,22 +24,30 @@
 
 package net.malisis.doors.sound;
 
+import net.malisis.core.MalisisRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
- * 
+ *
  */
 public class JailDoorSound implements IDoorSound
 {
+	private SoundEvent jailDoor;
 
 	@Override
-	public String getSoundPath(DoorState state)
+	public void register()
 	{
-		if (state == DoorState.OPENING || state == DoorState.CLOSING)
-			return MalisisDoors.modid + ":jaildoor";
-		return null;
+		jailDoor = MalisisRegistry.registerSound(MalisisDoors.modid, "jaildoor");
 	}
 
+	@Override
+	public SoundEvent getSound(DoorState state)
+	{
+		if (state == DoorState.OPENING || state == DoorState.CLOSING)
+			return jailDoor;
+		return null;
+	}
 }

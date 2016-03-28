@@ -29,23 +29,26 @@ import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.PowerComponent;
 import net.malisis.core.block.component.PowerComponent.Type;
+import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.MalisisIcon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.renderer.GarageDoorRenderer;
 import net.malisis.doors.tileentity.GarageDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,6 +58,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author Ordinastie
  *
  */
+@MalisisRendered(item = GarageDoorRenderer.class)
 public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 {
 	public GarageDoor()
@@ -63,7 +67,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 		setName("garage_door");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(2.0F);
-		setStepSound(soundTypeWood);
+		setSoundType(SoundType.WOOD);
 
 		addComponent(new DirectionalComponent());
 		addComponent(new PowerComponent(Type.REDSTONE));
@@ -98,12 +102,12 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 			return;
 
 		boolean powered = world.isBlockIndirectlyGettingPowered(pos) != 0;
-		if ((powered || neighborBlock.canProvidePower()) && neighborBlock != this)
+		if ((powered || neighborBlock.getDefaultState().canProvidePower()) && neighborBlock != this)
 			te.getTopDoor().setPowered(powered);
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos);
 		if (te != null && (te.isMoving() || te.getState() != DoorState.CLOSED))
@@ -120,27 +124,21 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 	}
 
 	@Override
-	public boolean isNormalCube()
+	public boolean isNormalCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
-	}
-
-	@Override
-	public int getRenderType()
-	{
-		return -1;
 	}
 
 	@SideOnly(Side.CLIENT)

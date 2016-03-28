@@ -32,10 +32,10 @@ import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 import com.google.common.collect.Sets;
 

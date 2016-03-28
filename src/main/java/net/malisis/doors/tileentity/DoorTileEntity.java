@@ -24,6 +24,7 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.Timer;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorState;
@@ -38,12 +39,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -171,8 +174,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	public boolean setCentered(boolean centered)
 	{
 		this.centered = centered;
-		if (worldObj != null)
-			worldObj.markBlockForUpdate(pos);
+		TileEntityUtils.notifyUpdate(this);
 		return centered;
 	}
 
@@ -233,7 +235,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			moving = false;
 		}
 
-		worldObj.markBlockForUpdate(pos);
+		TileEntityUtils.notifyUpdate(this);
 		playSound();
 	}
 
@@ -245,11 +247,12 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		if (worldObj.isRemote)
 			return;
 
-		String soundPath = null;
+		SoundEvent sound = null;
 		if (descriptor.getSound() != null)
-			soundPath = descriptor.getSound().getSoundPath(state);
-		if (soundPath != null)
-			getWorld().playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), soundPath, 1F, 1F);
+			sound = descriptor.getSound().getSound(state);
+
+		if (sound != null)
+			getWorld().playSound(null, pos, sound, SoundCategory.BLOCKS, 1F, 1F);
 	}
 
 	/**
@@ -357,11 +360,11 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(pos, 0, nbt);
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
 	{
 		this.readFromNBT(packet.getNbtCompound());
 	}

@@ -24,6 +24,7 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
@@ -32,10 +33,10 @@ import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -79,7 +80,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return (EnumFacing) getBlockState().getValue(BlockTrapDoor.FACING);
+		return getBlockState().getValue(BlockTrapDoor.FACING);
 	}
 
 	public void updateAll()
@@ -92,7 +93,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 		camoColor = pair.getRight();
 		isWall = updateWall();
 
-		worldObj.markBlockForUpdate(pos);
+		TileEntityUtils.notifyUpdate(this);
 	}
 
 	private Pair<IBlockState, Integer> updateCamo()
@@ -105,8 +106,8 @@ public class FenceGateTileEntity extends DoorTileEntity
 			p = p.offset(dir);
 
 		IBlockState state1 = worldObj.getBlockState(p);
-		int color1 = state1.getBlock().colorMultiplier(worldObj, p);
-		if (state1.getBlock().isAir(worldObj, p))
+		int color1 = MalisisRenderer.colorMultiplier(worldObj, p, state1);
+		if (state1.getBlock().isAir(state1, worldObj, p))
 			return Pair.of(getBlockState(), -1);
 
 		dir = dir.getOpposite();
@@ -117,8 +118,8 @@ public class FenceGateTileEntity extends DoorTileEntity
 			p = p.offset(dir);
 
 		IBlockState state2 = worldObj.getBlockState(p);
-		int color2 = state2.getBlock().colorMultiplier(worldObj, p);
-		if (state1.getBlock().isAir(worldObj, p))
+		int color2 = MalisisRenderer.colorMultiplier(worldObj, p, state2);
+		if (state1.getBlock().isAir(state2, worldObj, p))
 			return Pair.of(getBlockState(), -1);
 
 		if (!state1.equals(state2) || color1 != color2)
@@ -182,7 +183,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
 	{
 		super.onDataPacket(net, packet);
 		updateAll();

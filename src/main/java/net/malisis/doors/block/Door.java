@@ -55,11 +55,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -90,7 +92,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 		this.descriptor = desc;
 
 		setHardness(desc.getHardness());
-		setStepSound(desc.getSoundType());
+		setSoundType(desc.getSoundType());
 		setUnlocalizedName(desc.getName());
 	}
 
@@ -143,7 +145,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null)
@@ -225,7 +227,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 			}
 
 			//check if still on ground
-			if (!World.doesBlockHaveSolidTopSurface(world, pos.down()))
+			if (!world.getBlockState(pos.down()).isSideSolid(world, pos.down(), EnumFacing.UP))
 			{
 				world.setBlockToAir(pos);
 				dropStack = true;
@@ -256,7 +258,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 					return;
 
 				boolean powered = te.isPowered();
-				if ((powered || block.canProvidePower()) && block != this)
+				if ((powered || block.getDefaultState().canProvidePower()) && block != this)
 					te.setPowered(powered);
 
 				//center check
@@ -296,15 +298,15 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public Item getItem(World worldIn, BlockPos pos)
+	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
 	{
-		return descriptor.getItem();
+		return new ItemStack(descriptor.getItem());
 	}
 
 	//#region BoundingBox
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, BoundingBoxType type)
+	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null || te.isMoving() || te.getMovement() == null)
@@ -322,9 +324,9 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public void addCollisionBoxesToList(World world, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity entityIn)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.COLLISION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
 		{
 			if (aabb != null && mask.intersectsWith(aabb))
@@ -333,9 +335,9 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(World world, BlockPos pos)
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos)
 	{
-		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, BoundingBoxType.SELECTION);
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.SELECTION);
 		if (ArrayUtils.isEmpty(aabbs) || aabbs[0] == null)
 			return AABBUtils.empty(pos);
 
@@ -343,7 +345,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public MovingObjectPosition collisionRayTrace(World world, BlockPos pos, Vec3 src, Vec3 dest)
+	public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d src, Vec3d dest)
 	{
 		return new RaytraceBlock(world, src, dest, pos).trace();
 	}
@@ -367,7 +369,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side)
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)
 	{
 		//allows fences and iron bars to connect to the doors
 		Block b = world.getBlockState(pos.offset(side)).getBlock();
@@ -401,9 +403,9 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	public int getRenderType()
+	public EnumBlockRenderType getRenderType(IBlockState state)
 	{
-		return -1;
+		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	public static DoorTileEntity getDoor(IBlockAccess world, BlockPos pos)

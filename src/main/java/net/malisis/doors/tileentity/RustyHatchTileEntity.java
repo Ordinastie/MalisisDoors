@@ -33,9 +33,9 @@ import net.malisis.doors.movement.RustyHatchMovement;
 import net.malisis.doors.sound.RustyHatchSound;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @author Ordinastie

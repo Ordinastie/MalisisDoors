@@ -22,41 +22,32 @@
  * THE SOFTWARE.
  */
 
-package net.malisis.doors.descriptor;
+package net.malisis.doors.sound;
 
-import net.malisis.doors.DoorRegistry;
-import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.TrapDoorDescriptor;
-import net.malisis.doors.movement.SlidingTrapDoorMovement;
-import net.malisis.doors.sound.PneumaticSound;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
+import net.malisis.doors.DoorState;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundEvent;
 
 /**
  * @author Ordinastie
  *
  */
-public class SlidingTrapDoor extends TrapDoorDescriptor
+//Vanilla iron trapdoor
+public class IronTrapDoorSound implements IDoorSound
 {
-	public SlidingTrapDoor()
+	@Override
+	public void register()
+	{}
+
+	@Override
+	public SoundEvent getSound(DoorState state)
 	{
-		//Block
-		setOpeningTime(12);
-		setMaterial(Material.iron);
-		setHardness(4.0F);
-		setSoundType(SoundType.METAL);
-		setName("sliding_trapdoor");
-		setTextureName(MalisisDoors.modid, "blocks/sliding_trapdoor");
+		if (state == DoorState.OPENING)
+			return SoundEvents.block_iron_trapdoor_open;
+		if (state == DoorState.CLOSED)
+			return SoundEvents.block_iron_trapdoor_close;
 
-		//te
-		setMovement(DoorRegistry.getMovement(SlidingTrapDoorMovement.class));
-		setSound(DoorRegistry.getSound(PneumaticSound.class));
-
-		//item
-		setTab(MalisisDoors.tab);
-
-		//recipe
-		setRecipe("ABB", "ABB", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
+		return null;
 	}
+
 }

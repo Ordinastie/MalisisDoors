@@ -32,9 +32,9 @@ import net.malisis.core.renderer.element.Vertex;
 import net.malisis.core.renderer.element.face.NorthFace;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import org.lwjgl.opengl.GL11;
 
