@@ -26,6 +26,7 @@ package net.malisis.doors.tileentity;
 
 import java.util.Map;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.util.SafeGet;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
@@ -57,6 +58,9 @@ public class CustomDoorTileEntity extends DoorTileEntity
 
 	private void buildSafeMap()
 	{
+		if (!MalisisCore.isClient())
+			return;
+
 		safeMap.clear();
 		safeMap.put(frame, new SafeGet<>(() -> frame.getBlock().colorMultiplier(worldObj, pos), frame.getBlock().getBlockColor()));
 		safeMap.put(top, new SafeGet<>(() -> top.getBlock().colorMultiplier(worldObj, pos), top.getBlock().getBlockColor()));
