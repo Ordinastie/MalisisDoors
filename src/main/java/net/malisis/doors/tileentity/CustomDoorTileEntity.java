@@ -24,6 +24,9 @@
 
 package net.malisis.doors.tileentity;
 
+import java.util.Map;
+
+import net.malisis.core.util.SafeGet;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
 import net.minecraft.block.state.IBlockState;
@@ -32,6 +35,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import org.apache.commons.lang3.tuple.Triple;
+
+import com.google.common.collect.Maps;
 
 /**
  * @author Ordinastie
@@ -42,6 +47,21 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	private IBlockState frame = Blocks.planks.getDefaultState();
 	private IBlockState top = Blocks.glass.getDefaultState();
 	private IBlockState bottom = Blocks.glass.getDefaultState();
+
+	private Map<IBlockState, SafeGet<Integer>> safeMap = Maps.newHashMap();
+
+	public CustomDoorTileEntity()
+	{
+		buildSafeMap();
+	}
+
+	private void buildSafeMap()
+	{
+		safeMap.clear();
+		safeMap.put(frame, new SafeGet<>(() -> frame.getBlock().colorMultiplier(worldObj, pos), frame.getBlock().getBlockColor()));
+		safeMap.put(top, new SafeGet<>(() -> top.getBlock().colorMultiplier(worldObj, pos), top.getBlock().getBlockColor()));
+		safeMap.put(bottom, new SafeGet<>(() -> bottom.getBlock().colorMultiplier(worldObj, pos), bottom.getBlock().getBlockColor()));
+	}
 
 	//#region Getters/setters
 	public IBlockState getFrame()
@@ -66,6 +86,11 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		return Math.max(Math.max(frame.getBlock().getLightValue(), top.getBlock().getLightValue()), bottom.getBlock().getLightValue());
 	}
 
+	public int getColor(IBlockState state)
+	{
+		return safeMap.containsKey(state) ? safeMap.get(state).get() : 0xFFFFFF;
+	}
+
 	//#end Getters/setters
 
 	@Override
@@ -79,6 +104,8 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		bottom = triple.getRight();
 
 		setCentered(shouldCenter());
+
+		buildSafeMap();
 	}
 
 	@Override
@@ -90,6 +117,8 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		frame = triple.getLeft();
 		top = triple.getMiddle();
 		bottom = triple.getRight();
+
+		buildSafeMap();
 	}
 
 	@Override
