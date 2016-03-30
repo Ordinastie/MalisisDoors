@@ -186,6 +186,7 @@ public class CustomDoorRenderer extends DoorRenderer
 	{
 		if (state.getBlock() == Blocks.grass)
 			return 0xFFFFFF;
-		return renderType == RenderType.TILE_ENTITY ? state.getBlock().colorMultiplier(world, pos) : state.getBlock().getBlockColor();
+		return renderType == RenderType.TILE_ENTITY ? ((CustomDoorTileEntity) tileEntity).getColor(state) : state.getBlock()
+				.getBlockColor();
 	}
 }
