@@ -1,6 +1,5 @@
 {
 	"slidingdooro": {"category": "master","sounds": [{"name": "slidingdooro","stream": false}]},
-	"portal": {"category": "master","sounds": [{"name": "portal","stream": false}]},
 	"jaildoor": {"category": "master","sounds": [{"name": "jaildoor","stream": false}]},
 	"space_door_open": {"category": "master","sounds": [{"name": "space_door_open","stream": false}]},	
 	"space_door_close": {"category": "master","sounds": [{"name": "space_door_close","stream": false}]},	
