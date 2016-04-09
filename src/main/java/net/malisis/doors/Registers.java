@@ -175,13 +175,13 @@ public class Registers
 
 		if (MalisisCore.isClient())
 		{
-			MalisisRegistry.registerItemModel(doorOakItem, "minecraft", "oak_door");
-			MalisisRegistry.registerItemModel(doorAcaciaItem, "minecraft", "acacia_door");
-			MalisisRegistry.registerItemModel(doorBirchItem, "minecraft", "birch_door");
-			MalisisRegistry.registerItemModel(doorDarkOakItem, "minecraft", "dark_oak_door");
-			MalisisRegistry.registerItemModel(doorJungleItem, "minecraft", "jungle_door");
-			MalisisRegistry.registerItemModel(doorSpruceItem, "minecraft", "spruce_door");
-			MalisisRegistry.registerItemModel(doorIronItem, "minecraft", "iron_door");
+			MalisisRegistry.registerItemModel(doorOakItem, "minecraft:oak_door");
+			MalisisRegistry.registerItemModel(doorAcaciaItem, "minecraft:acacia_door");
+			MalisisRegistry.registerItemModel(doorBirchItem, "minecraft:birch_door");
+			MalisisRegistry.registerItemModel(doorDarkOakItem, "minecraft:dark_oak_door");
+			MalisisRegistry.registerItemModel(doorJungleItem, "minecraft:jungle_door");
+			MalisisRegistry.registerItemModel(doorSpruceItem, "minecraft:spruce_door");
+			MalisisRegistry.registerItemModel(doorIronItem, "minecraft:iron_door");
 		}
 	}
 

@@ -24,12 +24,15 @@
 
 package net.malisis.doors.block;
 
+import java.util.List;
+
+import net.malisis.core.MalisisCore;
+import net.malisis.core.block.IComponent;
+import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
-import net.malisis.core.renderer.icon.IMetaIconProvider;
-import net.malisis.core.renderer.icon.VanillaIcon;
-import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -54,15 +57,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Ordinastie
  *
  */
 @MalisisRendered(FenceGateRenderer.class)
-public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IMetaIconProvider, IRegisterable
+public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IComponentProvider, IRegisterable
 {
 	public static enum Type
 	{
@@ -86,8 +89,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	private Type type;
-	@SideOnly(Side.CLIENT)
-	private IIconProvider iconProvider;
+	protected final List<IComponent> components = Lists.newArrayList();
 
 	public FenceGate(Type type)
 	{
@@ -100,6 +102,17 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 
 		if (type == Type.CAMO)
 			setCreativeTab(MalisisDoors.tab);
+
+		if (MalisisCore.isClient())
+		{
+			if (type == Type.CAMO)
+				addComponent(CamoFenceGateIconProvider.get());
+			else
+			{
+				MalisisIcon icon = MalisisIcon.from(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT, type.type));
+				addComponent((IIconProvider) () -> icon);
+			}
+		}
 	}
 
 	@Override
@@ -109,21 +122,15 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IM
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
+	public void addComponent(IComponent component)
 	{
-		if (type == Type.CAMO)
-			iconProvider = new CamoFenceGateIconProvider();
-		else
-			iconProvider = new DefaultIconProvider(new VanillaIcon(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT,
-					type.type)));
+		components.add(component);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIconProvider getIconProvider()
+	public List<IComponent> getComponents()
 	{
-		return iconProvider;
+		return components;
 	}
 
 	@Override

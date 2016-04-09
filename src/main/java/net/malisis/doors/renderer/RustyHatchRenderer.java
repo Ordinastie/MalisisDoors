@@ -26,6 +26,7 @@ package net.malisis.doors.renderer;
 
 import javax.vecmath.Matrix4f;
 
+import net.malisis.core.block.IComponent;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
@@ -64,6 +65,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	private RenderParameters rp = new RenderParameters();
 	private AnimationRenderer ar = new AnimationRenderer();
 	private RustyHatchTileEntity tileEntity;
+	private RustyHatchIconProvider iconProvider;
 
 	private boolean topBlock;
 	private EnumFacing direction;
@@ -90,6 +92,8 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
 		rp.calculateBrightness.set(false);
+
+		iconProvider = IComponent.getComponent(RustyHatchIconProvider.class, MalisisDoors.Blocks.rustyHatch);
 	}
 
 	private void setup(Shape s)
@@ -144,7 +148,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 			ladder.translate(-1, topBlock ? -0 : 0, 0);
 			//ladder.translate(direction.getOpposite().getFrontOffsetX(), topBlock ? -1 : 0, direction.getOpposite().getFrontOffsetZ());
 
-			rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
+			rp.icon.set(iconProvider.getHandleIcon());
 			drawShape(ladder, rp);
 		}
 		else
@@ -177,10 +181,10 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 		}
 
 		next(GL11.GL_POLYGON);
-		rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHatchIcon());
+		rp.icon.set(iconProvider.getHatchIcon());
 		drawShape(hatch, rp);
 
-		rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
+		rp.icon.set(iconProvider.getHandleIcon());
 		drawShape(handle, rp);
 	}
 
@@ -207,9 +211,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 		shape.resetState();
 		shape.scale(1.5F);
 
-		RustyHatchIconProvider iconProvider = (RustyHatchIconProvider) MalisisDoors.Blocks.rustyHatch.getIconProvider();
 		rp.icon.set(iconProvider.getHandleIcon());
-		//rp.icon.set(((RustyHatchIconProvider) ((RustyHatch) block).getIconProvider()).getHandleIcon());
 		drawShape(shape, rp);
 	}
 }

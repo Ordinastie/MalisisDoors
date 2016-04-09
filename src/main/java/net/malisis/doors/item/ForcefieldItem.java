@@ -24,8 +24,10 @@
 
 package net.malisis.doors.item;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.renderer.icon.provider.IItemIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
@@ -35,7 +37,6 @@ import net.malisis.doors.block.Forcefield;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -64,13 +65,15 @@ public class ForcefieldItem extends MalisisItem
 		setName("forcefieldItem");
 		setCreativeTab(MalisisDoors.tab);
 		setMaxDamage(0);
+
+		if (MalisisCore.isClient())
+			addComponent(getIconProvider());
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
+	public IIconProvider getIconProvider()
 	{
-		iconProvider = new ForcefieldItemIconProvider();
+		return new ForcefieldItemIconProvider();
 	}
 
 	public int getEnergy(ItemStack itemStack)
@@ -254,21 +257,11 @@ public class ForcefieldItem extends MalisisItem
 	@SideOnly(Side.CLIENT)
 	public class ForcefieldItemIconProvider implements IItemIconProvider
 	{
-		protected MalisisIcon itemIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem");
-		protected MalisisIcon yellowIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_yellow");
-		protected MalisisIcon redIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_red");;
-		protected MalisisIcon greenIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_green");;
-		protected MalisisIcon disabledIcon = new MalisisIcon(MalisisDoors.modid + ":items/forcefielditem_disabled");
-
-		@Override
-		public void registerIcons(TextureMap map)
-		{
-			itemIcon = itemIcon.register(map);
-			yellowIcon = yellowIcon.register(map);
-			redIcon = redIcon.register(map);
-			greenIcon = greenIcon.register(map);
-			disabledIcon = disabledIcon.register(map);
-		}
+		protected MalisisIcon itemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem");
+		protected MalisisIcon yellowIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_yellow");
+		protected MalisisIcon redIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_red");;
+		protected MalisisIcon greenIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_green");;
+		protected MalisisIcon disabledIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_disabled");
 
 		@Override
 		public MalisisIcon getIcon()

@@ -24,10 +24,11 @@
 
 package net.malisis.doors.block;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.inventory.MalisisInventory;
-import net.malisis.core.renderer.icon.provider.SidesIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
@@ -42,8 +43,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -59,15 +58,11 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider
 		setHardness(3.0F);
 
 		addComponent(new DirectionalComponent());
-	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
-	{
-		SidesIconProvider ip = new SidesIconProvider(MalisisDoors.modid + ":blocks/door_factory_side");
-		ip.setSideIcon(EnumFacing.SOUTH, MalisisDoors.modid + ":blocks/door_factory");
-		iconProvider = ip;
+		if (MalisisCore.isClient())
+			addComponent(IIconProvider.create(MalisisDoors.modid + ":blocks/", "door_factory_side")
+										.withSide(EnumFacing.SOUTH, "door_factory")
+										.build());
 	}
 
 	@Override

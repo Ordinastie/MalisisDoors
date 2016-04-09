@@ -26,13 +26,14 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
+import net.malisis.core.block.IComponent;
+import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
-import net.malisis.core.renderer.icon.IMetaIconProvider;
-import net.malisis.core.renderer.icon.provider.DefaultIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
@@ -58,21 +59,20 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.Lists;
 
 /**
  * @author Ordinastie
  *
  */
 @MalisisRendered(TrapDoorRenderer.class)
-public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IMetaIconProvider, IRegisterable
+public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IComponentProvider, IRegisterable
 {
 	private TrapDoorDescriptor descriptor;
-	@SideOnly(Side.CLIENT)
-	private IIconProvider iconProvider;
+	protected final List<IComponent> components = Lists.newArrayList();
 
 	public TrapDoor(TrapDoorDescriptor desc)
 	{
@@ -86,6 +86,10 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		setCreativeTab(desc.getTab());
 
 		disableStats();
+
+		if (MalisisCore.isClient())
+			addComponent(IIconProvider.create(descriptor.getModId() + ":" + descriptor.getTextureName()).build());
+
 	}
 
 	public DoorDescriptor getDescriptor()
@@ -100,16 +104,15 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
+	public void addComponent(IComponent component)
 	{
-		iconProvider = DefaultIconProvider.from(descriptor.getModId() + ":" + descriptor.getTextureName());
+		components.add(component);
 	}
 
 	@Override
-	public IIconProvider getIconProvider()
+	public List<IComponent> getComponents()
 	{
-		return iconProvider;
+		return components;
 	}
 
 	@Override

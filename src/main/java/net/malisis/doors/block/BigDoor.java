@@ -26,13 +26,14 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.MalisisIcon;
-import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.MBlockState;
 import net.malisis.core.util.TileEntityUtils;
@@ -60,8 +61,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.Lists;
 
@@ -87,12 +86,10 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	private AxisAlignedBB defaultBoundingBox = new AxisAlignedBB(0, 0, 1 - Door.DOOR_WIDTH, 4, 5, 1);
-	private Type type;
 
 	public BigDoor(Type type)
 	{
 		super(Material.wood);
-		this.type = type;
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setSoundType(SoundType.STONE);
@@ -100,13 +97,9 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		setCreativeTab(MalisisDoors.tab);
 
 		addComponent(new DirectionalComponent());
-	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
-	{
-		iconProvider = new BigDoorIconProvider(type);
+		if (MalisisCore.isClient())
+			addComponent(BigDoorIconProvider.get(type));
 	}
 
 	@Override
@@ -229,22 +222,15 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		return true;
 	}
 
-	public static class BigDoorIconProvider implements IBlockIconProvider
+	public static class BigDoorIconProvider implements IIconProvider
 	{
 		MalisisIcon itemIcon;
 		MalisisIcon doorIcon;
 
 		public BigDoorIconProvider(Type type)
 		{
-			itemIcon = new MalisisIcon(MalisisDoors.modid + ":items/" + type.name + "_item");
-			doorIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/" + type.name);
-		}
-
-		@Override
-		public void registerIcons(net.minecraft.client.renderer.texture.TextureMap map)
-		{
-			itemIcon = itemIcon.register(map);
-			doorIcon = doorIcon.register(map);
+			itemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/" + type.name + "_item");
+			doorIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/" + type.name);
 		}
 
 		@Override
@@ -256,6 +242,11 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		public MalisisIcon getDoorIcon()
 		{
 			return doorIcon;
+		}
+
+		public static BigDoorIconProvider get(Type type)
+		{
+			return new BigDoorIconProvider(type);
 		}
 
 	}

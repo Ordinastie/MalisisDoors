@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.MBlockState;
 import net.malisis.doors.DoorDescriptor;
@@ -85,12 +84,6 @@ public class CustomDoorItem extends DoorItem
 	public String getName()
 	{
 		return "customDoorItem";
-	}
-
-	@Override
-	public IIconProvider getIconProvider()
-	{
-		return null;
 	}
 
 	public static ItemStack fromDoorFactory(DoorFactoryTileEntity te)

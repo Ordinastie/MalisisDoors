@@ -24,6 +24,7 @@
 
 package net.malisis.doors.renderer;
 
+import net.malisis.core.block.IComponent;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
@@ -104,7 +105,7 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 	{
 		IBlockState state = tileEntity.getFrameState();
 
-		if (!state.getBlock().canRenderInLayer(getRenderLayer()))
+		if (!state.getBlock().canRenderInLayer(state, getRenderLayer()))
 			return;
 
 		rp.icon.set(new VanillaIcon(state));
@@ -123,7 +124,7 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 		}
 
 		next(GL11.GL_POLYGON);
-		rp.icon.set(((BigDoorIconProvider) block.getIconProvider()).getDoorIcon());
+		rp.icon.set(IComponent.getComponent(BigDoorIconProvider.class, block).getDoorIcon());
 		drawShape(doorLeft, rp);
 		drawShape(doorRight, rp);
 	}

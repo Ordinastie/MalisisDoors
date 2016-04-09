@@ -25,6 +25,7 @@
 package net.malisis.doors.block;
 
 import net.malisis.core.renderer.MalisisRendered;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.iconprovider.SaloonDoorIconProvider;
 import net.malisis.doors.renderer.SaloonDoorRenderer;
@@ -55,9 +56,9 @@ public class SaloonDoorBlock extends Door
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
+	public IIconProvider getIconProvider()
 	{
-		iconProvider = new SaloonDoorIconProvider(descriptor);
+		return new SaloonDoorIconProvider(descriptor);
 	}
 
 	@Override

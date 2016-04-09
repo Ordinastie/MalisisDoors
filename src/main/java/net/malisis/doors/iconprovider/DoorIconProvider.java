@@ -30,7 +30,7 @@ import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.descriptor.VanillaDoor;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -46,14 +46,16 @@ public class DoorIconProvider implements IBlockIconProvider
 	protected MalisisIcon[] iconTop;
 	protected MalisisIcon[] iconBottom;
 
+	boolean built = false;
+
 	public DoorIconProvider(DoorDescriptor descriptor)
 	{
 		String modid = descriptor.getModId();
 		String name = descriptor.getTextureName();
 
-		itemIcon = new MalisisIcon(modid + ":items/" + name);
-		top = new MalisisIcon(modid + ":blocks/" + name + "_upper");
-		bottom = new MalisisIcon(modid + ":blocks/" + name + "_lower");
+		itemIcon = MalisisIcon.from(modid + ":items/" + name);
+		top = MalisisIcon.from(modid + ":blocks/" + name + "_upper");
+		bottom = MalisisIcon.from(modid + ":blocks/" + name + "_lower");
 
 		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (descriptor instanceof VanillaDoor)
@@ -81,27 +83,28 @@ public class DoorIconProvider implements IBlockIconProvider
 		iconBottom[3] = bottom;
 		iconBottom[4] = new ClippedIcon(side, 3 * w, 0, w, 1);
 		iconBottom[5] = new ClippedIcon(side, 4 * w, 0, w, 1);
-	}
 
-	@Override
-	public void registerIcons(TextureMap map)
-	{
-		top = top.register(map);
-		bottom = bottom.register(map);
-		side = side.register(map);
-		itemIcon = itemIcon.register(map);
-
-		buildIcons();
+		built = true;
 	}
 
 	@Override
 	public MalisisIcon getIcon()
 	{
+		System.out.println("DOOR ITEM ICON");
 		return itemIcon;
+	}
+
+	@Override
+	public MalisisIcon getIcon(IBlockState state, EnumFacing side)
+	{
+		return null; //NOT used
 	}
 
 	public MalisisIcon getIcon(boolean isTop, boolean isHingeLeft, EnumFacing side)
 	{
+		if (!built)
+			buildIcons();
+
 		boolean flipH = false;
 		boolean flipV = false;
 

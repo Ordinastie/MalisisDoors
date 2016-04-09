@@ -24,6 +24,7 @@
 
 package net.malisis.doors;
 
+import net.malisis.core.MalisisRegistry;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.DoorItem;
@@ -375,14 +376,14 @@ public class DoorDescriptor
 			create();
 
 		if (block instanceof IRegisterable)
-			((IRegisterable) block).register();
+			MalisisRegistry.register((IRegisterable) block);
 		else
-			GameRegistry.registerBlock(block, block.getUnlocalizedName().substring(5));
+			GameRegistry.register(block);
 
 		if (item instanceof IRegisterable)
-			((IRegisterable) item).register();
+			MalisisRegistry.register((IRegisterable) item);
 		else
-			GameRegistry.registerItem(item, item.getUnlocalizedName());
+			GameRegistry.register(item);
 
 		if (recipe != null)
 		{

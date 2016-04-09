@@ -26,12 +26,13 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.MalisisIcon;
-import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
@@ -46,7 +47,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,8 +60,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -88,16 +86,13 @@ public class RustyHatch extends MalisisBlock
 		setCreativeTab(MalisisDoors.tab);
 
 		bottomMultiBlock.setBulkProcess(true, true);
+		topMultiBlock.setBulkProcess(true, true);
 
 		addComponent(new MultiBlockComponent((world, pos, state, itemStack) -> isTop(state) ? topMultiBlock : bottomMultiBlock));
-		topMultiBlock.setBulkProcess(true, true);
-	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
-	{
-		iconProvider = new RustyHatchIconProvider();
+		if (MalisisCore.isClient())
+			addComponent(RustyHatchIconProvider.get());
+
 	}
 
 	@Override
@@ -146,7 +141,9 @@ public class RustyHatch extends MalisisBlock
 			return null;
 
 		AxisAlignedBB aabb = te.isOpened() ? te.getMovement().getOpenBoundingBox(te, te.isTop(), type) : te.getMovement()
-				.getClosedBoundingBox(te, te.isTop(), type);
+																											.getClosedBoundingBox(te,
+																													te.isTop(),
+																													type);
 
 		if (aabb == null)
 			return null;
@@ -244,19 +241,11 @@ public class RustyHatch extends MalisisBlock
 		return TileEntityUtils.getTileEntity(RustyHatchTileEntity.class, world, origin != null ? origin : pos);
 	}
 
-	public static class RustyHatchIconProvider implements IBlockIconProvider
+	public static class RustyHatchIconProvider implements IIconProvider
 	{
-		private MalisisIcon hatchIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/rusty_hatch");
-		private MalisisIcon handleIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/rusty_hatch_handle");
-		private MalisisIcon hatchItemIcon = new MalisisIcon(MalisisDoors.modid + ":items/rusty_hatch_item");
-
-		@Override
-		public void registerIcons(TextureMap map)
-		{
-			hatchIcon = hatchIcon.register(map);
-			handleIcon = handleIcon.register(map);
-			hatchItemIcon = hatchItemIcon.register(map);
-		}
+		private MalisisIcon hatchIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/rusty_hatch");
+		private MalisisIcon handleIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/rusty_hatch_handle");
+		private MalisisIcon hatchItemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/rusty_hatch_item");
 
 		@Override
 		public MalisisIcon getIcon()
@@ -272,6 +261,11 @@ public class RustyHatch extends MalisisBlock
 		public MalisisIcon getHatchIcon()
 		{
 			return hatchIcon;
+		}
+
+		public static RustyHatchIconProvider get()
+		{
+			return new RustyHatchIconProvider();
 		}
 
 	}

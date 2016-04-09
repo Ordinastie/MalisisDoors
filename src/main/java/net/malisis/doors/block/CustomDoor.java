@@ -27,7 +27,7 @@ package net.malisis.doors.block;
 import java.util.List;
 
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.renderer.CustomDoorRenderer;

@@ -30,10 +30,11 @@ import java.util.Random;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
+import net.malisis.core.block.IComponent;
+import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
-import net.malisis.core.renderer.icon.IMetaIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
@@ -69,12 +70,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Ordinastie
  *
  */
 @MalisisRendered(item = DoorRenderer.class)
-public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, IRegisterable
+public class Door extends BlockDoor implements IBoundingBox, IComponentProvider, IRegisterable
 {
 	public static Block[] centerBlocks = new Block[] { Blocks.iron_bars, Blocks.cobblestone_wall, Blocks.spruce_fence, Blocks.birch_fence,
 			Blocks.jungle_fence, Blocks.dark_oak_fence, Blocks.acacia_fence };
@@ -82,8 +85,7 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	public static final float DOOR_WIDTH = 0.1875F;
 
 	protected DoorDescriptor descriptor;
-	@SideOnly(Side.CLIENT)
-	protected IIconProvider iconProvider;
+	protected final List<IComponent> components = Lists.newArrayList();
 
 	public Door(DoorDescriptor desc)
 	{
@@ -94,6 +96,10 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
 		setUnlocalizedName(desc.getName());
+
+		if (MalisisCore.isClient())
+			addComponent(getIconProvider());
+
 	}
 
 	public Door(Material material)
@@ -119,18 +125,21 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
+	public void addComponent(IComponent component)
 	{
-		if (descriptor != null)
-			iconProvider = new DoorIconProvider(descriptor);
+		components.add(component);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IIconProvider getIconProvider()
+	public List<IComponent> getComponents()
 	{
-		return iconProvider;
+		return components;
+	}
+
+	@SideOnly(Side.CLIENT)
+	protected IIconProvider getIconProvider()
+	{
+		return new DoorIconProvider(descriptor);
 	}
 
 	// #region Events
@@ -313,7 +322,9 @@ public class Door extends BlockDoor implements IBoundingBox, IMetaIconProvider, 
 			return null;
 
 		AxisAlignedBB aabb = te.isOpened() ? te.getMovement().getOpenBoundingBox(te, te.isTopBlock(pos), type) : te.getMovement()
-				.getClosedBoundingBox(te, te.isTopBlock(pos), type);
+																													.getClosedBoundingBox(te,
+																															te.isTopBlock(pos),
+																															type);
 
 		if (aabb != null && te.isCentered())
 			aabb = aabb.offset(0, 0, 0.5F - Door.DOOR_WIDTH / 2);

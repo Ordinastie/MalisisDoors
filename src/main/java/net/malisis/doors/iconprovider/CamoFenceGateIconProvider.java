@@ -31,7 +31,6 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.tileentity.FenceGateTileEntity;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -42,13 +41,7 @@ import net.minecraft.world.IBlockAccess;
  */
 public class CamoFenceGateIconProvider implements IBlockIconProvider
 {
-	private MalisisIcon defaultIcon = new MalisisIcon(MalisisDoors.modid + ":blocks/camo_fencegate");
-
-	@Override
-	public void registerIcons(TextureMap map)
-	{
-		defaultIcon = defaultIcon.register(map);
-	}
+	private MalisisIcon defaultIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/camo_fencegate");
 
 	@Override
 	public MalisisIcon getIcon()
@@ -68,5 +61,17 @@ public class CamoFenceGateIconProvider implements IBlockIconProvider
 			return getIcon();
 
 		return new VanillaIcon(camoState);
+	}
+
+	@Override
+	public MalisisIcon getIcon(IBlockState state, EnumFacing side)
+	{
+		//called for ITEM
+		return defaultIcon;
+	}
+
+	public static CamoFenceGateIconProvider get()
+	{
+		return new CamoFenceGateIconProvider();
 	}
 }

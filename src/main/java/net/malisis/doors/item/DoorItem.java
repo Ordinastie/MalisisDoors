@@ -29,8 +29,8 @@ import java.util.List;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.IIconProvider;
-import net.malisis.core.renderer.icon.IMetaIconProvider;
+import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.renderer.DoorRenderer;
 import net.minecraft.block.Block;
@@ -49,11 +49,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @MalisisRendered(item = DoorRenderer.class)
-public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterable
+public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 {
 	private DoorDescriptor descriptor;
-	@SideOnly(Side.CLIENT)
-	private IIconProvider iconProvider;
 
 	public DoorItem(DoorDescriptor desc)
 	{
@@ -84,16 +82,9 @@ public class DoorItem extends ItemDoor implements IMetaIconProvider, IRegisterab
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void createIconProvider(Object object)
-	{}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIconProvider getIconProvider()
+	public MalisisIcon getIcon()
 	{
-		if (descriptor == null || !(descriptor.getBlock() instanceof IMetaIconProvider))
-			return null;
-		return ((IMetaIconProvider) descriptor.getBlock()).getIconProvider();
+		return MalisisIcon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
 	}
 
 	@Override
