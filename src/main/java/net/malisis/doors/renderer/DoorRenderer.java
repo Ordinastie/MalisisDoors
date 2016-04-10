@@ -199,6 +199,8 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 				return;
 		}
 
+		rp.rotateIcon.set(false);
+
 		//model.render(this, rp);
 		topBlock = false;
 		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));

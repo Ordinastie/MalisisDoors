@@ -26,18 +26,17 @@ package net.malisis.doors.iconprovider;
 
 import net.malisis.core.renderer.icon.ClippedIcon;
 import net.malisis.core.renderer.icon.MalisisIcon;
-import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
+import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.descriptor.VanillaDoor;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 
 /**
  * @author Ordinastie
  *
  */
-public class DoorIconProvider implements IBlockIconProvider
+public class DoorIconProvider implements IIconProvider
 {
 	protected MalisisIcon itemIcon;
 	protected MalisisIcon top;
@@ -45,8 +44,6 @@ public class DoorIconProvider implements IBlockIconProvider
 	protected MalisisIcon side;
 	protected MalisisIcon[] iconTop;
 	protected MalisisIcon[] iconBottom;
-
-	boolean built = false;
 
 	public DoorIconProvider(DoorDescriptor descriptor)
 	{
@@ -61,6 +58,8 @@ public class DoorIconProvider implements IBlockIconProvider
 		if (descriptor instanceof VanillaDoor)
 			modid = MalisisDoors.modid;
 		side = new MalisisIcon(modid + ":blocks/" + name + "_side");
+
+		buildIcons();
 
 	}
 
@@ -84,27 +83,17 @@ public class DoorIconProvider implements IBlockIconProvider
 		iconBottom[4] = new ClippedIcon(side, 3 * w, 0, w, 1);
 		iconBottom[5] = new ClippedIcon(side, 4 * w, 0, w, 1);
 
-		built = true;
 	}
 
 	@Override
 	public MalisisIcon getIcon()
 	{
-		System.out.println("DOOR ITEM ICON");
-		return itemIcon;
-	}
-
-	@Override
-	public MalisisIcon getIcon(IBlockState state, EnumFacing side)
-	{
-		return null; //NOT used
+		//particles
+		return top;
 	}
 
 	public MalisisIcon getIcon(boolean isTop, boolean isHingeLeft, EnumFacing side)
 	{
-		if (!built)
-			buildIcons();
-
 		boolean flipH = false;
 		boolean flipV = false;
 

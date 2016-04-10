@@ -185,9 +185,6 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 
 		if (tileEntity.isTop())
 			model.translate(0, 1 - Door.DOOR_WIDTH, 0);
-
-		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
-		model.getShape("shape").deductParameters();
 	}
 
 	protected void renderTileEntity(MalisisModel model)
