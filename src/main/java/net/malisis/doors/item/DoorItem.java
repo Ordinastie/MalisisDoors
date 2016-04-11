@@ -29,7 +29,7 @@ import java.util.List;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.renderer.DoorRenderer;
@@ -82,9 +82,9 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public MalisisIcon getIcon()
+	public Icon getIcon()
 	{
-		return MalisisIcon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
+		return Icon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
 	}
 
 	@Override

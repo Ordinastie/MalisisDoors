@@ -24,7 +24,7 @@
 
 package net.malisis.doors.iconprovider;
 
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.minecraft.block.state.IBlockState;
@@ -36,26 +36,26 @@ import net.minecraft.util.EnumFacing;
  */
 public class SaloonDoorIconProvider implements IBlockIconProvider
 {
-	private MalisisIcon itemIcon;
-	private MalisisIcon blockIcon;
+	private Icon itemIcon;
+	private Icon blockIcon;
 
 	public SaloonDoorIconProvider(DoorDescriptor descriptor)
 	{
 		String modid = descriptor.getModId();
 		String name = descriptor.getTextureName();
 
-		itemIcon = MalisisIcon.from(modid + ":items/" + name);
-		blockIcon = MalisisIcon.from(modid + ":blocks/" + name);
+		itemIcon = Icon.from(modid + ":items/" + name);
+		blockIcon = Icon.from(modid + ":blocks/" + name);
 	}
 
 	@Override
-	public MalisisIcon getIcon(IBlockState state, EnumFacing side)
+	public Icon getIcon(IBlockState state, EnumFacing side)
 	{
 		return blockIcon;
 	}
 
 	@Override
-	public MalisisIcon getIcon()
+	public Icon getIcon()
 	{
 		return itemIcon;
 	}

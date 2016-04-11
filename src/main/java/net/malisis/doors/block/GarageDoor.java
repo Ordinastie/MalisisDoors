@@ -31,7 +31,7 @@ import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.PowerComponent;
 import net.malisis.core.block.component.PowerComponent.Type;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorState;
@@ -140,24 +140,24 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 	@SideOnly(Side.CLIENT)
 	public static class GarageDoorIconProvider implements IBlockIconProvider
 	{
-		private MalisisIcon topIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/garage_door_top");
-		private MalisisIcon baseIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/garage_door");
+		private Icon topIcon = Icon.from(MalisisDoors.modid + ":blocks/garage_door_top");
+		private Icon baseIcon = Icon.from(MalisisDoors.modid + ":blocks/garage_door");
 
 		@Override
-		public MalisisIcon getIcon()
+		public Icon getIcon()
 		{
 			return baseIcon;
 		}
 
 		@Override
-		public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+		public Icon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 		{
 			GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos);
 			return te != null && te.isTop() ? getIcon(state, side) : baseIcon;
 		}
 
 		@Override
-		public MalisisIcon getIcon(IBlockState state, EnumFacing side)
+		public Icon getIcon(IBlockState state, EnumFacing side)
 		{
 			return side.getAxis() == Axis.Z ? topIcon : baseIcon;
 		}

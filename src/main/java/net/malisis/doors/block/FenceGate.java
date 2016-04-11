@@ -31,7 +31,7 @@ import net.malisis.core.block.IComponent;
 import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
@@ -109,7 +109,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 				addComponent(CamoFenceGateIconProvider.get());
 			else
 			{
-				MalisisIcon icon = MalisisIcon.from(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT, type.type));
+				Icon icon = Icon.from(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT, type.type));
 				addComponent((IIconProvider) () -> icon);
 			}
 		}

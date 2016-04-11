@@ -48,7 +48,7 @@ import net.malisis.core.client.gui.component.interaction.UITextField;
 import net.malisis.core.client.gui.event.ComponentEvent.ValueChange;
 import net.malisis.core.client.gui.event.component.StateChangeEvent.ActiveStateChange;
 import net.malisis.core.inventory.MalisisInventoryContainer;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
@@ -71,9 +71,9 @@ public class DoorFactoryGui extends MalisisGui
 {
 	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorFactoryTabIcons.png");
 	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 128);
-	public static MalisisIcon propIcon = tabTexture.getIcon(0, 0, 64, 64);
-	public static MalisisIcon matIcon = tabTexture.getIcon(64, 0, 64, 64);
-	public static MalisisIcon dcIcon = tabTexture.getIcon(0, 64, 64, 64);
+	public static Icon propIcon = tabTexture.getIcon(0, 0, 64, 64);
+	public static Icon matIcon = tabTexture.getIcon(64, 0, 64, 64);
+	public static Icon dcIcon = tabTexture.getIcon(0, 64, 64, 64);
 
 	private DoorFactoryTileEntity tileEntity;
 	private UISelect<String> selDoorMovement;

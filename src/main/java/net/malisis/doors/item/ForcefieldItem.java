@@ -26,7 +26,7 @@ package net.malisis.doors.item;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.item.MalisisItem;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.renderer.icon.provider.IItemIconProvider;
 import net.malisis.core.util.TileEntityUtils;
@@ -257,20 +257,20 @@ public class ForcefieldItem extends MalisisItem
 	@SideOnly(Side.CLIENT)
 	public class ForcefieldItemIconProvider implements IItemIconProvider
 	{
-		protected MalisisIcon itemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem");
-		protected MalisisIcon yellowIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_yellow");
-		protected MalisisIcon redIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_red");;
-		protected MalisisIcon greenIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_green");;
-		protected MalisisIcon disabledIcon = MalisisIcon.from(MalisisDoors.modid + ":items/forcefielditem_disabled");
+		protected Icon itemIcon = Icon.from(MalisisDoors.modid + ":items/forcefielditem");
+		protected Icon yellowIcon = Icon.from(MalisisDoors.modid + ":items/forcefielditem_yellow");
+		protected Icon redIcon = Icon.from(MalisisDoors.modid + ":items/forcefielditem_red");;
+		protected Icon greenIcon = Icon.from(MalisisDoors.modid + ":items/forcefielditem_green");;
+		protected Icon disabledIcon = Icon.from(MalisisDoors.modid + ":items/forcefielditem_disabled");
 
 		@Override
-		public MalisisIcon getIcon()
+		public Icon getIcon()
 		{
 			return itemIcon;
 		}
 
 		@Override
-		public MalisisIcon getIcon(ItemStack itemStack)
+		public Icon getIcon(ItemStack itemStack)
 		{
 			if (getEnergy(itemStack) < getMaxEnergy())
 				return disabledIcon;

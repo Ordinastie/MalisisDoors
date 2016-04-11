@@ -31,7 +31,7 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
@@ -243,22 +243,22 @@ public class RustyHatch extends MalisisBlock
 
 	public static class RustyHatchIconProvider implements IIconProvider
 	{
-		private MalisisIcon hatchIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/rusty_hatch");
-		private MalisisIcon handleIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/rusty_hatch_handle");
-		private MalisisIcon hatchItemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/rusty_hatch_item");
+		private Icon hatchIcon = Icon.from(MalisisDoors.modid + ":blocks/rusty_hatch");
+		private Icon handleIcon = Icon.from(MalisisDoors.modid + ":blocks/rusty_hatch_handle");
+		private Icon hatchItemIcon = Icon.from(MalisisDoors.modid + ":items/rusty_hatch_item");
 
 		@Override
-		public MalisisIcon getIcon()
+		public Icon getIcon()
 		{
 			return hatchItemIcon;
 		}
 
-		public MalisisIcon getHandleIcon()
+		public Icon getHandleIcon()
 		{
 			return handleIcon;
 		}
 
-		public MalisisIcon getHatchIcon()
+		public Icon getHatchIcon()
 		{
 			return hatchIcon;
 		}

@@ -39,7 +39,7 @@ import net.malisis.core.renderer.animation.transformation.ITransformable;
 import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
@@ -248,7 +248,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	}
 
 	@Override
-	protected MalisisIcon getIcon(Face face, RenderParameters params)
+	protected Icon getIcon(Face face, RenderParameters params)
 	{
 		if (params.icon.get() != null)
 			return params.icon.get();

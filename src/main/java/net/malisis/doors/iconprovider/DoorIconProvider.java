@@ -25,7 +25,7 @@
 package net.malisis.doors.iconprovider;
 
 import net.malisis.core.renderer.icon.ClippedIcon;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
@@ -38,26 +38,26 @@ import net.minecraft.util.EnumFacing;
  */
 public class DoorIconProvider implements IIconProvider
 {
-	protected MalisisIcon itemIcon;
-	protected MalisisIcon top;
-	protected MalisisIcon bottom;
-	protected MalisisIcon side;
-	protected MalisisIcon[] iconTop;
-	protected MalisisIcon[] iconBottom;
+	protected Icon itemIcon;
+	protected Icon top;
+	protected Icon bottom;
+	protected Icon side;
+	protected Icon[] iconTop;
+	protected Icon[] iconBottom;
 
 	public DoorIconProvider(DoorDescriptor descriptor)
 	{
 		String modid = descriptor.getModId();
 		String name = descriptor.getTextureName();
 
-		itemIcon = MalisisIcon.from(modid + ":items/" + name);
-		top = MalisisIcon.from(modid + ":blocks/" + name + "_upper");
-		bottom = MalisisIcon.from(modid + ":blocks/" + name + "_lower");
+		itemIcon = Icon.from(modid + ":items/" + name);
+		top = Icon.from(modid + ":blocks/" + name + "_upper");
+		bottom = Icon.from(modid + ":blocks/" + name + "_lower");
 
 		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (descriptor instanceof VanillaDoor)
 			modid = MalisisDoors.modid;
-		side = new MalisisIcon(modid + ":blocks/" + name + "_side");
+		side = new Icon(modid + ":blocks/" + name + "_side");
 
 		buildIcons();
 
@@ -66,7 +66,7 @@ public class DoorIconProvider implements IIconProvider
 	private void buildIcons()
 	{
 		float w = 3F / 16F;
-		iconTop = new MalisisIcon[6];
+		iconTop = new Icon[6];
 		iconTop[0] = new ClippedIcon(side, 0, 0, w, 1);
 		iconTop[0].setRotation(1);
 		iconTop[1] = iconTop[0];
@@ -75,7 +75,7 @@ public class DoorIconProvider implements IIconProvider
 		iconTop[4] = new ClippedIcon(side, w, 0, w, 1);
 		iconTop[5] = new ClippedIcon(side, 2 * w, 0, w, 1);
 
-		iconBottom = new MalisisIcon[6];
+		iconBottom = new Icon[6];
 		iconBottom[0] = iconTop[0];
 		iconBottom[1] = iconTop[0];
 		iconBottom[2] = bottom;
@@ -86,13 +86,13 @@ public class DoorIconProvider implements IIconProvider
 	}
 
 	@Override
-	public MalisisIcon getIcon()
+	public Icon getIcon()
 	{
 		//particles
 		return top;
 	}
 
-	public MalisisIcon getIcon(boolean isTop, boolean isHingeLeft, EnumFacing side)
+	public Icon getIcon(boolean isTop, boolean isHingeLeft, EnumFacing side)
 	{
 		boolean flipH = false;
 		boolean flipV = false;
@@ -114,7 +114,7 @@ public class DoorIconProvider implements IIconProvider
 				break;
 		}
 
-		MalisisIcon icon = isTop ? iconTop[side.getIndex()] : iconBottom[side.getIndex()];
+		Icon icon = isTop ? iconTop[side.getIndex()] : iconBottom[side.getIndex()];
 		icon.flip(flipH, flipV);
 
 		return icon;

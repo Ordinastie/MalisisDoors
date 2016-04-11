@@ -32,7 +32,7 @@ import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.MBlockState;
@@ -224,22 +224,22 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 
 	public static class BigDoorIconProvider implements IIconProvider
 	{
-		MalisisIcon itemIcon;
-		MalisisIcon doorIcon;
+		Icon itemIcon;
+		Icon doorIcon;
 
 		public BigDoorIconProvider(Type type)
 		{
-			itemIcon = MalisisIcon.from(MalisisDoors.modid + ":items/" + type.name + "_item");
-			doorIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/" + type.name);
+			itemIcon = Icon.from(MalisisDoors.modid + ":items/" + type.name + "_item");
+			doorIcon = Icon.from(MalisisDoors.modid + ":blocks/" + type.name);
 		}
 
 		@Override
-		public MalisisIcon getIcon()
+		public Icon getIcon()
 		{
 			return itemIcon;
 		}
 
-		public MalisisIcon getDoorIcon()
+		public Icon getDoorIcon()
 		{
 			return doorIcon;
 		}

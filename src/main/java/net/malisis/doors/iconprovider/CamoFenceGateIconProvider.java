@@ -24,7 +24,7 @@
 
 package net.malisis.doors.iconprovider;
 
-import net.malisis.core.renderer.icon.MalisisIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
@@ -41,16 +41,16 @@ import net.minecraft.world.IBlockAccess;
  */
 public class CamoFenceGateIconProvider implements IBlockIconProvider
 {
-	private MalisisIcon defaultIcon = MalisisIcon.from(MalisisDoors.modid + ":blocks/camo_fencegate");
+	private Icon defaultIcon = Icon.from(MalisisDoors.modid + ":blocks/camo_fencegate");
 
 	@Override
-	public MalisisIcon getIcon()
+	public Icon getIcon()
 	{
 		return defaultIcon;
 	}
 
 	@Override
-	public MalisisIcon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
+	public Icon getIcon(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side)
 	{
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null)
@@ -64,7 +64,7 @@ public class CamoFenceGateIconProvider implements IBlockIconProvider
 	}
 
 	@Override
-	public MalisisIcon getIcon(IBlockState state, EnumFacing side)
+	public Icon getIcon(IBlockState state, EnumFacing side)
 	{
 		//called for ITEM
 		return defaultIcon;
