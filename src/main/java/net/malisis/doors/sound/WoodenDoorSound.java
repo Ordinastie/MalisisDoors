@@ -43,9 +43,9 @@ public class WoodenDoorSound implements IDoorSound
 	public SoundEvent getSound(DoorState state)
 	{
 		if (state == DoorState.OPENING)
-			return SoundEvents.block_wooden_door_open;
+			return SoundEvents.BLOCK_WOODEN_DOOR_OPEN;
 		if (state == DoorState.CLOSED)
-			return SoundEvents.block_wooden_door_close;
+			return SoundEvents.BLOCK_WOODEN_DOOR_CLOSE;
 
 		return null;
 	}

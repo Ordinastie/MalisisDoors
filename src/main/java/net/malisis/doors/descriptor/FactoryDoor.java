@@ -42,7 +42,7 @@ public class FactoryDoor extends DoorDescriptor
 	public FactoryDoor()
 	{
 		//Block
-		setMaterial(Material.iron);
+		setMaterial(Material.IRON);
 		setHardness(4.0F);
 		setSoundType(SoundType.METAL);
 		setName("factory_door");
@@ -59,6 +59,6 @@ public class FactoryDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe("AA", "BB", "AA", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
+		setRecipe("AA", "BB", "AA", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

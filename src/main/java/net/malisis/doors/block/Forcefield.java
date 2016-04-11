@@ -64,7 +64,7 @@ public class Forcefield extends MalisisBlock
 
 	public Forcefield()
 	{
-		super(Material.anvil);
+		super(Material.ANVIL);
 		setResistance(60000000);
 		setBlockUnbreakable();
 		setSoundType(SoundType.ANVIL);

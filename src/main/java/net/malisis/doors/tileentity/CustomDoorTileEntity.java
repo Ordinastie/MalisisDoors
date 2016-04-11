@@ -39,9 +39,9 @@ import org.apache.commons.lang3.tuple.Triple;
  */
 public class CustomDoorTileEntity extends DoorTileEntity
 {
-	private IBlockState frame = Blocks.planks.getDefaultState();
-	private IBlockState top = Blocks.glass.getDefaultState();
-	private IBlockState bottom = Blocks.glass.getDefaultState();
+	private IBlockState frame = Blocks.PLANKS.getDefaultState();
+	private IBlockState top = Blocks.GLASS.getDefaultState();
+	private IBlockState bottom = Blocks.GLASS.getDefaultState();
 
 	//#region Getters/setters
 	public IBlockState getFrame()
@@ -63,8 +63,7 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	{
 		if (frame == null)
 			return 0;
-		return Math
-				.max(Math.max(frame.getLightValue(worldObj, pos), top.getLightValue(worldObj, pos)), bottom.getLightValue(worldObj, pos));
+		return Math.max(Math.max(frame.getLightValue(worldObj, pos), top.getLightValue(worldObj, pos)), bottom.getLightValue(worldObj, pos));
 	}
 
 	//#end Getters/setters

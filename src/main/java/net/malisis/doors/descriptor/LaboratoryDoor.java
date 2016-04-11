@@ -42,7 +42,7 @@ public class LaboratoryDoor extends DoorDescriptor
 	public LaboratoryDoor()
 	{
 		//Block
-		setMaterial(Material.iron);
+		setMaterial(Material.IRON);
 		setHardness(4.0F);
 		setSoundType(SoundType.METAL);
 		setName("laboratory_door");
@@ -59,6 +59,6 @@ public class LaboratoryDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe("AA", "BB", "BB", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
+		setRecipe("AA", "BB", "BB", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

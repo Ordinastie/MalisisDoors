@@ -42,7 +42,7 @@ public class JailDoor extends DoorDescriptor
 	public JailDoor()
 	{
 		//Block
-		setMaterial(Material.iron);
+		setMaterial(Material.IRON);
 		setHardness(5.0F);
 		setSoundType(SoundType.METAL);
 		setName("jail_door");
@@ -59,6 +59,6 @@ public class JailDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe("AA", "AA", "AA", 'A', Blocks.iron_bars);
+		setRecipe("AA", "AA", "AA", 'A', Blocks.IRON_BARS);
 	}
 }

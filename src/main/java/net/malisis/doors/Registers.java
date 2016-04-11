@@ -123,55 +123,60 @@ public class Registers
 		oakDoor.create();
 		doorOak = (Door) oakDoor.getBlock();
 		doorOakItem = (DoorItem) oakDoor.getItem();
-		ReplacementTool.replaceVanillaItem(324, "wooden_door", "oak_door", "field_179570_aq", oakDoor.getItem(), Items.oak_door);
-		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "oak_door", "field_180413_ao", oakDoor.getBlock(), Blocks.oak_door);
+		ReplacementTool.replaceVanillaItem(324, "wooden_door", "oak_door", "field_179570_aq", oakDoor.getItem(), Items.OAK_DOOR);
+		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "oak_door", "field_180413_ao", oakDoor.getBlock(), Blocks.OAK_DOOR);
 
 		VanillaDoor acaciaDoor = new VanillaDoor(VanillaDoor.Type.ACACIA);
 		acaciaDoor.create();
 		doorAcacia = (Door) acaciaDoor.getBlock();
 		doorAcaciaItem = (DoorItem) acaciaDoor.getItem();
-		ReplacementTool.replaceVanillaItem(430, "acacia_door", "acacia_door", "field_179572_au", acaciaDoor.getItem(), Items.acacia_door);
-		ReplacementTool
-				.replaceVanillaBlock(196, "acacia_door", "acacia_door", "field_180410_as", acaciaDoor.getBlock(), Blocks.acacia_door);
+		ReplacementTool.replaceVanillaItem(430, "acacia_door", "acacia_door", "field_179572_au", acaciaDoor.getItem(), Items.ACACIA_DOOR);
+		ReplacementTool.replaceVanillaBlock(196, "acacia_door", "acacia_door", "field_180410_as", acaciaDoor.getBlock(), Blocks.ACACIA_DOOR);
 
 		VanillaDoor birchDoor = new VanillaDoor(VanillaDoor.Type.BIRCH);
 		birchDoor.create();
 		doorBirch = (Door) birchDoor.getBlock();
 		doorBirchItem = (DoorItem) birchDoor.getItem();
-		ReplacementTool.replaceVanillaItem(428, "birch_door", "birch_door", "field_179568_as", birchDoor.getItem(), Items.birch_door);
-		ReplacementTool.replaceVanillaBlock(194, "birch_door", "birch_door", "field_180412_aq", birchDoor.getBlock(), Blocks.birch_door);
+		ReplacementTool.replaceVanillaItem(428, "birch_door", "birch_door", "field_179568_as", birchDoor.getItem(), Items.BIRCH_DOOR);
+		ReplacementTool.replaceVanillaBlock(194, "birch_door", "birch_door", "field_180412_aq", birchDoor.getBlock(), Blocks.BIRCH_DOOR);
 
 		VanillaDoor darkOakDoor = new VanillaDoor(VanillaDoor.Type.DARK_OAK);
 		darkOakDoor.create();
 		doorDarkOak = (Door) darkOakDoor.getBlock();
 		doorDarkOakItem = (DoorItem) darkOakDoor.getItem();
-		ReplacementTool.replaceVanillaItem(431, "dark_oak_door", "dark_oak_door", "field_179571_av", darkOakDoor.getItem(),
-				Items.dark_oak_door);
-		ReplacementTool.replaceVanillaBlock(197, "dark_oak_door", "dark_oak_door", "field_180409_at", darkOakDoor.getBlock(),
-				Blocks.dark_oak_door);
+		ReplacementTool.replaceVanillaItem(431,
+				"dark_oak_door",
+				"dark_oak_door",
+				"field_179571_av",
+				darkOakDoor.getItem(),
+				Items.DARK_OAK_DOOR);
+		ReplacementTool.replaceVanillaBlock(197,
+				"dark_oak_door",
+				"dark_oak_door",
+				"field_180409_at",
+				darkOakDoor.getBlock(),
+				Blocks.DARK_OAK_DOOR);
 
 		VanillaDoor jungleDoor = new VanillaDoor(VanillaDoor.Type.JUNGLE);
 		jungleDoor.create();
 		doorJungle = (Door) jungleDoor.getBlock();
 		doorJungleItem = (DoorItem) jungleDoor.getItem();
-		ReplacementTool.replaceVanillaItem(429, "jungle_door", "jungle_door", "field_179567_at", jungleDoor.getItem(), Items.jungle_door);
-		ReplacementTool
-				.replaceVanillaBlock(195, "jungle_door", "jungle_door", "field_180411_ar", jungleDoor.getBlock(), Blocks.jungle_door);
+		ReplacementTool.replaceVanillaItem(429, "jungle_door", "jungle_door", "field_179567_at", jungleDoor.getItem(), Items.JUNGLE_DOOR);
+		ReplacementTool.replaceVanillaBlock(195, "jungle_door", "jungle_door", "field_180411_ar", jungleDoor.getBlock(), Blocks.JUNGLE_DOOR);
 
 		VanillaDoor spruceDoor = new VanillaDoor(VanillaDoor.Type.SPRUCE);
 		spruceDoor.create();
 		doorSpruce = (Door) spruceDoor.getBlock();
 		doorSpruceItem = (DoorItem) spruceDoor.getItem();
-		ReplacementTool.replaceVanillaItem(427, "spruce_door", "spruce_door", "field_179569_ar", spruceDoor.getItem(), Items.spruce_door);
-		ReplacementTool
-				.replaceVanillaBlock(193, "spruce_door", "spruce_door", "field_180414_ap", spruceDoor.getBlock(), Blocks.spruce_door);
+		ReplacementTool.replaceVanillaItem(427, "spruce_door", "spruce_door", "field_179569_ar", spruceDoor.getItem(), Items.SPRUCE_DOOR);
+		ReplacementTool.replaceVanillaBlock(193, "spruce_door", "spruce_door", "field_180414_ap", spruceDoor.getBlock(), Blocks.SPRUCE_DOOR);
 
 		VanillaDoor ironDoor = new VanillaDoor(VanillaDoor.Type.IRON);
 		ironDoor.create();
 		doorIron = (Door) ironDoor.getBlock();
 		doorIronItem = (DoorItem) ironDoor.getItem();
-		ReplacementTool.replaceVanillaItem(330, "iron_door", "iron_door", "field_151139_aw", ironDoor.getItem(), Items.iron_door);
-		ReplacementTool.replaceVanillaBlock(71, "iron_door", "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.iron_door);
+		ReplacementTool.replaceVanillaItem(330, "iron_door", "iron_door", "field_151139_aw", ironDoor.getItem(), Items.IRON_DOOR);
+		ReplacementTool.replaceVanillaBlock(71, "iron_door", "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.IRON_DOOR);
 
 		if (MalisisCore.isClient())
 		{
@@ -190,39 +195,63 @@ public class Registers
 		VanillaTrapDoor trapDoorOak = new VanillaTrapDoor(Type.WOOD);
 		trapDoorOak.create();
 		oakTrapDoor = (TrapDoor) trapDoorOak.getBlock();
-		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "trapdoor", "field_150415_aT", trapDoorOak.getBlock(), Blocks.trapdoor);
+		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "trapdoor", "field_150415_aT", trapDoorOak.getBlock(), Blocks.TRAPDOOR);
 
 		VanillaTrapDoor trapDoorIron = new VanillaTrapDoor(Type.IRON);
 		trapDoorIron.create();
 		ironTrapDoor = (TrapDoor) trapDoorIron.getBlock();
-		ReplacementTool.replaceVanillaBlock(167, "iron_trapdoor", "iron_trapdoor", "field_180400_cw", trapDoorIron.getBlock(),
-				Blocks.iron_trapdoor);
+		ReplacementTool.replaceVanillaBlock(167,
+				"iron_trapdoor",
+				"iron_trapdoor",
+				"field_180400_cw",
+				trapDoorIron.getBlock(),
+				Blocks.IRON_TRAPDOOR);
 	}
 
 	private static void registerVanillaFenceGate()
 	{
 		oakFenceGate = new FenceGate(FenceGate.Type.OAK);
-		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "oak_fence_gate", "field_180390_bo", oakFenceGate, Blocks.oak_fence_gate);
+		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "oak_fence_gate", "field_180390_bo", oakFenceGate, Blocks.OAK_FENCE_GATE);
 
 		acaciaFenceGate = new FenceGate(FenceGate.Type.ACACIA);
-		ReplacementTool.replaceVanillaBlock(187, "acacia_fence_gate", "acacia_fence_gate", "field_180387_bt", acaciaFenceGate,
-				Blocks.acacia_fence_gate);
+		ReplacementTool.replaceVanillaBlock(187,
+				"acacia_fence_gate",
+				"acacia_fence_gate",
+				"field_180387_bt",
+				acaciaFenceGate,
+				Blocks.ACACIA_FENCE_GATE);
 
 		birchFenceGate = new FenceGate(FenceGate.Type.BIRCH);
-		ReplacementTool.replaceVanillaBlock(184, "birch_fence_gate", "birch_fence_gate", "field_180392_bq", birchFenceGate,
-				Blocks.birch_fence_gate);
+		ReplacementTool.replaceVanillaBlock(184,
+				"birch_fence_gate",
+				"birch_fence_gate",
+				"field_180392_bq",
+				birchFenceGate,
+				Blocks.BIRCH_FENCE_GATE);
 
 		darkOakFenceGate = new FenceGate(FenceGate.Type.DARK_OAK);
-		ReplacementTool.replaceVanillaBlock(186, "dark_oak_fence_gate", "dark_oak_fence_gate", "field_180385_bs", darkOakFenceGate,
-				Blocks.dark_oak_fence_gate);
+		ReplacementTool.replaceVanillaBlock(186,
+				"dark_oak_fence_gate",
+				"dark_oak_fence_gate",
+				"field_180385_bs",
+				darkOakFenceGate,
+				Blocks.DARK_OAK_FENCE_GATE);
 
 		jungleFenceGate = new FenceGate(FenceGate.Type.JUNGLE);
-		ReplacementTool.replaceVanillaBlock(185, "jungle_fence_gate", "jungle_fence_gate", "field_180386_br", jungleFenceGate,
-				Blocks.jungle_fence_gate);
+		ReplacementTool.replaceVanillaBlock(185,
+				"jungle_fence_gate",
+				"jungle_fence_gate",
+				"field_180386_br",
+				jungleFenceGate,
+				Blocks.JUNGLE_FENCE_GATE);
 
 		spruceFenceGate = new FenceGate(FenceGate.Type.SPRUCE);
-		ReplacementTool.replaceVanillaBlock(183, "spruce_fence_gate", "spruce_fence_gate", "field_180391_bp", spruceFenceGate,
-				Blocks.spruce_fence_gate);
+		ReplacementTool.replaceVanillaBlock(183,
+				"spruce_fence_gate",
+				"spruce_fence_gate",
+				"field_180391_bp",
+				spruceFenceGate,
+				Blocks.SPRUCE_FENCE_GATE);
 	}
 
 	private static void registerDoors()
@@ -230,11 +259,11 @@ public class Registers
 		DoorDescriptor desc;
 
 		//Glass Doors
-		desc = new GlassDoor(Material.wood).register();
+		desc = new GlassDoor(Material.WOOD).register();
 		woodSlidingDoor = (Door) desc.getBlock();
 		woodSlidingDoorItem = (DoorItem) desc.getItem();
 
-		desc = new GlassDoor(Material.iron).register();
+		desc = new GlassDoor(Material.IRON).register();
 		ironSlidingDoor = (Door) desc.getBlock();
 		ironSlidingDoorItem = (DoorItem) desc.getItem();
 
@@ -303,8 +332,14 @@ public class Registers
 	{
 		camoFenceGate = new FenceGate(FenceGate.Type.CAMO);
 		camoFenceGate.register();
-		GameRegistry.addRecipe(new ItemStack(camoFenceGate), "ABC", 'A', Blocks.acacia_fence_gate, 'B', Blocks.jungle_fence_gate, 'C',
-				Blocks.birch_fence_gate);
+		GameRegistry.addRecipe(new ItemStack(camoFenceGate),
+				"ABC",
+				'A',
+				Blocks.ACACIA_FENCE_GATE,
+				'B',
+				Blocks.JUNGLE_FENCE_GATE,
+				'C',
+				Blocks.BIRCH_FENCE_GATE);
 	}
 
 	private static void registerGarageDoor()
@@ -314,7 +349,7 @@ public class Registers
 
 		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
 
-		GameRegistry.addRecipe(new ItemStack(garageDoor), "ABA", "AAA", 'A', Blocks.planks, 'B', Blocks.glass);
+		GameRegistry.addRecipe(new ItemStack(garageDoor), "ABA", "AAA", 'A', Blocks.PLANKS, 'B', Blocks.GLASS);
 	}
 
 	private static void registerDoorFactory()
@@ -324,8 +359,18 @@ public class Registers
 
 		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");
 
-		GameRegistry.addRecipe(new ItemStack(doorFactory), "ABA", "C C", "ADA", 'A', Items.iron_ingot, 'B', Items.iron_door, 'C',
-				Items.redstone, 'D', Blocks.piston);
+		GameRegistry.addRecipe(new ItemStack(doorFactory),
+				"ABA",
+				"C C",
+				"ADA",
+				'A',
+				Items.IRON_INGOT,
+				'B',
+				Items.IRON_DOOR,
+				'C',
+				Items.REDSTONE,
+				'D',
+				Blocks.PISTON);
 	}
 
 	private static void registerCustomDoor()
@@ -350,12 +395,12 @@ public class Registers
 
 		GameRegistry.registerTileEntity(RustyHatchTileEntity.class, "rustyHatchTileEntity");
 
-		GameRegistry.addRecipe(new ItemStack(rustyHandle), "AAA", " A ", 'A', Items.iron_ingot);
-		GameRegistry.addRecipe(new ItemStack(rustyHatch), "A ", "AB", "A ", 'A', Items.iron_ingot, 'B', rustyHandle);
+		GameRegistry.addRecipe(new ItemStack(rustyHandle), "AAA", " A ", 'A', Items.IRON_INGOT);
+		GameRegistry.addRecipe(new ItemStack(rustyHatch), "A ", "AB", "A ", 'A', Items.IRON_INGOT, 'B', rustyHandle);
 
 		rustyLadder = new RustyLadder();
 		rustyLadder.register();
-		GameRegistry.addRecipe(new ItemStack(rustyLadder), "AAA", 'A', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(rustyLadder), "AAA", 'A', Items.IRON_INGOT);
 	}
 
 	private static void registerBigDoors()
@@ -381,7 +426,19 @@ public class Registers
 		forcefieldItem.register();
 
 		GameRegistry.registerTileEntity(ForcefieldTileEntity.class, "forcefieldTileEntity");
-		GameRegistry.addRecipe(new ItemStack(forcefieldItem), "ABA", "CDC", "AEA", 'A', Items.diamond, 'B', Blocks.obsidian, 'C',
-				Items.repeater, 'D', Items.ender_eye, 'E', Items.comparator);
+		GameRegistry.addRecipe(new ItemStack(forcefieldItem),
+				"ABA",
+				"CDC",
+				"AEA",
+				'A',
+				Items.DIAMOND,
+				'B',
+				Blocks.OBSIDIAN,
+				'C',
+				Items.REPEATER,
+				'D',
+				Items.ENDER_EYE,
+				'E',
+				Items.COMPARATOR);
 	}
 }

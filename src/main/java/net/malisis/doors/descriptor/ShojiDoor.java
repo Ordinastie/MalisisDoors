@@ -43,7 +43,7 @@ public class ShojiDoor extends DoorDescriptor
 	public ShojiDoor()
 	{
 		//Block
-		setMaterial(Material.wood);
+		setMaterial(Material.WOOD);
 		setHardness(1.0F);
 		setSoundType(SoundType.CLOTH);
 		setName("shoji_door");
@@ -59,6 +59,6 @@ public class ShojiDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe("AB", "AB", "AB", 'A', Blocks.planks, 'B', Items.paper);
+		setRecipe("AB", "AB", "AB", 'A', Blocks.PLANKS, 'B', Items.PAPER);
 	}
 }

@@ -67,7 +67,7 @@ public class VanillaDoor extends DoorDescriptor
 		boolean iron = type == Type.IRON;
 		//Block
 		setOpeningTime(6);
-		setMaterial(iron ? Material.iron : Material.wood);
+		setMaterial(iron ? Material.IRON : Material.WOOD);
 		setHardness(iron ? 5.0F : 3.0F);
 		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
 		setName(type.name);
@@ -80,6 +80,6 @@ public class VanillaDoor extends DoorDescriptor
 		setSound(DoorRegistry.getSound(iron ? IronDoorSound.class : WoodenDoorSound.class));
 
 		//item
-		setTab(CreativeTabs.tabRedstone);
+		setTab(CreativeTabs.REDSTONE);
 	}
 }

@@ -50,7 +50,7 @@ public class VanillaTrapDoor extends TrapDoorDescriptor
 
 		//Block
 		setOpeningTime(6);
-		setMaterial(iron ? Material.iron : Material.wood);
+		setMaterial(iron ? Material.IRON : Material.WOOD);
 		setHardness(iron ? 5.0F : 3.0F);
 		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
 		setName(iron ? "iron_trapdoor" : "trapdoor");
@@ -62,6 +62,6 @@ public class VanillaTrapDoor extends TrapDoorDescriptor
 		setSound(DoorRegistry.getSound(iron ? IronTrapDoorSound.class : WoodenTrapDoorSound.class));
 
 		//item
-		setTab(CreativeTabs.tabRedstone);
+		setTab(CreativeTabs.REDSTONE);
 	}
 }

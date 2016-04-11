@@ -60,7 +60,7 @@ public class DoorDescriptor
 	protected Item item;
 
 	//block
-	protected Material material = Material.wood;
+	protected Material material = Material.WOOD;
 	protected float hardness = 3.0F;
 	protected SoundType soundType = SoundType.WOOD;
 	protected String name;

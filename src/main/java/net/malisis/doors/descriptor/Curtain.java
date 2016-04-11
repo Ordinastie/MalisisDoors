@@ -44,7 +44,7 @@ public class Curtain extends DoorDescriptor
 	public Curtain(EnumDyeColor color)
 	{
 		//Block
-		setMaterial(Material.cloth);
+		setMaterial(Material.CLOTH);
 		setHardness(2.0F);
 		setSoundType(SoundType.CLOTH);
 		setName("curtain_" + color.getName());
@@ -61,6 +61,6 @@ public class Curtain extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe("AA", "AA", "AA", 'A', new ItemStack(Blocks.wool, 1, color.getMetadata()));
+		setRecipe("AA", "AA", "AA", 'A', new ItemStack(Blocks.WOOL, 1, color.getMetadata()));
 	}
 }

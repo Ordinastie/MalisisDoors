@@ -58,7 +58,7 @@ public class CustomDoor extends Door
 {
 	public CustomDoor()
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		setHardness(3.0F);
 		setSoundType(SoundType.WOOD);
 		setUnlocalizedName("customDoor");

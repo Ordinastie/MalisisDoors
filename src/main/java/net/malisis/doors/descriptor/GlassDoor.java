@@ -42,7 +42,7 @@ public class GlassDoor extends DoorDescriptor
 {
 	public GlassDoor(Material material)
 	{
-		boolean wood = material == Material.wood;
+		boolean wood = material == Material.WOOD;
 		//Block
 		setMaterial(material);
 		setHardness(wood ? 2.0F : 3.0F);
@@ -60,6 +60,6 @@ public class GlassDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setOreDictRecipe("AB", "AB", "AB", 'A', wood ? Blocks.planks : Items.iron_ingot, 'B', "blockGlassColorless");
+		setOreDictRecipe("AB", "AB", "AB", 'A', wood ? Blocks.PLANKS : Items.IRON_INGOT, 'B', "blockGlassColorless");
 	}
 }

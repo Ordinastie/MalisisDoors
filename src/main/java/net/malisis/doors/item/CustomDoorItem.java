@@ -60,10 +60,10 @@ public class CustomDoorItem extends DoorItem
 	private static HashMap<Item, IBlockState> itemsAllowed = new HashMap<>();
 	static
 	{
-		itemsAllowed.put(Items.flint_and_steel, Blocks.fire.getDefaultState());
-		itemsAllowed.put(Items.ender_pearl, Blocks.portal.getDefaultState());
-		itemsAllowed.put(Items.water_bucket, Blocks.water.getDefaultState());
-		itemsAllowed.put(Items.lava_bucket, Blocks.lava.getDefaultState());
+		itemsAllowed.put(Items.FLINT_AND_STEEL, Blocks.FIRE.getDefaultState());
+		itemsAllowed.put(Items.ENDER_PEARL, Blocks.PORTAL.getDefaultState());
+		itemsAllowed.put(Items.WATER_BUCKET, Blocks.WATER.getDefaultState());
+		itemsAllowed.put(Items.LAVA_BUCKET, Blocks.LAVA.getDefaultState());
 	}
 
 	public CustomDoorItem()
@@ -166,11 +166,11 @@ public class CustomDoorItem extends DoorItem
 		IBlockState bottom = MBlockState.fromNBT(nbt, "bottomMaterial", "bottomMaterialMetadata");
 
 		if (frame == null)
-			frame = Blocks.planks.getDefaultState();
+			frame = Blocks.PLANKS.getDefaultState();
 		if (top == null)
-			top = Blocks.glass.getDefaultState();
+			top = Blocks.GLASS.getDefaultState();
 		if (bottom == null)
-			bottom = Blocks.glass.getDefaultState();
+			bottom = Blocks.GLASS.getDefaultState();
 
 		return new ImmutableTriple<>(frame, top, bottom);
 	}
@@ -178,11 +178,11 @@ public class CustomDoorItem extends DoorItem
 	public static NBTTagCompound writeNBT(NBTTagCompound nbt, IBlockState frame, IBlockState top, IBlockState bottom)
 	{
 		if (frame == null)
-			frame = Blocks.planks.getDefaultState();
+			frame = Blocks.PLANKS.getDefaultState();
 		if (top == null)
-			top = Blocks.glass.getDefaultState();
+			top = Blocks.GLASS.getDefaultState();
 		if (top == null)
-			top = Blocks.glass.getDefaultState();
+			top = Blocks.GLASS.getDefaultState();
 
 		MBlockState.toNBT(nbt, frame, "frame", "frameMetadata");
 		MBlockState.toNBT(nbt, top, "topMaterial", "topMaterialMetadata");

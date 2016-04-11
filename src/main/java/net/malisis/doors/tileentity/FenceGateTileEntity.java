@@ -132,10 +132,10 @@ public class FenceGateTileEntity extends DoorTileEntity
 	{
 		EnumFacing dir = getDirection().rotateY();
 		IBlockState state = worldObj.getBlockState(pos.offset(dir));
-		if (state.getBlock() == Blocks.cobblestone_wall)
+		if (state.getBlock() == Blocks.COBBLESTONE_WALL)
 			return true;
 		state = worldObj.getBlockState(pos.offset(dir.getOpposite()));
-		if (state.getBlock() == Blocks.cobblestone_wall)
+		if (state.getBlock() == Blocks.COBBLESTONE_WALL)
 			return true;
 		return false;
 	}

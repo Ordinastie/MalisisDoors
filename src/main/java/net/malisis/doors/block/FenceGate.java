@@ -109,7 +109,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 				addComponent(CamoFenceGateIconProvider.get());
 			else
 			{
-				Icon icon = Icon.from(Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT, type.type));
+				Icon icon = Icon.from(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, type.type));
 				addComponent((IIconProvider) () -> icon);
 			}
 		}

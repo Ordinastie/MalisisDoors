@@ -183,7 +183,7 @@ public class CustomDoorRenderer extends DoorRenderer
 
 	private int getColor(IBlockState state)
 	{
-		if (state.getBlock() == Blocks.grass)
+		if (state.getBlock() == Blocks.GRASS)
 			return 0xFFFFFF;
 		return colorMultiplier(world, pos, state);
 	}

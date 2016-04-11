@@ -43,9 +43,9 @@ public class IronTrapDoorSound implements IDoorSound
 	public SoundEvent getSound(DoorState state)
 	{
 		if (state == DoorState.OPENING)
-			return SoundEvents.block_iron_trapdoor_open;
+			return SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN;
 		if (state == DoorState.CLOSED)
-			return SoundEvents.block_iron_trapdoor_close;
+			return SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE;
 
 		return null;
 	}

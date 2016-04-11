@@ -52,7 +52,7 @@ public class DoorFactory extends MalisisBlock implements ITileEntityProvider
 {
 	public DoorFactory()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		setCreativeTab(MalisisDoors.tab);
 		setName("door_factory");
 		setHardness(3.0F);

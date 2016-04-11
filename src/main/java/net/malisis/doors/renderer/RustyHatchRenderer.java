@@ -157,7 +157,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 				return;
 			frame.resetState();
 			setup(frame);
-			rp.icon.set(new VanillaIcon(Blocks.furnace));
+			rp.icon.set(new VanillaIcon(Blocks.FURNACE));
 			drawShape(frame, rp);
 		}
 	}
@@ -205,7 +205,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 
 	private void renderItem()
 	{
-		bindTexture(TextureMap.locationBlocksTexture);
+		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		//MalisisCore.message(item.getUnlocalizedName());
 		Shape shape = item == MalisisDoors.Items.rustyHandle ? handle : ladder;
 		shape.resetState();

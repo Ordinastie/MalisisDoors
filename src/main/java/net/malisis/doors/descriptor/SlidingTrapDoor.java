@@ -43,7 +43,7 @@ public class SlidingTrapDoor extends TrapDoorDescriptor
 	{
 		//Block
 		setOpeningTime(12);
-		setMaterial(Material.iron);
+		setMaterial(Material.IRON);
 		setHardness(4.0F);
 		setSoundType(SoundType.METAL);
 		setName("sliding_trapdoor");
@@ -57,6 +57,6 @@ public class SlidingTrapDoor extends TrapDoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//recipe
-		setRecipe("ABB", "ABB", 'A', Items.gold_ingot, 'B', Items.iron_ingot);
+		setRecipe("ABB", "ABB", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

@@ -43,7 +43,7 @@ public class VerticalHatch extends DoorDescriptor
 	public VerticalHatch()
 	{
 		//Block
-		setMaterial(Material.iron);
+		setMaterial(Material.IRON);
 		setHardness(3.5F);
 		setSoundType(SoundType.METAL);
 		setName("verticalHatch");
@@ -60,7 +60,7 @@ public class VerticalHatch extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe("AA ", "AAA", "AA ", 'A', Items.iron_ingot);
+		setRecipe("AA ", "AAA", "AA ", 'A', Items.IRON_INGOT);
 	}
 
 }

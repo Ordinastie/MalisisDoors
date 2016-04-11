@@ -48,7 +48,7 @@ public class RustyLadder extends MalisisBlock
 {
 	public RustyLadder()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		setName("rustyLadder");
 		setCreativeTab(MalisisDoors.tab);
 		setTexture(MalisisDoors.modid + ":blocks/rusty_hatch_handle");

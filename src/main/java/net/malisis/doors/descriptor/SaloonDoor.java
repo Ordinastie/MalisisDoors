@@ -43,7 +43,7 @@ public class SaloonDoor extends DoorDescriptor
 	public SaloonDoor()
 	{
 		//Block
-		setMaterial(Material.wood);
+		setMaterial(Material.WOOD);
 		setHardness(2.5F);
 		setSoundType(SoundType.WOOD);
 		setName("saloon");
@@ -60,6 +60,6 @@ public class SaloonDoor extends DoorDescriptor
 		setTab(MalisisDoors.tab);
 
 		//Recipe
-		setRecipe("AA", "BB", "AA", 'A', Blocks.planks, 'B', Items.stick);
+		setRecipe("AA", "BB", "AA", 'A', Blocks.PLANKS, 'B', Items.STICK);
 	}
 }

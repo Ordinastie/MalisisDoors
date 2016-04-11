@@ -63,7 +63,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 {
 	public GarageDoor()
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		setName("garage_door");
 		setCreativeTab(MalisisDoors.tab);
 		setHardness(2.0F);

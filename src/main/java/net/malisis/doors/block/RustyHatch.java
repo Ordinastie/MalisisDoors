@@ -78,7 +78,7 @@ public class RustyHatch extends MalisisBlock
 
 	public RustyHatch()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		setHardness(3.0F);
 		setResistance(10000);
 		setSoundType(SoundType.METAL);

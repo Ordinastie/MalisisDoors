@@ -60,7 +60,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 		descriptor.setOpeningTime(20);
 		setDescriptor(descriptor);
 
-		frameState = Blocks.quartz_block.getDefaultState();
+		frameState = Blocks.QUARTZ_BLOCK.getDefaultState();
 	}
 
 	public IBlockState getFrameState()
@@ -154,6 +154,6 @@ public class BigDoorTileEntity extends DoorTileEntity
 	{
 		super.readFromNBT(nbt);
 
-		frameState = Objects.firstNonNull(MBlockState.fromNBT(nbt), Blocks.quartz_block.getDefaultState());
+		frameState = Objects.firstNonNull(MBlockState.fromNBT(nbt), Blocks.QUARTZ_BLOCK.getDefaultState());
 	}
 }

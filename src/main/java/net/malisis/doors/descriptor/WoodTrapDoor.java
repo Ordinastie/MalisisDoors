@@ -65,7 +65,7 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 	{
 		//Block
 		setOpeningTime(6);
-		setMaterial(Material.wood);
+		setMaterial(Material.WOOD);
 		setHardness(4.0F);
 		setSoundType(SoundType.WOOD);
 		setName(type.name);
@@ -80,6 +80,6 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 
 		//recipe
 		setNumCrafted(2);
-		setRecipe("AAA", "AAA", 'A', new ItemStack(Blocks.planks, 1, type.type.getMetadata()));
+		setRecipe("AAA", "AAA", 'A', new ItemStack(Blocks.PLANKS, 1, type.type.getMetadata()));
 	}
 }

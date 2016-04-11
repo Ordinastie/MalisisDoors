@@ -73,7 +73,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 {
 	public enum Type
 	{
-		CARRIAGE("carriage_door", Items.oak_door), MEDIEVAL("medieval_door", Items.spruce_door);
+		CARRIAGE("carriage_door", Items.OAK_DOOR), MEDIEVAL("medieval_door", Items.SPRUCE_DOOR);
 
 		public String name;
 		public Item door;
@@ -89,7 +89,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 
 	public BigDoor(Type type)
 	{
-		super(Material.wood);
+		super(Material.WOOD);
 		setHardness(5.0F);
 		setResistance(10.0F);
 		setSoundType(SoundType.STONE);

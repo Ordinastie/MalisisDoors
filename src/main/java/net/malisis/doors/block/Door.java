@@ -79,8 +79,8 @@ import com.google.common.collect.Lists;
 @MalisisRendered(item = DoorRenderer.class)
 public class Door extends BlockDoor implements IBoundingBox, IComponentProvider, IRegisterable
 {
-	public static Block[] centerBlocks = new Block[] { Blocks.iron_bars, Blocks.cobblestone_wall, Blocks.spruce_fence, Blocks.birch_fence,
-			Blocks.jungle_fence, Blocks.dark_oak_fence, Blocks.acacia_fence };
+	public static Block[] centerBlocks = new Block[] { Blocks.IRON_BARS, Blocks.COBBLESTONE_WALL, Blocks.SPRUCE_FENCE, Blocks.BIRCH_FENCE,
+			Blocks.JUNGLE_FENCE, Blocks.DARK_OAK_FENCE, Blocks.ACACIA_FENCE };
 
 	public static final float DOOR_WIDTH = 0.1875F;
 
