@@ -51,7 +51,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @MalisisRendered(item = DoorRenderer.class)
 public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 {
-	private DoorDescriptor descriptor;
+	protected DoorDescriptor descriptor;
 
 	public DoorItem(DoorDescriptor desc)
 	{

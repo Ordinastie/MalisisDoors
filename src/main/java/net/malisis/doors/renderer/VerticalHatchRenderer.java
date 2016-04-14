@@ -24,8 +24,11 @@
 
 package net.malisis.doors.renderer;
 
+import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
+import net.malisis.core.renderer.element.Face;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
@@ -47,6 +50,8 @@ public class VerticalHatchRenderer extends DoorRenderer
 	{
 		super(false);
 		registerFor(VerticalHatchTileEntity.class);
+		//make sur the icon gets registered
+		Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
 	}
 
 	@Override
@@ -59,12 +64,13 @@ public class VerticalHatchRenderer extends DoorRenderer
 
 		gui = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, 0, 0).scale(.7F, .45F, 1).get();
 		firstPerson = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, -45, 0).scale(.5F).get();
+
 	}
 
 	@Override
 	public void render()
 	{
-		initialize();
+
 		if (renderType == RenderType.BLOCK)
 		{
 			if (!Door.isTop(blockState))
@@ -112,4 +118,9 @@ public class VerticalHatchRenderer extends DoorRenderer
 		drawShape(model.getShape(MalisisDoorsSettings.use3branchgHandle.get() ? "Handle3" : "Handle4"), rp);
 	}
 
+	@Override
+	protected Icon getIcon(Face face, RenderParameters params)
+	{
+		return Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
+	}
 }

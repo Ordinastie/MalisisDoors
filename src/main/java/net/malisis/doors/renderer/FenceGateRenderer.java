@@ -38,6 +38,7 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.tileentity.FenceGateTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing.Axis;
 
 /**
@@ -120,14 +121,14 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 	}
 
 	@Override
-	public Matrix4f getTransform(TransformType tranformType)
+	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
 		switch (tranformType)
 		{
 			case GUI:
 				return gui;
 			default:
-				return DefaultRenderer.block.getTransform(tranformType);
+				return DefaultRenderer.block.getTransform(item, tranformType);
 		}
 	}
 

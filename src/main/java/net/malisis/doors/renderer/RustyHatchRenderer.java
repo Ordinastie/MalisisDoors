@@ -42,8 +42,8 @@ import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.RustyHatch.RustyHatchIconProvider;
 import net.malisis.doors.tileentity.RustyHatchTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -70,8 +70,8 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	private boolean topBlock;
 	private EnumFacing direction;
 
-	private Matrix4f gui = new TransformBuilder().translate(-0.2F, 0.5F, 0.15F).rotate(90, 0, 0).get();
-	private Matrix4f thirdPerson = new TransformBuilder().translate(0, 0.15F, -0.25F).rotate(0, -45, 0).scale(0.25F).get();
+	private Matrix4f gui = new TransformBuilder().translate(-.55F, 0.55F, 0.15F).scale(.75F).rotate(90, 0, 0).get();
+	private Matrix4f thirdPersone = new TransformBuilder().translate(0, 0.15F, -0.25F).rotate(0, -45, 0).scale(0.25F).get();
 
 	public RustyHatchRenderer()
 	{
@@ -189,23 +189,26 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	}
 
 	@Override
-	public Matrix4f getTransform(TransformType tranformType)
+	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
+		Matrix4f firstPersonLeft = new TransformBuilder().translate(0, 0F, -0.25F).rotate(0, 135, 0).scale(0.25F).get();
+		Matrix4f thirdPersonLeft = new TransformBuilder().translate(-.2F, .25F, 0F).rotate(0, 135, 0).scale(0.25F).get();
 		switch (tranformType)
 		{
 			case GUI:
 				return gui;
-			case THIRD_PERSON_RIGHT_HAND:
+			case FIRST_PERSON_LEFT_HAND:
+				return firstPersonLeft;
 			case THIRD_PERSON_LEFT_HAND:
-				return thirdPerson;
+				return thirdPersonLeft;
 			default:
-				return null;
+				return thirdPersone;
 		}
 	}
 
 	private void renderItem()
 	{
-		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		//		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		//MalisisCore.message(item.getUnlocalizedName());
 		Shape shape = item == MalisisDoors.Items.rustyHandle ? handle : ladder;
 		shape.resetState();

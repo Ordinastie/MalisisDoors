@@ -26,8 +26,12 @@ package net.malisis.doors.renderer;
 
 import java.util.Set;
 
+import javax.vecmath.Matrix4f;
+
+import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
+import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.animation.transformation.ChainedTransformation;
 import net.malisis.core.renderer.animation.transformation.ParallelTransformation;
@@ -39,6 +43,8 @@ import net.malisis.core.util.EnumFacingUtils;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.GarageDoorTileEntity;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -74,12 +80,23 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
 		rp.useWorldSensitiveIcon.set(false);
+	}
 
+	@Override
+	public Matrix4f getTransform(Item item, TransformType tranformType)
+	{
+		return DefaultRenderer.block.getTransform(item, tranformType);
 	}
 
 	@Override
 	public void render()
 	{
+		if (renderType == RenderType.ITEM)
+		{
+			drawShape(shape);
+			return;
+		}
+
 		if (tileEntity == null || !tileEntity.isTop())
 			return;
 

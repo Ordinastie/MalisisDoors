@@ -40,6 +40,7 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -126,7 +127,7 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	//        }
 	//    }
 	@Override
-	public Matrix4f getTransform(TransformType tranformType)
+	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
 
 		switch (tranformType)

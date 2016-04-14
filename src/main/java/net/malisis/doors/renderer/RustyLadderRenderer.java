@@ -35,6 +35,7 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -47,8 +48,11 @@ public class RustyLadderRenderer extends MalisisRenderer<TileEntity>
 {
 	private Shape ladder;
 	private RenderParameters rp;
-	private Matrix4f gui = new TransformBuilder().translate(0, 0.1F, 0).rotate(0, 45, 0).scale(1.5F).get();
+	private Matrix4f gui = new TransformBuilder().translate(-0.35F, -.2F, 0).rotate(30, 45, 0).scale(1F).get();
 	private Matrix4f thirdPerson = new TransformBuilder().translate(0, 0, -0.20F).rotate(0, 110, 0).scale(-0.5F, 0.5F, 0.5F).get();
+	private Matrix4f thirdPersonLeft = new TransformBuilder().translate(-.25F, 0, 0.0F).rotate(90, 180, 0).scale(.6F).get();
+	private Matrix4f firstPerson = new TransformBuilder().translate(-.1F, .1F, 0F).rotate(0, 0, 0).scale(0.5F).get();
+	private Matrix4f firstPersonLeft = new TransformBuilder().translate(-.1F, .1F, 0F).rotate(0, 180, 0).scale(0.5F).get();
 
 	@Override
 	protected void initialize()
@@ -63,15 +67,20 @@ public class RustyLadderRenderer extends MalisisRenderer<TileEntity>
 	}
 
 	@Override
-	public Matrix4f getTransform(TransformType tranformType)
+	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
 		switch (tranformType)
 		{
 			case GUI:
 				return gui;
+			case FIRST_PERSON_LEFT_HAND:
+				return firstPersonLeft;
+			case FIRST_PERSON_RIGHT_HAND:
+				return firstPerson;
 			case THIRD_PERSON_RIGHT_HAND:
-			case THIRD_PERSON_LEFT_HAND:
 				return thirdPerson;
+			case THIRD_PERSON_LEFT_HAND:
+				return thirdPersonLeft;
 			default:
 				return null;
 		}

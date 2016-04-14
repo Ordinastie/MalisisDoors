@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.vecmath.Matrix4f;
 
+import net.malisis.core.block.IComponent;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
@@ -40,16 +41,17 @@ import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.icon.Icon;
-import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.iconprovider.DoorIconProvider;
+import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -65,9 +67,10 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
 
-	protected Matrix4f gui = new TransformBuilder().translate(.15F, -0.2F, 0).rotate(0, 90, 0).scale(.75F).get();
-	protected Matrix4f thirdPerson = new TransformBuilder().translate(0, 0, -0.25F).rotate(90, 0, 0).scale(0.3F, 0.3F, 0.3F).get();
-	protected Matrix4f firstPerson = new TransformBuilder().rotate(0, 90, 0).scale(0.9F, 0.8F, 1).get();
+	protected Matrix4f gui = new TransformBuilder().translate(.15F, -0.25F, 0).rotate(30, 45, 0).scale(.46F).get();
+	protected Matrix4f thirdPerson = new TransformBuilder().translate(.1F, .3F, .3F).rotate(90, 90, 135).scale(0.3F).get();
+	protected Matrix4f firstPerson = new TransformBuilder().translate(.2F, 0, 0).rotate(0, 90, 0).scale(0.3F).get();
+	protected Matrix4f ground = new TransformBuilder().scale(0.25F).get();
 
 	public DoorRenderer()
 	{
@@ -113,10 +116,10 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	}
 
 	@Override
-	public Matrix4f getTransform(TransformType tranformType)
+	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
 		if (!isGui3d())
-			return DefaultRenderer.item.getTransform(tranformType);
+			return DefaultRenderer.item.getTransform(item, tranformType);
 
 		switch (tranformType)
 		{
@@ -128,6 +131,9 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 			case THIRD_PERSON_RIGHT_HAND:
 			case THIRD_PERSON_LEFT_HAND:
 				return thirdPerson;
+
+			case GROUND:
+				return ground;
 			default:
 				return null;
 		}
@@ -232,6 +238,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 
 	protected void setItem()
 	{
+		set(((DoorItem) item).getDescriptor(itemStack).getBlock());
 		direction = EnumFacing.SOUTH;
 		hingeLeft = true;
 	}
@@ -253,11 +260,11 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 		if (params.icon.get() != null)
 			return params.icon.get();
 
-		IIconProvider iconProvider = getIconProvider(params);
-		if (!(iconProvider instanceof DoorIconProvider))
+		DoorIconProvider iconProvider = IComponent.getComponent(DoorIconProvider.class, block);
+		if (iconProvider == null)
 			return super.getIcon(face, params);
 
-		return ((DoorIconProvider) iconProvider).getIcon(topBlock, hingeLeft, params.textureSide.get());
+		return iconProvider.getIcon(topBlock, hingeLeft, params.textureSide.get());
 	}
 
 }

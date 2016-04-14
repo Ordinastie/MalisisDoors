@@ -159,7 +159,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 		@Override
 		public Icon getIcon(IBlockState state, EnumFacing side)
 		{
-			return side.getAxis() == Axis.Z ? topIcon : baseIcon;
+			return side == null || side.getAxis() == Axis.Z ? topIcon : baseIcon;
 		}
 
 		public static GarageDoorIconProvider get()
