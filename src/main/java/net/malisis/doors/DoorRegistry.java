@@ -54,6 +54,7 @@ import net.malisis.doors.movement.VanishingDoorMovement;
 import net.malisis.doors.movement.VaultDoorMovement;
 import net.malisis.doors.movement.VerticalHatchMovement;
 import net.malisis.doors.sound.BigDoorSound;
+import net.malisis.doors.sound.FenceGateSound;
 import net.malisis.doors.sound.GlassDoorSound;
 import net.malisis.doors.sound.IDoorSound;
 import net.malisis.doors.sound.IronDoorSound;
@@ -117,6 +118,7 @@ public class DoorRegistry
 		registerSound("shoji_door", new ShojiDoorSound());
 		registerSound("rusty_hatch", new RustyHatchSound());
 		registerSound("carriage_door", new BigDoorSound());
+		registerSound("fence_gate", new FenceGateSound());
 	}
 
 	//#region Movements

@@ -28,7 +28,7 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.movement.TrapDoorMovement;
-import net.malisis.doors.sound.WoodenDoorSound;
+import net.malisis.doors.sound.WoodenTrapDoorSound;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -73,7 +73,7 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 
 		//te
 		setMovement(DoorRegistry.getMovement(TrapDoorMovement.class));
-		setSound(DoorRegistry.getSound(WoodenDoorSound.class));
+		setSound(DoorRegistry.getSound(WoodenTrapDoorSound.class));
 
 		//item
 		setTab(MalisisDoors.tab);

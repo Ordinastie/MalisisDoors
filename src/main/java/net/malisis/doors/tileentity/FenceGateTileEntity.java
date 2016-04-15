@@ -29,6 +29,7 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.movement.FenceGateMovement;
+import net.malisis.doors.sound.FenceGateSound;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -53,6 +54,7 @@ public class FenceGateTileEntity extends DoorTileEntity
 	{
 		DoorDescriptor descriptor = new DoorDescriptor();
 		descriptor.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
+		descriptor.setSound(DoorRegistry.getSound(FenceGateSound.class));
 		setDescriptor(descriptor);
 	}
 

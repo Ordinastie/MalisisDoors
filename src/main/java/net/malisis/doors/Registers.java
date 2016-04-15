@@ -85,9 +85,9 @@ public class Registers
 	{
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 		{
-			//registerVanillaDoors();
-			//registerVanillaTrapDoor();
-			//registerVanillaFenceGate();
+			registerVanillaDoors();
+			registerVanillaTrapDoor();
+			registerVanillaFenceGate();
 		}
 
 		registerDoors();
@@ -123,22 +123,22 @@ public class Registers
 		oakDoor.create();
 		doorOak = (Door) oakDoor.getBlock();
 		doorOakItem = (DoorItem) oakDoor.getItem();
-		ReplacementTool.replaceVanillaItem(324, "wooden_door", "oak_door", "field_179570_aq", oakDoor.getItem(), Items.OAK_DOOR);
-		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "oak_door", "field_180413_ao", oakDoor.getBlock(), Blocks.OAK_DOOR);
+		ReplacementTool.replaceVanillaItem(324, "wooden_door", "OAK_DOOR", "field_179570_aq", oakDoor.getItem(), Items.OAK_DOOR);
+		ReplacementTool.replaceVanillaBlock(64, "wooden_door", "OAK_DOOR", "field_180413_ao", oakDoor.getBlock(), Blocks.OAK_DOOR);
 
 		VanillaDoor acaciaDoor = new VanillaDoor(VanillaDoor.Type.ACACIA);
 		acaciaDoor.create();
 		doorAcacia = (Door) acaciaDoor.getBlock();
 		doorAcaciaItem = (DoorItem) acaciaDoor.getItem();
-		ReplacementTool.replaceVanillaItem(430, "acacia_door", "acacia_door", "field_179572_au", acaciaDoor.getItem(), Items.ACACIA_DOOR);
-		ReplacementTool.replaceVanillaBlock(196, "acacia_door", "acacia_door", "field_180410_as", acaciaDoor.getBlock(), Blocks.ACACIA_DOOR);
+		ReplacementTool.replaceVanillaItem(430, "acacia_door", "ACACIA_DOOR", "field_179572_au", acaciaDoor.getItem(), Items.ACACIA_DOOR);
+		ReplacementTool.replaceVanillaBlock(196, "acacia_door", "ACACIA_DOOR", "field_180410_as", acaciaDoor.getBlock(), Blocks.ACACIA_DOOR);
 
 		VanillaDoor birchDoor = new VanillaDoor(VanillaDoor.Type.BIRCH);
 		birchDoor.create();
 		doorBirch = (Door) birchDoor.getBlock();
 		doorBirchItem = (DoorItem) birchDoor.getItem();
-		ReplacementTool.replaceVanillaItem(428, "birch_door", "birch_door", "field_179568_as", birchDoor.getItem(), Items.BIRCH_DOOR);
-		ReplacementTool.replaceVanillaBlock(194, "birch_door", "birch_door", "field_180412_aq", birchDoor.getBlock(), Blocks.BIRCH_DOOR);
+		ReplacementTool.replaceVanillaItem(428, "birch_door", "BIRCH_DOOR", "field_179568_as", birchDoor.getItem(), Items.BIRCH_DOOR);
+		ReplacementTool.replaceVanillaBlock(194, "birch_door", "BIRCH_DOOR", "field_180412_aq", birchDoor.getBlock(), Blocks.BIRCH_DOOR);
 
 		VanillaDoor darkOakDoor = new VanillaDoor(VanillaDoor.Type.DARK_OAK);
 		darkOakDoor.create();
@@ -146,13 +146,13 @@ public class Registers
 		doorDarkOakItem = (DoorItem) darkOakDoor.getItem();
 		ReplacementTool.replaceVanillaItem(431,
 				"dark_oak_door",
-				"dark_oak_door",
+				"DARK_OAK_DOOR",
 				"field_179571_av",
 				darkOakDoor.getItem(),
 				Items.DARK_OAK_DOOR);
 		ReplacementTool.replaceVanillaBlock(197,
 				"dark_oak_door",
-				"dark_oak_door",
+				"DARK_OAK_DOOR",
 				"field_180409_at",
 				darkOakDoor.getBlock(),
 				Blocks.DARK_OAK_DOOR);
@@ -161,22 +161,22 @@ public class Registers
 		jungleDoor.create();
 		doorJungle = (Door) jungleDoor.getBlock();
 		doorJungleItem = (DoorItem) jungleDoor.getItem();
-		ReplacementTool.replaceVanillaItem(429, "jungle_door", "jungle_door", "field_179567_at", jungleDoor.getItem(), Items.JUNGLE_DOOR);
-		ReplacementTool.replaceVanillaBlock(195, "jungle_door", "jungle_door", "field_180411_ar", jungleDoor.getBlock(), Blocks.JUNGLE_DOOR);
+		ReplacementTool.replaceVanillaItem(429, "jungle_door", "JUNGLE_DOOR", "field_179567_at", jungleDoor.getItem(), Items.JUNGLE_DOOR);
+		ReplacementTool.replaceVanillaBlock(195, "jungle_door", "JUNGLE_DOOR", "field_180411_ar", jungleDoor.getBlock(), Blocks.JUNGLE_DOOR);
 
 		VanillaDoor spruceDoor = new VanillaDoor(VanillaDoor.Type.SPRUCE);
 		spruceDoor.create();
 		doorSpruce = (Door) spruceDoor.getBlock();
 		doorSpruceItem = (DoorItem) spruceDoor.getItem();
-		ReplacementTool.replaceVanillaItem(427, "spruce_door", "spruce_door", "field_179569_ar", spruceDoor.getItem(), Items.SPRUCE_DOOR);
-		ReplacementTool.replaceVanillaBlock(193, "spruce_door", "spruce_door", "field_180414_ap", spruceDoor.getBlock(), Blocks.SPRUCE_DOOR);
+		ReplacementTool.replaceVanillaItem(427, "spruce_door", "SPRUCE_DOOR", "field_179569_ar", spruceDoor.getItem(), Items.SPRUCE_DOOR);
+		ReplacementTool.replaceVanillaBlock(193, "spruce_door", "SPRUCE_DOOR", "field_180414_ap", spruceDoor.getBlock(), Blocks.SPRUCE_DOOR);
 
 		VanillaDoor ironDoor = new VanillaDoor(VanillaDoor.Type.IRON);
 		ironDoor.create();
 		doorIron = (Door) ironDoor.getBlock();
 		doorIronItem = (DoorItem) ironDoor.getItem();
-		ReplacementTool.replaceVanillaItem(330, "iron_door", "iron_door", "field_151139_aw", ironDoor.getItem(), Items.IRON_DOOR);
-		ReplacementTool.replaceVanillaBlock(71, "iron_door", "iron_door", "field_150454_av", ironDoor.getBlock(), Blocks.IRON_DOOR);
+		ReplacementTool.replaceVanillaItem(330, "iron_door", "IRON_DOOR", "field_151139_aw", ironDoor.getItem(), Items.IRON_DOOR);
+		ReplacementTool.replaceVanillaBlock(71, "iron_door", "IRON_DOOR", "field_150454_av", ironDoor.getBlock(), Blocks.IRON_DOOR);
 
 		if (MalisisCore.isClient())
 		{
@@ -195,14 +195,14 @@ public class Registers
 		VanillaTrapDoor trapDoorOak = new VanillaTrapDoor(Type.WOOD);
 		trapDoorOak.create();
 		oakTrapDoor = (TrapDoor) trapDoorOak.getBlock();
-		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "trapdoor", "field_150415_aT", trapDoorOak.getBlock(), Blocks.TRAPDOOR);
+		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "TRAPDOOR", "field_150415_aT", trapDoorOak.getBlock(), Blocks.TRAPDOOR);
 
 		VanillaTrapDoor trapDoorIron = new VanillaTrapDoor(Type.IRON);
 		trapDoorIron.create();
 		ironTrapDoor = (TrapDoor) trapDoorIron.getBlock();
 		ReplacementTool.replaceVanillaBlock(167,
 				"iron_trapdoor",
-				"iron_trapdoor",
+				"IRON_TRAPDOOR",
 				"field_180400_cw",
 				trapDoorIron.getBlock(),
 				Blocks.IRON_TRAPDOOR);
@@ -211,12 +211,12 @@ public class Registers
 	private static void registerVanillaFenceGate()
 	{
 		oakFenceGate = new FenceGate(FenceGate.Type.OAK);
-		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "oak_fence_gate", "field_180390_bo", oakFenceGate, Blocks.OAK_FENCE_GATE);
+		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "OAK_FENCE_GATE", "field_180390_bo", oakFenceGate, Blocks.OAK_FENCE_GATE);
 
 		acaciaFenceGate = new FenceGate(FenceGate.Type.ACACIA);
 		ReplacementTool.replaceVanillaBlock(187,
 				"acacia_fence_gate",
-				"acacia_fence_gate",
+				"ACACIA_FENCE_GATE",
 				"field_180387_bt",
 				acaciaFenceGate,
 				Blocks.ACACIA_FENCE_GATE);
@@ -224,7 +224,7 @@ public class Registers
 		birchFenceGate = new FenceGate(FenceGate.Type.BIRCH);
 		ReplacementTool.replaceVanillaBlock(184,
 				"birch_fence_gate",
-				"birch_fence_gate",
+				"BIRCH_FENCE_GATE",
 				"field_180392_bq",
 				birchFenceGate,
 				Blocks.BIRCH_FENCE_GATE);
@@ -232,7 +232,7 @@ public class Registers
 		darkOakFenceGate = new FenceGate(FenceGate.Type.DARK_OAK);
 		ReplacementTool.replaceVanillaBlock(186,
 				"dark_oak_fence_gate",
-				"dark_oak_fence_gate",
+				"DARK_OAK_FENCE_GATE",
 				"field_180385_bs",
 				darkOakFenceGate,
 				Blocks.DARK_OAK_FENCE_GATE);
@@ -240,7 +240,7 @@ public class Registers
 		jungleFenceGate = new FenceGate(FenceGate.Type.JUNGLE);
 		ReplacementTool.replaceVanillaBlock(185,
 				"jungle_fence_gate",
-				"jungle_fence_gate",
+				"JUNGLE_FENCE_GATE",
 				"field_180386_br",
 				jungleFenceGate,
 				Blocks.JUNGLE_FENCE_GATE);
@@ -248,7 +248,7 @@ public class Registers
 		spruceFenceGate = new FenceGate(FenceGate.Type.SPRUCE);
 		ReplacementTool.replaceVanillaBlock(183,
 				"spruce_fence_gate",
-				"spruce_fence_gate",
+				"SPRUCE_FENCE_GATE",
 				"field_180391_bp",
 				spruceFenceGate,
 				Blocks.SPRUCE_FENCE_GATE);

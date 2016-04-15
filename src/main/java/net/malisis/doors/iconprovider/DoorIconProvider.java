@@ -53,11 +53,9 @@ public class DoorIconProvider implements IIconProvider
 		itemIcon = Icon.from(modid + ":items/" + name);
 		top = Icon.from(modid + ":blocks/" + name + "_upper");
 		bottom = Icon.from(modid + ":blocks/" + name + "_lower");
-
-		//for the side of vanilla doors, add MalisisDoors: to the name
 		if (descriptor instanceof VanillaDoor)
 			modid = MalisisDoors.modid;
-		side = new Icon(modid + ":blocks/" + name + "_side");
+		side = Icon.from(modid + ":blocks/" + name + "_side");
 
 		buildIcons();
 
