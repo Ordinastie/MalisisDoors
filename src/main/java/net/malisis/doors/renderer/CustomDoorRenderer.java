@@ -32,6 +32,7 @@ import net.malisis.core.renderer.element.face.TopFace;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
+import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
@@ -126,6 +127,8 @@ public class CustomDoorRenderer extends DoorRenderer
 		model.storeState();
 
 		initParams();
+
+		ensureBlock(CustomDoor.class);
 	}
 
 	@Override

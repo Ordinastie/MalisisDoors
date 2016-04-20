@@ -28,6 +28,7 @@ import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.SaloonDoorBlock;
 import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -53,13 +54,16 @@ public class SaloonDoorRenderer extends DoorRenderer
 
 		initParams();
 
-		gui = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, 90, 0).get();
+		gui = new TransformBuilder().translate(.15F, -0.2F, 0).rotate(30, 45, 0).scale(.56F).get();
+
+		ensureBlock(SaloonDoorBlock.class);
 	}
 
 	@Override
 	protected void renderTileEntity()
 	{
-		enableBlending();
+		initialize();
+
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();

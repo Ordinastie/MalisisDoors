@@ -34,6 +34,7 @@ import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
+import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -65,6 +66,7 @@ public class VerticalHatchRenderer extends DoorRenderer
 		gui = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, 0, 0).scale(.7F, .45F, 1).get();
 		firstPerson = new TransformBuilder().translate(.0F, -0.28F, 0).rotate(0, -45, 0).scale(.5F).get();
 
+		ensureBlock(VerticalHatchDoor.class);
 	}
 
 	@Override
