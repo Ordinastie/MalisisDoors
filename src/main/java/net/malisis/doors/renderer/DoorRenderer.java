@@ -98,6 +98,8 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 		model.storeState();
 
 		initParams();
+
+		ensureBlock(Door.class);
 	}
 
 	protected void initParams()

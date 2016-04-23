@@ -29,6 +29,7 @@ import javax.vecmath.Vector3f;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.SaloonDoorBlock;
 import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.TRSRTransformation;
@@ -57,6 +58,8 @@ public class SaloonDoorRenderer extends DoorRenderer
 
 		gui = new TRSRTransformation(new Vector3f(.0F, -0.28F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
 				new Vector3f(1F, 1F, 1F), null).getMatrix();
+
+		ensureBlock(SaloonDoorBlock.class);
 	}
 
 	@Override

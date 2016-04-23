@@ -32,6 +32,7 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
+import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.TRSRTransformation;
@@ -61,6 +62,8 @@ public class VerticalHatchRenderer extends DoorRenderer
 
 		gui = new TRSRTransformation(new Vector3f(.0F, -0.28F, 0), TRSRTransformation.quatFromYXZDegrees(new Vector3f(0, 90, 0)),
 				new Vector3f(.75F, .75F, .75F), null).getMatrix();
+
+		ensureBlock(VerticalHatchDoor.class);
 	}
 
 	@Override
