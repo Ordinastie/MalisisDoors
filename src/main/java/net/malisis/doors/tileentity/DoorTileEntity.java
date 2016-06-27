@@ -37,8 +37,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -125,7 +123,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		if (state.getBlock() != getBlockType() || getBlockType() == null)
 			return null;
 
-		return state.getBlock().getActualState(state, worldObj, pos);
+		return state.getActualState(worldObj, pos);
 	}
 
 	public EnumFacing getDirection()
@@ -346,17 +344,19 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		if (descriptor != null)
 			descriptor.writeNBT(nbt);
 		nbt.setInteger("state", state.ordinal());
 		nbt.setBoolean("centered", centered);
+
+		return nbt;
 	}
 
 	@Override
-	public Packet<INetHandlerPlayClient> getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);

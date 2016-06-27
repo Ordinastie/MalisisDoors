@@ -44,8 +44,6 @@ import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -257,7 +255,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 
@@ -273,6 +271,8 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		nbt.setBoolean("doubleDoor", doubleDoor);
 
 		inventory.writeToNBT(nbt);
+
+		return nbt;
 	}
 
 	@Override
@@ -291,7 +291,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 	}
 
 	@Override
-	public Packet<INetHandlerPlayClient> getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);

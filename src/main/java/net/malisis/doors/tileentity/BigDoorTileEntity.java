@@ -142,11 +142,12 @@ public class BigDoorTileEntity extends DoorTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 
 		MBlockState.toNBT(nbt, frameState);
+		return nbt;
 	}
 
 	@Override

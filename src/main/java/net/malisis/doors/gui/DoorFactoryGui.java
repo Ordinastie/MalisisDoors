@@ -55,8 +55,8 @@ import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.network.DoorFactoryMessage;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -183,7 +183,7 @@ public class DoorFactoryGui extends MalisisGui
 	private ImmutableList<String> getSortedList(Set<String> set, String prefix)
 	{
 		return FluentIterable.from(set).toSortedList((String s1, String s2) -> {
-			return I18n.translateToLocal(prefix + s1).compareTo(I18n.translateToLocal(prefix + s2));
+			return I18n.format(prefix + s1).compareTo(I18n.format(prefix + s2));
 		});
 	}
 

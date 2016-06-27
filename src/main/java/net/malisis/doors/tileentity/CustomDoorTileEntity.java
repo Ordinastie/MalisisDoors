@@ -93,9 +93,10 @@ public class CustomDoorTileEntity extends DoorTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		CustomDoorItem.writeNBT(nbt, frame, top, bottom);
+		return nbt;
 	}
 }

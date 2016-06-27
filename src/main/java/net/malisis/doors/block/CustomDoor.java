@@ -36,7 +36,7 @@ import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -124,30 +124,29 @@ public class CustomDoor extends Door
 		return ImmutableList.of();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, EffectRenderer effectRenderer)
+	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
 	{
 		DoorTileEntity door = Door.getDoor(world, target.getBlockPos());
 		if (!(door instanceof CustomDoorTileEntity))
 			return true;
 
 		CustomDoorTileEntity te = (CustomDoorTileEntity) door;
-		EntityUtils.addHitEffects(world, target, effectRenderer, te.getFrame(), te.getTop(), te.getBottom());
+		EntityUtils.addHitEffects(world, target, manager, te.getFrame(), te.getTop(), te.getBottom());
 
 		return true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean addDestroyEffects(World world, BlockPos pos, EffectRenderer effectRenderer)
+	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager)
 	{
 		DoorTileEntity door = Door.getDoor(world, pos);
 		if (!(door instanceof CustomDoorTileEntity))
 			return true;
 
 		CustomDoorTileEntity te = (CustomDoorTileEntity) door;
-		EntityUtils.addDestroyEffects(world, pos, effectRenderer, te.getFrame(), te.getTop(), te.getBottom());
+		EntityUtils.addDestroyEffects(world, pos, manager, te.getFrame(), te.getTop(), te.getBottom());
 
 		return true;
 	}

@@ -31,8 +31,6 @@ import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -95,7 +93,7 @@ public class ForcefieldTileEntity extends TileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -103,7 +101,7 @@ public class ForcefieldTileEntity extends TileEntity
 			AABBUtils.writeToNBT(tag, multiBlock.getBoundingBox());
 
 		tag.setBoolean("opened", opened);
-
+		return tag;
 	}
 
 	@Override
@@ -119,7 +117,7 @@ public class ForcefieldTileEntity extends TileEntity
 	}
 
 	@Override
-	public Packet<INetHandlerPlayClient> getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);

@@ -64,7 +64,7 @@ public class RustyHatchTileEntity extends DoorTileEntity
 	public boolean isTop()
 	{
 		IBlockState state = worldObj.getBlockState(pos);
-		return state.getBlock() == getBlockType() && (boolean) state.getValue(RustyHatch.TOP);
+		return state.getBlock() == getBlockType() && state.getValue(RustyHatch.TOP);
 	}
 
 	@Override
@@ -124,9 +124,10 @@ public class RustyHatchTileEntity extends DoorTileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 		nbt.setBoolean("top", isTop);
+		return nbt;
 	}
 }

@@ -220,7 +220,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
 		if (!Door.isTop(state))
 		{
@@ -289,7 +289,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 			if (downState.getBlock() != this) //bottom is not door anymore
 				world.setBlockToAir(pos);
 			else if (block != this) //pass the neighbor block change to bottom
-				onNeighborBlockChange(world, pos.down(), downState, block);
+				neighborChanged(downState, world, pos.down(), block);
 		}
 	}
 
