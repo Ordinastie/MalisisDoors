@@ -154,9 +154,12 @@ public class CustomDoorItem extends DoorItem
 		ItemStack top = ItemUtils.getItemStackFromState(triple.getMiddle());
 		ItemStack bottom = ItemUtils.getItemStackFromState(triple.getRight());
 
-		tooltip.addAll(frame.getTooltip(player, advancedTooltip));
-		tooltip.addAll(top.getTooltip(player, advancedTooltip));
-		tooltip.addAll(bottom.getTooltip(player, advancedTooltip));
+		if (frame != null)
+			tooltip.addAll(frame.getTooltip(player, advancedTooltip));
+		if (top != null)
+			tooltip.addAll(top.getTooltip(player, advancedTooltip));
+		if (bottom != null)
+			tooltip.addAll(bottom.getTooltip(player, advancedTooltip));
 	}
 
 	public static Triple<IBlockState, IBlockState, IBlockState> readNBT(NBTTagCompound nbt)
