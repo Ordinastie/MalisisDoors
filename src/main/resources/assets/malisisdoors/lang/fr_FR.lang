@@ -126,12 +126,16 @@ gui.door_factory.redstone_behavior=Comportement redstone
 gui.door_factory.door_double_door=Double porte
 gui.door_factory.door_sound=Type de son
 gui.door_factory.door_sound.silent_door=Silencieux
-gui.door_factory.door_sound.vanilla_door=Porte originale
+gui.door_factory.door_sound.vanilla_door=Porte en bois
 gui.door_factory.door_sound.glass_door=Porte vitrée
 gui.door_factory.door_sound.jail_door=Porte de prison
 gui.door_factory.door_sound.pneumatic_door=Porte pneumatique
 gui.door_factory.door_sound.shoji_door=Porte Shoji
 gui.door_factory.door_sound.carriage_door=Grande porte
+gui.door_factory.door_sound.fence_gate=Portillon
+gui.door_factory.door_sound.iron_door=Porte en fer
+gui.door_factory.door_sound.iron_trapdoor=Trappe en fer
+gui.door_factory.door_sound.wooden_trapdoor=Trappe en bois
 
 gui.door_factory.redstone_behavior.STANDARD=Standard
 gui.door_factory.redstone_behavior.REDSTONE_ONLY=Redstone seulement 
