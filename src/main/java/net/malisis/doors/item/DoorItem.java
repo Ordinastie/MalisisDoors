@@ -52,6 +52,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 {
 	protected DoorDescriptor descriptor;
+	@SideOnly(Side.CLIENT)
+	protected Icon icon;
 
 	public DoorItem(DoorDescriptor desc)
 	{
@@ -62,6 +64,9 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 		setUnlocalizedName(desc.getName());
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
+
+		if (MalisisCore.isClient())
+			icon = Icon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
 	}
 
 	public DoorItem()
@@ -84,7 +89,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 	@SideOnly(Side.CLIENT)
 	public Icon getIcon()
 	{
-		return Icon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
+		return icon;
 	}
 
 	@Override
