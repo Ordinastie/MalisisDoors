@@ -26,6 +26,9 @@ package net.malisis.doors.tileentity;
 
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.Timer;
+import net.malisis.core.util.syncer.Sync;
+import net.malisis.core.util.syncer.Syncable;
+import net.malisis.core.util.syncer.Syncer;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.block.Door;
@@ -36,8 +39,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -53,6 +54,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class DoorTileEntity extends TileEntity implements ITickable
 {
 	protected DoorDescriptor descriptor;
@@ -87,6 +89,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		return timer;
 	}
 
+	@Sync("state")
 	public DoorState getState()
 	{
 		return state;
@@ -202,6 +205,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	 *
 	 * @param newSate
 	 */
+	@Sync("state")
 	public void setDoorState(DoorState newState)
 	{
 		if (state == newState)
@@ -233,7 +237,8 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			moving = false;
 		}
 
-		TileEntityUtils.notifyUpdate(this);
+		if (!worldObj.isRemote)
+			Syncer.sync(this, "state");
 		playSound();
 	}
 
@@ -356,18 +361,24 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
+	public NBTTagCompound getUpdateTag()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
+		return writeToNBT(new NBTTagCompound());
 	}
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-	{
-		this.readFromNBT(packet.getNbtCompound());
-	}
+	//	@Override
+	//	public SPacketUpdateTileEntity getUpdatePacket()
+	//	{
+	//		NBTTagCompound nbt = new NBTTagCompound();
+	//		this.writeToNBT(nbt);
+	//		return new SPacketUpdateTileEntity(pos, 0, nbt);
+	//	}
+	//
+	//	@Override
+	//	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
+	//	{
+	//		this.readFromNBT(packet.getNbtCompound());
+	//	}
 
 	//#end NBT/Network
 
