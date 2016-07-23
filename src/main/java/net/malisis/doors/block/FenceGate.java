@@ -35,6 +35,7 @@ import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.clientnotif.ClientNotification;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.iconprovider.CamoFenceGateIconProvider;
 import net.malisis.doors.renderer.FenceGateRenderer;
@@ -140,6 +141,10 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te != null)
 			te.updateAll();
+
+		te.getDoubleDoor();
+		if (te != null)
+			te.updateAll();
 	}
 
 	@Override
@@ -172,16 +177,22 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 	}
 
 	@Override
+	@ClientNotification
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock)
 	{
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
 		if (te == null)
 			return;
 
-		te.updateAll();
-
-		if (world.isBlockIndirectlyGettingPowered(pos) != 0 || neighborBlock.getDefaultState().canProvidePower())
-			te.setPowered(te.isPowered());
+		if (!world.isRemote) //server
+		{
+			if (world.isBlockIndirectlyGettingPowered(pos) != 0 || neighborBlock.getDefaultState().canProvidePower())
+				te.setPowered(te.isPowered());
+		}
+		else
+		{
+			te.updateAll();
+		}
 	}
 
 	@Override

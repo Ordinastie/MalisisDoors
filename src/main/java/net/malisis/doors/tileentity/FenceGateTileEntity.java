@@ -26,6 +26,8 @@ package net.malisis.doors.tileentity;
 
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.syncer.Sync;
+import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.movement.FenceGateMovement;
@@ -33,8 +35,6 @@ import net.malisis.doors.sound.FenceGateSound;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -44,10 +44,14 @@ import org.apache.commons.lang3.tuple.Pair;
 /**
  * @author Ordinastie
  */
+@Syncable("TileEntity")
 public class FenceGateTileEntity extends DoorTileEntity
 {
+	@Sync("camoState")
 	private IBlockState camoState;
+	@Sync("camoColor")
 	private int camoColor = -1;
+	@Sync("isWall")
 	private boolean isWall = false;
 
 	public FenceGateTileEntity()
@@ -172,8 +176,8 @@ public class FenceGateTileEntity extends DoorTileEntity
 		if (getDirection().getAxis() != te.getDirection().getAxis()) // different direction
 			return false;
 
-		if (isOpened() != te.isOpened()) // different state
-			return false;
+		//		if (isOpened() != te.isOpened()) // different state
+		//			return false;
 
 		return true;
 	}
@@ -182,12 +186,5 @@ public class FenceGateTileEntity extends DoorTileEntity
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		return new AxisAlignedBB(pos, pos.add(1, 1, 1));
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-	{
-		super.onDataPacket(net, packet);
-		updateAll();
 	}
 }
