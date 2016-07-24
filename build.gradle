@@ -28,7 +28,7 @@ targetCompatibility = 1.8
 version = "1.9.4-5.0.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
-libsDirName = "../releases"w
+libsDirName = "../releases"
 
 // Extended project information
 ext.projectName = 'MalisisDoors'
