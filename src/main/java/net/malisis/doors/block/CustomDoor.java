@@ -125,6 +125,7 @@ public class CustomDoor extends Door
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean addHitEffects(IBlockState state, World world, RayTraceResult target, ParticleManager manager)
 	{
 		DoorTileEntity door = Door.getDoor(world, target.getBlockPos());
