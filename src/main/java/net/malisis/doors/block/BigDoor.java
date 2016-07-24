@@ -138,7 +138,8 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 			return AABBUtils.identities();
 
 		AxisAlignedBB[] aabbs = new AxisAlignedBB[] { defaultBoundingBox };
-		if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.RAYTRACE) && (te.isOpened() || te.isMoving()))
+		if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.RAYTRACE || type == BoundingBoxType.RENDER)
+				&& (te.isOpened() || te.isMoving()))
 		{
 			aabbs = new AxisAlignedBB[] { new AxisAlignedBB(0, 0, -0.5F, 0.5F, 4, 1), new AxisAlignedBB(3.5F, 0, -0.5F, 4, 4, 1),
 					new AxisAlignedBB(0, 4, 1 - Door.DOOR_WIDTH, 4, 5, 1) };

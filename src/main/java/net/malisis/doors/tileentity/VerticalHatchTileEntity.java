@@ -24,11 +24,13 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.util.syncer.Syncable;
 
 /**
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class VerticalHatchTileEntity extends DoorTileEntity
 {
 

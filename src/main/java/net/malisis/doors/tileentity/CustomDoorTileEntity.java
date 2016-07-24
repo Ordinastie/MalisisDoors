@@ -24,6 +24,7 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.CustomDoorItem;
 import net.minecraft.block.state.IBlockState;
@@ -37,6 +38,7 @@ import org.apache.commons.lang3.tuple.Triple;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class CustomDoorTileEntity extends DoorTileEntity
 {
 	private IBlockState frame = Blocks.PLANKS.getDefaultState();

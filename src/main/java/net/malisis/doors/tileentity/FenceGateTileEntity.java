@@ -26,7 +26,6 @@ package net.malisis.doors.tileentity;
 
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.util.TileEntityUtils;
-import net.malisis.core.util.syncer.Sync;
 import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
@@ -47,11 +46,8 @@ import org.apache.commons.lang3.tuple.Pair;
 @Syncable("TileEntity")
 public class FenceGateTileEntity extends DoorTileEntity
 {
-	@Sync("camoState")
 	private IBlockState camoState;
-	@Sync("camoColor")
 	private int camoColor = -1;
-	@Sync("isWall")
 	private boolean isWall = false;
 
 	public FenceGateTileEntity()

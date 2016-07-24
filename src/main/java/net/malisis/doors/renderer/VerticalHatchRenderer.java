@@ -51,8 +51,8 @@ public class VerticalHatchRenderer extends DoorRenderer
 	{
 		super(false);
 		registerFor(VerticalHatchTileEntity.class);
-		//make sur the icon gets registered
-		Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
+		//make sure the icon gets registered
+		//		Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
 	}
 
 	@Override
@@ -123,6 +123,6 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	protected Icon getIcon(Face face, RenderParameters params)
 	{
-		return Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
+		return MalisisDoors.Blocks.verticalHatch.getIconProvider().getIcon();
 	}
 }

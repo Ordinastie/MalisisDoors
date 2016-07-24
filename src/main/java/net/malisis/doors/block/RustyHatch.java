@@ -154,6 +154,11 @@ public class RustyHatch extends MalisisBlock
 		pos = pos.subtract(te.getPos());
 		aabb = aabb.offset(-pos.getX(), -pos.getY(), -pos.getZ());
 
+		if (type == BoundingBoxType.RAYTRACE)
+			pos.down();
+		if (type == BoundingBoxType.SELECTION)
+			pos.down();
+
 		return aabb;
 	}
 
@@ -176,6 +181,13 @@ public class RustyHatch extends MalisisBlock
 			return AABBUtils.empty(pos);
 
 		return AABBUtils.offset(pos, aabbs)[0];
+	}
+
+	@Override
+	public AxisAlignedBB[] getRayTraceBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state)
+	{
+		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.RAYTRACE);
+		return aabbs;
 	}
 
 	@Override

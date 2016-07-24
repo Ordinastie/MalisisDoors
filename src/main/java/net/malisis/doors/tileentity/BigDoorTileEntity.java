@@ -28,6 +28,8 @@ import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.util.MBlockState;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.chunkcollision.ChunkCollision;
+import net.malisis.core.util.syncer.Sync;
+import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.DoorState;
@@ -47,6 +49,7 @@ import com.google.common.base.Objects;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class BigDoorTileEntity extends DoorTileEntity
 {
 	private IBlockState frameState;
@@ -111,6 +114,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 	}
 
 	@Override
+	@Sync("state")
 	public void setDoorState(DoorState newState)
 	{
 		boolean moving = this.moving;

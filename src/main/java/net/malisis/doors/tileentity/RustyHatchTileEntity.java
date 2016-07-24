@@ -25,6 +25,7 @@
 package net.malisis.doors.tileentity;
 
 import net.malisis.core.block.component.DirectionalComponent;
+import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.DoorState;
@@ -41,6 +42,7 @@ import net.minecraft.util.math.BlockPos;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class RustyHatchTileEntity extends DoorTileEntity
 {
 	private boolean isTop = false;

@@ -25,6 +25,7 @@
 package net.malisis.doors.tileentity;
 
 import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.syncer.Syncable;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -34,6 +35,7 @@ import net.minecraft.util.math.AxisAlignedBB;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class TrapDoorTileEntity extends DoorTileEntity
 {
 	public TrapDoorTileEntity()
@@ -50,7 +52,7 @@ public class TrapDoorTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return (EnumFacing) getBlockState().getValue(BlockTrapDoor.FACING);
+		return getBlockState().getValue(BlockTrapDoor.FACING);
 	}
 
 	public boolean isTop()

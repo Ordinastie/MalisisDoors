@@ -24,12 +24,14 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.util.syncer.Syncable;
 import net.minecraft.entity.Entity;
 
 /**
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class SaloonDoorTileEntity extends DoorTileEntity
 {
 	private boolean openBackward = false;
