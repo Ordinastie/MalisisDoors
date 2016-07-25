@@ -10,7 +10,7 @@ item.shoji_door.name=Дверь Сёдзи
 item.rustyHatch.name=Ржавый люк
 item.rustyHandle.name=Ржавый вентиль
 item.carriage_door.name=Дверь-фрейм
-
+item.medieval_door.name=Средневековая дверь
 item.forcefieldItem.name=Контроллер силового поля
 item.door_spruce.name=Дверь из ели
 item.door_birch.name=Дверь из берёзы
@@ -18,23 +18,24 @@ item.door_jungle.name=Дверь из тропического дерева
 item.door_acacia.name=Дверь из акации
 item.door_dark_oak.name=Дверь из тёмного дуба
 item.saloon.name=Дверь салуна
+item.verticalHatch.name=Бронированная дверь
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+item.curtain_white.name=Белая штора
+item.curtain_orange.name=Оранжевая штора
+item.curtain_magenta.name=Пурпурная штора
+item.curtain_light_blue.name=Голубая штора
+item.curtain_yellow.name=Жёлтая штора
+item.curtain_lime.name=Лаймовая штора
+item.curtain_pink.name=Розовая штора
+item.curtain_gray.name=Серая штора
+item.curtain_silver.name=Светло-серая штора
+item.curtain_cyan.name=Бирюзовая штора
+item.curtain_purple.name=Фиолетовая штора
+item.curtain_blue.name=Синяя штора
+item.curtain_brown.name=Коричневая штора
+item.curtain_green.name=Зелёная штора
+item.curtain_red.name=Красная штора
+item.curtain_black.name=Чёрная штора
 
 tile.garage_door.name=Гаражная дверь
 tile.jail_door.name=Тюремная дверь
@@ -47,7 +48,7 @@ tile.wood_sliding_door.name=Деревянная стеклянная дверь
 tile.iron_sliding_door.name=Железная стеклянная дверь
 tile.rustyHatch.name=Ржавый люк
 tile.carriage_door.name=Дверь-фрейм
-
+tile.medieval_door.name=Средневековая дверь
 tile.forcefieldDoor.name=Силовое поле
 tile.rustyLadder.name=Ржавая лестница
 tile.door_spruce.name=Дверь из ели
@@ -58,28 +59,30 @@ tile.door_dark_oak.name=Дверь из тёмного дуба
 tile.iron_trapdoor.name=Железный люк
 tile.sliding_trapdoor.name=Задвижной люк
 tile.saloon.name=Дверь салуна
+tile.trapdoor_acacia.name=Люк из акации
+tile.trapdoor_birch.name=Люк из берёзы
+tile.trapdoor_dark_oak.name=Люк из тёмного дуба
+tile.trapdoor_jungle.name=Люк из тропического дерева
+tile.trapdoor_spruce.name=Люк из ели
+tile.camoFenceGate.name=Камуфляжная калитка
+tile.verticalHatch.name=Бронированная дверь
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+tile.curtain_white.name=Белая штора
+tile.curtain_orange.name=Оранжевая штора
+tile.curtain_magenta.name=Пурпурная штора
+tile.curtain_light_blue.name=Голубая штора
+tile.curtain_yellow.name=Жёлтая штора
+tile.curtain_lime.name=Лаймовая штора
+tile.curtain_pink.name=Розовая штора
+tile.curtain_gray.name=Серая штора
+tile.curtain_silver.name=Светло-серая штора
+tile.curtain_cyan.name=Бирюзовая штора
+tile.curtain_purple.name=Фиолетовая штора
+tile.curtain_blue.name=Синяя штора
+tile.curtain_brown.name=Коричневая штора
+tile.curtain_green.name=Зелёная штора
+tile.curtain_red.name=Красная штора
+tile.curtain_black.name=Чёрная штора
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда>, где "команда" - это "config" или "version"
 
@@ -88,7 +91,7 @@ config.title=Настройки MalisisDoors
 config.modifyVanillaDoors=Включить улучшение стандартных дверей
 config.modifyVanillaDoors.comment1=Включает анимацию для дверей, калиток и люков.
 config.modifyVanillaDoors.comment2=Это полностью заменит двери, так что могут появиться конфликты, если другой мод попытается изменить их.
-
+config.use3DItems=Рендерить двери в инвентаре в 3D
 
 
 door_movement.rotating_door=Вращение
@@ -119,7 +122,7 @@ gui.door_factory.rb_edit=Изменить
 gui.door_factory.door_movement=Движение
 gui.door_factory.door_open_time=Время открытия
 gui.door_factory.door_auto_close_time=Задержка закрытия
-gui.door_factory.door_require_redstone=Требуется сигнал красного камня
+gui.door_factory.redstone_behavior=Поведение редстоуна
 gui.door_factory.door_double_door=Двойная дверь
 gui.door_factory.door_sound=Тип звука
 gui.door_factory.door_sound.silent_door=Без звука
@@ -129,7 +132,15 @@ gui.door_factory.door_sound.jail_door=Тюремная дверь
 gui.door_factory.door_sound.pneumatic_door=Пневматическая дверь
 gui.door_factory.door_sound.shoji_door=Дверь Сёдзи
 gui.door_factory.door_sound.carriage_door=Дверь-фрейм
+gui.door_factory.door_sound.fence_gate=Калитка
+gui.door_factory.door_sound.iron_door=Железная дверь
+gui.door_factory.door_sound.iron_trapdoor=Железный люк
+gui.door_factory.door_sound.wooden_trapdoor=Люк
 
+gui.door_factory.redstone_behavior.STANDARD=Обычное
+gui.door_factory.redstone_behavior.REDSTONE_ONLY=Только при сигнале редстоуна
+gui.door_factory.redstone_behavior.REDSTONE_LOCK=При блокировке сигнала редстоуна
+gui.door_factory.redstone_behavior.HAND_ONLY=Только в руках
 
 gui.door_factory.frame_type=Тип рамки
 gui.door_factory.top_material=Материал верхнего блока
