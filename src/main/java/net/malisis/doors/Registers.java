@@ -26,6 +26,7 @@ package net.malisis.doors;
 
 import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
+import static net.minecraftforge.oredict.RecipeSorter.Category.*;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.MalisisRegistry;
 import net.malisis.core.item.MalisisItem;
@@ -79,6 +80,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
 
 public class Registers
 {
@@ -448,6 +450,8 @@ public class Registers
 
 		GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.CARRIAGE));
 		GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.MEDIEVAL));
+
+		RecipeSorter.register("malisisdoors:bigdoorsrecipe", BigDoorRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 	}
 
 	private static void registerForcefield()
