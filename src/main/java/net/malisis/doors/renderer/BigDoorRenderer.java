@@ -34,7 +34,6 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.BigDoor.BigDoorIconProvider;
 import net.malisis.doors.tileentity.BigDoorTileEntity;
 import net.minecraft.block.state.IBlockState;
@@ -49,8 +48,6 @@ import org.lwjgl.opengl.GL11;
  */
 public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 {
-	private BigDoor block;
-
 	private ResourceLocation rl;
 	private MalisisModel model;
 	private Shape frame;
@@ -84,7 +81,6 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 	@Override
 	public void render()
 	{
-		block = (BigDoor) super.block;
 		if (tileEntity == null)
 			return;
 
