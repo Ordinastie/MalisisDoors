@@ -27,11 +27,12 @@ package net.malisis.doors.tileentity;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
+import net.malisis.core.util.syncer.Sync;
+import net.malisis.core.util.syncer.Syncable;
+import net.malisis.core.util.syncer.Syncer;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -41,6 +42,7 @@ import net.minecraft.world.World;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class ForcefieldTileEntity extends TileEntity
 {
 	private AABBMultiBlock multiBlock;
@@ -51,15 +53,22 @@ public class ForcefieldTileEntity extends TileEntity
 
 	}
 
+	@Sync("opened")
 	public boolean isOpened()
 	{
 		return opened;
 	}
 
+	@Sync("opened")
+	public void setOpened(boolean opened)
+	{
+		this.opened = opened;
+	}
+
 	public void switchForcefield()
 	{
 		opened = !opened;
-		TileEntityUtils.notifyUpdate(this);
+		Syncer.sync(this, "opened");
 	}
 
 	public void setMultiBlock(AABBMultiBlock multiBlock)
@@ -117,17 +126,9 @@ public class ForcefieldTileEntity extends TileEntity
 	}
 
 	@Override
-	public SPacketUpdateTileEntity getUpdatePacket()
+	public NBTTagCompound getUpdateTag()
 	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeToNBT(nbt);
-		return new SPacketUpdateTileEntity(pos, 0, nbt);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-	{
-		this.readFromNBT(packet.getNbtCompound());
+		return writeToNBT(new NBTTagCompound());
 	}
 
 	@Override
