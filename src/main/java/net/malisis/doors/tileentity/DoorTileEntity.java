@@ -59,7 +59,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 {
 	protected DoorDescriptor descriptor;
 	protected int lastMetadata = -1;
-	protected Timer timer = new Timer();
+	protected Timer timer = new Timer(0);
 	protected DoorState state = DoorState.CLOSED;
 	protected boolean moving;
 	protected boolean centered = false;
@@ -333,7 +333,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		if (!moving)
 			return;
 
-		if (timer.elapsedTick() > descriptor.getOpeningTime())
+		if (timer.elapsedTick() > getOpeningTime())
 			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
 	}
 
