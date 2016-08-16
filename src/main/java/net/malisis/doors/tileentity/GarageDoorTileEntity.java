@@ -30,6 +30,7 @@ import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.PowerComponent;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
+import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -43,6 +44,7 @@ import com.google.common.collect.Sets;
  * @author Ordinastie
  *
  */
+@Syncable("TileEntity")
 public class GarageDoorTileEntity extends DoorTileEntity
 {
 	public static final int maxOpenTime = 10;

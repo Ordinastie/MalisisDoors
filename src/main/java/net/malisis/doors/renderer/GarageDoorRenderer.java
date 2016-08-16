@@ -40,6 +40,7 @@ import net.malisis.core.renderer.animation.transformation.Translation;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.util.EnumFacingUtils;
+import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.GarageDoorTileEntity;
@@ -60,6 +61,8 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 	protected Shape shape;
 	protected RenderParameters rp;
 	protected AnimationRenderer ar = new AnimationRenderer();
+
+	private Matrix4f firstPersonHand = new TransformBuilder().rotate(0, 90, 0).scale(0.4F).get();
 
 	public GarageDoorRenderer()
 	{
@@ -85,6 +88,8 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 	@Override
 	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
+		if (tranformType == TransformType.FIRST_PERSON_LEFT_HAND || tranformType == TransformType.FIRST_PERSON_RIGHT_HAND)
+			return firstPersonHand;
 		return DefaultRenderer.block.getTransform(item, tranformType);
 	}
 
@@ -93,6 +98,7 @@ public class GarageDoorRenderer extends MalisisRenderer<GarageDoorTileEntity>
 	{
 		if (renderType == RenderType.ITEM)
 		{
+			shape.resetState();
 			drawShape(shape);
 			return;
 		}
