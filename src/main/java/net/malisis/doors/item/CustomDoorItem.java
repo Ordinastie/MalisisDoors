@@ -33,7 +33,6 @@ import net.malisis.core.util.MBlockState;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.CustomDoorRenderer;
-import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.tileentity.DoorFactoryTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -103,24 +102,10 @@ public class CustomDoorItem extends DoorItem
 
 		//NBT
 		NBTTagCompound nbt = new NBTTagCompound();
-		te.buildDescriptor().writeNBT(nbt);
+		te.buildDescriptor(MalisisDoors.Blocks.customDoor, MalisisDoors.Items.customDoorItem).writeNBT(nbt);
 		writeNBT(nbt, frame, top, bottom);
 
 		//ItemStack
-		ItemStack is = new ItemStack(MalisisDoors.Items.customDoorItem, 1);
-		is.setTagCompound(nbt);
-		return is;
-	}
-
-	public static ItemStack fromTileEntity(CustomDoorTileEntity te)
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		if (te.getDescriptor() != null)
-			te.getDescriptor().writeNBT(nbt);
-		else
-			new DoorDescriptor().writeNBT(nbt);
-
-		writeNBT(nbt, te.getFrame(), te.getTop(), te.getBottom());
 		ItemStack is = new ItemStack(MalisisDoors.Items.customDoorItem, 1);
 		is.setTagCompound(nbt);
 		return is;

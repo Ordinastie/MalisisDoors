@@ -33,12 +33,13 @@ import net.malisis.core.util.ItemUtils;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
-import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.gui.DoorFactoryGui;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.movement.IDoorMovement;
 import net.malisis.doors.sound.IDoorSound;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -205,7 +206,8 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 			if (nbt == null)
 				nbt = new NBTTagCompound();
 
-			buildDescriptor().writeNBT(nbt);
+			DoorDescriptor desc = ((DoorItem) doors.getItem()).getDescriptor(doors);
+			buildDescriptor(desc.getBlock(), desc.getItem()).writeNBT(nbt);
 
 			doors.setTagCompound(nbt);
 
@@ -236,10 +238,10 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		return true;
 	}
 
-	public DoorDescriptor buildDescriptor()
+	public DoorDescriptor buildDescriptor(Block block, Item item)
 	{
 		DoorDescriptor desc = new DoorDescriptor();
-		desc.set(MalisisDoors.Blocks.customDoor, MalisisDoors.Items.customDoorItem);
+		desc.set(block, item);
 		desc.setMovement(getDoorMovement());
 		desc.setSound(getDoorSound());
 		desc.setOpeningTime(getOpeningTime());

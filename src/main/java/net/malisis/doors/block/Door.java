@@ -24,6 +24,8 @@
 
 package net.malisis.doors.block;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.util.List;
 import java.util.Random;
 
@@ -70,6 +72,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 /**
@@ -91,7 +94,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	{
 		super(desc.getMaterial());
 
-		this.descriptor = desc;
+		this.descriptor = checkNotNull(desc);
 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
@@ -225,30 +228,29 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 		if (!Door.isTop(state))
 		{
 			//current block is bottom
-			boolean dropStack = false;
+			ItemStack itemStack = null;
 			IBlockState upState = world.getBlockState(pos.up());
 			//top is not door anymore
 			if (upState.getBlock() != this)
 			{
 				//remove this block
+				itemStack = getDoorItemStack(world, pos);
 				world.setBlockToAir(pos);
-				dropStack = true;
 			}
 
 			//check if still on ground
 			if (!world.getBlockState(pos.down()).isSideSolid(world, pos.down(), EnumFacing.UP))
 			{
+				itemStack = getDoorItemStack(world, pos);
 				world.setBlockToAir(pos);
-				dropStack = true;
 				//remove top block too
 				if (upState.getBlock() == this)
 					world.setBlockToAir(pos.up());
 			}
 
-			if (dropStack)
+			if (itemStack != null)
 			{
-				ItemStack itemStack = getDoorItemStack(world, pos);
-				if (!world.isRemote && itemStack != null)
+				if (!world.isRemote)
 					spawnAsEntity(world, pos, itemStack);
 			}
 			else
@@ -297,19 +299,32 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 
 	protected ItemStack getDoorItemStack(IBlockAccess world, BlockPos pos)
 	{
-		return new ItemStack(descriptor.getItem(), 1);
+		DoorTileEntity te = getDoor(world, pos);
+		return te != null ? te.getItemStack() : null;
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
 	{
-		return !isTop(state) && descriptor != null ? descriptor.getItem() : null;
+		return getDoorItemStack(world, pos);
 	}
 
 	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
-		return new ItemStack(descriptor.getItem());
+		if (!player.capabilities.isCreativeMode)
+		{
+			DoorTileEntity te = Door.getDoor(world, pos);
+			if (te != null)
+				spawnAsEntity(world, pos, getDoorItemStack(world, pos));
+		}
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
+	{
+		return ImmutableList.of();
 	}
 
 	//#region BoundingBox

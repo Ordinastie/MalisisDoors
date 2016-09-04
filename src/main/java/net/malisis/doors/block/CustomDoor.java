@@ -24,12 +24,9 @@
 
 package net.malisis.doors.block;
 
-import java.util.List;
-
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
-import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.renderer.CustomDoorRenderer;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.tileentity.DoorTileEntity;
@@ -37,8 +34,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -46,8 +41,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * @author Ordinastie
@@ -83,45 +76,6 @@ public class CustomDoor extends Door
 			return null;
 
 		return new CustomDoorTileEntity();
-	}
-
-	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
-	{
-		DoorTileEntity te = Door.getDoor(world, pos);
-		if (!(te instanceof CustomDoorTileEntity))
-			return null;
-
-		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
-	}
-
-	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
-	{
-		if (!player.capabilities.isCreativeMode)
-		{
-			DoorTileEntity te = Door.getDoor(world, pos);
-			if (!(te instanceof CustomDoorTileEntity))
-				return true;
-			if (!te.isTopBlock(pos))
-				spawnAsEntity(world, pos, CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te));
-		}
-		return super.removedByPlayer(state, world, pos, player, willHarvest);
-	}
-
-	@Override
-	protected ItemStack getDoorItemStack(IBlockAccess world, BlockPos pos)
-	{
-		DoorTileEntity te = Door.getDoor(world, pos);
-		if (!(te instanceof CustomDoorTileEntity))
-			return null;
-		return CustomDoorItem.fromTileEntity((CustomDoorTileEntity) te);
-	}
-
-	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-	{
-		return ImmutableList.of();
 	}
 
 	@Override

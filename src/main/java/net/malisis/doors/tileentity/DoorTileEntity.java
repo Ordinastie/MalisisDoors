@@ -39,6 +39,8 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -71,7 +73,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		if (descriptor == null || descriptor.getMovement() == null)
 		{
 			if (getBlockType() == null)
-				return descriptor;
+				return new DoorDescriptor(); //prevent crashes
 
 			if (getBlockType() instanceof Door)
 				descriptor = ((Door) getBlockType()).getDescriptor();
@@ -179,6 +181,16 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		return centered;
 	}
 
+	public ItemStack getItemStack()
+	{
+		ItemStack itemStack = new ItemStack(getDescriptor().getItem());
+		NBTTagCompound nbt = new NBTTagCompound();
+		descriptor.writeNBT(nbt);
+		itemStack.setTagCompound(nbt);
+
+		return itemStack;
+	}
+
 	//#end Getter/Setter
 
 	public void onBlockPlaced(Door door, ItemStack itemStack)
@@ -228,6 +240,9 @@ public class DoorTileEntity extends TileEntity implements ITickable
 				moving = true;
 			}
 
+			if (!worldObj.isRemote)
+				Syncer.sync(this, "state");
+
 		}
 		else
 		{
@@ -237,8 +252,6 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			moving = false;
 		}
 
-		if (!worldObj.isRemote)
-			Syncer.sync(this, "state");
 		playSound();
 	}
 
@@ -342,6 +355,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		super.readFromNBT(nbt);
+
 		//if (descriptor == null)
 		descriptor = new DoorDescriptor(nbt);
 		setDoorState(DoorState.values()[nbt.getInteger("state")]);
@@ -366,19 +380,19 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		return writeToNBT(new NBTTagCompound());
 	}
 
-	//	@Override
-	//	public SPacketUpdateTileEntity getUpdatePacket()
-	//	{
-	//		NBTTagCompound nbt = new NBTTagCompound();
-	//		this.writeToNBT(nbt);
-	//		return new SPacketUpdateTileEntity(pos, 0, nbt);
-	//	}
-	//
-	//	@Override
-	//	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
-	//	{
-	//		this.readFromNBT(packet.getNbtCompound());
-	//	}
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new SPacketUpdateTileEntity(pos, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
+	{
+		this.readFromNBT(packet.getNbtCompound());
+	}
 
 	//#end NBT/Network
 

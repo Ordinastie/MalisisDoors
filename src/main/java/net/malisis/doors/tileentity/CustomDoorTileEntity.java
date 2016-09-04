@@ -68,6 +68,14 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		return Math.max(Math.max(frame.getLightValue(worldObj, pos), top.getLightValue(worldObj, pos)), bottom.getLightValue(worldObj, pos));
 	}
 
+	@Override
+	public ItemStack getItemStack()
+	{
+		ItemStack itemStack = super.getItemStack();
+		CustomDoorItem.writeNBT(itemStack.getTagCompound(), frame, top, bottom);
+		return itemStack;
+	}
+
 	//#end Getters/setters
 
 	@Override
