@@ -38,6 +38,7 @@ import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -144,6 +145,7 @@ public class CustomDoorRenderer extends DoorRenderer
 		frame = triple.getLeft();
 		top = triple.getMiddle();
 		bottom = triple.getRight();
+		direction = EnumFacing.SOUTH;
 
 		setupParams();
 	}
