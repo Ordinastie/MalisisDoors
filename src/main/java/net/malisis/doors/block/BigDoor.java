@@ -39,7 +39,6 @@ import net.malisis.core.util.MBlockState;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.core.util.chunkcollision.IChunkCollidable;
-import net.malisis.core.util.chunklistener.IBlockListener;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.BigDoorRenderer;
 import net.malisis.doors.tileentity.BigDoorTileEntity;
@@ -69,11 +68,12 @@ import com.google.common.collect.Lists;
  *
  */
 @MalisisRendered(block = BigDoorRenderer.class, item = DefaultRenderer.Item.class)
-public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable, IBlockListener
+public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunkCollidable/*, IBlockListener*/
 {
 	public enum Type
 	{
-		CARRIAGE("carriage_door", Items.OAK_DOOR), MEDIEVAL("medieval_door", Items.SPRUCE_DOOR);
+		CARRIAGE("carriage_door", Items.OAK_DOOR),
+		MEDIEVAL("medieval_door", Items.SPRUCE_DOOR);
 
 		public String name;
 		public Item door;
@@ -198,27 +198,6 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 
 	@Override
 	public boolean canRenderInLayer(BlockRenderLayer layer)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean onBlockSet(World world, BlockPos pos, MBlockState blockSet)
-	{
-		if (!blockSet.getBlock().isReplaceable(world, blockSet.getPos()))
-			return true;
-
-		for (AxisAlignedBB aabb : AABBUtils.getCollisionBoundingBoxes(world, new MBlockState(pos, this), true))
-		{
-			if (aabb != null && aabb.intersectsWith(AABBUtils.identity(blockSet.getPos())))
-				return false;
-		}
-
-		return true;
-	}
-
-	@Override
-	public boolean onBlockRemoved(World world, BlockPos pos, BlockPos blockPos)
 	{
 		return true;
 	}
