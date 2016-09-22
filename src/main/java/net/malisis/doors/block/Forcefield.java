@@ -102,7 +102,7 @@ public class Forcefield extends MalisisBlock
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!EntityUtils.isEquipped(player, MalisisDoors.Items.forcefieldItem, hand))
-			return true;
+			return false;
 
 		ForcefieldTileEntity te = getForcefield(world, pos);
 		if (te == null)
