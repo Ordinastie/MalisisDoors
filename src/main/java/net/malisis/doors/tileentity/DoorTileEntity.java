@@ -149,7 +149,10 @@ public class DoorTileEntity extends TileEntity implements ITickable
 
 	public boolean isHingeLeft()
 	{
-		return getBlockType() instanceof Door && getBlockState().getValue(BlockDoor.HINGE) == BlockDoor.EnumHingePosition.LEFT;
+		IBlockState state = getBlockState();
+		if (state == null)
+			return false;
+		return state.getBlock() instanceof Door && state.getValue(BlockDoor.HINGE) == BlockDoor.EnumHingePosition.LEFT;
 	}
 
 	public boolean isPowered()
@@ -184,9 +187,13 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	public ItemStack getItemStack()
 	{
 		ItemStack itemStack = new ItemStack(getDescriptor().getItem());
-		NBTTagCompound nbt = new NBTTagCompound();
-		descriptor.writeNBT(nbt);
-		itemStack.setTagCompound(nbt);
+		//don't write descriptor if it's the default one so their still stackable
+		if (getDescriptor() != ((Door) getBlockType()).getDescriptor())
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			getDescriptor().writeNBT(nbt);
+			itemStack.setTagCompound(nbt);
+		}
 
 		return itemStack;
 	}
