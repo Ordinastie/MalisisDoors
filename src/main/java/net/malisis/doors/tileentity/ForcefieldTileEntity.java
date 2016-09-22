@@ -24,8 +24,8 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.util.AABBUtils;
-import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
 import net.malisis.core.util.syncer.Sync;
 import net.malisis.core.util.syncer.Syncable;
@@ -116,7 +116,7 @@ public class ForcefieldTileEntity extends TileEntity
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return TileEntityUtils.getRenderingBounds(this);
+		return IBoundingBox.getRenderingBounds(worldObj, pos);
 	}
 
 	@Override

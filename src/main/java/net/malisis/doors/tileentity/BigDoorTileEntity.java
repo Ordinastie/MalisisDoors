@@ -24,9 +24,9 @@
 
 package net.malisis.doors.tileentity;
 
+import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.util.MBlockState;
-import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.chunkcollision.ChunkCollision;
 import net.malisis.core.util.syncer.Sync;
 import net.malisis.core.util.syncer.Syncable;
@@ -142,7 +142,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return TileEntityUtils.getRenderingBounds(this);
+		return IBoundingBox.getRenderingBounds(worldObj, pos);
 	}
 
 	@Override
