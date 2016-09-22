@@ -24,8 +24,8 @@
 
 package net.malisis.doors;
 
-import net.malisis.core.MalisisRegistry;
 import net.malisis.core.block.IRegisterable;
+import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.movement.IDoorMovement;

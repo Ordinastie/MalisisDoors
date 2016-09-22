@@ -24,7 +24,7 @@
 
 package net.malisis.doors.sound;
 
-import net.malisis.core.MalisisRegistry;
+import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.util.SoundEvent;
