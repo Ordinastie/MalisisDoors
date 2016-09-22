@@ -312,12 +312,12 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	@Override
 	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
 	{
-		if (!player.capabilities.isCreativeMode)
-		{
-			DoorTileEntity te = Door.getDoor(world, pos);
-			if (te != null)
-				spawnAsEntity(world, pos, getDoorItemStack(world, pos));
-		}
+		//		if (!player.capabilities.isCreativeMode)
+		//		{
+		//			DoorTileEntity te = Door.getDoor(world, pos);
+		//			if (te != null)
+		//				spawnAsEntity(world, pos, getDoorItemStack(world, pos));
+		//		}
 		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
