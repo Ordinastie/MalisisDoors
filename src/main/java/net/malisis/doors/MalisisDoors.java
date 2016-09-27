@@ -2,10 +2,10 @@ package net.malisis.doors;
 
 import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
-import net.malisis.core.MalisisRegistry;
 import net.malisis.core.configuration.Settings;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
+import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
@@ -14,6 +14,7 @@ import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.Forcefield;
 import net.malisis.doors.block.GarageDoor;
+import net.malisis.doors.block.ModelDoor;
 import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.SaloonDoorBlock;
@@ -147,6 +148,9 @@ public class MalisisDoors implements IMalisisMod
 		//MalisisDoors blocks
 		public static DoorFactory doorFactory;
 		public static RustyLadder rustyLadder;
+
+		//3x2 door
+		public static ModelDoor modelDoor;
 	}
 
 	public static class Items

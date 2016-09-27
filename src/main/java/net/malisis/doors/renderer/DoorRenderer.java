@@ -144,6 +144,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	@Override
 	public void render()
 	{
+		isBatched = true;
 		if (renderType == RenderType.BLOCK)
 			return;
 

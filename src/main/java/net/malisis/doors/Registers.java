@@ -28,8 +28,8 @@ import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 import static net.minecraftforge.oredict.RecipeSorter.Category.*;
 import net.malisis.core.MalisisCore;
-import net.malisis.core.MalisisRegistry;
 import net.malisis.core.item.MalisisItem;
+import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
@@ -38,6 +38,7 @@ import net.malisis.doors.block.DoorFactory;
 import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.block.Forcefield;
 import net.malisis.doors.block.GarageDoor;
+import net.malisis.doors.block.ModelDoor;
 import net.malisis.doors.block.RustyHatch;
 import net.malisis.doors.block.RustyLadder;
 import net.malisis.doors.block.SaloonDoorBlock;
@@ -114,6 +115,9 @@ public class Registers
 		registerRustyHatch();
 
 		registerForcefield();
+
+		modelDoor = new ModelDoor();
+		modelDoor.register();
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
@@ -215,13 +219,13 @@ public class Registers
 
 		if (MalisisCore.isClient())
 		{
-			MalisisRegistry.registerItemModel(doorOakItem, "minecraft:oak_door");
-			MalisisRegistry.registerItemModel(doorAcaciaItem, "minecraft:acacia_door");
-			MalisisRegistry.registerItemModel(doorBirchItem, "minecraft:birch_door");
-			MalisisRegistry.registerItemModel(doorDarkOakItem, "minecraft:dark_oak_door");
-			MalisisRegistry.registerItemModel(doorJungleItem, "minecraft:jungle_door");
-			MalisisRegistry.registerItemModel(doorSpruceItem, "minecraft:spruce_door");
-			MalisisRegistry.registerItemModel(doorIronItem, "minecraft:iron_door");
+			MalisisRegistry.registerDummyModel(doorOakItem, "minecraft:oak_door");
+			MalisisRegistry.registerDummyModel(doorAcaciaItem, "minecraft:acacia_door");
+			MalisisRegistry.registerDummyModel(doorBirchItem, "minecraft:birch_door");
+			MalisisRegistry.registerDummyModel(doorDarkOakItem, "minecraft:dark_oak_door");
+			MalisisRegistry.registerDummyModel(doorJungleItem, "minecraft:jungle_door");
+			MalisisRegistry.registerDummyModel(doorSpruceItem, "minecraft:spruce_door");
+			MalisisRegistry.registerDummyModel(doorIronItem, "minecraft:iron_door");
 		}
 	}
 

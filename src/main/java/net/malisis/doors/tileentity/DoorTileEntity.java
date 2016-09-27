@@ -417,4 +417,10 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	{
 		return oldState.getBlock() != newState.getBlock();
 	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass)
+	{
+		return pass == 0;
+	}
 }

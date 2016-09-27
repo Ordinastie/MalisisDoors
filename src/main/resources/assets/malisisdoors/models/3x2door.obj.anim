@@ -1,0 +1,104 @@
+{
+	"transforms": 
+	{
+		"openLeft" : 
+		{
+			"type" : "translation",
+			"to": [-1.3125, 0, 0],
+			"ticks": 15,
+			"delay": 6
+		},
+		"openRight":
+		{
+			"type" : "translation",
+			"to": [1.3125, 0, 0],
+			"ticks": 15,
+			"delay" : 6
+		},
+		
+		"closeLeft":
+		{
+			"type" : "translation",
+			"from": [-1.3125, 0, 0],
+			"to": [0, 0, 0],
+			"ticks": 15
+		},
+		
+		"closeRight":
+		{
+			"type" : "translation",
+			"from": [1.3125, 0, 0],
+			"to": [0, 0, 0],
+			"ticks": 15
+		},
+		
+		"rotateLatch":
+		{
+			"type": "rotation",
+			"axis": "z",
+			"to": 90,
+			"ticks" : 6,
+			"offset": [0, 0.5, 0]
+		},
+		
+		"rotateLatchClose":
+		{
+			"type": "rotation",
+			"axis": "z",
+			"from": 90,
+			"to": 0,
+			"ticks" : 6,
+			"delay": 15,
+			"offset": [0, 0.5, 0]
+		},
+		
+		"openLatchLeft":
+		{
+			"type": "parallel",
+			"transforms" : [ "openLeft", "rotateLatch" ]
+		},
+		
+		"openLatchRight":
+		{
+			"type": "parallel",
+			"transforms" : [ "openRight", "rotateLatch" ]
+		},		
+		
+		"closeLatchLeft":
+		{
+			"type": "parallel",
+			"transforms" : [ "closeLeft", "rotateLatchClose" ]
+		},
+		
+		"closeLatchRight":
+		{
+			"type": "parallel",
+			"transforms" : [ "closeRight", "rotateLatchClose" ]
+		}
+		
+		
+
+	},
+	
+	"anims":
+	{
+		"open" : 
+		[ 
+			{ 	"group" : "doorleft", "transform": "openLeft",  "persist": true  },
+			{ 	"group" : "doorright", "transform": "openRight",  "persist": true  },
+			{ 	"group" : "glassleft", "transform": "openLeft",  "persist": true  },
+			{ 	"group" : "glassright", "transform": "openRight",  "persist": true  },
+			{ 	"group" : "latchtop", "transform": "openLatchLeft",  "persist": true  },
+			{ 	"group" : "latchbottom", "transform": "openLatchRight",  "persist": true  }
+		 ],
+		"close" : 
+		[
+			{	"group" : "doorleft",  "transform" : "closeLeft"},
+			{	"group" : "doorright",  "transform" : "closeRight"},
+			{	"group" : "glassleft",  "transform" : "closeLeft"},
+			{	"group" : "glassright",  "transform" : "closeRight"},
+			{ 	"group" : "latchtop", "transform": "closeLatchLeft",  "persist": true  },
+			{ 	"group" : "latchbottom", "transform": "closeLatchRight",  "persist": true  }
+		 ]
+	}
+}
