@@ -86,11 +86,8 @@ tile.curtain_black.name=Black Curtain
 
 malisisdoors.command.usage=Use /malisisdoors <command> where command is config or version
 
-config.title=MalisisDoors' configuration
-
 config.modifyVanillaDoors=Enable vanilla doors improvement
-config.modifyVanillaDoors.comment1=Enables the animations for doors, fence gates and trap doors.
-config.modifyVanillaDoors.comment2=This replaces the doors entirely so conflicts may arise if another mod tries to modify them too.
+config.modifyVanillaDoors.comment=Enables the animations for doors, fence gates and trap doors.\r\nThis replaces the doors entirely so conflicts may arise if another mod tries to modify them too.
 config.use3DItems=Render the door items in 3D
 
 

@@ -86,11 +86,8 @@ tile.curtain_black.name=Rideau Noir
 
 malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est config ou version
 
-config.title=Configuration de MalisisDoors
-
 config.modifyVanillaDoors=Activer l'amélioration des portes vanilla.
-config.modifyVanillaDoors.comment1=Active l'animation des portes, trappes et portillons.
-config.modifyVanillaDoors.comment2=Les blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
+config.modifyVanillaDoors.comment=Active l'animation des portes, trappes et portillons.\r\nLes blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
 config.use3DItems=Render the door items in 3D
 
 

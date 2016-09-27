@@ -50,6 +50,6 @@ public class MalisisDoorsSettings extends Settings
 	@Override
 	protected void initSettings()
 	{
-		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment1", "config.modifyVanillaDoors.comment2");
+		modifyVanillaDoors.setComment("config.modifyVanillaDoors.comment");
 	}
 }

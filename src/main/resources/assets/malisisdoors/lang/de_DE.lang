@@ -81,13 +81,13 @@ tile.rustyLadder.name=Rostige Leiter
  
  
  
-malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
+
  
-config.title=MalisisDoors - Konfiguration
+ 
+ malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
 config.modifyVanillaDoors=Aktiviere Vanilla-Verbesserungen
-config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter und Falltüren.
-config.modifyVanillaDoors.comment2=Dies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
+config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter und Falltüren.\r\nDies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
  
  
  

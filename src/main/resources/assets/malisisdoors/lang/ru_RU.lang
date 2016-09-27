@@ -86,11 +86,8 @@ tile.curtain_black.name=Чёрная штора
 
 malisisdoors.command.usage=Используйте /malisisdoors <команда>, где "команда" - это "config" или "version"
 
-config.title=Настройки MalisisDoors
-
 config.modifyVanillaDoors=Включить улучшение стандартных дверей
-config.modifyVanillaDoors.comment1=Включает анимацию для дверей, калиток и люков.
-config.modifyVanillaDoors.comment2=Это полностью заменит двери, так что могут появиться конфликты, если другой мод попытается изменить их.
+config.modifyVanillaDoors.comment=Включает анимацию для дверей, калиток и люков.\r\nЭто полностью заменит двери, так что могут появиться конфликты, если другой мод попытается изменить их.
 config.use3DItems=Рендерить двери в инвентаре в 3D
 
 

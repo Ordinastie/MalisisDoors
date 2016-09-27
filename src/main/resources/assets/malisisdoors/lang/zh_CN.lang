@@ -81,13 +81,13 @@ tile.rustyLadder.name=生锈铁梯
 
 
 
+
+
+
 malisisdoors.command.usage=使用指令/malisisdoors <command>需在command处键入配置名或版本
 
-config.title=MalisisDoors模组配置
-
 config.modifyVanillaDoors=启用原版门的修改
-config.modifyVanillaDoors.comment1=启用门,栅栏门和陷阱门的动画.
-config.modifyVanillaDoors.comment2=这会完全替换掉门,所以当其他模组试图修改它们时可能会有冲突.
+config.modifyVanillaDoors.comment=启用门,栅栏门和陷阱门的动画.\r\n这会完全替换掉门,所以当其他模组试图修改它们时可能会有冲突.
 
 
 

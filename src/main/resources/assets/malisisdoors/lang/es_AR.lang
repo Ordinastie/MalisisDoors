@@ -81,13 +81,13 @@ tile.shoji_door.name=Puerta Shoji
 
 
 
+
+
+
 malisisdoors.command.usage=Use /malisisdoors command con el argumento config o version
 
-config.title=Configuración de MalisisDoors
-
 config.modifyVanillaDoors=Permitir mejora a las puertas de Minecraft normal.
-config.modifyVanillaDoors.comment1=Permitir animaciones para puertas, puertas de vallas y escotillas.
-config.modifyVanillaDoors.comment2=Esto reemplaza completamente las puertas; pueden surgir conflictos si otro mod trata de modificarlas también.
+config.modifyVanillaDoors.comment=Permitir animaciones para puertas, puertas de vallas y escotillas.\r\nEsto reemplaza completamente las puertas; pueden surgir conflictos si otro mod trata de modificarlas también.
 
 
 
