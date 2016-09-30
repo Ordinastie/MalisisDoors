@@ -118,6 +118,7 @@ public class Registers
 
 		modelDoor = new ModelDoor();
 		modelDoor.register();
+		GameRegistry.addRecipe(new ItemStack(modelDoor), "ABA", "ABA", 'A', Items.GOLD_INGOT, 'B', ironSlidingDoorItem);
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
