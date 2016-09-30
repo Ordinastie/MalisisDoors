@@ -1,0 +1,146 @@
+itemGroup.malisisdoors=MalisisDoors
+
+item.wood_sliding_door.name=Porta de Madeira com Vidro
+item.iron_sliding_door.name=Porta de Ferro com Vidro
+item.jail_door.name=Porta de Cela
+item.laboratory_door.name=Porta de Laboratório
+item.factory_door.name=Porta de Fábrica
+item.custom_door.name=Porta Personalizada
+item.shoji_door.name=Porta Shoji
+item.rustyHatch.name=Alçapão Enferrujado
+item.rustyHandle.name=Vela Enferrujada
+item.carriage_door.name=Porta de Transporte
+item.medieval_door.name=Porta Medieval
+item.forcefieldItem.name=Controle do Campo de Força
+item.door_spruce.name=Porta de Pinheiro
+item.door_birch.name=Porta de Eucalipto
+item.door_jungle.name=Porta de Madeira da Selva
+item.door_acacia.name=Porta de Acacia
+item.door_dark_oak.name=Porta de Madeira Escura
+item.saloon.name=Porta de Salão
+item.verticalHatch.name=Porta Reforçada
+
+item.curtain_white.name=Cortina Branca
+item.curtain_orange.name=Cortina Laranja
+item.curtain_magenta.name=Cortina Magenta
+item.curtain_light_blue.name=Cortina Azul Claro
+item.curtain_yellow.name=Cortina Amarela
+item.curtain_lime.name=Cortina Lima
+item.curtain_pink.name=Cortina Rosa
+item.curtain_gray.name=Cortina Cinza
+item.curtain_silver.name=Cortina Prateada
+item.curtain_cyan.name=Cortina Ciano
+item.curtain_purple.name=Cortina Roxa
+item.curtain_blue.name=Cortina Azul
+item.curtain_brown.name=Cortina Marrom
+item.curtain_green.name=Cortina Verde
+item.curtain_red.name=Cortina Vermelha
+item.curtain_black.name=Cortina Afrodescendente
+
+tile.garage_door.name=Porta de Garagem
+tile.jail_door.name=Porta de Cela
+tile.laboratory_door.name=Porta de Laboratório
+tile.factory_door.name=Porta de Fábrica
+tile.door_factory.name=Fábrica de Portas
+tile.custom_door.name=Porta Personalizada
+tile.shoji_door.name=Porta Shoji
+tile.wood_sliding_door.name=Porta de Madeira com Vidro
+tile.iron_sliding_door.name=Porta de Ferro com Vidro
+tile.rustyHatch.name=Alçapão Enferrujado
+tile.carriage_door.name=Porta de Transporte
+tile.medieval_door.name=Porta Medieval
+tile.forcefieldDoor.name=Campo de Força 9000
+tile.rustyLadder.name=Escada Enferrujada
+tile.door_spruce.name=Porta de Pinheiro
+tile.door_birch.name=Porta de Eucalipto
+tile.door_jungle.name=Porta de Madeira da Selva
+tile.door_acacia.name=Porta de Acacia
+tile.door_dark_oak.name=Porta de Madeira Escura
+tile.iron_trapdoor.name=Alçapão de Ferro
+tile.sliding_trapdoor.name=Alçapão Escorregadio
+tile.saloon.name=Porta de Salão
+tile.trapdoor_acacia.name=Alçapão de Acacia
+tile.trapdoor_birch.name=Alçapão de Eucalipto
+tile.trapdoor_dark_oak.name=Alçapão de Madeira Escura
+tile.trapdoor_jungle.name=Alçapão de Madeira da Selva
+tile.trapdoor_spruce.name=Alçapão de Pinheiro
+tile.camoFenceGate.name=Portão Camuflado
+tile.verticalHatch.name=Porta Reforçada
+
+tile.curtain_white.name=Cortina Branca
+tile.curtain_orange.name=Cortina Laranja
+tile.curtain_magenta.name=Cortina Magenta
+tile.curtain_light_blue.name=Cortina Azul Claro
+tile.curtain_yellow.name=Cortina Amarela
+tile.curtain_lime.name=Cortina Lima
+tile.curtain_pink.name=Cortina Rosa
+tile.curtain_gray.name=Cortina Cinza
+tile.curtain_silver.name=Cortina Prateada
+tile.curtain_cyan.name=Cortina Ciano
+tile.curtain_purple.name=Cortina Roxa
+tile.curtain_blue.name=Cortina Azul
+tile.curtain_brown.name=Cortina Marrom
+tile.curtain_green.name=Cortina Verde
+tile.curtain_red.name=Cortina Vermelha
+tile.curtain_black.name=Cortina Preta
+
+malisisdoors.command.usage=Use /malisisdoors <comando>, onde <comando> é config ou versão.
+
+config.title=Configs do Malisi's Doors
+
+config.modifyVanillaDoors=Ativar melhorias nas portas vanilla
+config.modifyVanillaDoors.comment1=Ativa animações para portas, portões e alçapões.
+config.modifyVanillaDoors.comment2=Isso substitui totalmente todas as portas, então pode dar problema se outro mod estiver usando elas também.
+config.use3DItems=Renderizar os ícones dos itens das portas em 3D
+
+
+door_movement.rotating_door=Rotação
+door_movement.sliding_door=Deslizando para o lado
+door_movement.sliding_up_door=Deslizando para cima
+door_movement.sliding_split_door=Deslizando para cima e para baixo
+door_movement.rotating_split_door=Girando para cima e para baixo
+door_movement.vault_door=Vault
+door_movement.sliding_4ways=Deslizando dos quatro modos
+door_movement.rotating_4ways=Girando dos quatro modos
+door_movement.rotate_around=Girando em volta
+door_movement.rotate_slide=Girando e deslizando
+door_movement.rotate_place=Girando e substituindo
+door_movement.vanishing_door=Desaparecendo
+door_movement.spinning_door=Fiando
+door_movement.spinning_around_door=Vortex
+door_movement.double_slide_left=Deslizando para a esquerda duas vezes
+door_movement.double_slide_right=Deslizando para a direita duas vezes
+door_movement.double_rotate_left=Girando para a esquerda duas vezes
+door_movement.double_rotate_right=Girando para a direita duas vezez
+
+
+gui.door_factory.tab_properties=Propriedades
+gui.door_factory.tab_materials=Materiais
+gui.door_factory.tab_digicode=Código de Segurança
+gui.door_factory.rb_create=Criar
+gui.door_factory.rb_edit=Modificar
+gui.door_factory.door_movement=Movimento
+gui.door_factory.door_open_time=Tempo de Abertura
+gui.door_factory.door_auto_close_time=Intervalo de auto-fechamento
+gui.door_factory.redstone_behavior=Modo de Redstone
+gui.door_factory.door_double_door=Porta Dupla
+gui.door_factory.door_sound=Barulho
+gui.door_factory.door_sound.silent_door=Silenciosa
+gui.door_factory.door_sound.vanilla_door=Porta Vanilla
+gui.door_factory.door_sound.glass_door=Porta de Vidro
+gui.door_factory.door_sound.jail_door=Porta de Cela
+gui.door_factory.door_sound.pneumatic_door=Porta Pneumática
+gui.door_factory.door_sound.shoji_door=Porta Shoji
+gui.door_factory.door_sound.carriage_door=Portona
+
+gui.door_factory.redstone_behavior.STANDARD=Padrão
+gui.door_factory.redstone_behavior.REDSTONE_ONLY=Somente com Restone
+gui.door_factory.redstone_behavior.REDSTONE_LOCK=Trava com Redstone
+gui.door_factory.redstone_behavior.HAND_ONLY=Somente à Mão
+
+gui.door_factory.frame_type=Tipo de Moldura
+gui.door_factory.top_material=Material do bloco de cima
+gui.door_factory.bottom_material=Material do bloco de baixo
+gui.door_factory.door_edit_slot=Porta a ser modificada
+gui.door_factory.create_door=Criar sua Porta
+gui.door_factory.edit_door=Modificar Porta
