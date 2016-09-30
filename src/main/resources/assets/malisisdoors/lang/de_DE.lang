@@ -10,31 +10,33 @@ item.shoji_door.name=Shoji-Schiebetür
 item.rustyHatch.name=Rostige Luke
 item.rustyHandle.name=Rostiger Griff
 item.carriage_door.name=Kutschentor
+item.medieval_door.name=Mittelalterliches Tor
 item.forcefieldItem.name=Kraftfeldregler
-
-
-
-
-
-
-
-
+item.door_spruce.name=Fichtenholztür
+item.door_birch.name=Birkenholztür
+item.door_jungle.name=Tropenholztür
+item.door_acacia.name=Akazienholztür
+item.door_dark_oak.name=Schwarzeichenholztür
+item.saloon.name=Saloontür
+item.verticalHatch.name=Verstärkte Tür
 item.malisisdoors:hitechdoor.name=Hightechtür
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+item.curtain_white.name=Weißer Vorhang
+item.curtain_orange.name=Oranger Vorhang
+item.curtain_magenta.name=Magenta Vorhang
+item.curtain_light_blue.name=Hellblauer Vorhang
+item.curtain_yellow.name=Gelber Vorhang
+item.curtain_lime.name=Hellgrüner Vorhang
+item.curtain_pink.name=Pinker Vorhang
+item.curtain_gray.name=Grauer Vorhang
+item.curtain_silver.name=Silberner Vorhang
+item.curtain_cyan.name=Türkiser Vorhang
+item.curtain_purple.name=Violetter Vorhang
+item.curtain_blue.name=Blauer Vorhang
+item.curtain_brown.name=Brauner Vorhang
+item.curtain_green.name=Grüner Vorhang
+item.curtain_red.name=Roter Vorhang
+item.curtain_black.name=Schwarzer Vorhang
 
 tile.garage_door.name=Garagentor
 tile.jail_door.name=Gefängnistür
@@ -47,54 +49,52 @@ tile.wood_sliding_door.name=Holz-Schiebetür
 tile.iron_sliding_door.name=Eisen-Schiebetür
 tile.rustyHatch.name=Rostige Luke
 tile.carriage_door.name=Wagentor
+item.medieval_door.name=Mittelalterliches Tor
 tile.forcefieldDoor.name=Forcefield
 tile.rustyLadder.name=Rostige Leiter
+tile.door_spruce.name=Fichtenholztür
+tile.door_birch.name=Birkenholztür
+tile.door_jungle.name=Tropenholztür
+tile.door_acacia.name=Akazienholztür
+tile.door_dark_oak.name=Schwarzeichenholztür
+tile.iron_trapdoor.name=Eisenfalltür
+tile.sliding_trapdoor.name=Schiebefalltür
+tile.saloon.name=Saloontür
+tile.trapdoor_acacia.name=Akazienholzfalltür
+tile.trapdoor_birch.name=Birkenholzfalltür
+tile.trapdoor_dark_oak.name=Schwarzeichenholzfalltür
+tile.trapdoor_jungle.name=Tropenholzfalltür
+tile.trapdoor_spruce.name=Fichtenholzfalltür
+tile.camoFenceGate.name=Camo-Zauntor
+tile.verticalHatch.name=Verstärkte Tür
+tile.malisisdoors:hitechdoor.name=Hightechtür
 
-
-
-
-
-
-
-
-
+tile.curtain_white.name=Weißer Vorhang
+tile.curtain_orange.name=Oranger Vorhang
+tile.curtain_magenta.name=Magenta Vorhang
+tile.curtain_light_blue.name=Hellblauer Vorhang
+tile.curtain_yellow.name=Gelber Vorhang
+tile.curtain_lime.name=Hellgrüner Vorhang
+tile.curtain_pink.name=Pinker Vorhang
+tile.curtain_gray.name=Grauer Vorhang
+tile.curtain_silver.name=Silberner Vorhang
+tile.curtain_cyan.name=Türkiser Vorhang
+tile.curtain_purple.name=Violetter Vorhang
+tile.curtain_blue.name=Blauer Vorhang
+tile.curtain_brown.name=Brauner Vorhang
+tile.curtain_green.name=Grüner Vorhang
+tile.curtain_red.name=Roter Vorhang
+tile.curtain_black.name=Schwarzer Vorhang
  
- 
- 
- 
- 
- 
- 
- 
- 
- tile.malisisdoors:hitechdoor.name=Hightechtür
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
- 
- 
- malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
+malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
  
 config.modifyVanillaDoors=Aktiviere Vanilla-Verbesserungen
 config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter und Falltüren.\r\nDies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
- 
+ config.use3DItems=Rendere Türen als Items in 3D
  
  
 door_movement.rotating_door=Aufschwingend
-door_movement.sliding_door=Auflgeitend
+door_movement.sliding_door=Aufgleitend
 door_movement.sliding_up_door=Aufgleitend (hoch)
 door_movement.sliding_split_door=Aufgleitend (hoch und runter)
 door_movement.rotating_split_door=Aufklappend
@@ -105,36 +105,46 @@ door_movement.rotate_around=
 door_movement.rotate_slide=Aufklappen und -gleiten
 door_movement.rotate_place=Aufklappen und Ersetzen
 door_movement.vanishing_door=Schwindend
- 
- 
- 
- 
- 
- 
+door_movement.spinning_door=Drehend
+door_movement.spinning_around_door=Vortex
+door_movement.double_slide_left=Doppelt nach links aufgleitend
+door_movement.double_slide_right=Doppelt nach rechts aufgleitend
+door_movement.double_rotate_left=Doppelt nach links aufschwingend
+door_movement.double_rotate_right=Doppelt nach rechts aufschwingend
  
  
 gui.door_factory.tab_properties=Eigenschaften
 gui.door_factory.tab_materials=Materialien
+gui.door_factory.tab_digicode=Digicode
+gui.door_factory.rb_create=Erstellen
+gui.door_factory.rb_edit=Bearbeiten
 gui.door_factory.door_movement=Bewegung
 gui.door_factory.door_open_time=Öffnungszeit
-gui.door_factory.door_require_redstone=Benötigt Redstone
+gui.door_factory.door_auto_close_time=Auto-Schließen-Verzögerung
+gui.door_factory.redstone_behavior=Redstone-Verhalten
 gui.door_factory.door_double_door=Doppeltür
 gui.door_factory.door_sound=Geräusch
 gui.door_factory.door_sound.silent_door=Lautlos
-gui.door_factory.door_sound.vanilla_door=Vanilla-Tür
-gui.door_factory.door_sound.glass_door=Glasstür
+gui.door_factory.door_sound.vanilla_door=Holztür
+gui.door_factory.door_sound.glass_door=Glastür
 gui.door_factory.door_sound.jail_door=Gefängnistür
 gui.door_factory.door_sound.pneumatic_door=Pneumatiktür
 gui.door_factory.door_sound.shoji_door=Shoji-Schiebetür
 gui.door_factory.door_sound.carriage_door=Wagentor
- 
+gui.door_factory.door_sound.fence_gate=Zauntor
+gui.door_factory.door_sound.iron_door=Eisentür
+gui.door_factory.door_sound.iron_trapdoor=Eisenfalltür
+gui.door_factory.door_sound.wooden_trapdoor=Holzfalltür
 
- 
- 
- 
+gui.door_factory.redstone_behavior.STANDARD=Standard
+gui.door_factory.redstone_behavior.REDSTONE_ONLY=Nur Redstone
+gui.door_factory.redstone_behavior.REDSTONE_LOCK=Redstone-Sperre
+gui.door_factory.redstone_behavior.HAND_ONLY=Nur manuell
  
 gui.door_factory.frame_type=Rahmenart
 gui.door_factory.top_material=Material oben
 gui.door_factory.bottom_material=Material unten
+gui.door_factory.door_edit_slot=Zu ändernde Tür
 gui.door_factory.create_door=Tür bauen
+gui.door_factory.edit_door=Tür ändern
 
