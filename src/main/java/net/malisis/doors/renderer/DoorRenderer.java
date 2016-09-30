@@ -75,10 +75,13 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	public DoorRenderer()
 	{
 		registerFor(DoorTileEntity.class);
+		isBatched = true;
 	}
 
 	public DoorRenderer(boolean noRegister)
-	{}
+	{
+		isBatched = true;
+	}
 
 	@Override
 	protected void initialize()
@@ -144,7 +147,6 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	@Override
 	public void render()
 	{
-		isBatched = true;
 		if (renderType == RenderType.BLOCK)
 			return;
 
@@ -196,7 +198,6 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 
 	protected void renderTileEntity()
 	{
-		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		List<ITransformable> toRender = new ArrayList<>();
@@ -248,7 +249,6 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 
 	protected void renderItem()
 	{
-		enableBlending();
 		topBlock = false;
 		drawShape(model.getShape("bottom"), rp);
 		topBlock = true;

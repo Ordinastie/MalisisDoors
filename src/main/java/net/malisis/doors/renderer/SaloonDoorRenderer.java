@@ -32,8 +32,6 @@ import net.malisis.doors.block.SaloonDoorBlock;
 import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
-
 /**
  * @author Ordinastie
  *
@@ -62,8 +60,6 @@ public class SaloonDoorRenderer extends DoorRenderer
 	@Override
 	protected void renderTileEntity()
 	{
-		initialize();
-
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();
@@ -77,7 +73,6 @@ public class SaloonDoorRenderer extends DoorRenderer
 			ar.animate(anims);
 		}
 
-		next(GL11.GL_POLYGON);
 		//model.render(this, rp);
 		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		model.render(this, rp);
@@ -86,7 +81,6 @@ public class SaloonDoorRenderer extends DoorRenderer
 	@Override
 	protected void renderItem()
 	{
-		next(GL11.GL_POLYGON);
 		model.render(this, rp);
 	}
 }
