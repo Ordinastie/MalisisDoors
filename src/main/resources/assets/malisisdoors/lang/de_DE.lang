@@ -19,7 +19,7 @@ item.forcefieldItem.name=Kraftfeldregler
 
 
 
-
+item.malisisdoors:hitechdoor.name=Hightechtür
 
 
 
@@ -67,6 +67,8 @@ tile.rustyLadder.name=Rostige Leiter
  
  
  
+ tile.malisisdoors:hitechdoor.name=Hightechtür
+
  
  
  
