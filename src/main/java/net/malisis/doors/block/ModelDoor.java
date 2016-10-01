@@ -99,7 +99,8 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		boolean opened = OPENED.invert(world, pos);
-		amc.link(pos, opened ? "close" : "open", opened ? "open" : "close");
+		if (world.isRemote)
+			amc.link(pos, opened ? "close" : "open", opened ? "open" : "close");
 
 		return true;
 	}
