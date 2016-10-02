@@ -40,8 +40,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
-
 /**
  * @author Ordinastie
  *
@@ -81,6 +79,7 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 	@Override
 	public void render()
 	{
+		isBatched = false;
 		if (tileEntity == null)
 			return;
 
@@ -119,7 +118,6 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 			ar.animate(anims);
 		}
 
-		next(GL11.GL_POLYGON);
 		rp.icon.set(IComponent.getComponent(BigDoorIconProvider.class, block).getDoorIcon());
 		drawShape(doorLeft, rp);
 		drawShape(doorRight, rp);
