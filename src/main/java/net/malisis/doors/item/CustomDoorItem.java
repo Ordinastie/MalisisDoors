@@ -69,7 +69,7 @@ public class CustomDoorItem extends DoorItem
 	{
 		super();
 		setUnlocalizedName("customDoorItem");
-		this.maxStackSize = 16;
+		this.maxStackSize = 64;
 		setCreativeTab(null);
 	}
 
