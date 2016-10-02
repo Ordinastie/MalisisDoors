@@ -39,9 +39,6 @@ public class MalisisDoorsSettings extends Settings
 	@ConfigurationSetting
 	public static Setting<Boolean> use3DItems = new BooleanSetting("config.use3DItems", false);
 
-	@ConfigurationSetting
-	public static Setting<Boolean> use3branchgHandle = new BooleanSetting("config.use3BranchHandle", false);
-
 	public MalisisDoorsSettings(File file)
 	{
 		super(file);

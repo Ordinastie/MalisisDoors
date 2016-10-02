@@ -32,13 +32,10 @@ import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
-import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * @author Ordinastie
@@ -75,6 +72,7 @@ public class VerticalHatchRenderer extends DoorRenderer
 
 		if (renderType == RenderType.BLOCK)
 		{
+			initialize();
 			if (!Door.isTop(blockState))
 			{
 				setTileEntity();
@@ -99,11 +97,10 @@ public class VerticalHatchRenderer extends DoorRenderer
 			ar.animate(anims);
 		}
 
-		next(GL11.GL_POLYGON);
 		//model.render(this, rp);
 		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		drawShape(model.getShape("Door"), rp);
-		drawShape(model.getShape(MalisisDoorsSettings.use3branchgHandle.get() ? "Handle3" : "Handle4"), rp);
+		drawShape(model.getShape("Handle4"), rp);
 	}
 
 	@Override
@@ -115,9 +112,8 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	protected void renderItem()
 	{
-		next(GL11.GL_POLYGON);
 		drawShape(model.getShape("Door"), rp);
-		drawShape(model.getShape(MalisisDoorsSettings.use3branchgHandle.get() ? "Handle3" : "Handle4"), rp);
+		drawShape(model.getShape("Handle4"), rp);
 	}
 
 	@Override

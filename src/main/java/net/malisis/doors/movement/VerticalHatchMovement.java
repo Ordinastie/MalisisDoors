@@ -34,7 +34,6 @@ import net.malisis.core.renderer.animation.transformation.Transformation;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.doors.DoorState;
-import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -99,7 +98,7 @@ public class VerticalHatchMovement implements IDoorMovement
 		ParallelTransformation transform = new ParallelTransformation(getDoorTransformation(tileEntity),
 				getHandleTransformation(tileEntity));
 		return new Animation[] { new Animation<>(model.getShape("Door"), getDoorTransformation(tileEntity)),
-				new Animation<>(model.getShape(MalisisDoorsSettings.use3branchgHandle.get() ? "Handle3" : "Handle4"), transform) };
+				new Animation<>(model.getShape("Handle4"), transform) };
 	}
 
 	@Override
