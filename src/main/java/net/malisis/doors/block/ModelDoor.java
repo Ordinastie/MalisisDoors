@@ -63,6 +63,8 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	public ModelDoor()
 	{
 		super(Material.IRON);
+		setHardness(4.0F);
+
 		setCreativeTab(MalisisDoors.tab);
 
 		//params
