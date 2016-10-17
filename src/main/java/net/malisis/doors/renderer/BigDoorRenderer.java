@@ -79,7 +79,6 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 	@Override
 	public void render()
 	{
-		isBatched = false;
 		if (tileEntity == null)
 			return;
 

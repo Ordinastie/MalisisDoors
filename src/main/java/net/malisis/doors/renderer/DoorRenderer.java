@@ -75,12 +75,12 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	public DoorRenderer()
 	{
 		registerFor(DoorTileEntity.class);
-		isBatched = true;
+		setBatched();
 	}
 
 	public DoorRenderer(boolean noRegister)
 	{
-		isBatched = true;
+		setBatched();
 	}
 
 	@Override
@@ -151,6 +151,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 			return;
 
 		rp.icon.set(null);
+		rp.brightness.reset();
 		if (renderType == RenderType.TILE_ENTITY)
 		{
 			setTileEntity();
@@ -210,8 +211,8 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 		}
 
 		rp.rotateIcon.set(false);
-
 		//model.render(this, rp);
+
 		topBlock = false;
 		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 		drawShape(model.getShape("bottom"), rp);
