@@ -34,6 +34,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -67,6 +69,13 @@ public class CustomDoor extends Door
 	public IIconProvider getIconProvider()
 	{
 		return null;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack itemStack)
+	{
+		super.onBlockPlacedBy(world, pos, state, placer, itemStack);
+		world.checkLight(pos);
 	}
 
 	@Override
@@ -107,8 +116,11 @@ public class CustomDoor extends Door
 	}
 
 	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos)
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
+		if (isTop(state))
+			return 0;
+
 		DoorTileEntity te = Door.getDoor(world, pos);
 		return te instanceof CustomDoorTileEntity ? ((CustomDoorTileEntity) te).getLightValue() : 0;
 	}

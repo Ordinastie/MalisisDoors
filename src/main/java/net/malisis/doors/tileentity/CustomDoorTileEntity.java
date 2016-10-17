@@ -61,11 +61,12 @@ public class CustomDoorTileEntity extends DoorTileEntity
 		return bottom;
 	}
 
+	@SuppressWarnings("deprecation")
 	public int getLightValue()
 	{
 		if (frame == null)
 			return 0;
-		return Math.max(Math.max(frame.getLightValue(worldObj, pos), top.getLightValue(worldObj, pos)), bottom.getLightValue(worldObj, pos));
+		return Math.max(Math.max(frame.getLightValue(), top.getLightValue()), bottom.getLightValue());
 	}
 
 	@Override
