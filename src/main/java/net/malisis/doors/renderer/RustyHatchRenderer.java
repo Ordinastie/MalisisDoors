@@ -47,6 +47,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+
 /**
  * @author Ordinastie
  *
@@ -178,12 +180,12 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 			ar.animate(anims);
 		}
 
-		//		next(GL11.GL_POLYGON);
-		//		rp.icon.set(iconProvider.getHatchIcon());
-		//		drawShape(hatch, rp);
-		//
-		//		rp.icon.set(iconProvider.getHandleIcon());
-		//		drawShape(handle, rp);
+		next(GL11.GL_POLYGON);
+		rp.icon.set(iconProvider.getHatchIcon());
+		drawShape(hatch, rp);
+
+		rp.icon.set(iconProvider.getHandleIcon());
+		drawShape(handle, rp);
 	}
 
 	@Override
