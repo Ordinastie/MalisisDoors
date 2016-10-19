@@ -1,7 +1,4 @@
-!build/
 build/*
-!build/libs/
-!build/libs/*
 bin/*
 .gradle/*
 .project
