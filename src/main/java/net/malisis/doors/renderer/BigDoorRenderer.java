@@ -103,6 +103,8 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 			return;
 
 		rp.icon.set(new VanillaIcon(state));
+		frame.applyMatrix();
+		frame.deductParameters();
 		set(state);
 		drawShape(frame, rp);
 	}
