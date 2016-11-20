@@ -29,8 +29,7 @@ import net.malisis.core.client.gui.MalisisGui;
 import net.malisis.core.client.gui.component.container.UIContainer;
 import net.malisis.core.client.gui.component.interaction.UIButton;
 import net.malisis.core.client.gui.event.ComponentEvent;
-import net.malisis.core.renderer.font.FontRenderOptions;
-import net.malisis.core.renderer.font.MalisisFont;
+import net.malisis.core.renderer.font.FontOptions;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.network.DigicodeMessage;
 
@@ -47,6 +46,9 @@ public class Digicode extends UIContainer<Digicode>
 {
 	private String enteredCode = "";
 	private String expectedCode = null;
+
+	private FontOptions fontOptions = FontOptions.builder().scale(2).color(0x00CC00).build();
+	private FontOptions bgFontOptions = FontOptions.builder().scale(2).color(0x003300).build();
 
 	public Digicode(MalisisGui gui, String expected)
 	{
@@ -137,22 +139,12 @@ public class Digicode extends UIContainer<Digicode>
 	{
 		super.drawForeground(renderer, mouseX, mouseY, partialTick);
 
+		String code = StringUtils.repeat(' ', 6 - enteredCode.length()) + enteredCode;
+
 		renderer.currentComponent = this;
-
 		renderer.drawRectangle(0, 0, 0, getWidth(), 15, 0x191919, 255);
-
-		MalisisFont font = MalisisDoors.digitalFont;
-		FontRenderOptions fro = new FontRenderOptions();
-		fro.fontScale = 2F;
-
-		fro.color = 0x003300;
-		renderer.drawText(font, "888888", fro);
-
-		String code = enteredCode.length() < 6 ? StringUtils.repeat(' ', 6 - enteredCode.length()) + enteredCode : enteredCode;
-
-		fro.color = 0x00CC00;
-		fro.saveDefault();
-		renderer.drawText(font, code, fro);
+		renderer.drawText(MalisisDoors.digitalFont, "888888", bgFontOptions);
+		renderer.drawText(MalisisDoors.digitalFont, code, fontOptions);
 	}
 
 	@Subscribe
