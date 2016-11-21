@@ -124,16 +124,16 @@ public class DoorTileEntity extends TileEntity implements ITickable
 
 	public IBlockState getBlockState()
 	{
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		if (state.getBlock() != getBlockType() || getBlockType() == null)
 			return null;
 
-		return state.getActualState(worldObj, pos);
+		return state.getActualState(world, pos);
 	}
 
 	public EnumFacing getDirection()
 	{
-		return BlockDoor.getFacing(worldObj, pos);
+		return BlockDoor.getFacing(world, pos);
 	}
 
 	public boolean isTopBlock(BlockPos pos)
@@ -171,8 +171,8 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			return false;
 
 		EnumFacing offset = getDirection().rotateY();
-		Block b1 = worldObj.getBlockState(pos.offset(offset, 1)).getBlock();
-		Block b2 = worldObj.getBlockState(pos.offset(offset, -1)).getBlock();
+		Block b1 = world.getBlockState(pos.offset(offset, 1)).getBlock();
+		Block b2 = world.getBlockState(pos.offset(offset, -1)).getBlock();
 
 		return ArrayUtils.contains(Door.centerBlocks, b1) || ArrayUtils.contains(Door.centerBlocks, b2);
 	}
@@ -247,7 +247,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 				moving = true;
 			}
 
-			if (!worldObj.isRemote)
+			if (!world.isRemote)
 				Syncer.sync(this, "state");
 
 		}
@@ -255,7 +255,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		{
 			IBlockState state = getBlockState();
 			if (state != null)
-				worldObj.setBlockState(pos, state.withProperty(openProperty, newState == DoorState.OPENED));
+				world.setBlockState(pos, state.withProperty(openProperty, newState == DoorState.OPENED));
 			moving = false;
 		}
 
@@ -267,7 +267,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	 */
 	public void playSound()
 	{
-		if (worldObj.isRemote)
+		if (world.isRemote)
 			return;
 
 		SoundEvent sound = null;
@@ -292,7 +292,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		if (isHingeLeft())
 			offset = offset.getOpposite();
 
-		DoorTileEntity te = Door.getDoor(worldObj, pos.offset(offset));
+		DoorTileEntity te = Door.getDoor(world, pos.offset(offset));
 		if (isMatchingDoubleDoor(te))
 			return te;
 

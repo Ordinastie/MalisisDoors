@@ -80,7 +80,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return DirectionalComponent.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(world, pos);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class BigDoorTileEntity extends DoorTileEntity
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return IBoundingBox.getRenderingBounds(worldObj, pos);
+		return IBoundingBox.getRenderingBounds(world, pos);
 	}
 
 	@Override

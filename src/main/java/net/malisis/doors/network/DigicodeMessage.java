@@ -51,7 +51,7 @@ public class DigicodeMessage implements IMalisisMessageHandler<DigicodeMessage.P
 	@Override
 	public void process(Packet message, MessageContext ctx)
 	{
-		World world = ctx.getServerHandler().playerEntity.worldObj;
+		World world = IMalisisMessageHandler.getWorld(ctx);
 		DoorTileEntity te = Door.getDoor(world, message.pos);
 		if (te == null)
 			return;

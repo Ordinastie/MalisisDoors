@@ -65,14 +65,14 @@ public class RustyHatchTileEntity extends DoorTileEntity
 
 	public boolean isTop()
 	{
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = world.getBlockState(pos);
 		return state.getBlock() == getBlockType() && state.getValue(RustyHatch.TOP);
 	}
 
 	@Override
 	public EnumFacing getDirection()
 	{
-		return DirectionalComponent.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(world, pos);
 	}
 
 	@Override

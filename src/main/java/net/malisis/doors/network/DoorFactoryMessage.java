@@ -54,7 +54,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 	@Override
 	public void process(Packet message, MessageContext ctx)
 	{
-		World world = ctx.getServerHandler().playerEntity.worldObj;
+		World world = IMalisisMessageHandler.getWorld(ctx);
 		DoorFactoryTileEntity te = TileEntityUtils.getTileEntity(DoorFactoryTileEntity.class, world, message.pos);
 		if (te == null)
 			return;

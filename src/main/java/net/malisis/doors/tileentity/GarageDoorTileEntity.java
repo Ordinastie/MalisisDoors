@@ -52,7 +52,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	@Override
 	public EnumFacing getDirection()
 	{
-		return DirectionalComponent.getDirection(worldObj, pos);
+		return DirectionalComponent.getDirection(world, pos);
 	}
 
 	@Override
@@ -86,13 +86,13 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	@Override
 	public boolean isPowered()
 	{
-		return PowerComponent.isPowered(worldObj, pos);
+		return PowerComponent.isPowered(world, pos);
 	}
 
 	public GarageDoorTileEntity getDoor(EnumFacing dir)
 	{
 
-		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, worldObj, pos.offset(dir));
+		GarageDoorTileEntity te = TileEntityUtils.getTileEntity(GarageDoorTileEntity.class, world, pos.offset(dir));
 		if (te == null || te.getDirection() != getDirection())
 			return null;
 
@@ -123,7 +123,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 			return;
 		}
 
-		boolean isPowered = PowerComponent.isPowered(worldObj, pos);
+		boolean isPowered = PowerComponent.isPowered(world, pos);
 		if (isPowered == powered && !isMoving())
 			return;
 
@@ -134,8 +134,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 		for (GarageDoorTileEntity te : getDoors())
 		{
 			te.setDoorState(newState);
-			worldObj.setBlockState(te.getPos(),
-					worldObj.getBlockState(pos).withProperty(PowerComponent.getProperty(getBlockType()), powered));
+			world.setBlockState(te.getPos(), world.getBlockState(pos).withProperty(PowerComponent.getProperty(getBlockType()), powered));
 		}
 
 		EnumFacing dir = getDirection().rotateY();

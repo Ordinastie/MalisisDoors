@@ -112,9 +112,9 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack itemStack)
 	{
-		return super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(TOP, hitY > 0.5F);
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, itemStack).withProperty(TOP, hitY > 0.5F);
 	}
 
 	@Override

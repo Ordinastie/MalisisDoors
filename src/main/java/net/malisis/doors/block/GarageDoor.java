@@ -44,6 +44,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
@@ -77,7 +78,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack itemStack)
 	{
 		IBlockState neighborState = world.getBlockState(pos.up());
 		if (neighborState.getBlock() == this)
@@ -87,7 +88,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 		if (neighborState.getBlock() == this)
 			return neighborState;
 
-		return super.onBlockPlaced(world, pos, facing, hitX, hitY, hitZ, meta, placer);
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, itemStack);
 	}
 
 	@Override

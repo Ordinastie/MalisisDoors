@@ -445,7 +445,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 		{
 			MalisisCore.log.error("[MalisisDoors] DoorTileEntity found without a world!");
 			te.setPos(pos);
-			te.setWorldObj((World) world);
+			te.setWorld((World) world);
 		}
 		return te;
 	}

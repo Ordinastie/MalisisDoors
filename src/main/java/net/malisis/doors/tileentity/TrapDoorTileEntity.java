@@ -46,7 +46,7 @@ public class TrapDoorTileEntity extends DoorTileEntity
 	@Override
 	public IBlockState getBlockState()
 	{
-		return worldObj.getBlockState(pos);
+		return world.getBlockState(pos);
 	}
 
 	@Override
