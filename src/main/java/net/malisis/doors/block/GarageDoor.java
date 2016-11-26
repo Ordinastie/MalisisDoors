@@ -29,7 +29,8 @@ import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.PowerComponent;
-import net.malisis.core.block.component.PowerComponent.Type;
+import net.malisis.core.block.component.PowerComponent.ComponentType;
+import net.malisis.core.block.component.PowerComponent.InteractionType;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
@@ -71,7 +72,7 @@ public class GarageDoor extends MalisisBlock implements ITileEntityProvider
 		setSoundType(SoundType.WOOD);
 
 		addComponent(new DirectionalComponent());
-		addComponent(new PowerComponent(Type.REDSTONE));
+		addComponent(new PowerComponent(InteractionType.REDSTONE, ComponentType.RECEIVER));
 
 		if (MalisisCore.isClient())
 			addComponent(GarageDoorIconProvider.get());

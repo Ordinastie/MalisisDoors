@@ -29,11 +29,11 @@ import javax.vecmath.Matrix4f;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
-import net.malisis.core.block.component.BooleanComponent;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.ItemTransformComponent;
 import net.malisis.core.block.component.PowerComponent;
-import net.malisis.core.block.component.PowerComponent.Type;
+import net.malisis.core.block.component.PowerComponent.ComponentType;
+import net.malisis.core.block.component.PowerComponent.InteractionType;
 import net.malisis.core.renderer.component.AnimatedModelComponent;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.Timer;
@@ -61,7 +61,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ModelDoor extends MalisisBlock implements IChunkCollidable
 {
-	private static BooleanComponent OPENED = new PowerComponent(Type.BOTH);
+	private static PowerComponent OPENED = new PowerComponent(InteractionType.BOTH, ComponentType.RECEIVER);
 	private AxisAlignedBB aabb = AABBUtils.identity();
 	private AnimatedModelComponent amc = null;
 
@@ -121,7 +121,6 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	{
 		super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 		openDoor(world, pos);
-		MalisisCore.message("Activated > " + world.getBlockState(pos));
 		return true;
 	}
 
@@ -130,7 +129,6 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock)
 	{
 		super.neighborChanged(state, world, pos, neighborBlock);
-		MalisisCore.message("NeighborChanged > " + world.getBlockState(pos));
 		openDoor(world, pos);
 	}
 
@@ -171,6 +169,8 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	{
 		if (OPENED.get(state) && !amc.isAnimating(pos, "open"))
 			amc.start(pos, "open", new Timer(Integer.MIN_VALUE));
+		else if (!OPENED.get(state) && !amc.isAnimating(pos, "close"))
+			amc.start(pos, "close", new Timer(Integer.MIN_VALUE));
 	}
 
 }
