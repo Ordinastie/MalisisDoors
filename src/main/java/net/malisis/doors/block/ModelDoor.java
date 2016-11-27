@@ -36,22 +36,14 @@ import net.malisis.core.block.component.PowerComponent.ComponentType;
 import net.malisis.core.block.component.PowerComponent.InteractionType;
 import net.malisis.core.renderer.component.AnimatedModelComponent;
 import net.malisis.core.util.AABBUtils;
-import net.malisis.core.util.Timer;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.core.util.chunkcollision.IChunkCollidable;
-import net.malisis.core.util.clientnotif.ClientNotification;
 import net.malisis.doors.MalisisDoors;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -84,7 +76,7 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 		if (MalisisCore.isClient())
 		{
 			amc = new AnimatedModelComponent(MalisisDoors.modid + ":models/hitechdoor.obj");
-			amc.onFirstRender(this::stateCheck);
+			amc.onRender((w, p, s, a) -> a.link(p, OPENED.get(s) ? "close" : "open", OPENED.get(s) ? "open" : "close"));
 			addComponent(amc);
 
 			addComponent(getTransform());
@@ -105,31 +97,6 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 											.fixed(fixed)
 											.gui(gui)
 											.ground(ground);
-	}
-
-	public void openDoor(World world, BlockPos pos)
-	{
-		if (!world.isRemote)
-			return;
-
-		boolean opened = OPENED.get(world, pos);
-		amc.link(pos, opened ? "close" : "open", opened ? "open" : "close");
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
-		openDoor(world, pos);
-		return true;
-	}
-
-	@Override
-	@ClientNotification
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock)
-	{
-		super.neighborChanged(state, world, pos, neighborBlock);
-		openDoor(world, pos);
 	}
 
 	@Override
@@ -167,10 +134,8 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 
 	public void stateCheck(IBlockAccess world, BlockPos pos, IBlockState state, AnimatedModelComponent amc)
 	{
-		if (OPENED.get(state) && !amc.isAnimating(pos, "open"))
-			amc.start(pos, "open", new Timer(Integer.MIN_VALUE));
-		else if (!OPENED.get(state) && !amc.isAnimating(pos, "close"))
-			amc.start(pos, "close", new Timer(Integer.MIN_VALUE));
+		;
+
 	}
 
 }
