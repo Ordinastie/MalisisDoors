@@ -33,6 +33,7 @@ import net.malisis.core.util.ItemUtils;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.gui.DoorFactoryGui;
 import net.malisis.doors.item.CustomDoorItem;
 import net.malisis.doors.item.DoorItem;
@@ -319,6 +320,8 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
+			if (itemStack.getItem() == MalisisDoors.Items.verticalHatchItem)
+				return false;
 			return itemStack.getItem() instanceof DoorItem || itemStack.getItem() instanceof ItemDoor;
 		}
 	}
