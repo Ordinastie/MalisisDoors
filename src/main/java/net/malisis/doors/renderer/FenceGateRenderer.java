@@ -36,6 +36,7 @@ import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
+import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.tileentity.FenceGateTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.Item;
@@ -68,6 +69,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 	public FenceGateRenderer()
 	{
 		registerFor(FenceGateTileEntity.class);
+		ensureBlock(FenceGate.class);
 	}
 
 	@Override
