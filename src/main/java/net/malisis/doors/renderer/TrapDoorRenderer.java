@@ -98,8 +98,6 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
-		rp.useEnvironmentBrightness.set(false);
-		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
 	}
 
@@ -154,6 +152,7 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	{
 		if (renderType == RenderType.BLOCK)
 			return;
+		initParams();
 
 		MalisisModel model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
 		model.resetState();

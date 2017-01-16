@@ -63,7 +63,6 @@ public class RustyLadderRenderer extends MalisisRenderer<TileEntity>
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
-		rp.calculateBrightness.set(false);
 	}
 
 	@Override

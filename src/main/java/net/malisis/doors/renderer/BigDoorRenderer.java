@@ -72,8 +72,7 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
-		rp.calculateAOColor.set(false);
-		rp.calculateBrightness.set(false);
+		rp.useEnvironmentBrightness.set(false);
 	}
 
 	@Override

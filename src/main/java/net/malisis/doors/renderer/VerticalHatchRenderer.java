@@ -69,19 +69,17 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-
 		if (renderType == RenderType.BLOCK)
 		{
-			initialize();
 			if (!Door.isTop(blockState))
 			{
 				setTileEntity();
 				setup();
+				rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 				drawShape(model.getShape("Frame"), rp);
 			}
 			return;
 		}
-
 		super.render();
 	}
 

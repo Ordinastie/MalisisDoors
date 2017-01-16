@@ -29,6 +29,8 @@ import java.util.List;
 
 import javax.vecmath.Matrix4f;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.malisis.core.block.IComponent;
 import net.malisis.core.renderer.DefaultRenderer;
 import net.malisis.core.renderer.MalisisRenderer;
@@ -53,8 +55,6 @@ import net.minecraft.block.BlockDoor;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 {

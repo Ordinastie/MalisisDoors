@@ -26,6 +26,8 @@ package net.malisis.doors.renderer;
 
 import javax.vecmath.Matrix4f;
 
+import org.lwjgl.opengl.GL11;
+
 import net.malisis.core.block.IComponent;
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.renderer.RenderParameters;
@@ -46,8 +48,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
 
 /**
  * @author Ordinastie
@@ -91,7 +91,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 
 		rp = new RenderParameters();
 		rp.useBlockBounds.set(false);
-		rp.calculateBrightness.set(false);
+		rp.useEnvironmentBrightness.set(false);
 
 		iconProvider = IComponent.getComponent(RustyHatchIconProvider.class, MalisisDoors.Blocks.rustyHatch);
 	}
