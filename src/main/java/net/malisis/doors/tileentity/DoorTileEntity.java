@@ -24,6 +24,8 @@
 
 package net.malisis.doors.tileentity;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.Timer;
 import net.malisis.core.util.syncer.Sync;
@@ -49,8 +51,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author Ordinastie
@@ -78,7 +78,8 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			if (getBlockType() instanceof Door)
 				descriptor = ((Door) getBlockType()).getDescriptor();
 		}
-		return descriptor;
+		//prevents NPE ?
+		return descriptor != null ? descriptor : new DoorDescriptor();
 	}
 
 	public void setDescriptor(DoorDescriptor descriptor)
