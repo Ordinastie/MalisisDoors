@@ -272,8 +272,8 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			return;
 
 		SoundEvent sound = null;
-		if (descriptor.getSound() != null)
-			sound = descriptor.getSound().getSound(state);
+		if (getDescriptor().getSound() != null)
+			sound = getDescriptor().getSound().getSound(state);
 
 		if (sound != null)
 			getWorld().playSound(null, pos, sound, SoundCategory.BLOCKS, 1F, 1F);
@@ -286,7 +286,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	 */
 	public DoorTileEntity getDoubleDoor()
 	{
-		if (!descriptor.isDoubleDoor())
+		if (!getDescriptor().isDoubleDoor())
 			return null;
 
 		EnumFacing offset = getDirection().rotateYCCW();
