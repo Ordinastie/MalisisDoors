@@ -26,6 +26,8 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IComponent;
 import net.malisis.core.block.IComponentProvider;
@@ -58,8 +60,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author Ordinastie
@@ -139,10 +139,11 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 	{
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos);
-		if (te != null)
-			te.updateAll();
+		if (te == null)
+			return;
 
-		te.getDoubleDoor();
+		te.updateAll();
+		te = te.getDoubleDoor();
 		if (te != null)
 			te.updateAll();
 	}
