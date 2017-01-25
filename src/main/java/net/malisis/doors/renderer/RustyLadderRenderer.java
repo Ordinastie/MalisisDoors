@@ -57,7 +57,7 @@ public class RustyLadderRenderer extends MalisisRenderer<TileEntity>
 	@Override
 	protected void initialize()
 	{
-		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid, "models/rustyhatch.obj");
+		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid, "models/rusty_hatch.obj");
 		MalisisModel model = new MalisisModel(rl);
 		ladder = model.getShape("ladder");
 

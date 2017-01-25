@@ -30,6 +30,7 @@ import net.malisis.core.inventory.MalisisInventory;
 import net.malisis.core.inventory.MalisisInventoryContainer;
 import net.malisis.core.inventory.MalisisSlot;
 import net.malisis.core.util.ItemUtils;
+import net.malisis.core.util.ItemUtils.ItemStacksMerger;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
@@ -73,15 +74,14 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 
 	public DoorFactoryTileEntity()
 	{
-		frameSlot = new DoorFactorySlot(0);
-		topMaterialSlot = new DoorFactorySlot(1);
-		bottomMaterialSlot = new DoorFactorySlot(2);
-		doorEditSlot = new DoorEditSlot(3);
-		outputSlot = new MalisisSlot(4);
+		frameSlot = new DoorFactorySlot(true);
+		topMaterialSlot = new DoorFactorySlot(false);
+		bottomMaterialSlot = new DoorFactorySlot(false);
+		doorEditSlot = new DoorEditSlot();
+		outputSlot = new MalisisSlot();
 		outputSlot.setOutputSlot();
 
-		inventory = new MalisisInventory(this,
-				new MalisisSlot[] { frameSlot, topMaterialSlot, bottomMaterialSlot, doorEditSlot, outputSlot });
+		inventory = new MalisisInventory(this, frameSlot, topMaterialSlot, bottomMaterialSlot, doorEditSlot, outputSlot);
 	}
 
 	public boolean isCreate()
@@ -192,7 +192,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 			if (expected == null)
 				return;
 
-			if (output != null && (!ItemStack.areItemStackTagsEqual(output, expected) || output.stackSize >= output.getMaxStackSize()))
+			if (output.getCount() >= output.getMaxStackSize() || !new ItemStacksMerger(expected, output).canMerge())
 				return;
 
 			frameSlot.extract(1);
@@ -298,25 +298,22 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 
 	private class DoorFactorySlot extends MalisisSlot
 	{
-		public DoorFactorySlot(int index)
+		private boolean forFrame;
+
+		public DoorFactorySlot(boolean frame)
 		{
-			super(index);
+			this.forFrame = frame;
 		}
 
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{
-			return CustomDoorItem.canBeUsedForDoor(itemStack, slotNumber == 0);
+			return CustomDoorItem.canBeUsedForDoor(itemStack, forFrame);
 		}
 	}
 
 	private class DoorEditSlot extends MalisisSlot
 	{
-		public DoorEditSlot(int index)
-		{
-			super(index);
-		}
-
 		@Override
 		public boolean isItemValid(ItemStack itemStack)
 		{

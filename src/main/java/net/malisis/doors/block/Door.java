@@ -29,6 +29,11 @@ import static com.google.common.base.Preconditions.*;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.IBoundingBox;
@@ -70,11 +75,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 /**
  * @author Ordinastie
  *
@@ -82,8 +82,13 @@ import com.google.common.collect.Lists;
 @MalisisRendered(item = DoorRenderer.class)
 public class Door extends BlockDoor implements IBoundingBox, IComponentProvider, IRegisterable
 {
-	public static Block[] centerBlocks = new Block[] { Blocks.IRON_BARS, Blocks.COBBLESTONE_WALL, Blocks.SPRUCE_FENCE, Blocks.BIRCH_FENCE,
-			Blocks.JUNGLE_FENCE, Blocks.DARK_OAK_FENCE, Blocks.ACACIA_FENCE };
+	public static Block[] centerBlocks = new Block[] {	Blocks.IRON_BARS,
+														Blocks.COBBLESTONE_WALL,
+														Blocks.SPRUCE_FENCE,
+														Blocks.BIRCH_FENCE,
+														Blocks.JUNGLE_FENCE,
+														Blocks.DARK_OAK_FENCE,
+														Blocks.ACACIA_FENCE };
 
 	public static final float DOOR_WIDTH = 0.1875F;
 
@@ -157,7 +162,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		DoorTileEntity te = Door.getDoor(world, pos);
 		if (te == null)
@@ -223,7 +228,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
 	{
 		if (!Door.isTop(state))
 		{
@@ -291,7 +296,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 			if (downState.getBlock() != this) //bottom is not door anymore
 				world.setBlockToAir(pos);
 			else if (block != this) //pass the neighbor block change to bottom
-				neighborChanged(downState, world, pos.down(), block);
+				neighborChanged(downState, world, pos.down(), block, fromPos);
 		}
 	}
 
@@ -336,10 +341,8 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 		if (te == null || te.isMoving() || te.getMovement() == null)
 			return null;
 
-		AxisAlignedBB aabb = te.isOpened() ? te.getMovement().getOpenBoundingBox(te, te.isTopBlock(pos), type) : te.getMovement()
-																													.getClosedBoundingBox(te,
-																															te.isTopBlock(pos),
-																															type);
+		AxisAlignedBB aabb = te.isOpened()	? te.getMovement().getOpenBoundingBox(te, te.isTopBlock(pos), type)
+											: te.getMovement().getClosedBoundingBox(te, te.isTopBlock(pos), type);
 
 		if (aabb != null && te.isCentered())
 			aabb = aabb.offset(0, 0, 0.5F - Door.DOOR_WIDTH / 2);

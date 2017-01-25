@@ -26,6 +26,10 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.common.collect.Lists;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
@@ -50,7 +54,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -60,10 +63,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author Ordinastie
@@ -112,13 +111,13 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack itemStack)
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
 	{
-		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, itemStack).withProperty(TOP, hitY > 0.5F);
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(TOP, hitY > 0.5F);
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -140,10 +139,8 @@ public class RustyHatch extends MalisisBlock
 		if (te.isMoving())
 			return null;
 
-		AxisAlignedBB aabb = te.isOpened() ? te.getMovement().getOpenBoundingBox(te, te.isTop(), type) : te.getMovement()
-																											.getClosedBoundingBox(te,
-																													te.isTop(),
-																													type);
+		AxisAlignedBB aabb = te.isOpened()	? te.getMovement().getOpenBoundingBox(te, te.isTop(), type)
+											: te.getMovement().getClosedBoundingBox(te, te.isTop(), type);
 
 		if (aabb == null)
 			return null;

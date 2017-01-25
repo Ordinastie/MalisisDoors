@@ -25,10 +25,8 @@
 package net.malisis.doors.item;
 
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
-import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.SaloonDoorRenderer;
 
 /**
@@ -41,11 +39,5 @@ public class SaloonDoorItem extends DoorItem implements IIconProvider
 	public SaloonDoorItem(DoorDescriptor desc)
 	{
 		super(desc);
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return Icon.from(MalisisDoors.modid + ":items/saloon_door");
 	}
 }

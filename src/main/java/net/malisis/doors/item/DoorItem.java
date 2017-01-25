@@ -93,13 +93,13 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (side != EnumFacing.UP)
 			return EnumActionResult.FAIL;
 
+		ItemStack itemStack = player.getHeldItem(hand);
 		IBlockState state = world.getBlockState(pos);
-
 		if (!state.getBlock().isReplaceable(world, pos))
 			pos = pos.up();
 
@@ -117,7 +117,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 			return EnumActionResult.FAIL;
 
 		placeDoor(world, pos, EnumFacing.fromAngle(player.rotationYaw), block, false);
-		--itemStack.stackSize;
+		itemStack.shrink(1);
 		block.onBlockPlacedBy(world, pos, world.getBlockState(pos), player, itemStack);
 		return EnumActionResult.SUCCESS;
 	}

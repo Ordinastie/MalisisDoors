@@ -37,6 +37,12 @@ public class VerticalHatchItem extends DoorItem
 {
 	public VerticalHatchItem(DoorDescriptor desc)
 	{
-		super(desc);
+		//manually set everything because it doesn't use item texture.
+		super();
+		this.descriptor = desc;
+		this.maxStackSize = desc.getMaxStackSize();
+		setUnlocalizedName(desc.getName());
+		//setTextureName(desc.getTextureName());
+		setCreativeTab(desc.getTab());
 	}
 }

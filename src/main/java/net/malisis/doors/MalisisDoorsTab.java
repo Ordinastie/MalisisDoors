@@ -26,7 +26,7 @@ package net.malisis.doors;
 
 import net.malisis.doors.MalisisDoors.Items;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author Ordinastie
@@ -40,9 +40,9 @@ public class MalisisDoorsTab extends CreativeTabs
 	}
 
 	@Override
-	public Item getTabIconItem()
+	public ItemStack getTabIconItem()
 	{
-		return Items.jailDoorItem;
+		return new ItemStack(Items.jailDoorItem);
 	}
 
 }

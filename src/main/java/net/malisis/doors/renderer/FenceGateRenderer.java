@@ -111,9 +111,8 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 		rp.renderAllFaces.set(true);
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
-		rp.useEnvironmentBrightness.set(false);
-		rp.calculateBrightness.set(false);
 		rp.interpolateUV.set(false);
+		rp.deductParameters.set(false);
 	}
 
 	@Override
@@ -166,16 +165,12 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 			model.translate(0, -.19F, 0);
 
 		//rp.icon.set(tileEntity.getCamoIcon());
-		rp.interpolateUV.set(false);
 		rp.colorMultiplier.set(tileEntity.getCamoColor());
-		rp.useEnvironmentBrightness.set(false);
-		rp.calculateAOColor.set(false);
 		rp.brightness.set(blockState.getPackedLightmapCoords(world, pos));
 	}
 
 	protected void renderTileEntity()
 	{
-		enableBlending();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();

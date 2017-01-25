@@ -109,8 +109,9 @@ public class ForcefieldItem extends MalisisItem
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack itemStack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
+		ItemStack itemStack = player.getHeldItem(hand);
 		if (getEnergy(itemStack) < getMaxEnergy())
 			return EnumActionResult.FAIL;
 
@@ -130,7 +131,7 @@ public class ForcefieldItem extends MalisisItem
 			return clearStartPosition(itemStack);
 
 		Forcefield block = MalisisDoors.Blocks.forcefieldDoor;
-		if (!world.canBlockBePlaced(block, pos, false, side, player, itemStack))
+		if (!world.mayPlace(block, pos, false, side, player))
 			return clearStartPosition(itemStack);
 
 		IBlockState state = block.getDefaultState().withProperty(MultiBlockComponent.ORIGIN, true);

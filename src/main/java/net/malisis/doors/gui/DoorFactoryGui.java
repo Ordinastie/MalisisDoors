@@ -26,6 +26,11 @@ package net.malisis.doors.gui;
 
 import java.util.Set;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.Subscribe;
+
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.ComponentPosition;
 import net.malisis.core.client.gui.GuiTexture;
@@ -58,18 +63,13 @@ import net.malisis.doors.tileentity.DoorFactoryTileEntity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.eventbus.Subscribe;
-
 /**
  * @author Ordinastie
  *
  */
 public class DoorFactoryGui extends MalisisGui
 {
-	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorFactoryTabIcons.png");
+	public static ResourceLocation tabIconsRl = new ResourceLocation(MalisisDoors.modid, "textures/gui/doorfactory_tabicons.png");
 	public static GuiTexture tabTexture = new GuiTexture(tabIconsRl, 128, 128);
 	public static Icon propIcon = tabTexture.getIcon(0, 0, 64, 64);
 	public static Icon matIcon = tabTexture.getIcon(64, 0, 64, 64);

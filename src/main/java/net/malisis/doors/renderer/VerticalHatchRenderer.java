@@ -43,6 +43,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class VerticalHatchRenderer extends DoorRenderer
 {
+	private Icon icon = Icon.from(MalisisDoors.modid + ":blocks/vertical_hatch");
 
 	public VerticalHatchRenderer()
 	{
@@ -55,7 +56,7 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	protected void initialize()
 	{
-		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid + ":models/verticalHatch.obj");
+		ResourceLocation rl = new ResourceLocation(MalisisDoors.modid + ":models/vertical_hatch.obj");
 		model = new MalisisModel(rl);
 
 		initParams();
@@ -117,6 +118,6 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	protected Icon getIcon(Face face, RenderParameters params)
 	{
-		return MalisisDoors.Blocks.verticalHatch.getIconProvider().getIcon();
+		return icon;
 	}
 }

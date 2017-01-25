@@ -31,7 +31,6 @@ import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
-import net.malisis.core.renderer.element.Face;
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.shape.Cube;
 import net.malisis.core.renderer.model.MalisisModel;
@@ -79,8 +78,6 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 		trapDoorModel.addShape("shape", s);
 		trapDoorModel.storeState();
 
-		s.getFace(Face.nameFromDirection(EnumFacing.UP)).getParameters().calculateAOColor.set(true);
-
 		s = new Cube();
 		s.setSize(1, Door.DOOR_WIDTH / 2, 1);
 		s.interpolateUV();
@@ -99,6 +96,7 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
 		rp.interpolateUV.set(false);
+		rp.deductParameters.set(true);
 	}
 
 	@Override
@@ -127,7 +125,6 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	@Override
 	public Matrix4f getTransform(Item item, TransformType tranformType)
 	{
-
 		switch (tranformType)
 		{
 			case FIRST_PERSON_LEFT_HAND:
@@ -152,7 +149,6 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	{
 		if (renderType == RenderType.BLOCK)
 			return;
-		initParams();
 
 		MalisisModel model = block == MalisisDoors.Blocks.slidingTrapDoor ? slidingTrapDoorModel : trapDoorModel;
 		model.resetState();

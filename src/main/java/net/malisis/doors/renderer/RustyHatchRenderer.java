@@ -82,7 +82,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 	@Override
 	protected void initialize()
 	{
-		rl = new ResourceLocation(MalisisDoors.modid, "models/rustyhatch.obj");
+		rl = new ResourceLocation(MalisisDoors.modid, "models/rusty_hatch.obj");
 		model = new MalisisModel(rl);
 		frame = model.getShape("frame");
 		hatch = model.getShape("door");

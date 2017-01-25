@@ -26,6 +26,8 @@ package net.malisis.doors.block;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.BoundingBoxType;
 import net.malisis.core.block.MalisisBlock;
@@ -60,8 +62,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author Ordinastie
@@ -115,7 +115,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 			return true;
@@ -141,8 +141,9 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 		if ((type == BoundingBoxType.COLLISION || type == BoundingBoxType.RAYTRACE || type == BoundingBoxType.RENDER)
 				&& (te.isOpened() || te.isMoving()))
 		{
-			aabbs = new AxisAlignedBB[] { new AxisAlignedBB(0, 0, -0.5F, 0.5F, 4, 1), new AxisAlignedBB(3.5F, 0, -0.5F, 4, 4, 1),
-					new AxisAlignedBB(0, 4, 1 - Door.DOOR_WIDTH, 4, 5, 1) };
+			aabbs = new AxisAlignedBB[] {	new AxisAlignedBB(0, 0, -0.5F, 0.5F, 4, 1),
+											new AxisAlignedBB(3.5F, 0, -0.5F, 4, 4, 1),
+											new AxisAlignedBB(0, 4, 1 - Door.DOOR_WIDTH, 4, 5, 1) };
 		}
 
 		return aabbs;
@@ -197,7 +198,7 @@ public class BigDoor extends MalisisBlock implements ITileEntityProvider, IChunk
 	}
 
 	@Override
-	public boolean canRenderInLayer(BlockRenderLayer layer)
+	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
 	{
 		return true;
 	}

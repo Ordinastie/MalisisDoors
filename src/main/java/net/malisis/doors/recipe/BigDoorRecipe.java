@@ -35,6 +35,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 /**
@@ -78,7 +79,7 @@ public class BigDoorRecipe implements IRecipe
 			if (block == null || (frame != null && !ItemUtils.areItemStacksStackable(frame, itemStack)))
 				return null;
 			frame = itemStack;
-			frameSize += itemStack.stackSize;
+			frameSize += itemStack.getCount();
 		}
 
 		return !doorMatch || frame == null || frameSize < 5 ? null : frame;
@@ -111,20 +112,20 @@ public class BigDoorRecipe implements IRecipe
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	{
-		ItemStack[] itemStacks = new ItemStack[inv.getSizeInventory()];
+		NonNullList<ItemStack> itemStacks = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 		int left = 5;
 		for (int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			ItemStack itemStack = inv.getStackInSlot(i);
-			inv.setInventorySlotContents(i, null);
-			if (itemStack == null)
+			inv.setInventorySlotContents(i, ItemStack.EMPTY);
+			if (itemStack.isEmpty())
 				continue;
 
 			ItemStackSplitter iss = new ItemStackSplitter(itemStack);
 			iss.split(itemStack.getItem() == type.door ? 1 : left);
-			itemStacks[i] = iss.source;
+			itemStacks.set(i, iss.source);
 			if (itemStack.getItem() != type.door)
 				left -= iss.amount;
 		}
