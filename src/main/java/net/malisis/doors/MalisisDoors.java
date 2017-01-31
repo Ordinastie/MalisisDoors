@@ -35,7 +35,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore", acceptedMinecraftVersions = "[1.11, 1.12)")
+@Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore", acceptedMinecraftVersions = "[1.11.2, 1.12)")
 public class MalisisDoors implements IMalisisMod
 {
 	public static final String modid = "malisisdoors";
