@@ -108,11 +108,11 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 	protected void initParams()
 	{
 		rp = new RenderParameters();
-		rp.renderAllFaces.set(true);
-		rp.calculateAOColor.set(false);
 		rp.useBlockBounds.set(false);
+		rp.renderAllFaces.set(true);
 		rp.interpolateUV.set(false);
-		rp.deductParameters.set(false);
+		rp.deductParameters.set(true);
+		rp.calculateAOColor.set(false);
 	}
 
 	@Override
@@ -157,6 +157,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 
 	protected void setup()
 	{
+		initParams();
 		model.resetState();
 		if (tileEntity.getDirection().getAxis() == Axis.X)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
