@@ -139,7 +139,8 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 		if (renderType == RenderType.BLOCK)
 			return;
 
-		rp.icon.set(null);
+		rp.icon.reset();
+		rp.colorMultiplier.reset();
 		if (renderType == RenderType.TILE_ENTITY)
 		{
 			setup();
@@ -148,7 +149,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 
 		if (renderType == RenderType.ITEM)
 		{
-			rp.reset();
+			//rp.reset();
 			model.resetState();
 			model.render(this, rp);
 			return;
@@ -157,7 +158,6 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 
 	protected void setup()
 	{
-		initParams();
 		model.resetState();
 		if (tileEntity.getDirection().getAxis() == Axis.X)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
@@ -172,6 +172,7 @@ public class FenceGateRenderer extends MalisisRenderer<FenceGateTileEntity>
 
 	protected void renderTileEntity()
 	{
+		initParams();
 		ar.setStartTime(tileEntity.getTimer().getStart());
 
 		setup();
