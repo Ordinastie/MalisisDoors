@@ -147,20 +147,14 @@ public class RustyHatch extends MalisisBlock
 
 		//rotate before origin offset
 		aabb = AABBUtils.rotate(aabb, te.getDirection());
-
-		pos = pos.subtract(te.getPos());
-		aabb = aabb.offset(-pos.getX(), -pos.getY(), -pos.getZ());
-
-		if (type == BoundingBoxType.RAYTRACE)
-			pos.down();
-		if (type == BoundingBoxType.SELECTION)
-			pos.down();
+		//returned AABB expected to be relative to this blockPos, but it's relative to TE's pos, so wee need to offset
+		aabb = aabb.offset(te.getPos().subtract(pos));
 
 		return aabb;
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
+	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity, boolean useActualState)
 	{
 		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
