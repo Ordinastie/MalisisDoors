@@ -54,43 +54,43 @@ public class BigDoorRecipe implements IRecipe
 	@Override
 	public boolean matches(InventoryCrafting inv, World world)
 	{
-		return getMatching(inv) != null;
+		return !getMatching(inv).isEmpty();
 	}
 
 	public ItemStack getMatching(InventoryCrafting inv)
 	{
 		boolean doorMatch = false;
-		ItemStack frame = null;
+		ItemStack frame = ItemStack.EMPTY;
 		int frameSize = 0;
 		for (int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			ItemStack itemStack = inv.getStackInSlot(i);
-			if (itemStack == null)
+			if (itemStack.isEmpty())
 				continue;
 			if (itemStack.getItem() == type.door)
 			{
 				if (doorMatch == true) //two doors
-					return null;
+					return ItemStack.EMPTY;
 				doorMatch = true;
 				continue;
 			}
 
 			Block block = Block.getBlockFromItem(itemStack.getItem());
-			if (block == null || (frame != null && !ItemUtils.areItemStacksStackable(frame, itemStack)))
-				return null;
+			if (block == net.minecraft.init.Blocks.AIR || (!frame.isEmpty() && !ItemUtils.areItemStacksStackable(frame, itemStack)))
+				return ItemStack.EMPTY;
 			frame = itemStack;
 			frameSize += itemStack.getCount();
 		}
 
-		return !doorMatch || frame == null || frameSize < 5 ? null : frame;
+		return !doorMatch || frameSize < 5 ? ItemStack.EMPTY : frame;
 	}
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv)
 	{
 		ItemStack frame = getMatching(inv);
-		if (frame == null)
-			return null;
+		if (frame.isEmpty())
+			return ItemStack.EMPTY;
 
 		ItemStack itemStack = new ItemStack(type == Type.CARRIAGE ? Blocks.carriageDoor : Blocks.medievalDoor);
 		NBTTagCompound nbt = new NBTTagCompound();
