@@ -35,7 +35,7 @@ import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.icon.VanillaIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.core.util.multiblock.MultiBlock;
@@ -157,7 +157,7 @@ public class RustyHatchRenderer extends MalisisRenderer<RustyHatchTileEntity>
 				return;
 			frame.resetState();
 			setup(frame);
-			rp.icon.set(new VanillaIcon(Blocks.FURNACE));
+			rp.icon.set(Icon.from(Blocks.FURNACE));
 			drawShape(frame, rp);
 		}
 	}

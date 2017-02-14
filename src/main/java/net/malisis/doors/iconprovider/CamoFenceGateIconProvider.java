@@ -25,7 +25,6 @@
 package net.malisis.doors.iconprovider;
 
 import net.malisis.core.renderer.icon.Icon;
-import net.malisis.core.renderer.icon.VanillaIcon;
 import net.malisis.core.renderer.icon.provider.IBlockIconProvider;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.MalisisDoors;
@@ -60,7 +59,7 @@ public class CamoFenceGateIconProvider implements IBlockIconProvider
 		if (camoState == null)
 			return getIcon();
 
-		return new VanillaIcon(camoState);
+		return Icon.from(camoState);
 	}
 
 	@Override

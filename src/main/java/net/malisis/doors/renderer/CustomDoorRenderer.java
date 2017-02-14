@@ -24,13 +24,15 @@
 
 package net.malisis.doors.renderer;
 
+import org.apache.commons.lang3.tuple.Triple;
+
 import net.malisis.core.renderer.element.Shape;
 import net.malisis.core.renderer.element.face.BottomFace;
 import net.malisis.core.renderer.element.face.NorthFace;
 import net.malisis.core.renderer.element.face.SouthFace;
 import net.malisis.core.renderer.element.face.TopFace;
 import net.malisis.core.renderer.element.shape.Cube;
-import net.malisis.core.renderer.icon.VanillaIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
@@ -39,8 +41,6 @@ import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-
-import org.apache.commons.lang3.tuple.Triple;
 
 /**
  * @author Ordinastie
@@ -168,16 +168,16 @@ public class CustomDoorRenderer extends DoorRenderer
 		//reset alpha before so it doesn't bleed to the shapes
 		rp.alpha.reset();
 
-		rp.icon.set(new VanillaIcon(frame));
+		rp.icon.set(Icon.from(frame));
 		rp.colorMultiplier.set(getColor(frame));
 		model.getShape("top").setParameters("frame", rp, true);
 		model.getShape("bottom").setParameters("frame", rp, true);
 
-		rp.icon.set(new VanillaIcon(top));
+		rp.icon.set(Icon.from(top));
 		rp.colorMultiplier.set(getColor(top));
 		model.getShape("top").setParameters("material", rp, true);
 
-		rp.icon.set(new VanillaIcon(bottom));
+		rp.icon.set(Icon.from(bottom));
 		rp.colorMultiplier.set(getColor(bottom));
 		model.getShape("bottom").setParameters("material", rp, true);
 

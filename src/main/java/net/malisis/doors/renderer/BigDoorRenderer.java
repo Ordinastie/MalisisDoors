@@ -31,7 +31,7 @@ import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
 import net.malisis.core.renderer.animation.AnimationRenderer;
 import net.malisis.core.renderer.element.Shape;
-import net.malisis.core.renderer.icon.VanillaIcon;
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.BigDoor.BigDoorIconProvider;
@@ -101,7 +101,7 @@ public class BigDoorRenderer extends MalisisRenderer<BigDoorTileEntity>
 		if (!state.getBlock().canRenderInLayer(state, getRenderLayer()))
 			return;
 
-		rp.icon.set(new VanillaIcon(state));
+		rp.icon.set(Icon.from(state));
 		frame.applyMatrix();
 		frame.deductParameters();
 		set(state);
