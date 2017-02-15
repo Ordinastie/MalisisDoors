@@ -47,7 +47,7 @@ public class VerticalHatch extends DoorDescriptor
 		setHardness(3.5F);
 		setSoundType(SoundType.METAL);
 		setName("verticalHatch");
-		setTextureName(MalisisDoors.modid, "verticalHatch");
+		//setTextureName(MalisisDoors.modid, "vertical_hatch"); //handled by the VerticalHatchDoor.getIconProvider()
 
 		//TileEntity
 		setOpeningTime(60);

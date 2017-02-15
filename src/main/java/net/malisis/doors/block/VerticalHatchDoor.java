@@ -25,7 +25,6 @@
 package net.malisis.doors.block;
 
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
@@ -49,8 +48,6 @@ public class VerticalHatchDoor extends Door
 	@SideOnly(Side.CLIENT)
 	public IIconProvider getIconProvider()
 	{
-		Icon icon = Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
-		return () -> icon;
-		//return null;
+		return IIconProvider.create(MalisisDoors.modid + ":blocks/verticalHatch").build();
 	}
 }
