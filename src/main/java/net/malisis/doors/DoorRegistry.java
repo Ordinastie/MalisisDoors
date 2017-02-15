@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Maps;
+
 import net.malisis.doors.movement.CarriageDoorMovement;
 import net.malisis.doors.movement.CurtainMovement;
 import net.malisis.doors.movement.DoubleRotateMovement;
@@ -66,9 +69,6 @@ import net.malisis.doors.sound.ShojiDoorSound;
 import net.malisis.doors.sound.SilentDoorSound;
 import net.malisis.doors.sound.WoodenDoorSound;
 import net.malisis.doors.sound.WoodenTrapDoorSound;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Maps;
 
 /**
  * @author Ordinastie
@@ -123,10 +123,10 @@ public class DoorRegistry
 
 	//#region Movements
 	/**
-	 * Gets the movement register for the class
+	 * Gets the movement register for the class.
 	 *
-	 * @param clazz
-	 * @return
+	 * @param clazz the clazz
+	 * @return the movement
 	 */
 	public static IDoorMovement getMovement(Class<? extends IDoorMovement> clazz)
 	{
@@ -150,10 +150,10 @@ public class DoorRegistry
 	}
 
 	/**
-	 * Gets the movement associated to an id in the registry
+	 * Gets the movement associated to an id in the registry.
 	 *
-	 * @param id
-	 * @return
+	 * @param id the id
+	 * @return the movement
 	 */
 	public static IDoorMovement getMovement(String id)
 	{
@@ -161,10 +161,10 @@ public class DoorRegistry
 	}
 
 	/**
-	 * Gets the id associated to a movement in the registry
+	 * Gets the id associated to a movement in the registry.
 	 *
-	 * @param movement
-	 * @return
+	 * @param movement the movement
+	 * @return the id
 	 */
 	public static String getId(IDoorMovement movement)
 	{
@@ -177,7 +177,8 @@ public class DoorRegistry
 				return entry.getKey();
 		}
 
-		throw new IllegalArgumentException(String.format("Door movement %s not found in the registry", movement.getClass().getSimpleName()));
+		throw new IllegalArgumentException(String.format(	"Door movement %s not found in the registry",
+															movement.getClass().getSimpleName()));
 	}
 
 	public static Map<String, IDoorMovement> listMovements()
@@ -197,10 +198,10 @@ public class DoorRegistry
 
 	//#region Sounds
 	/**
-	 * Gets the movement register for the class
+	 * Gets the movement register for the class.
 	 *
-	 * @param clazz
-	 * @return
+	 * @param clazz the clazz
+	 * @return the sound
 	 */
 	public static IDoorSound getSound(Class<? extends IDoorSound> clazz)
 	{
@@ -225,10 +226,10 @@ public class DoorRegistry
 	}
 
 	/**
-	 * Gets the Sound associated to an id in the registry
+	 * Gets the Sound associated to an id in the registry.
 	 *
-	 * @param id
-	 * @return
+	 * @param id the id
+	 * @return the sound
 	 */
 	public static IDoorSound getSound(String id)
 	{
@@ -236,10 +237,10 @@ public class DoorRegistry
 	}
 
 	/**
-	 * Gets the id associated to a Sound in the registry
+	 * Gets the id associated to a Sound in the registry.
 	 *
-	 * @param Sound
-	 * @return
+	 * @param Sound the sound
+	 * @return the id
 	 */
 	public static String getId(IDoorSound Sound)
 	{

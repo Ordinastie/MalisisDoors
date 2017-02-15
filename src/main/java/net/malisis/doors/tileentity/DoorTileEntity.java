@@ -221,9 +221,9 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	}
 
 	/**
-	 * Change the current state of this DoorTileEntity
+	 * Change the current state of this DoorTileEntity.
 	 *
-	 * @param newSate
+	 * @param newState the new door state
 	 */
 	@Sync("state")
 	public void setDoorState(DoorState newState)
@@ -280,9 +280,9 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	}
 
 	/**
-	 * Find the corresponding double door for this DoorTileEntity
+	 * Find the corresponding double door for this DoorTileEntity.
 	 *
-	 * @return
+	 * @return the double door
 	 */
 	public DoorTileEntity getDoubleDoor()
 	{
@@ -301,10 +301,10 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	}
 
 	/**
-	 * Is the DoorTileEntity passed a matching matching double door to this DoorTileEntity
+	 * Is the DoorTileEntity passed a matching matching double door to this DoorTileEntity.
 	 *
-	 * @param te
-	 * @return
+	 * @param te the te
+	 * @return true, if is matching double door
 	 */
 	public boolean isMatchingDoubleDoor(DoorTileEntity te)
 	{
