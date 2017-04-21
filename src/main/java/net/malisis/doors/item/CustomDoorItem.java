@@ -27,6 +27,11 @@ package net.malisis.doors.item;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
+import com.google.common.base.Objects;
+
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.MBlockState;
@@ -43,11 +48,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumBlockRenderType;
-
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Ordinastie
@@ -68,7 +68,7 @@ public class CustomDoorItem extends DoorItem
 	public CustomDoorItem()
 	{
 		super();
-		setUnlocalizedName("customDoorItem");
+		setUnlocalizedName("custom_door");
 		this.maxStackSize = 64;
 		setCreativeTab(null);
 	}
@@ -139,11 +139,11 @@ public class CustomDoorItem extends DoorItem
 		ItemStack top = ItemUtils.getItemStackFromState(triple.getMiddle());
 		ItemStack bottom = ItemUtils.getItemStackFromState(triple.getRight());
 
-		if (frame != null)
+		if (!frame.isEmpty()) //should never happen
 			tooltip.addAll(frame.getTooltip(player, advancedTooltip));
-		if (top != null)
+		if (!top.isEmpty()) //ex: water
 			tooltip.addAll(top.getTooltip(player, advancedTooltip));
-		if (bottom != null)
+		if (!bottom.isEmpty())
 			tooltip.addAll(bottom.getTooltip(player, advancedTooltip));
 	}
 
