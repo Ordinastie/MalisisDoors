@@ -24,11 +24,15 @@
 
 package net.malisis.doors.iconprovider;
 
+import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
+import net.malisis.core.util.callback.CallbackResult;
+import net.malisis.core.util.callback.ICallback.CallbackOption;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.descriptor.VanillaDoor;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 
 /**
@@ -56,6 +60,8 @@ public class DoorIconProvider implements IIconProvider
 		if (descriptor instanceof VanillaDoor)
 			modid = MalisisDoors.modid;
 		side = Icon.from(modid + ":blocks/" + name + "_side");
+
+		MalisisRegistry.onTextureStitched(this::textureStitched, CallbackOption.of());
 	}
 
 	private void buildIcons()
@@ -118,6 +124,12 @@ public class DoorIconProvider implements IIconProvider
 		icon.flip(flipH, flipV);
 
 		return icon;
+	}
+
+	private CallbackResult<Void> textureStitched(TextureMap map)
+	{
+		iconBuilt = false;
+		return CallbackResult.noResult();
 	}
 
 }
