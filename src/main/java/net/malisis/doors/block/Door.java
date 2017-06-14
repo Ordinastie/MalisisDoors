@@ -31,7 +31,6 @@ import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import net.malisis.core.MalisisCore;
@@ -329,7 +328,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		return ImmutableList.of();
+		return Lists.newArrayList();
 	}
 
 	//#region BoundingBox
