@@ -357,7 +357,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 		AxisAlignedBB[] aabbs = getBoundingBoxes(world, pos, state, BoundingBoxType.COLLISION);
 		for (AxisAlignedBB aabb : AABBUtils.offset(pos, aabbs))
 		{
-			if (aabb != null && mask.intersectsWith(aabb))
+			if (aabb != null && mask.intersects(aabb))
 				list.add(aabb);
 		}
 	}
