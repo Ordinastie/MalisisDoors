@@ -26,8 +26,6 @@ package net.malisis.doors;
 
 import net.malisis.core.block.IRegisterable;
 import net.malisis.doors.block.TrapDoor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author Ordinastie
@@ -48,8 +46,8 @@ public class TrapDoorDescriptor extends DoorDescriptor
 			create();
 
 		((IRegisterable) block).register();
-		if (recipe != null)
-			GameRegistry.addRecipe(new ItemStack(block, numCrafted), recipe);
+		//		if (recipe != null)
+		//			GameRegistry.addRecipe(new ItemStack(block, numCrafted), recipe);
 
 		return this;
 	}

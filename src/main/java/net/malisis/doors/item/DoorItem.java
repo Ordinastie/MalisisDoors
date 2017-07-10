@@ -26,6 +26,8 @@ package net.malisis.doors.item;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.renderer.MalisisRendered;
@@ -36,6 +38,7 @@ import net.malisis.doors.renderer.DoorRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
@@ -62,6 +65,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 		this.descriptor = desc;
 		this.maxStackSize = desc.getMaxStackSize();
 		setUnlocalizedName(desc.getName());
+		setRegistryName(desc.getName());
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 
@@ -123,7 +127,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		if (stack.getTagCompound() == null)
 			return;

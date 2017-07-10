@@ -24,6 +24,8 @@
 
 package net.malisis.doors.tileentity;
 
+import com.google.common.base.MoreObjects;
+
 import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.util.MBlockState;
@@ -42,8 +44,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Ordinastie
@@ -159,6 +159,6 @@ public class BigDoorTileEntity extends DoorTileEntity
 	{
 		super.readFromNBT(nbt);
 
-		frameState = Objects.firstNonNull(MBlockState.fromNBT(nbt), Blocks.QUARTZ_BLOCK.getDefaultState());
+		frameState = MoreObjects.firstNonNull(MBlockState.fromNBT(nbt), Blocks.QUARTZ_BLOCK.getDefaultState());
 	}
 }

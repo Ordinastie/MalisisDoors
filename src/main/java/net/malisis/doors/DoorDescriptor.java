@@ -24,6 +24,8 @@
 
 package net.malisis.doors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.doors.block.Door;
@@ -38,12 +40,8 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-
-import org.apache.commons.lang3.StringUtils;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * @author Ordinastie
@@ -53,7 +51,10 @@ public class DoorDescriptor
 {
 	public static enum RedstoneBehavior
 	{
-		STANDARD, REDSTONE_ONLY, REDSTONE_LOCK, HAND_ONLY
+		STANDARD,
+		REDSTONE_ONLY,
+		REDSTONE_LOCK,
+		HAND_ONLY
 	}
 
 	protected Block block;
@@ -378,20 +379,20 @@ public class DoorDescriptor
 		if (block instanceof IRegisterable)
 			MalisisRegistry.register((IRegisterable) block);
 		else
-			GameRegistry.register(block);
+			ForgeRegistries.BLOCKS.register(block);
 
 		if (item instanceof IRegisterable)
 			MalisisRegistry.register((IRegisterable) item);
 		else
-			GameRegistry.register(item);
+			ForgeRegistries.ITEMS.register(item);
 
-		if (recipe != null)
-		{
-			if (oredict)
-				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
-			else
-				GameRegistry.addRecipe(new ItemStack(item, numCrafted), recipe);
-		}
+		//		if (recipe != null)
+		//		{
+		//			if (oredict)
+		//				ForgeRegistries.RECIPES.register(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
+		//			else
+		//				ForgeRegistries.RECIPES.register(new (new ItemStack(item, numCrafted), recipe);
+		//		}
 
 		return this;
 	}

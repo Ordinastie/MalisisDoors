@@ -57,6 +57,7 @@ public class CustomDoor extends Door
 		setHardness(3.0F);
 		setSoundType(SoundType.WOOD);
 		setUnlocalizedName("customDoor");
+		setRegistryName("customDoor");
 	}
 
 	@Override

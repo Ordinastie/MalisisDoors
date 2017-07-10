@@ -24,6 +24,8 @@
 
 package net.malisis.doors.recipe;
 
+import javax.annotation.Nullable;
+
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.ItemUtils.ItemStackSplitter;
 import net.malisis.core.util.MBlockState;
@@ -36,6 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
@@ -45,6 +48,7 @@ import net.minecraft.world.World;
 public class BigDoorRecipe implements IRecipe
 {
 	private BigDoor.Type type;
+	private ResourceLocation registryName;
 
 	public BigDoorRecipe(BigDoor.Type type)
 	{
@@ -106,9 +110,30 @@ public class BigDoorRecipe implements IRecipe
 	}
 
 	@Override
-	public int getRecipeSize()
+	public boolean canFit(int width, int height)
 	{
-		return 2;
+		return width <= 2 && height <= 2;
+	}
+
+	@Override
+	public IRecipe setRegistryName(ResourceLocation name)
+	{
+		registryName = name;
+		return this;
+	}
+
+	@Override
+	@Nullable
+	public ResourceLocation getRegistryName()
+	{
+		return registryName;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<IRecipe> getRegistryType()
+	{
+		return (Class<IRecipe>) this.getClass();
 	}
 
 	@Override

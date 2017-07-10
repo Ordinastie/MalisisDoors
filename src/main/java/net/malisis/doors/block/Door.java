@@ -103,6 +103,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
 		setUnlocalizedName(desc.getName());
+		setRegistryName(desc.getName());
 
 		if (MalisisCore.isClient())
 			addComponent(getIconProvider());
