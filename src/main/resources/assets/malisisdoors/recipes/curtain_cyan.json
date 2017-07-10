@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AA",
+		"AA",
+		"AA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:wool",
+			"data": 9
+		}
+	},
+	"result": {
+		"item": "malisisdoors:curtain_cyan",
+		"count": 3
+	}
+}

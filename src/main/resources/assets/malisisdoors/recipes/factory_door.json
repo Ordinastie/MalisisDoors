@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AA",
+		"BB",
+		"AA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:gold_ingot"
+		},
+		"B": {
+			"item": "minecraft:iron_ingot"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:factory_door",
+		"count": 3
+	}
+}

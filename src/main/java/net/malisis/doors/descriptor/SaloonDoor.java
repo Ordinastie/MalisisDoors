@@ -27,6 +27,8 @@ package net.malisis.doors.descriptor;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.SaloonDoorBlock;
+import net.malisis.doors.item.SaloonDoorItem;
 import net.malisis.doors.movement.SaloonDoorMovement;
 import net.malisis.doors.sound.SilentDoorSound;
 import net.minecraft.block.SoundType;
@@ -61,5 +63,12 @@ public class SaloonDoor extends DoorDescriptor
 
 		//Recipe
 		setRecipe("AA", "BB", "AA", 'A', Blocks.PLANKS, 'B', Items.STICK);
+	}
+
+	@Override
+	public void create()
+	{
+		block = new SaloonDoorBlock(this);
+		item = new SaloonDoorItem(this);
 	}
 }

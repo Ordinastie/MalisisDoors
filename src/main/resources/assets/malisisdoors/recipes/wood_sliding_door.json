@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AB",
+		"AB",
+		"AB"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:planks",
+			"data": 32767
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlassColorless"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:wood_sliding_door",
+		"count": 3
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:iron_ingot"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:rustyLadder"
+	}
+}

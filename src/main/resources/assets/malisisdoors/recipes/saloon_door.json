@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AA",
+		"BB",
+		"AA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:planks",
+			"data": 32767
+		},
+		"B": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:saloon",
+		"count": 3
+	}
+}

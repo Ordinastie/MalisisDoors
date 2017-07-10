@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:planks",
+			"data": 4
+		}
+	},
+	"result": {
+		"item": "malisisdoors:trapdoor_acacia"
+	}
+}

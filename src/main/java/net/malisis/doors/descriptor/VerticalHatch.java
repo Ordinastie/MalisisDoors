@@ -27,6 +27,8 @@ package net.malisis.doors.descriptor;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.block.VerticalHatchDoor;
+import net.malisis.doors.item.VerticalHatchItem;
 import net.malisis.doors.movement.VerticalHatchMovement;
 import net.malisis.doors.sound.RustyHatchSound;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
@@ -61,6 +63,13 @@ public class VerticalHatch extends DoorDescriptor
 
 		//Recipe
 		setRecipe("AA ", "AAA", "AA ", 'A', Items.IRON_INGOT);
+	}
+
+	@Override
+	public void create()
+	{
+		block = new VerticalHatchDoor(this);
+		item = new VerticalHatchItem(this);
 	}
 
 }

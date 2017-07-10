@@ -43,14 +43,13 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 {
 	public static enum Type
 	{
-		//@formatter:off
-//		OAK("", EnumType.OAK),
+		//OAK("", EnumType.OAK),
 		ACACIA("trapdoor_acacia", EnumType.ACACIA),
 		BIRCH("trapdoor_birch", EnumType.BIRCH),
 		DARK_OAK("trapdoor_dark_oak", EnumType.DARK_OAK),
 		JUNGLE("trapdoor_jungle", EnumType.JUNGLE),
 		SPRUCE("trapdoor_spruce", EnumType.SPRUCE);
-		//@formatter:on
+
 		private EnumType type;
 		private String name;
 

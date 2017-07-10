@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABC"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:acacia_fence_gate"
+		},
+		"B": {
+			"item": "minecraft:jungle_fence_gate"
+		},
+		"C": {
+			"item": "minecraft:birch_fence_gate"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:camo_fence_gate",
+		"count": 3
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AB",
+		"AB",
+		"AB"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:iron_ingot"
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlassColorless"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:iron_sliding_door",
+		"count": 3
+	}
+}

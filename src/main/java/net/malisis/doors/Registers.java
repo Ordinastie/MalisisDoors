@@ -86,9 +86,9 @@ public class Registers
 	{
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
 		{
-			registerVanillaDoors();
-			registerVanillaTrapDoor();
-			registerVanillaFenceGate();
+			//registerVanillaDoors();
+			//registerVanillaTrapDoor();
+			//registerVanillaFenceGate();
 		}
 
 		registerDoors();
@@ -332,24 +332,17 @@ public class Registers
 
 	private static void registerSaloonDoor()
 	{
-		DoorDescriptor desc = new SaloonDoor();
-		saloonDoor = new SaloonDoorBlock(desc);
-		saloonDoorItem = new SaloonDoorItem(desc);
-
-		desc.set(saloonDoor, saloonDoorItem);
-		desc.register();
-
+		DoorDescriptor desc = new SaloonDoor().register();
+		saloonDoor = (SaloonDoorBlock) desc.getBlock();
+		saloonDoorItem = (SaloonDoorItem) desc.getItem();
 		GameRegistry.registerTileEntity(SaloonDoorTileEntity.class, "saloonDoorTileEntity");
 	}
 
 	private static void registerVerticalHatch()
 	{
-		DoorDescriptor desc = new VerticalHatch();
-		verticalHatch = new VerticalHatchDoor(desc);
-		verticalHatchItem = new VerticalHatchItem(desc);
-
-		desc.set(verticalHatch, verticalHatchItem);
-		desc.register();
+		DoorDescriptor desc = new VerticalHatch().register();
+		verticalHatch = (VerticalHatchDoor) desc.getBlock();
+		verticalHatchItem = (VerticalHatchItem) desc.getItem();
 
 		GameRegistry.registerTileEntity(VerticalHatchTileEntity.class, "verticalHatchTileEntity");
 	}

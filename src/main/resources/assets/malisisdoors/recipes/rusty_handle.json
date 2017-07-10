@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		" A "
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:iron_ingot"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:rustyHandle"
+	}
+}

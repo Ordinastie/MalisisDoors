@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABB",
+		"ABB"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:gold_ingot"
+		},
+		"B": {
+			"item": "malisisdoors:iron_sliding_door"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:sliding_trapdoor"
+	}
+}

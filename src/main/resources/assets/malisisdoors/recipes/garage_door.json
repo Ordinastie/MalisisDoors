@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:planks",
+			"data": 32767
+		},
+		"B": {
+			"item": "minecraft:glass",
+			"data": 0
+		}
+	},
+	"result": {
+		"item": "malisisdoors:garage_door"
+	}
+}
