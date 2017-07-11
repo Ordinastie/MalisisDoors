@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"CDC",
+		"AEA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:diamond"
+		},
+		"B": {
+			"item": "minecraft:obsidian"
+		},
+		"C": {
+			"item": "minecraft:repeater"
+		},
+		"D": {
+			"item": "minecraft:ender_eye"
+		},
+		"E": {
+			"item": "minecraft:comparator"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:forcefieldItem"
+	}
+}
