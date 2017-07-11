@@ -36,6 +36,7 @@ import net.malisis.core.block.IBoundingBox;
 import net.malisis.core.block.IComponent;
 import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
+import net.malisis.core.inventory.MalisisTab;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
@@ -50,6 +51,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -90,6 +92,15 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		if (MalisisCore.isClient())
 			addComponent(IIconProvider.create(descriptor.getModId() + ":" + descriptor.getTextureName()).build());
 
+	}
+
+	@Override
+	public TrapDoor setCreativeTab(CreativeTabs tab)
+	{
+		super.setCreativeTab(tab);
+		if (tab instanceof MalisisTab)
+			((MalisisTab) tab).addItem(this);
+		return this;
 	}
 
 	public DoorDescriptor getDescriptor()

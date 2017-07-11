@@ -97,19 +97,19 @@ public class Registers
 
 		registerSaloonDoor();
 
-		registerVerticalHatch();
-
-		registerBigDoors();
-
 		registerTrapDoors();
 
 		registerCamoFenceGate();
 
+		registerVerticalHatch();
+
 		registerGarageDoor();
 
-		registerDoorFactory();
+		registerBigDoors();
 
 		registerRustyHatch();
+
+		registerDoorFactory();
 
 		registerForcefield();
 

@@ -26,6 +26,8 @@ package net.malisis.doors.tileentity;
 
 import java.util.Set;
 
+import com.google.common.collect.Sets;
+
 import net.malisis.core.block.component.DirectionalComponent;
 import net.malisis.core.block.component.PowerComponent;
 import net.malisis.core.util.AABBUtils;
@@ -37,8 +39,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-
-import com.google.common.collect.Sets;
 
 /**
  * @author Ordinastie
@@ -165,7 +165,7 @@ public class GarageDoorTileEntity extends DoorTileEntity
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		Set<GarageDoorTileEntity> childDoors = getDoors();
-		return AABBUtils.identity(pos).expand(childDoors.size(), childDoors.size(), childDoors.size());
+		return AABBUtils.identity(pos).grow(childDoors.size(), childDoors.size(), childDoors.size());
 	}
 
 }

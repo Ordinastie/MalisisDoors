@@ -34,6 +34,7 @@ import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IComponent;
 import net.malisis.core.block.IComponentProvider;
 import net.malisis.core.block.IRegisterable;
+import net.malisis.core.inventory.MalisisTab;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
@@ -51,6 +52,7 @@ import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -136,6 +138,15 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 	public List<IComponent> getComponents()
 	{
 		return components;
+	}
+
+	@Override
+	public FenceGate setCreativeTab(CreativeTabs tab)
+	{
+		super.setCreativeTab(tab);
+		if (tab instanceof MalisisTab)
+			((MalisisTab) tab).addItem(this);
+		return this;
 	}
 
 	@Override

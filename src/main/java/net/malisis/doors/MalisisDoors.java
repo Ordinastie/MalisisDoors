@@ -3,6 +3,7 @@ package net.malisis.doors;
 import net.malisis.core.IMalisisMod;
 import net.malisis.core.MalisisCore;
 import net.malisis.core.configuration.Settings;
+import net.malisis.core.inventory.MalisisTab;
 import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.registry.MalisisRegistry;
@@ -46,7 +47,7 @@ public class MalisisDoors implements IMalisisMod
 	public static MalisisNetwork network;
 	public static MalisisDoorsSettings settings;
 
-	public static CreativeTabs tab = new MalisisDoorsTab();
+	public static CreativeTabs tab = new MalisisTab(MalisisDoors.modid, () -> Items.jailDoorItem);
 	public static MalisisFont digitalFont;
 
 	public MalisisDoors()
@@ -132,6 +133,13 @@ public class MalisisDoors implements IMalisisMod
 		public static Door shojiDoor;
 		public static Door curtains;
 
+		//MalisisDoors trapdoors
+		public static TrapDoor trapdoorAcacia;
+		public static TrapDoor trapdoorBirch;
+		public static TrapDoor trapdoorDarkOak;
+		public static TrapDoor trapdoorJungle;
+		public static TrapDoor trapdoorSpruce;
+
 		//Special doors
 		public static CustomDoor customDoor;
 		public static SaloonDoorBlock saloonDoor;
@@ -173,12 +181,18 @@ public class MalisisDoors implements IMalisisMod
 		public static DoorItem shojiDoorItem;
 		public static DoorItem curtainsItem;
 
+		//MalisisDoors trapdoors items
+		public static Item trapdoorAcaciaItem;
+		public static Item trapdoorBirchItem;
+		public static Item trapdoorDarkOakItem;
+		public static Item trapdoorJungleItem;
+		public static Item trapdoorSpruceItem;
+		public static Item slidingTrapDoorItem;
+
 		//Special door items
 		public static CustomDoorItem customDoorItem;
 		public static SaloonDoorItem saloonDoorItem;
 		public static VerticalHatchItem verticalHatchItem;
-
-		public static Item slidingTrapDoorItem;
 
 		//Other items
 		public static MalisisItem rustyHandle;

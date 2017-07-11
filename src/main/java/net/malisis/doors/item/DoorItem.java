@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 
 import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
+import net.malisis.core.inventory.MalisisTab;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
@@ -39,6 +40,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
@@ -133,5 +135,14 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 			return;
 
 		tooltip.add(TextFormatting.WHITE + I18n.format("door_movement." + stack.getTagCompound().getString("movement")));
+	}
+
+	@Override
+	public DoorItem setCreativeTab(CreativeTabs tab)
+	{
+		super.setCreativeTab(tab);
+		if (tab instanceof MalisisTab)
+			((MalisisTab) tab).addItem(this);
+		return this;
 	}
 }
