@@ -161,7 +161,7 @@ public class ForcefieldItem extends MalisisItem
 
 	private static AxisAlignedBB getBoundingBox(BlockPos start, BlockPos end)
 	{
-		return new AxisAlignedBB(start, end).offset(.5F, .5F, .5F).expand(.5F, .5F, .5F);
+		return new AxisAlignedBB(start, end).offset(.5F, .5F, .5F).grow(.5F, .5F, .5F);
 	}
 
 	@Override
