@@ -36,6 +36,7 @@ import net.malisis.core.util.multiblock.MultiBlock;
 import net.malisis.core.util.multiblock.MultiBlockComponent;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.MalisisDoors.Items;
+import net.malisis.doors.item.ForcefieldItem;
 import net.malisis.doors.tileentity.ForcefieldTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -101,19 +102,23 @@ public class Forcefield extends MalisisBlock
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (!EntityUtils.isEquipped(player, MalisisDoors.Items.forcefieldItem, hand))
+		ForcefieldItem item = MalisisDoors.Items.forcefieldItem;
+		if (!EntityUtils.isEquipped(player, item, hand))
 			return false;
 
 		ForcefieldTileEntity te = getForcefield(world, pos);
 		if (te == null)
 			return true;
 
+		AABBMultiBlock mb = te.getMultiBlock();
+		ItemStack itemStack = player.getHeldItem(hand);
+		AxisAlignedBB aabb = mb.getRelativeBoundingBox(pos, te.getPos());
 		if (player.isSneaking())
 		{
-			te.getMultiBlock().breakBlocks(world, pos, getDefaultState());
-			MalisisDoors.Items.forcefieldItem.setEnergy(player.getHeldItem(hand), 0);
+			if (item.destroyForcefield(itemStack, aabb))
+				mb.breakBlocks(world, pos, getDefaultState());
 		}
-		else
+		else if (item.toggleForcefield(itemStack, aabb))
 			te.switchForcefield();
 
 		return true;

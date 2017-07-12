@@ -90,7 +90,7 @@ public class ForcefieldItem extends MalisisItem
 		getNBT(itemStack).setInteger("energy", energy);
 	}
 
-	public void drainEnergy(ItemStack itemStack, int energy, long time)
+	public void drainEnergy(ItemStack itemStack, int energy)
 	{
 		setEnergy(itemStack, getEnergy(itemStack) - energy);
 	}
@@ -112,11 +112,9 @@ public class ForcefieldItem extends MalisisItem
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack itemStack = player.getHeldItem(hand);
-		if (getEnergy(itemStack) < getMaxEnergy())
-			return EnumActionResult.FAIL;
 
 		pos = pos.offset(side);
-		if (!isStartSet(itemStack))
+		if (!isStartSet(itemStack)) //set start
 			return setStartPosition(itemStack, pos, world.getTotalWorldTime());
 
 		BlockPos start = getStartPosition(itemStack);
@@ -154,7 +152,7 @@ public class ForcefieldItem extends MalisisItem
 		//TODO: forcefield sound ?
 		//		world.playSoundEffect(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, block.stepSound.getPlaceSound(),
 		//				(block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getFrequency() * 0.8F);
-		drainEnergy(itemStack, size * 20, world.getTotalWorldTime());
+		drainEnergy(itemStack, size * 20);
 
 		return clearStartPosition(itemStack);
 	}
@@ -194,7 +192,7 @@ public class ForcefieldItem extends MalisisItem
 		return EnumActionResult.SUCCESS;
 	}
 
-	protected int getDoorSize(AxisAlignedBB aabb)
+	public int getDoorSize(AxisAlignedBB aabb)
 	{
 		int diffX = (int) (aabb.maxX - aabb.minX);
 		int diffY = (int) (aabb.maxY - aabb.minY);
@@ -208,6 +206,26 @@ public class ForcefieldItem extends MalisisItem
 			return diffX * diffY;
 		else
 			return -1;
+	}
+
+	public boolean toggleForcefield(ItemStack itemStack, AxisAlignedBB aabb)
+	{
+		int size = getDoorSize(aabb);
+		if (getEnergy(itemStack) < size * 5)
+			return false;
+
+		drainEnergy(itemStack, size * 5);
+		return true;
+	}
+
+	public boolean destroyForcefield(ItemStack itemStack, AxisAlignedBB aabb)
+	{
+		int size = getDoorSize(aabb);
+		if (getEnergy(itemStack) < size * 20)
+			return false;
+
+		drainEnergy(itemStack, size * 20);
+		return true;
 	}
 
 	@Override
@@ -225,9 +243,9 @@ public class ForcefieldItem extends MalisisItem
 		if (getEnergy(itemStack) >= getMaxEnergy())
 			return;
 
-		int energy = getEnergy(itemStack) + 1;
+		int energy = getEnergy(itemStack) + 5;
 		if (((EntityPlayer) entity).capabilities.isCreativeMode)
-			energy += 19;
+			energy += 15;
 		setEnergy(itemStack, energy);
 	}
 
@@ -273,8 +291,6 @@ public class ForcefieldItem extends MalisisItem
 		@Override
 		public Icon getIcon(ItemStack itemStack)
 		{
-			if (getEnergy(itemStack) < getMaxEnergy())
-				return disabledIcon;
 			if (!isStartSet(itemStack))
 				return itemIcon;
 
