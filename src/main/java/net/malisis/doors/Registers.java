@@ -28,7 +28,6 @@ import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 
 import net.malisis.core.item.MalisisItem;
-import net.malisis.core.util.replacement.ReplacementTool;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
@@ -72,7 +71,6 @@ import net.malisis.doors.tileentity.SaloonDoorTileEntity;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -80,12 +78,9 @@ public class Registers
 {
 	public static void init()
 	{
+		//Registration order affect items in the creative tab
 		if (MalisisDoorsSettings.modifyVanillaDoors.get())
-		{
 			registerVanillaDoors();
-			//registerVanillaTrapDoor();
-			//registerVanillaFenceGate();
-		}
 
 		registerDoors();
 
@@ -93,7 +88,13 @@ public class Registers
 
 		registerSaloonDoor();
 
+		if (MalisisDoorsSettings.modifyVanillaDoors.get())
+			registerVanillaTrapDoor();
+
 		registerTrapDoors();
+
+		if (MalisisDoorsSettings.modifyVanillaDoors.get())
+			registerVanillaFenceGate();
 
 		registerCamoFenceGate();
 
@@ -111,8 +112,6 @@ public class Registers
 
 		modelDoor = new ModelDoor();
 		modelDoor.register();
-		//handled in JSON
-		//GameRegistry.addRecipe(new ItemStack(modelDoor), "ABA", "ABA", 'A', Items.GOLD_INGOT, 'B', ironSlidingDoorItem);
 
 		GameRegistry.registerTileEntity(DoorTileEntity.class, "doorTileEntity");
 		GameRegistry.registerTileEntity(TrapDoorTileEntity.class, "trapDoorTileEntity");
@@ -125,7 +124,7 @@ public class Registers
 		oakDoor.register();
 		doorOak = (Door) oakDoor.getBlock();
 		doorOakItem = (DoorItem) oakDoor.getItem();
-		MalisisDoors.tab.addItem(doorDarkOakItem);
+		MalisisDoors.tab.addItem(doorOakItem);
 
 		VanillaDoor acaciaDoor = new VanillaDoor(VanillaDoor.Type.ACACIA);
 		acaciaDoor.register();
@@ -169,63 +168,39 @@ public class Registers
 		VanillaTrapDoor trapDoorOak = new VanillaTrapDoor(Type.WOOD);
 		trapDoorOak.register();
 		oakTrapDoor = (TrapDoor) trapDoorOak.getBlock();
-		ReplacementTool.replaceVanillaBlock(96, "trapdoor", "TRAPDOOR", "field_150415_aT", trapDoorOak.getBlock(), Blocks.TRAPDOOR);
+		MalisisDoors.tab.addItem(oakTrapDoor);
 
 		VanillaTrapDoor trapDoorIron = new VanillaTrapDoor(Type.IRON);
-		trapDoorIron.create();
+		trapDoorIron.register();
 		ironTrapDoor = (TrapDoor) trapDoorIron.getBlock();
-		ReplacementTool.replaceVanillaBlock(167,
-											"iron_trapdoor",
-											"IRON_TRAPDOOR",
-											"field_180400_cw",
-											trapDoorIron.getBlock(),
-											Blocks.IRON_TRAPDOOR);
+		MalisisDoors.tab.addItem(ironTrapDoor);
 	}
 
 	private static void registerVanillaFenceGate()
 	{
 		oakFenceGate = new FenceGate(FenceGate.Type.OAK);
-		ReplacementTool.replaceVanillaBlock(107, "fence_gate", "OAK_FENCE_GATE", "field_180390_bo", oakFenceGate, Blocks.OAK_FENCE_GATE);
+		oakFenceGate.register();
+		MalisisDoors.tab.addItem(oakFenceGate);
 
 		acaciaFenceGate = new FenceGate(FenceGate.Type.ACACIA);
-		ReplacementTool.replaceVanillaBlock(187,
-											"acacia_fence_gate",
-											"ACACIA_FENCE_GATE",
-											"field_180387_bt",
-											acaciaFenceGate,
-											Blocks.ACACIA_FENCE_GATE);
+		acaciaFenceGate.register();
+		MalisisDoors.tab.addItem(acaciaFenceGate);
 
 		birchFenceGate = new FenceGate(FenceGate.Type.BIRCH);
-		ReplacementTool.replaceVanillaBlock(184,
-											"birch_fence_gate",
-											"BIRCH_FENCE_GATE",
-											"field_180392_bq",
-											birchFenceGate,
-											Blocks.BIRCH_FENCE_GATE);
+		birchFenceGate.register();
+		MalisisDoors.tab.addItem(birchFenceGate);
 
 		darkOakFenceGate = new FenceGate(FenceGate.Type.DARK_OAK);
-		ReplacementTool.replaceVanillaBlock(186,
-											"dark_oak_fence_gate",
-											"DARK_OAK_FENCE_GATE",
-											"field_180385_bs",
-											darkOakFenceGate,
-											Blocks.DARK_OAK_FENCE_GATE);
+		darkOakFenceGate.register();
+		MalisisDoors.tab.addItem(darkOakFenceGate);
 
 		jungleFenceGate = new FenceGate(FenceGate.Type.JUNGLE);
-		ReplacementTool.replaceVanillaBlock(185,
-											"jungle_fence_gate",
-											"JUNGLE_FENCE_GATE",
-											"field_180386_br",
-											jungleFenceGate,
-											Blocks.JUNGLE_FENCE_GATE);
+		jungleFenceGate.register();
+		MalisisDoors.tab.addItem(jungleFenceGate);
 
 		spruceFenceGate = new FenceGate(FenceGate.Type.SPRUCE);
-		ReplacementTool.replaceVanillaBlock(183,
-											"spruce_fence_gate",
-											"SPRUCE_FENCE_GATE",
-											"field_180391_bp",
-											spruceFenceGate,
-											Blocks.SPRUCE_FENCE_GATE);
+		spruceFenceGate.register();
+		MalisisDoors.tab.addItem(spruceFenceGate);
 	}
 
 	private static void registerDoors()
@@ -299,14 +274,6 @@ public class Registers
 	{
 		camoFenceGate = new FenceGate(FenceGate.Type.CAMO);
 		camoFenceGate.register();
-		//		GameRegistry.addRecipe(	new ItemStack(camoFenceGate),
-		//								"ABC",
-		//								'A',
-		//								Blocks.ACACIA_FENCE_GATE,
-		//								'B',
-		//								Blocks.JUNGLE_FENCE_GATE,
-		//								'C',
-		//								Blocks.BIRCH_FENCE_GATE);
 	}
 
 	private static void registerGarageDoor()
@@ -315,8 +282,6 @@ public class Registers
 		garageDoor.register();
 
 		GameRegistry.registerTileEntity(GarageDoorTileEntity.class, "garageDoorTileEntity");
-
-		//GameRegistry.addRecipe(new ItemStack(garageDoor), "ABA", "AAA", 'A', Blocks.PLANKS, 'B', Blocks.GLASS);
 	}
 
 	private static void registerDoorFactory()
@@ -325,19 +290,6 @@ public class Registers
 		doorFactory.register();
 
 		GameRegistry.registerTileEntity(DoorFactoryTileEntity.class, "doorFactoryTileEntity");
-
-		//		GameRegistry.addRecipe(	new ItemStack(doorFactory),
-		//								"ABA",
-		//								"C C",
-		//								"ADA",
-		//								'A',
-		//								Items.IRON_INGOT,
-		//								'B',
-		//								Items.IRON_DOOR,
-		//								'C',
-		//								Items.REDSTONE,
-		//								'D',
-		//								Blocks.PISTON);
 	}
 
 	private static void registerCustomDoor()
@@ -362,12 +314,8 @@ public class Registers
 
 		GameRegistry.registerTileEntity(RustyHatchTileEntity.class, "rustyHatchTileEntity");
 
-		//GameRegistry.addRecipe(new ItemStack(rustyHandle), "AAA", " A ", 'A', Items.IRON_INGOT);
-		//GameRegistry.addRecipe(new ItemStack(rustyHatch), "A ", "AB", "A ", 'A', Items.IRON_INGOT, 'B', rustyHandle);
-
 		rustyLadder = new RustyLadder();
 		rustyLadder.register();
-		///GameRegistry.addRecipe(new ItemStack(rustyLadder), "AAA", 'A', Items.IRON_INGOT);
 	}
 
 	private static void registerBigDoors()
@@ -395,19 +343,5 @@ public class Registers
 		forcefieldItem.register();
 
 		GameRegistry.registerTileEntity(ForcefieldTileEntity.class, "forcefieldTileEntity");
-		//		GameRegistry.addRecipe(	new ItemStack(forcefieldItem),
-		//								"ABA",
-		//								"CDC",
-		//								"AEA",
-		//								'A',
-		//								Items.DIAMOND,
-		//								'B',
-		//								Blocks.OBSIDIAN,
-		//								'C',
-		//								Items.REPEATER,
-		//								'D',
-		//								Items.ENDER_EYE,
-		//								'E',
-		//								Items.COMPARATOR);
 	}
 }

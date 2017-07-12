@@ -105,7 +105,7 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 		setResistance(5.0F);
 		setSoundType(SoundType.WOOD);
 		setUnlocalizedName(type.name);
-		setRegistryName(type.name);
+		setRegistryName((type == Type.CAMO ? MalisisDoors.modid : "minecraft:") + type.name);
 
 		if (type == Type.CAMO)
 			setCreativeTab(MalisisDoors.tab);

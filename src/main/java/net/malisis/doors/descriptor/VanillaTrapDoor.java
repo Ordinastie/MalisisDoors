@@ -41,20 +41,23 @@ public class VanillaTrapDoor extends TrapDoorDescriptor
 {
 	public static enum Type
 	{
-		WOOD, IRON
+		WOOD,
+		IRON
 	}
 
 	public VanillaTrapDoor(Type type)
 	{
 		boolean iron = type == Type.IRON;
+		String name = iron ? "iron_trapdoor" : "trapdoor";
 
 		//Block
 		setOpeningTime(6);
 		setMaterial(iron ? Material.IRON : Material.WOOD);
 		setHardness(iron ? 5.0F : 3.0F);
 		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
-		setName(iron ? "iron_trapdoor" : "trapdoor");
-		setTextureName("minecraft", iron ? "blocks/iron_trapdoor" : "blocks/trapdoor");
+		setRegistryName("minecraft:" + name);
+		setUnlocalizedName(name);
+		setTextureName("minecraft", "blocks/" + name);
 
 		//te
 		setRedstoneBehavior(iron ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);
