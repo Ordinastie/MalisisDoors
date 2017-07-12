@@ -41,8 +41,8 @@ public class VerticalHatchItem extends DoorItem
 		super();
 		this.descriptor = desc;
 		this.maxStackSize = desc.getMaxStackSize();
-		setUnlocalizedName(desc.getName());
-		setRegistryName(desc.getName());
+		setUnlocalizedName(desc.getUnlocalizedName());
+		setRegistryName(desc.getRegistryName());
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 	}

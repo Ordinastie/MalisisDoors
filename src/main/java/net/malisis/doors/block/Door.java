@@ -102,8 +102,8 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
-		setUnlocalizedName(desc.getName());
-		setRegistryName(desc.getName());
+		setUnlocalizedName(desc.getUnlocalizedName());
+		setRegistryName(desc.getRegistryName());
 
 		if (MalisisCore.isClient())
 			addComponent(getIconProvider());
@@ -129,7 +129,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	@Override
 	public String getName()
 	{
-		return descriptor.getName();
+		return descriptor.getRegistryName();
 	}
 
 	@Override

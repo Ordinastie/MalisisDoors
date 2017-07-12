@@ -32,8 +32,6 @@ import net.malisis.doors.sound.WoodenTrapDoorSound;
 import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 
 /**
  * @author Ordinastie
@@ -76,9 +74,5 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 
 		//item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setNumCrafted(2);
-		setRecipe("AAA", "AAA", 'A', new ItemStack(Blocks.PLANKS, 1, type.type.getMetadata()));
 	}
 }

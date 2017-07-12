@@ -28,7 +28,6 @@ import net.malisis.doors.item.SaloonDoorItem;
 import net.malisis.doors.item.VerticalHatchItem;
 import net.malisis.doors.renderer.ForcefieldRenderer;
 import net.malisis.doors.renderer.RustyHatchRenderer;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
@@ -47,7 +46,7 @@ public class MalisisDoors implements IMalisisMod
 	public static MalisisNetwork network;
 	public static MalisisDoorsSettings settings;
 
-	public static CreativeTabs tab = new MalisisTab(MalisisDoors.modid, () -> Items.jailDoorItem);
+	public static MalisisTab tab = new MalisisTab(MalisisDoors.modid, () -> Items.jailDoorItem);
 	public static MalisisFont digitalFont;
 
 	public MalisisDoors()

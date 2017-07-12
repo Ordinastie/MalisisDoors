@@ -46,8 +46,6 @@ public class TrapDoorDescriptor extends DoorDescriptor
 			create();
 
 		((IRegisterable) block).register();
-		//		if (recipe != null)
-		//			GameRegistry.addRecipe(new ItemStack(block, numCrafted), recipe);
 
 		return this;
 	}

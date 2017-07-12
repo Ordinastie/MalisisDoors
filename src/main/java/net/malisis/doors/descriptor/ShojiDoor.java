@@ -31,8 +31,6 @@ import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.ShojiDoorSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -48,7 +46,6 @@ public class ShojiDoor extends DoorDescriptor
 		setSoundType(SoundType.CLOTH);
 		setName("shoji_door");
 		setTextureName(MalisisDoors.modid, "shoji_door");
-		setNumCrafted(3);
 
 		//te
 		setMovement(DoorRegistry.getMovement(SlidingDoorMovement.class));
@@ -57,8 +54,5 @@ public class ShojiDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setRecipe("AB", "AB", "AB", 'A', Blocks.PLANKS, 'B', Items.PAPER);
 	}
 }

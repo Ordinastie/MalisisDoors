@@ -64,7 +64,8 @@ public class DoorDescriptor
 	protected Material material = Material.WOOD;
 	protected float hardness = 3.0F;
 	protected SoundType soundType = SoundType.WOOD;
-	protected String name;
+	protected String registryName;
+	protected String unlocalizedName;
 	protected int autoCloseTime = 0;
 
 	//texture
@@ -82,11 +83,6 @@ public class DoorDescriptor
 	//item
 	protected CreativeTabs tab;
 	protected int maxStackSize = 64;
-
-	//recipe
-	protected Object[] recipe;
-	protected int numCrafted = 1;
-	protected boolean oredict = false;
 
 	//digicode
 	protected String code = null;
@@ -149,14 +145,30 @@ public class DoorDescriptor
 		this.soundType = soundType;
 	}
 
-	public String getName()
+	public String getRegistryName()
 	{
-		return name;
+		return registryName;
 	}
 
 	public void setName(String name)
 	{
-		this.name = name;
+		setRegistryName(name);
+		setUnlocalizedName(name);
+	}
+
+	public void setRegistryName(String name)
+	{
+		this.registryName = name;
+	}
+
+	public String getUnlocalizedName()
+	{
+		return unlocalizedName;
+	}
+
+	public void setUnlocalizedName(String name)
+	{
+		unlocalizedName = name;
 	}
 
 	public String getModId()
@@ -166,7 +178,7 @@ public class DoorDescriptor
 
 	public String getTextureName()
 	{
-		return textureName != null ? textureName : name;
+		return textureName != null ? textureName : registryName;
 	}
 
 	public void setTextureName(String modid, String textureName)
@@ -255,32 +267,6 @@ public class DoorDescriptor
 		this.tab = tab;
 	}
 
-	public Object[] getRecipe()
-	{
-		return recipe;
-	}
-
-	public void setRecipe(Object... recipe)
-	{
-		this.recipe = recipe;
-	}
-
-	public void setOreDictRecipe(Object... recipe)
-	{
-		this.recipe = recipe;
-		oredict = true;
-	}
-
-	public int getNumCrafted()
-	{
-		return numCrafted;
-	}
-
-	public void setNumCrafted(int numCrafted)
-	{
-		this.numCrafted = numCrafted;
-	}
-
 	public int getMaxStackSize()
 	{
 		return maxStackSize;
@@ -311,7 +297,7 @@ public class DoorDescriptor
 	public void readNBT(NBTTagCompound nbt)
 	{
 		if (nbt.hasKey("name"))
-			name = nbt.getString("name");
+			registryName = nbt.getString("name");
 		if (nbt.hasKey("modid"))
 			modid = nbt.getString("modid");
 		if (nbt.hasKey("textureName"))
@@ -385,14 +371,6 @@ public class DoorDescriptor
 			MalisisRegistry.register((IRegisterable) item);
 		else
 			ForgeRegistries.ITEMS.register(item);
-
-		//		if (recipe != null)
-		//		{
-		//			if (oredict)
-		//				ForgeRegistries.RECIPES.register(new ShapedOreRecipe(new ItemStack(item, numCrafted), recipe));
-		//			else
-		//				ForgeRegistries.RECIPES.register(new (new ItemStack(item, numCrafted), recipe);
-		//		}
 
 		return this;
 	}

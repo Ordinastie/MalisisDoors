@@ -66,8 +66,8 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 
 		this.descriptor = desc;
 		this.maxStackSize = desc.getMaxStackSize();
-		setUnlocalizedName(desc.getName());
-		setRegistryName(desc.getName());
+		setUnlocalizedName(desc.getUnlocalizedName());
+		setRegistryName(desc.getRegistryName());
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 
@@ -88,7 +88,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 	@Override
 	public String getName()
 	{
-		return descriptor.getName();
+		return descriptor.getRegistryName();
 	}
 
 	@Override

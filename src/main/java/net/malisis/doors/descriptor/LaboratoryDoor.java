@@ -31,7 +31,6 @@ import net.malisis.doors.movement.SlidingUpDoorMovement;
 import net.malisis.doors.sound.PneumaticSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -47,7 +46,6 @@ public class LaboratoryDoor extends DoorDescriptor
 		setSoundType(SoundType.METAL);
 		setName("laboratory_door");
 		setTextureName(MalisisDoors.modid, "laboratory_door");
-		setNumCrafted(3);
 
 		//te
 		setOpeningTime(12);
@@ -57,8 +55,5 @@ public class LaboratoryDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setRecipe("AA", "BB", "BB", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

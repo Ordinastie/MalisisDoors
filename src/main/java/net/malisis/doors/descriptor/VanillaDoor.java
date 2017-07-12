@@ -41,22 +41,22 @@ public class VanillaDoor extends DoorDescriptor
 {
 	public static enum Type
 	{
-		//@formatter:off
-		OAK("doorOak", "door_wood"),
-		SPRUCE("doorSpruce", "door_spruce"),
-		BIRCH("doorBirch", "door_birch"),
-		JUNGLE("doorJungle", "door_jungle"),
-		ACACIA("doorAcacia", "door_acacia"),
-		DARK_OAK("doorDarkOak", "door_dark_oak"),
-		IRON("doorIron", "door_iron");
-		//@formatter:on
+		OAK("wooden_door", "doorOak", "door_wood"),
+		SPRUCE("spruce_door", "doorSpruce", "door_spruce"),
+		BIRCH("birch_door", "doorBirch", "door_birch"),
+		JUNGLE("jungle_door", "doorJungle", "door_jungle"),
+		ACACIA("acacia_door", "doorAcacia", "door_acacia"),
+		DARK_OAK("dark_oak_door", "doorDarkOak", "door_dark_oak"),
+		IRON("iron_door", "doorIron", "door_iron");
 
-		private String name;
+		private String registry;
+		private String unlocalized;
 		private String texture;
 
-		private Type(String name, String texture)
+		private Type(String registry, String unlocalized, String texture)
 		{
-			this.name = name;
+			this.registry = registry;
+			this.unlocalized = unlocalized;
 			this.texture = texture;
 		}
 
@@ -70,9 +70,9 @@ public class VanillaDoor extends DoorDescriptor
 		setMaterial(iron ? Material.IRON : Material.WOOD);
 		setHardness(iron ? 5.0F : 3.0F);
 		setSoundType(iron ? SoundType.METAL : SoundType.WOOD);
-		setName(type.name);
+		setRegistryName("minecraft:" + type.registry);
+		setUnlocalizedName(type.unlocalized);
 		setTextureName("minecraft", type.texture);
-		setNumCrafted(3);
 
 		//te
 		setRedstoneBehavior(iron ? RedstoneBehavior.REDSTONE_ONLY : RedstoneBehavior.STANDARD);

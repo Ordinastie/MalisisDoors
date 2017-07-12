@@ -31,8 +31,6 @@ import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.GlassDoorSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -49,7 +47,6 @@ public class GlassDoor extends DoorDescriptor
 		setSoundType(wood ? SoundType.WOOD : SoundType.METAL);
 		setName(wood ? "wood_sliding_door" : "iron_sliding_door");
 		setTextureName(MalisisDoors.modid, wood ? "sliding_door_wood" : "sliding_door_iron");
-		setNumCrafted(3);
 
 		//te
 		setRedstoneBehavior(wood ? RedstoneBehavior.STANDARD : RedstoneBehavior.REDSTONE_ONLY);
@@ -58,8 +55,5 @@ public class GlassDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setOreDictRecipe("AB", "AB", "AB", 'A', wood ? Blocks.PLANKS : Items.IRON_INGOT, 'B', "blockGlassColorless");
 	}
 }

@@ -83,8 +83,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
-		setUnlocalizedName(desc.getName());
-		setRegistryName(desc.getName());
+		setUnlocalizedName(desc.getUnlocalizedName());
+		setRegistryName(desc.getRegistryName());
 		setCreativeTab(desc.getTab());
 
 		disableStats();
@@ -111,7 +111,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	@Override
 	public String getName()
 	{
-		return descriptor.getName();
+		return descriptor.getRegistryName();
 	}
 
 	@Override

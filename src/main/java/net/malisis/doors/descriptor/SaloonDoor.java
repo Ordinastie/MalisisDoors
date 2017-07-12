@@ -33,8 +33,6 @@ import net.malisis.doors.movement.SaloonDoorMovement;
 import net.malisis.doors.sound.SilentDoorSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -50,7 +48,6 @@ public class SaloonDoor extends DoorDescriptor
 		setSoundType(SoundType.WOOD);
 		setName("saloon");
 		setTextureName(MalisisDoors.modid, "saloon_door");
-		setNumCrafted(3);
 
 		//TileEntity
 		setOpeningTime(40);
@@ -60,9 +57,6 @@ public class SaloonDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//Recipe
-		setRecipe("AA", "BB", "AA", 'A', Blocks.PLANKS, 'B', Items.STICK);
 	}
 
 	@Override

@@ -31,7 +31,6 @@ import net.malisis.doors.movement.SlidingTrapDoorMovement;
 import net.malisis.doors.sound.PneumaticSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -55,8 +54,5 @@ public class SlidingTrapDoor extends TrapDoorDescriptor
 
 		//item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setRecipe("ABB", "ABB", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

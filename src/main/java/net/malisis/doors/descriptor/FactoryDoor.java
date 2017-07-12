@@ -31,7 +31,6 @@ import net.malisis.doors.movement.SlidingSplitDoorMovement;
 import net.malisis.doors.sound.PneumaticSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Items;
 
 /**
  * @author Ordinastie
@@ -47,7 +46,6 @@ public class FactoryDoor extends DoorDescriptor
 		setSoundType(SoundType.METAL);
 		setName("factory_door");
 		setTextureName(MalisisDoors.modid, "factory_door");
-		setNumCrafted(3);
 
 		//TileEntity
 		setOpeningTime(12);
@@ -57,8 +55,5 @@ public class FactoryDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//Recipe
-		setRecipe("AA", "BB", "AA", 'A', Items.GOLD_INGOT, 'B', Items.IRON_INGOT);
 	}
 }

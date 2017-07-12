@@ -31,7 +31,6 @@ import net.malisis.doors.movement.SlidingDoorMovement;
 import net.malisis.doors.sound.JailDoorSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 
 /**
  * @author Ordinastie
@@ -47,7 +46,6 @@ public class JailDoor extends DoorDescriptor
 		setSoundType(SoundType.METAL);
 		setName("jail_door");
 		setTextureName(MalisisDoors.modid, "jail_door");
-		setNumCrafted(3);
 
 		//TileEntity
 		setRedstoneBehavior(RedstoneBehavior.REDSTONE_ONLY);
@@ -57,8 +55,5 @@ public class JailDoor extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
-
-		//recipe
-		setRecipe("AA", "AA", "AA", 'A', Blocks.IRON_BARS);
 	}
 }
