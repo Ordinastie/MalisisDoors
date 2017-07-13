@@ -70,7 +70,7 @@ import net.minecraft.world.World;
  *
  */
 @MalisisRendered(TrapDoorRenderer.class)
-public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IComponentProvider, IRegisterable
+public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IComponentProvider, IRegisterable<Block>
 {
 	private TrapDoorDescriptor descriptor;
 	protected final List<IComponent> components = Lists.newArrayList();
@@ -83,8 +83,8 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
-		setUnlocalizedName(desc.getUnlocalizedName());
-		setRegistryName(desc.getRegistryName());
+		setName(desc.getRegistryName());
+
 		setCreativeTab(desc.getTab());
 
 		disableStats();
@@ -106,12 +106,6 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	public DoorDescriptor getDescriptor()
 	{
 		return descriptor;
-	}
-
-	@Override
-	public String getName()
-	{
-		return descriptor.getRegistryName();
 	}
 
 	@Override

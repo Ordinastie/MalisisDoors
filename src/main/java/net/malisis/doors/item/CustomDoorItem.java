@@ -71,8 +71,9 @@ public class CustomDoorItem extends DoorItem
 	public CustomDoorItem()
 	{
 		super();
+		setRegistryName("customdoorItem");
 		setUnlocalizedName("custom_door");
-		setRegistryName("customdoor");
+
 		this.maxStackSize = 64;
 		setCreativeTab(null);
 	}
@@ -81,12 +82,6 @@ public class CustomDoorItem extends DoorItem
 	public DoorDescriptor getDescriptor(ItemStack itemStack)
 	{
 		return new DoorDescriptor(itemStack.getTagCompound());
-	}
-
-	@Override
-	public String getName()
-	{
-		return "customDoorItem";
 	}
 
 	public static ItemStack fromDoorFactory(DoorFactoryTileEntity te)

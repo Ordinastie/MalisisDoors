@@ -79,7 +79,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  */
 @MalisisRendered(item = DoorRenderer.class)
-public class Door extends BlockDoor implements IBoundingBox, IComponentProvider, IRegisterable
+public class Door extends BlockDoor implements IBoundingBox, IComponentProvider, IRegisterable<Block>
 {
 	public static Block[] centerBlocks = new Block[] {	Blocks.IRON_BARS,
 														Blocks.COBBLESTONE_WALL,
@@ -102,12 +102,11 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
+		setName(desc.getRegistryName());
 		setUnlocalizedName(desc.getUnlocalizedName());
-		setRegistryName(desc.getRegistryName());
 
 		if (MalisisCore.isClient())
 			addComponent(getIconProvider());
-
 	}
 
 	public Door(Material material)
@@ -124,12 +123,6 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	public Item getItem(Block block)
 	{
 		return null;
-	}
-
-	@Override
-	public String getName()
-	{
-		return descriptor.getRegistryName();
 	}
 
 	@Override

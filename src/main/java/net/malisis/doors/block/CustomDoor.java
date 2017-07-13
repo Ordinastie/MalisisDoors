@@ -27,6 +27,7 @@ package net.malisis.doors.block;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
+import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.CustomDoorRenderer;
 import net.malisis.doors.tileentity.CustomDoorTileEntity;
 import net.malisis.doors.tileentity.DoorTileEntity;
@@ -56,14 +57,9 @@ public class CustomDoor extends Door
 		super(Material.WOOD);
 		setHardness(3.0F);
 		setSoundType(SoundType.WOOD);
+		setRegistryName(MalisisDoors.modid + "customDoor");
 		setUnlocalizedName("customDoor");
-		setRegistryName("customDoor");
-	}
 
-	@Override
-	public String getName()
-	{
-		return "customDoor";
 	}
 
 	@Override

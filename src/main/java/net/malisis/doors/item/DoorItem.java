@@ -42,6 +42,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -54,7 +55,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @MalisisRendered(item = DoorRenderer.class)
-public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
+public class DoorItem extends ItemDoor implements IRegisterable<Item>, IIconProvider
 {
 	protected DoorDescriptor descriptor;
 	@SideOnly(Side.CLIENT)
@@ -66,8 +67,8 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 
 		this.descriptor = desc;
 		this.maxStackSize = desc.getMaxStackSize();
+		setName(desc.getRegistryName());
 		setUnlocalizedName(desc.getUnlocalizedName());
-		setRegistryName(desc.getRegistryName());
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 
@@ -75,6 +76,7 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 			icon = Icon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
 	}
 
+	//for CustomDoor
 	public DoorItem()
 	{
 		super(null);
@@ -83,12 +85,6 @@ public class DoorItem extends ItemDoor implements IRegisterable, IIconProvider
 	public DoorDescriptor getDescriptor(ItemStack itemStack)
 	{
 		return descriptor;
-	}
-
-	@Override
-	public String getName()
-	{
-		return descriptor.getRegistryName();
 	}
 
 	@Override

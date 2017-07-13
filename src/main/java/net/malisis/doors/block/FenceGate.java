@@ -71,7 +71,7 @@ import net.minecraft.world.World;
  *
  */
 @MalisisRendered(FenceGateRenderer.class)
-public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IComponentProvider, IRegisterable
+public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IComponentProvider, IRegisterable<Block>
 {
 	public static enum Type
 	{
@@ -94,18 +94,16 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 		}
 	}
 
-	private Type type;
 	protected final List<IComponent> components = Lists.newArrayList();
 
 	public FenceGate(Type type)
 	{
 		super(type.type);
-		this.type = type;
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setSoundType(SoundType.WOOD);
+		setName(type == Type.CAMO ? MalisisDoors.modid + ":camoFenceGate" : "minecraft:" + type.name);
 		setUnlocalizedName(type.name);
-		setRegistryName((type == Type.CAMO ? MalisisDoors.modid : "minecraft:") + type.name);
 
 		if (type == Type.CAMO)
 			setCreativeTab(MalisisDoors.tab);
@@ -120,12 +118,6 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 				addComponent((IIconProvider) () -> icon);
 			}
 		}
-	}
-
-	@Override
-	public String getName()
-	{
-		return type.name;
 	}
 
 	@Override

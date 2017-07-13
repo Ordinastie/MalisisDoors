@@ -26,6 +26,7 @@ package net.malisis.doors;
 
 import net.malisis.core.block.IRegisterable;
 import net.malisis.doors.block.TrapDoor;
+import net.minecraft.block.Block;
 
 /**
  * @author Ordinastie
@@ -39,13 +40,14 @@ public class TrapDoorDescriptor extends DoorDescriptor
 		block = new TrapDoor(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DoorDescriptor register()
 	{
 		if (block == null)
 			create();
 
-		((IRegisterable) block).register();
+		((IRegisterable<Block>) block).register();
 
 		return this;
 	}
