@@ -1,0 +1,9 @@
+{
+	"type": "malisisdoors:big_door",
+	"door": {
+		"item": "minecraft:spruce_door"
+	},
+	"result": {
+		"item": "malisisdoors:medieval_door"
+	}
+}

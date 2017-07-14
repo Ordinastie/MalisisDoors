@@ -327,11 +327,6 @@ public class Registers
 		medievalDoor.register();
 
 		GameRegistry.registerTileEntity(BigDoorTileEntity.class, "bigDoorTileEntity");
-
-		//GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.CARRIAGE));
-		//GameRegistry.addRecipe(new BigDoorRecipe(BigDoor.Type.MEDIEVAL));
-
-		//RecipeSorter.register("malisisdoors:bigdoorsrecipe", BigDoorRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 	}
 
 	private static void registerForcefield()

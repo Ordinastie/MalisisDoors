@@ -26,20 +26,27 @@ package net.malisis.doors.recipe;
 
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
 import net.malisis.core.util.ItemUtils;
 import net.malisis.core.util.ItemUtils.ItemStackSplitter;
 import net.malisis.core.util.MBlockState;
-import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.block.BigDoor;
-import net.malisis.doors.block.BigDoor.Type;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IRecipeFactory;
+import net.minecraftforge.common.crafting.JsonContext;
 
 /**
  * @author Ordinastie
@@ -47,12 +54,14 @@ import net.minecraft.world.World;
  */
 public class BigDoorRecipe implements IRecipe
 {
-	private BigDoor.Type type;
 	private ResourceLocation registryName;
+	private final ItemDoor door;
+	private final ItemStack result;
 
-	public BigDoorRecipe(BigDoor.Type type)
+	public BigDoorRecipe(ItemDoor door, ItemStack result)
 	{
-		this.type = type;
+		this.door = door;
+		this.result = result;
 	}
 
 	@Override
@@ -71,7 +80,7 @@ public class BigDoorRecipe implements IRecipe
 			ItemStack itemStack = inv.getStackInSlot(i);
 			if (itemStack.isEmpty())
 				continue;
-			if (itemStack.getItem() == type.door)
+			if (itemStack.getItem() == door)
 			{
 				if (doorMatch == true) //two doors
 					return ItemStack.EMPTY;
@@ -96,7 +105,7 @@ public class BigDoorRecipe implements IRecipe
 		if (frame.isEmpty())
 			return ItemStack.EMPTY;
 
-		ItemStack itemStack = new ItemStack(type == Type.CARRIAGE ? Blocks.carriageDoor : Blocks.medievalDoor);
+		ItemStack itemStack = result.copy();
 		NBTTagCompound nbt = new NBTTagCompound();
 		MBlockState.toNBT(nbt, ItemUtils.getStateFromItemStack(frame));
 		itemStack.setTagCompound(nbt);
@@ -106,7 +115,7 @@ public class BigDoorRecipe implements IRecipe
 	@Override
 	public ItemStack getRecipeOutput()
 	{
-		return new ItemStack(type == Type.CARRIAGE ? Blocks.carriageDoor : Blocks.medievalDoor);
+		return result.copy();
 	}
 
 	@Override
@@ -149,13 +158,30 @@ public class BigDoorRecipe implements IRecipe
 				continue;
 
 			ItemStackSplitter iss = new ItemStackSplitter(itemStack);
-			iss.split(itemStack.getItem() == type.door ? 1 : left);
+			iss.split(itemStack.getItem() == door ? 1 : left);
 			itemStacks.set(i, iss.source);
-			if (itemStack.getItem() != type.door)
+			if (itemStack.getItem() != door)
 				left -= iss.amount;
 		}
 
 		return itemStacks;
+	}
+
+	public static class Factory implements IRecipeFactory
+	{
+		@Override
+		public BigDoorRecipe parse(JsonContext context, JsonObject json)
+		{
+			ItemStack itemStack = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "door"), context);
+			if (!(itemStack.getItem() instanceof ItemDoor))
+				throw new JsonParseException("Ingredient specified is not a door : " + itemStack.getItem().getRegistryName());
+
+			ItemStack result = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "result"), context);
+			if (!(result.getItem() instanceof ItemBlock && ((ItemBlock) result.getItem()).getBlock() instanceof BigDoor))
+				throw new JsonParseException("Ingredient specified is not a BigDoor : " + result.getItem().getRegistryName());
+
+			return new BigDoorRecipe((ItemDoor) itemStack.getItem(), result);
+		}
 	}
 
 }

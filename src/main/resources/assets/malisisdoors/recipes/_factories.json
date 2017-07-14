@@ -1,0 +1,5 @@
+{
+	"recipes": {
+		"big_door": "net.malisis.doors.recipe.BigDoorRecipe$Factory"
+	}
+}
