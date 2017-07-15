@@ -11,13 +11,13 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 	}
 }
 
 plugins
 {
-	id "com.matthewprenger.cursegradle" version "1.0.7"
+	id "com.matthewprenger.cursegradle" version "1.0.9"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -36,7 +36,7 @@ ext.url = 'http://github.com/Ordinastie/MalisisDoors'
 dependencies
 {
 	//compile 'net.malisis:malisiscore:1.10.2-4.2.8:dev'
-	compile files('../MalisisCore/build/libs/malisiscore-1.11.2-5.2.2-dev.jar')
+	compile files('../MalisisCore/build/libs/malisiscore-1.12-6.0.0-dev.jar')
 }
 
 
