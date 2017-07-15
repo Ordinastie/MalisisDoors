@@ -357,18 +357,19 @@ public class DoorDescriptor
 		item = new DoorItem(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	public DoorDescriptor register()
 	{
 		if (block == null || item == null)
 			create();
 
 		if (block instanceof IRegisterable)
-			MalisisRegistry.register((IRegisterable) block);
+			MalisisRegistry.register((IRegisterable<Block>) block);
 		else
 			ForgeRegistries.BLOCKS.register(block);
 
 		if (item instanceof IRegisterable)
-			MalisisRegistry.register((IRegisterable) item);
+			MalisisRegistry.register((IRegisterable<Item>) item);
 		else
 			ForgeRegistries.ITEMS.register(item);
 

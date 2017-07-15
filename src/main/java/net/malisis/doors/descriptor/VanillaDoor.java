@@ -24,6 +24,7 @@
 
 package net.malisis.doors.descriptor;
 
+import net.malisis.core.renderer.model.EmptyModelLoader;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.movement.RotatingDoorMovement;
@@ -31,7 +32,9 @@ import net.malisis.doors.sound.IronDoorSound;
 import net.malisis.doors.sound.WoodenDoorSound;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.client.model.ModelLoader;
 
 /**
  * @author Ordinastie
@@ -81,5 +84,17 @@ public class VanillaDoor extends DoorDescriptor
 
 		//item
 		setTab(CreativeTabs.REDSTONE);
+	}
+
+	@Override
+	public DoorDescriptor register()
+	{
+		super.register();
+
+		ModelResourceLocation mrl = new ModelResourceLocation(item.getRegistryName() + "-malisis", "inventory");
+		EmptyModelLoader.register(item, mrl);
+		ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+
+		return this;
 	}
 }
