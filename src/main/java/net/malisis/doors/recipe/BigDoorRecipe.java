@@ -138,11 +138,10 @@ public class BigDoorRecipe implements IRecipe
 		return registryName;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Class<IRecipe> getRegistryType()
 	{
-		return (Class<IRecipe>) this.getClass();
+		return IRecipe.class;
 	}
 
 	@Override
