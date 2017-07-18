@@ -24,8 +24,9 @@
 
 package net.malisis.doors.item;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.MalisisRendered;
-import net.malisis.doors.DoorDescriptor;
+import net.malisis.doors.descriptor.VerticalHatch;
 import net.malisis.doors.renderer.VerticalHatchRenderer;
 
 /**
@@ -35,15 +36,10 @@ import net.malisis.doors.renderer.VerticalHatchRenderer;
 @MalisisRendered(VerticalHatchRenderer.class)
 public class VerticalHatchItem extends DoorItem
 {
-	public VerticalHatchItem(DoorDescriptor desc)
+	public VerticalHatchItem(VerticalHatch desc)
 	{
-		//manually set everything because it doesn't use item texture.
-		super();
-		this.descriptor = desc;
-		this.maxStackSize = desc.getMaxStackSize();
-		setUnlocalizedName(desc.getUnlocalizedName());
-		setRegistryName(desc.getRegistryName());
-		//setTextureName(desc.getTextureName());
-		setCreativeTab(desc.getTab());
+		super(desc);
+		if (MalisisCore.isClient())
+			icon = desc.getIcon();
 	}
 }

@@ -72,7 +72,7 @@ public class DoorItem extends ItemDoor implements IRegisterable<Item>, IIconProv
 		//setTextureName(desc.getTextureName());
 		setCreativeTab(desc.getTab());
 
-		if (MalisisCore.isClient())
+		if (MalisisCore.isClient() && descriptor.getTextureName() != null)
 			icon = Icon.from(descriptor.getModId() + ":items/" + descriptor.getTextureName());
 	}
 

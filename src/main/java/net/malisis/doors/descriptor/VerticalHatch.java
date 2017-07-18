@@ -24,6 +24,7 @@
 
 package net.malisis.doors.descriptor;
 
+import net.malisis.core.renderer.icon.Icon;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.MalisisDoors;
@@ -41,6 +42,8 @@ import net.minecraft.block.material.Material;
  */
 public class VerticalHatch extends DoorDescriptor
 {
+	private Icon icon = Icon.from(MalisisDoors.modid + ":blocks/vertical_hatch");
+
 	public VerticalHatch()
 	{
 		//Block
@@ -48,7 +51,6 @@ public class VerticalHatch extends DoorDescriptor
 		setHardness(3.5F);
 		setSoundType(SoundType.METAL);
 		setName("verticalHatch");
-		//setTextureName(MalisisDoors.modid, "vertical_hatch"); //handled by the VerticalHatchDoor.getIconProvider()
 
 		//TileEntity
 		setOpeningTime(60);
@@ -66,6 +68,11 @@ public class VerticalHatch extends DoorDescriptor
 	{
 		block = new VerticalHatchDoor(this);
 		item = new VerticalHatchItem(this);
+	}
+
+	public Icon getIcon()
+	{
+		return icon;
 	}
 
 }
