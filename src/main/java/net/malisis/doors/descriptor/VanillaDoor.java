@@ -24,6 +24,7 @@
 
 package net.malisis.doors.descriptor;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.model.EmptyModelLoader;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
@@ -91,9 +92,12 @@ public class VanillaDoor extends DoorDescriptor
 	{
 		super.register();
 
-		ModelResourceLocation mrl = new ModelResourceLocation(item.getRegistryName() + "-malisis", "inventory");
-		EmptyModelLoader.register(item, mrl);
-		ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+		if (MalisisCore.isClient())
+		{
+			ModelResourceLocation mrl = new ModelResourceLocation(item.getRegistryName() + "-malisis", "inventory");
+			EmptyModelLoader.register(item, mrl);
+			ModelLoader.setCustomModelResourceLocation(item, 0, mrl);
+		}
 
 		return this;
 	}
