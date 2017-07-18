@@ -178,7 +178,7 @@ public class DoorDescriptor
 
 	public String getTextureName()
 	{
-		return textureName != null ? textureName : registryName;
+		return textureName;
 	}
 
 	public void setTextureName(String modid, String textureName)
