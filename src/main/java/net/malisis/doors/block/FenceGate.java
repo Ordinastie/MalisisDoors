@@ -75,21 +75,22 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 {
 	public static enum Type
 	{
-		//@formatter:off
-		OAK("fenceGate", EnumType.OAK),
-		ACACIA("acaciaFenceGate", EnumType.ACACIA),
-		BIRCH("birchFenceGate", EnumType.BIRCH),
-		DARK_OAK("darkOakFenceGate", EnumType.DARK_OAK),
-		JUNGLE("jungleFenceGate", EnumType.JUNGLE),
-		SPRUCE("spruceFenceGate", EnumType.SPRUCE),
-		CAMO("camoFenceGate", EnumType.OAK); //OAK to prevent NPE
-		//@formatter:on
-		private EnumType type;
-		private String name;
+		OAK("minecraft:fence_gate", "fenceGate", EnumType.OAK),
+		ACACIA("minecraft:acacia_fence_gate", "acaciaFenceGate", EnumType.ACACIA),
+		BIRCH("minecraft:birch_fence_fate", "birchFenceGate", EnumType.BIRCH),
+		DARK_OAK("minecraft:dark_oak_fence_gate", "darkOakFenceGate", EnumType.DARK_OAK),
+		JUNGLE("minecraft:jungle_fence_gate", "jungleFenceGate", EnumType.JUNGLE),
+		SPRUCE("minecraft:spruce_fence_gate", "spruceFenceGate", EnumType.SPRUCE),
+		CAMO(MalisisDoors.modid + ":camoFenceGate", "camoFenceGate", EnumType.OAK); //OAK to prevent NPE
 
-		private Type(String name, EnumType type)
+		private EnumType type;
+		private String registry;
+		private String unlocalized;
+
+		private Type(String registry, String unlocalized, EnumType type)
 		{
-			this.name = name;
+			this.registry = registry;
+			this.unlocalized = unlocalized;
 			this.type = type;
 		}
 	}
@@ -102,8 +103,8 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 		setHardness(2.0F);
 		setResistance(5.0F);
 		setSoundType(SoundType.WOOD);
-		setName(type == Type.CAMO ? MalisisDoors.modid + ":camoFenceGate" : "minecraft:" + type.name);
-		setUnlocalizedName(type.name);
+		setName(type.registry);
+		setUnlocalizedName(type.unlocalized);
 
 		if (type == Type.CAMO)
 			setCreativeTab(MalisisDoors.tab);
