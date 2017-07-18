@@ -24,6 +24,7 @@
 
 package net.malisis.doors.renderer;
 
+import net.malisis.core.registry.AutoLoad;
 import net.malisis.core.renderer.RenderParameters;
 import net.malisis.core.renderer.RenderType;
 import net.malisis.core.renderer.animation.Animation;
@@ -36,11 +37,15 @@ import net.malisis.doors.block.Door;
 import net.malisis.doors.block.VerticalHatchDoor;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
  *
  */
+@AutoLoad //to make sure the icon is registered soon enough
+@SideOnly(Side.CLIENT)
 public class VerticalHatchRenderer extends DoorRenderer
 {
 	private Icon icon = Icon.from(MalisisDoors.modid + ":blocks/vertical_hatch");
@@ -49,8 +54,6 @@ public class VerticalHatchRenderer extends DoorRenderer
 	{
 		super(false);
 		registerFor(VerticalHatchTileEntity.class);
-		//make sure the icon gets registered
-		//		Icon.from(MalisisDoors.modid + ":blocks/verticalHatch");
 	}
 
 	@Override
