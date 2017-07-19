@@ -24,6 +24,7 @@
 
 package net.malisis.doors.descriptor;
 
+import net.malisis.core.MalisisCore;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
@@ -35,6 +36,8 @@ import net.malisis.doors.sound.RustyHatchSound;
 import net.malisis.doors.tileentity.VerticalHatchTileEntity;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author Ordinastie
@@ -42,7 +45,8 @@ import net.minecraft.block.material.Material;
  */
 public class VerticalHatch extends DoorDescriptor
 {
-	private Icon icon = Icon.from(MalisisDoors.modid + ":blocks/vertical_hatch");
+	@SideOnly(Side.CLIENT)
+	private Icon icon;
 
 	public VerticalHatch()
 	{
@@ -61,6 +65,9 @@ public class VerticalHatch extends DoorDescriptor
 
 		//Item
 		setTab(MalisisDoors.tab);
+
+		if (MalisisCore.isClient())
+			icon = Icon.from(MalisisDoors.modid + ":blocks/vertical_hatch");
 	}
 
 	@Override
@@ -70,6 +77,7 @@ public class VerticalHatch extends DoorDescriptor
 		item = new VerticalHatchItem(this);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public Icon getIcon()
 	{
 		return icon;
