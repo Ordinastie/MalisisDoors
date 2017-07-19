@@ -19,6 +19,7 @@ item.door_acacia.name=Дверь из акации
 item.door_dark_oak.name=Дверь из тёмного дуба
 item.saloon.name=Дверь салуна
 item.verticalHatch.name=Бронированная дверь
+item.malisisdoors:hitechdoor.name=Высокотехнологичная дверь
 
 item.curtain_white.name=Белая штора
 item.curtain_orange.name=Оранжевая штора
@@ -66,6 +67,7 @@ tile.trapdoor_jungle.name=Люк из тропического дерева
 tile.trapdoor_spruce.name=Люк из ели
 tile.camoFenceGate.name=Камуфляжная калитка
 tile.verticalHatch.name=Бронированная дверь
+tile.malisisdoors:hitechdoor.name=Высокотехнологичная дверь
 
 tile.curtain_white.name=Белая штора
 tile.curtain_orange.name=Оранжевая штора
