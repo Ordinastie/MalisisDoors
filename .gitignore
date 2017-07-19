@@ -1,11 +1,30 @@
-build/*
-bin/*
-.gradle/*
-.project
-.classpath
+# mac stuff
+.DS_Store
+
+# gradle stuff
+build
+.gradle
+
+# intellij stuff
+.idea
 *.iml
-.settings/*
-/bin
+
+# eclipse stuff
+.classpath
+.project
+.settings
+eclipse
+bin
+*.launch
+
+# intellij stuff
+.idea
+*.iml
+
+# run configuration
+run
+
+# other
 gradle.properties
 init.gradle
 /libs
