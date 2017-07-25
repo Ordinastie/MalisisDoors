@@ -29,7 +29,6 @@ import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.movement.TrapDoorMovement;
 import net.malisis.doors.sound.WoodenTrapDoorSound;
-import net.minecraft.block.BlockPlanks.EnumType;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
@@ -42,19 +41,17 @@ public class WoodTrapDoor extends TrapDoorDescriptor
 	public static enum Type
 	{
 		//OAK("", EnumType.OAK),
-		ACACIA("trapdoor_acacia", EnumType.ACACIA),
-		BIRCH("trapdoor_birch", EnumType.BIRCH),
-		DARK_OAK("trapdoor_dark_oak", EnumType.DARK_OAK),
-		JUNGLE("trapdoor_jungle", EnumType.JUNGLE),
-		SPRUCE("trapdoor_spruce", EnumType.SPRUCE);
+		ACACIA("trapdoor_acacia"),
+		BIRCH("trapdoor_birch"),
+		DARK_OAK("trapdoor_dark_oak"),
+		JUNGLE("trapdoor_jungle"),
+		SPRUCE("trapdoor_spruce");
 
-		private EnumType type;
 		private String name;
 
-		private Type(String name, EnumType type)
+		private Type(String name)
 		{
 			this.name = name;
-			this.type = type;
 		}
 	}
 
