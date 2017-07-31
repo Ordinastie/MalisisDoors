@@ -41,9 +41,17 @@ import net.malisis.core.util.chunkcollision.IChunkCollidable;
 import net.malisis.doors.MalisisDoors;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -92,11 +100,23 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 		Matrix4f fixed = new TransformBuilder().translate(0, -.2F, 0).scale(0.4F).get();
 		Matrix4f ground = new TransformBuilder().translate(0, 0.3F, 0).scale(0.20F).get();
 
-		return new ItemTransformComponent().thirdPerson(thirdPerson, thirdPerson)
+		return new ItemTransformComponent()	.thirdPerson(thirdPerson, thirdPerson)
 											.firstPerson(firstPerson, firstPerson)
 											.fixed(fixed)
 											.gui(gui)
 											.ground(ground);
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+		super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+
+		String s = OPENED.get(state) ? "malisisdoors:space_door_open" : "malisisdoors:space_door_close";
+		SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(s));
+		world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1F, 1F);
+
+		return true;
 	}
 
 	@Override
