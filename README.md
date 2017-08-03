@@ -1,6 +1,6 @@
-#[MalisisDoors](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2076338-1-7-2-1-7-10-forge-malisisdoors-1-7-10-1-1-2)
+# [MalisisDoors](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2076338-1-7-2-1-7-10-forge-malisisdoors-1-7-10-1-1-2)
 
-##Features:
+## Features:
 
 * Adds animations to doors, trap doors and fence gates.
 * Adds new animated sliding doors that comes in wood or iron material.
