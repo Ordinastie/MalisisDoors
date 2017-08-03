@@ -84,6 +84,7 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 		setHardness(desc.getHardness());
 		setSoundType(desc.getSoundType());
 		setName(desc.getRegistryName());
+		setUnlocalizedName(desc.getUnlocalizedName());
 
 		setCreativeTab(desc.getTab());
 
