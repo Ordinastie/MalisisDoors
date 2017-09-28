@@ -24,6 +24,8 @@
 
 package net.malisis.doors.tileentity;
 
+import java.util.List;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import net.malisis.core.util.TileEntityUtils;
@@ -39,12 +41,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -161,6 +165,12 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		return getWorld().isBlockIndirectlyGettingPowered(pos) + getWorld().isBlockIndirectlyGettingPowered(pos.up()) != 0;
 	}
 
+	public boolean isDoubleDoorPowered()
+	{
+		DoorTileEntity te = getDoubleDoor();
+		return te != null && te.isPowered();
+	}
+
 	public boolean isCentered()
 	{
 		return centered;
@@ -212,12 +222,36 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	 */
 	public void openOrCloseDoor()
 	{
-		DoorState newState = state == DoorState.OPENED ? DoorState.CLOSING : DoorState.OPENING;
-		setDoorState(newState);
+		if (state == DoorState.OPENED)
+			close();
+		else
+			open();
+	}
 
+	public boolean open()
+	{
+		if (state == DoorState.OPENING || state == DoorState.OPENED)
+			return false;
+
+		setDoorState(DoorState.OPENING);
 		DoorTileEntity te = getDoubleDoor();
 		if (te != null)
-			te.setDoorState(newState);
+			te.setDoorState(DoorState.OPENING);
+
+		return true;
+	}
+
+	public boolean close()
+	{
+		if (state == DoorState.CLOSING || state == DoorState.CLOSED)
+			return false;
+
+		setDoorState(DoorState.CLOSING);
+		DoorTileEntity te = getDoubleDoor();
+		if (te != null)
+			te.setDoorState(DoorState.CLOSING);
+
+		return true;
 	}
 
 	/**
@@ -348,14 +382,53 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			te.setDoorState(newState);
 	}
 
+	protected boolean hasPlayer()
+	{
+		//north-south axis
+		boolean ns = getDirection().getAxis() == Axis.Z;
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+
+		AxisAlignedBB aabb = new AxisAlignedBB(x + (ns ? 0 : -2), y, z + (ns ? -2 : 0), x + (ns ? 3 : 1), y + 2, z + (ns ? 3 : 1));
+
+		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+		return list != null && !list.isEmpty();
+	}
+
+	protected boolean doubleDoorHasPlayer()
+	{
+		DoorTileEntity te = getDoubleDoor();
+		return te != null && te.hasPlayer();
+	}
+
 	@Override
 	public void update()
 	{
-		if (!moving)
-			return;
+		//animation finished, update state (current door only)
+		if (moving && timer.elapsedTick() > getOpeningTime())
+			setDoorState(getState() == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
 
-		if (timer.elapsedTick() > getOpeningTime())
-			setDoorState(state == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
+		//door is powered, open doors
+		if (isPowered() || isDoubleDoorPowered())
+		{
+			open();
+			return;
+		}
+
+		//door has player in proximity, open doors
+		if (getDescriptor().hasProximityDetection() && (hasPlayer() || doubleDoorHasPlayer()))
+		{
+			open();
+			return;
+		}
+
+		//time to auto-close, close doors
+		if (getDescriptor().getAutoCloseTime() > 0 && timer.elapsedTick() > getDescriptor().getAutoCloseTime())
+		{
+			close();
+			return;
+		}
 	}
 
 	//#region NBT/Network

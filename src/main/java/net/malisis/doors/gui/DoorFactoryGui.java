@@ -79,8 +79,9 @@ public class DoorFactoryGui extends MalisisGui
 	private UISelect<String> selDoorMovement;
 	private UITextField tfOpenTime;
 	private UITextField tfAutoCloseTime;
-	private UISelect<RedstoneBehavior> selRedstone;
 	private UICheckBox cbDoubleDoor;
+	private UICheckBox cbProximity;
+	private UISelect<RedstoneBehavior> selRedstone;
 	private UISelect<String> selDoorSound;
 	private UIRadioButton rbCreate;
 	private UIRadioButton rbEdit;
@@ -147,34 +148,52 @@ public class DoorFactoryGui extends MalisisGui
 	{
 		UIContainer<?> propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
 
+		//Door movement
+		int y = 2;
 		selDoorMovement = new UISelect<>(this, 100, getSortedList(DoorRegistry.listMovements().keySet(), "door_movement."));
-		selDoorMovement.setPosition(0, 2, Anchor.RIGHT);
+		selDoorMovement.setPosition(0, y, Anchor.RIGHT);
 		selDoorMovement.setLabelPattern("door_movement.%s").register(this);
-
-		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 14, Anchor.RIGHT).register(this);
-		tfAutoCloseTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, 26, Anchor.RIGHT).register(this);
-		cbDoubleDoor = new UICheckBox(this).setPosition(-15, 38, Anchor.RIGHT).register(this);
-
-		selRedstone = new UISelect<>(this, 100, Lists.newArrayList(RedstoneBehavior.values()));
-		selRedstone.setPosition(0, 50, Anchor.RIGHT);
-		selRedstone.setLabelPattern("gui.door_factory.redstone_behavior.%s").register(this);
-
-		selDoorSound = new UISelect<>(this, 100, getSortedList(DoorRegistry.listSounds().keySet(), "gui.door_factory.door_sound."));
-		selDoorSound.setPosition(0, 62, Anchor.RIGHT);
-		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s").register(this);
-
-		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, 4));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, 16));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_auto_close_time").setPosition(0, 28));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, 40));
-		propContainer.add(new UILabel(this, "gui.door_factory.redstone_behavior").setPosition(0, 52));
-		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, 64));
-
+		propContainer.add(new UILabel(this, "gui.door_factory.door_movement").setPosition(0, y + 2));
 		propContainer.add(selDoorMovement);
+
+		//Opening time
+		y += 12;
+		tfOpenTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, y, Anchor.RIGHT).register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.door_open_time").setPosition(0, y + 2));
 		propContainer.add(tfOpenTime);
+
+		//Auto close time
+		y += 12;
+		tfAutoCloseTime = new UITextField(this, null).setSize(30, 0).setPosition(-5, y, Anchor.RIGHT).register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.door_auto_close_time").setPosition(0, y + 2));
 		propContainer.add(tfAutoCloseTime);
+
+		//Double door
+		y += 12;
+		cbDoubleDoor = new UICheckBox(this).setPosition(-15, y, Anchor.RIGHT).register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.door_double_door").setPosition(0, y + 2));
 		propContainer.add(cbDoubleDoor);
+
+		//Proximity detection
+		y += 12;
+		cbProximity = new UICheckBox(this).setPosition(-15, y, Anchor.RIGHT).register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.proximity_detection").setPosition(0, y + 2));
+		propContainer.add(cbProximity);
+
+		//Redstone behavior
+		y += 12;
+		selRedstone = new UISelect<>(this, 100, Lists.newArrayList(RedstoneBehavior.values()));
+		selRedstone.setPosition(0, y, Anchor.RIGHT);
+		selRedstone.setLabelPattern("gui.door_factory.redstone_behavior.%s").register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.redstone_behavior").setPosition(0, y + 2));
 		propContainer.add(selRedstone);
+
+		//Door sound
+		y += 12;
+		selDoorSound = new UISelect<>(this, 100, getSortedList(DoorRegistry.listSounds().keySet(), "gui.door_factory.door_sound."));
+		selDoorSound.setPosition(0, y, Anchor.RIGHT);
+		selDoorSound.setLabelPattern("gui.door_factory.door_sound.%s").register(this);
+		propContainer.add(new UILabel(this, "gui.door_factory.door_sound").setPosition(0, y + 2));
 		propContainer.add(selDoorSound);
 
 		return propContainer;
@@ -249,15 +268,20 @@ public class DoorFactoryGui extends MalisisGui
 		selDoorMovement.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorMovement()));
 		tfOpenTime.setText(Integer.toString(tileEntity.getOpeningTime()));
 		tfAutoCloseTime.setText(Integer.toString(tileEntity.getAutoCloseTime()));
-		selRedstone.select(tileEntity.getRedstoneBehavior());
 		cbDoubleDoor.setChecked(tileEntity.isDoubleDoor());
+		cbProximity.setChecked(tileEntity.hasProximityDetection());
+		selRedstone.select(tileEntity.getRedstoneBehavior());
 		selDoorSound.setSelectedOption(DoorRegistry.getId(tileEntity.getDoorSound()));
 	}
 
 	@Subscribe
 	public void onCheckedEvent(UICheckBox.CheckEvent event)
 	{
-		tileEntity.setDoubleDoor(event.isChecked());
+		if (event.getComponent() == cbDoubleDoor)
+			tileEntity.setDoubleDoor(event.isChecked());
+		else if (event.getComponent() == cbProximity)
+			tileEntity.setProximityDetection(event.isChecked());
+
 		DoorFactoryMessage.sendDoorInformations(tileEntity);
 	}
 

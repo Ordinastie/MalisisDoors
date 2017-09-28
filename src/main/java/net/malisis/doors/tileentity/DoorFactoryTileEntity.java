@@ -62,6 +62,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 	private int autoCloseTime = 0;
 	private RedstoneBehavior redstoneBehavior = RedstoneBehavior.STANDARD;
 	private boolean doubleDoor = true;
+	private boolean proximityDetection = false;
 	private String code;
 
 	private boolean isCreate = true;
@@ -154,6 +155,16 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		this.doubleDoor = doubleDoor;
 	}
 
+	public boolean hasProximityDetection()
+	{
+		return proximityDetection;
+	}
+
+	public void setProximityDetection(boolean proximity)
+	{
+		proximityDetection = proximity;
+	}
+
 	public String getCode()
 	{
 		return code;
@@ -223,16 +234,16 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 
 		if (isCreate)
 		{
-			if (frameSlot.getItemStack() == null)
+			if (frameSlot.getItemStack().isEmpty())
 				return false;
-			if (topMaterialSlot.getItemStack() == null)
+			if (topMaterialSlot.getItemStack().isEmpty())
 				return false;
-			if (bottomMaterialSlot.getItemStack() == null)
+			if (bottomMaterialSlot.getItemStack().isEmpty())
 				return false;
 		}
 		else
 		{
-			if (doorEditSlot.getItemStack() == null)
+			if (doorEditSlot.getItemStack().isEmpty())
 				return false;
 		}
 
@@ -247,8 +258,9 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		desc.setSound(getDoorSound());
 		desc.setOpeningTime(getOpeningTime());
 		desc.setAutoCloseTime(getAutoCloseTime());
-		desc.setRedstoneBehavior(getRedstoneBehavior());
 		desc.setDoubleDoor(isDoubleDoor());
+		desc.setProximityDetection(hasProximityDetection());
+		desc.setRedstoneBehavior(getRedstoneBehavior());
 		desc.setCode(getCode());
 
 		return desc;
@@ -269,6 +281,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		nbt.setInteger("autoCloseTime", autoCloseTime);
 		nbt.setInteger("redstoneBehavior", getRedstoneBehavior().ordinal());
 		nbt.setBoolean("doubleDoor", doubleDoor);
+		nbt.setBoolean("proximityDetection", proximityDetection);
 
 		inventory.writeToNBT(nbt);
 
@@ -286,6 +299,7 @@ public class DoorFactoryTileEntity extends TileEntity implements IDirectInventor
 		autoCloseTime = nbt.getInteger("autoCloseTime");
 		redstoneBehavior = RedstoneBehavior.values()[nbt.getInteger("redstoneBehavior")];
 		doubleDoor = nbt.getBoolean("doubleDoor");
+		proximityDetection = nbt.getBoolean("proximityDetection");
 
 		inventory.readFromNBT(nbt);
 	}

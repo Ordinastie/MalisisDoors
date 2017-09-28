@@ -27,7 +27,6 @@ package net.malisis.doors.block;
 import static com.google.common.base.Preconditions.*;
 
 import java.util.List;
-import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -46,7 +45,6 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
-import net.malisis.doors.DoorState;
 import net.malisis.doors.gui.DigicodeGui;
 import net.malisis.doors.iconprovider.DoorIconProvider;
 import net.malisis.doors.renderer.DoorRenderer;
@@ -185,9 +183,6 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 			if (door != null && door.isPowered())
 				return true;
 		}
-
-		if (te.getDescriptor().getAutoCloseTime() > 0 && !te.isOpened())
-			world.scheduleBlockUpdate(pos, this, te.getDescriptor().getAutoCloseTime() + te.getDescriptor().getOpeningTime(), 0);
 
 		te.openOrCloseDoor();
 
@@ -373,22 +368,6 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	}
 
 	//#end BoudingBox
-
-	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
-	{
-		DoorTileEntity te = Door.getDoor(world, pos);
-		if (te == null)
-			return;
-
-		if (te.getDescriptor().getAutoCloseTime() <= 0)
-			return;
-
-		if (te.getState() == DoorState.CLOSED || te.getState() == DoorState.CLOSING)
-			return;
-
-		te.openOrCloseDoor();
-	}
 
 	@Override
 	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side)

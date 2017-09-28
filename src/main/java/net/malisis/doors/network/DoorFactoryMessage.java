@@ -68,6 +68,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 			te.setAutoCloseTime(message.autoCloseTime);
 			te.setRedstoneBehavior(RedstoneBehavior.values()[message.redstoneBehavior]);
 			te.setDoubleDoor(message.doubleDoor);
+			te.setProximityDetection(message.proximityDetection);
 			te.setCode(message.code);
 		}
 		else
@@ -102,6 +103,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 		private int autoCloseTime;
 		private int redstoneBehavior;
 		private boolean doubleDoor;
+		private boolean proximityDetection;
 		private String code;
 
 		public Packet()
@@ -125,6 +127,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 			this.autoCloseTime = te.getAutoCloseTime();
 			this.redstoneBehavior = te.getRedstoneBehavior().ordinal();
 			this.doubleDoor = te.isDoubleDoor();
+			this.proximityDetection = te.hasProximityDetection();
 			this.code = te.getCode();
 		}
 
@@ -146,6 +149,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 				autoCloseTime = buf.readInt();
 				redstoneBehavior = buf.readInt();
 				doubleDoor = buf.readBoolean();
+				proximityDetection = buf.readBoolean();
 				code = ByteBufUtils.readUTF8String(buf);
 			}
 		}
@@ -164,6 +168,7 @@ public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMes
 				buf.writeInt(autoCloseTime);
 				buf.writeInt(redstoneBehavior);
 				buf.writeBoolean(doubleDoor);
+				buf.writeBoolean(proximityDetection);
 				ByteBufUtils.writeUTF8String(buf, code != null ? code : "");
 			}
 		}

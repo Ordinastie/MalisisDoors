@@ -78,6 +78,7 @@ public class DoorDescriptor
 	protected IDoorSound sound;
 	protected int openingTime = 6;
 	protected boolean doubleDoor = true;
+	protected boolean proximityDetection = false;
 	protected RedstoneBehavior redstoneBehavior = RedstoneBehavior.STANDARD;
 
 	//item
@@ -237,6 +238,16 @@ public class DoorDescriptor
 		this.doubleDoor = doubleDoor;
 	}
 
+	public boolean hasProximityDetection()
+	{
+		return proximityDetection;
+	}
+
+	public void setProximityDetection(boolean proximity)
+	{
+		this.proximityDetection = proximity;
+	}
+
 	public RedstoneBehavior getRedstoneBehavior()
 	{
 		return redstoneBehavior;
@@ -321,6 +332,8 @@ public class DoorDescriptor
 			setRedstoneBehavior(RedstoneBehavior.values()[nbt.getInteger("redstoneBehavior")]);
 		if (nbt.hasKey("doubleDoor"))
 			setDoubleDoor(nbt.getBoolean("doubleDoor"));
+		if (nbt.hasKey("proximityDetection"))
+			setProximityDetection(nbt.getBoolean("proximityDetection"));
 		if (nbt.hasKey("autoCloseTime"))
 			setAutoCloseTime(nbt.getInteger("autoCloseTime"));
 		if (nbt.hasKey("code"))
@@ -338,6 +351,7 @@ public class DoorDescriptor
 		nbt.setInteger("openingTime", getOpeningTime());
 		nbt.setInteger("redstoneBehavior", getRedstoneBehavior().ordinal());
 		nbt.setBoolean("doubleDoor", isDoubleDoor());
+		nbt.setBoolean("proximityDetection", hasProximityDetection());
 		nbt.setInteger("autoCloseTime", getAutoCloseTime());
 		if (hasCode())
 			nbt.setString("code", getCode());
