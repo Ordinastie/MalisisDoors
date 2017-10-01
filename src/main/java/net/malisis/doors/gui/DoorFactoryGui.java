@@ -101,7 +101,7 @@ public class DoorFactoryGui extends MalisisGui
 	@Override
 	public void construct()
 	{
-		UIWindow window = new UIWindow(this, "tile.door_factory.name", UIPlayerInventory.INVENTORY_WIDTH + 80, 240);
+		UIWindow window = new UIWindow(this, "tile.door_factory.name", UIPlayerInventory.INVENTORY_WIDTH + 80, 255);
 
 		UIContainer<?> propContainer = getPropertiesContainer();
 		UIContainer<?> matContainer = getMaterialsContainer();
@@ -124,8 +124,8 @@ public class DoorFactoryGui extends MalisisGui
 		tabGroup.setActiveTab(activeTab != null ? activeTab : "tab_prop");
 		tabGroup.attachTo(window, false);
 
-		btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 98, Anchor.CENTER).register(this);
-		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 120, Anchor.CENTER);
+		btnCreate = new UIButton(this, "gui.door_factory.create_door").setSize(80).setPosition(0, 110, Anchor.CENTER).register(this);
+		UISlot outputSlot = new UISlot(this, tileEntity.outputSlot).setPosition(0, 132, Anchor.CENTER);
 
 		UIPlayerInventory playerInv = new UIPlayerInventory(this, inventoryContainer.getPlayerInventory());
 
@@ -146,7 +146,7 @@ public class DoorFactoryGui extends MalisisGui
 
 	private UIContainer<?> getPropertiesContainer()
 	{
-		UIContainer<?> propContainer = new UIContainer<>(this, UIComponent.INHERITED, 80).setPosition(0, 15);
+		UIContainer<?> propContainer = new UIContainer<>(this, UIComponent.INHERITED, 95).setPosition(0, 15);
 
 		//Door movement
 		int y = 2;
