@@ -121,6 +121,7 @@ gui.door_factory.rb_edit=Modify
 gui.door_factory.door_movement=Movement
 gui.door_factory.door_open_time=Opening time
 gui.door_factory.door_auto_close_time=Auto close delay
+gui.door_factory.proximity_detection=Player detection
 gui.door_factory.redstone_behavior=Redstone behavior
 gui.door_factory.door_double_door=Double door
 gui.door_factory.door_sound=Sound type
