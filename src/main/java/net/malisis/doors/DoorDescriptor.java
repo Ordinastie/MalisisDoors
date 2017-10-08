@@ -24,10 +24,15 @@
 
 package net.malisis.doors;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
+import net.malisis.core.MalisisCore;
 import net.malisis.core.block.IRegisterable;
 import net.malisis.core.registry.MalisisRegistry;
+import net.malisis.core.util.modmessage.ModMessage;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.movement.IDoorMovement;
@@ -41,6 +46,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
@@ -388,6 +395,57 @@ public class DoorDescriptor
 			ForgeRegistries.ITEMS.register(item);
 
 		return this;
+	}
+
+	@ModMessage("createDoor")
+	public static Pair<Block, Item> createDoor(HashMap<String, Object> map)
+	{
+		if (Loader.instance().getLoaderState() != LoaderState.PREINITIALIZATION)
+		{
+			MalisisCore.log.error(	"Tried to create and register a new door during wrong loader phase (was {}, expected {}).",
+									Loader.instance().getLoaderState(),
+									LoaderState.PREINITIALIZATION);
+			return null;
+		}
+
+		DoorDescriptor desc = new DoorDescriptor();
+		if (map.containsKey("name"))
+			desc.setRegistryName((String) map.get("name"));
+		if (map.containsKey("modid") && map.containsKey("textureName"))
+			desc.setTextureName((String) map.get("modid"), (String) map.get("textureName"));
+		if (map.containsKey("hardness"))
+			desc.setRegistryName((String) map.get("name"));
+		if (map.containsKey("movement"))
+		{
+			IDoorMovement mvt = DoorRegistry.getMovement((String) map.get("movement"));
+			if (mvt.isSpecial())
+			{
+				MalisisCore.log.error(	"{} is marked as 'special' and cannot be used for regular doors. Defaulting to 'rotating' movement",
+										map.get("movement"));
+				mvt = DoorRegistry.getMovement(RotatingDoorMovement.class);
+			}
+			desc.setMovement(mvt);
+		}
+		if (map.containsKey("sound"))
+			desc.setSound(DoorRegistry.getSound((String) map.get("sound")));
+		if (map.containsKey("openingTime"))
+			desc.setOpeningTime((int) map.get("openingTime"));
+		if (map.containsKey("redstoneBehavior"))
+			desc.setRedstoneBehavior(RedstoneBehavior.values()[(int) map.get("redstoneBehavior")]);
+		if (map.containsKey("doubleDoor"))
+			desc.setDoubleDoor((boolean) map.get("doubleDoor"));
+		if (map.containsKey("proximityDetection"))
+			desc.setProximityDetection((boolean) map.get("proximityDetection"));
+		if (map.containsKey("autoCloseTime"))
+			desc.setAutoCloseTime((int) map.get("autoCloseTime"));
+		if (map.containsKey("code"))
+			desc.setCode((String) map.get("code"));
+		if (map.containsKey("tab"))
+			desc.setTab((CreativeTabs) map.get("tab"));
+
+		desc.register();
+
+		return Pair.of(desc.getBlock(), desc.getItem());
 	}
 
 }
