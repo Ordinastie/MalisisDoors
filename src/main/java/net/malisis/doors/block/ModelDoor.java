@@ -38,20 +38,17 @@ import net.malisis.core.renderer.component.AnimatedModelComponent;
 import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.core.util.chunkcollision.IChunkCollidable;
+import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
+import net.malisis.doors.sound.IDoorSound;
+import net.malisis.doors.sound.PneumaticSound;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,6 +61,9 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 	private static PowerComponent OPENED = new PowerComponent(InteractionType.BOTH, ComponentType.RECEIVER);
 	private AxisAlignedBB aabb = AABBUtils.identity();
 	private AnimatedModelComponent amc = null;
+
+	//Reuse sound
+	private static final IDoorSound DOOR_SOUND = DoorRegistry.getSound(PneumaticSound.class);
 
 	public ModelDoor()
 	{
@@ -78,6 +78,12 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 		aabb = new AxisAlignedBB(-1, 0, 0.375F, 2, 2, 0.625F);
 
 		OPENED.setMetaOffset(2);
+		OPENED.onPowerChange((w, p, powered) -> w.playSound(null,
+															p,
+															DOOR_SOUND.getSound(powered ? DoorState.OPENING : DoorState.CLOSING),
+															SoundCategory.BLOCKS,
+															1F,
+															1F));
 		addComponent(OPENED);
 		addComponent(new DirectionalComponent());
 
@@ -105,18 +111,6 @@ public class ModelDoor extends MalisisBlock implements IChunkCollidable
 											.fixed(fixed)
 											.gui(gui)
 											.ground(ground);
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
-
-		String s = OPENED.get(state) ? "malisisdoors:space_door_open" : "malisisdoors:space_door_close";
-		SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(s));
-		world.playSound(null, pos, sound, SoundCategory.BLOCKS, 1F, 1F);
-
-		return true;
 	}
 
 	@Override
