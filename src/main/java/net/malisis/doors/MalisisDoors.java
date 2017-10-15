@@ -8,6 +8,7 @@ import net.malisis.core.item.MalisisItem;
 import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.core.renderer.font.MalisisFont;
+import net.malisis.core.util.modmessage.ModMessageManager;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
@@ -35,7 +36,11 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = MalisisDoors.modid, name = MalisisDoors.modname, version = MalisisDoors.version, dependencies = "required-after:malisiscore", acceptedMinecraftVersions = "[1.12, 1.13)")
+@Mod(	modid = MalisisDoors.modid,
+		name = MalisisDoors.modname,
+		version = MalisisDoors.version,
+		dependencies = "required-after:malisiscore",
+		acceptedMinecraftVersions = "[1.12, 1.13)")
 public class MalisisDoors implements IMalisisMod
 {
 	public static final String modid = "malisisdoors";
@@ -84,6 +89,8 @@ public class MalisisDoors implements IMalisisMod
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		settings = new MalisisDoorsSettings(event.getSuggestedConfigurationFile());
+
+		ModMessageManager.register(this, DoorDescriptor.class);
 
 		Registers.init();
 	}
