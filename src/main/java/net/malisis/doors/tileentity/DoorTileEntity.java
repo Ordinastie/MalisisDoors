@@ -25,9 +25,13 @@
 package net.malisis.doors.tileentity;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.collect.ImmutableMap;
+
+import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.Timer;
 import net.malisis.core.util.syncer.Sync;
@@ -48,7 +52,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -63,6 +66,17 @@ import net.minecraft.world.World;
 @Syncable("TileEntity")
 public class DoorTileEntity extends TileEntity implements ITickable
 {
+	//Door direction is vanilla. Logic is reversed from regular MalisisCore direction/rotation
+	private static final AxisAlignedBB BASE = new AxisAlignedBB(0, 0, -1, 1, 2, 3);
+	private static final Map<EnumFacing, AxisAlignedBB> DETECT = ImmutableMap.of(	EnumFacing.SOUTH,
+																					AABBUtils.rotate(BASE, EnumFacing.NORTH),
+																					EnumFacing.EAST,
+																					AABBUtils.rotate(BASE, EnumFacing.WEST),
+																					EnumFacing.NORTH,
+																					AABBUtils.rotate(BASE, EnumFacing.SOUTH),
+																					EnumFacing.WEST,
+																					AABBUtils.rotate(BASE, EnumFacing.EAST));
+
 	protected DoorDescriptor descriptor;
 	protected int lastMetadata = -1;
 	protected Timer timer = new Timer(0);
@@ -384,15 +398,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 
 	protected boolean hasPlayer()
 	{
-		//north-south axis
-		boolean ns = getDirection().getAxis() == Axis.Z;
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
-
-		AxisAlignedBB aabb = new AxisAlignedBB(x + (ns ? 0 : -2), y, z + (ns ? -2 : 0), x + (ns ? 3 : 1), y + 2, z + (ns ? 3 : 1));
-
-		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, aabb);
+		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, DETECT.get(getDirection()).offset(getPos()));
 		return list != null && !list.isEmpty();
 	}
 
