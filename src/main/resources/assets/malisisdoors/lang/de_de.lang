@@ -10,7 +10,7 @@ item.shoji_door.name=Shoji-Schiebetür
 item.rustyHatch.name=Rostige Luke
 item.rustyHandle.name=Rostiger Griff
 item.carriage_door.name=Kutschentor
-item.medieval_door.name=Mittelalterliches Tor
+tile.medieval_door.name=Mittelalterliches Tor
 item.forcefieldItem.name=Kraftfeldregler
 item.door_spruce.name=Fichtenholztür
 item.door_birch.name=Birkenholztür
@@ -85,14 +85,13 @@ tile.curtain_brown.name=Brauner Vorhang
 tile.curtain_green.name=Grüner Vorhang
 tile.curtain_red.name=Roter Vorhang
 tile.curtain_black.name=Schwarzer Vorhang
- 
+
 malisisdoors.command.usage=Benutze /malisisdoors [config|version] (Konfiguration/Version)
- 
+
 config.modifyVanillaDoors=Aktiviere Vanilla-Verbesserungen
-config.modifyVanillaDoors.comment1=Aktiviert Animationen für Türen, Zaungatter und Falltüren.\r\nDies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
- config.use3DItems=Rendere Türen als Items in 3D
- 
- 
+config.modifyVanillaDoors.comment=Aktiviert Animationen für Türen, Zaungatter und Falltüren.\r\nDies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
+config.use3DItems=Rendere Türen als Items in 3D
+
 door_movement.rotating_door=Aufschwingend
 door_movement.sliding_door=Aufgleitend
 door_movement.sliding_up_door=Aufgleitend (hoch)
@@ -111,8 +110,7 @@ door_movement.double_slide_left=Doppelt nach links aufgleitend
 door_movement.double_slide_right=Doppelt nach rechts aufgleitend
 door_movement.double_rotate_left=Doppelt nach links aufschwingend
 door_movement.double_rotate_right=Doppelt nach rechts aufschwingend
- 
- 
+
 gui.door_factory.tab_properties=Eigenschaften
 gui.door_factory.tab_materials=Materialien
 gui.door_factory.tab_digicode=Digicode
@@ -121,6 +119,7 @@ gui.door_factory.rb_edit=Bearbeiten
 gui.door_factory.door_movement=Bewegung
 gui.door_factory.door_open_time=Öffnungszeit
 gui.door_factory.door_auto_close_time=Auto-Schließen-Verzögerung
+gui.door_factory.proximity_detection=Spieler-Erkennung
 gui.door_factory.redstone_behavior=Redstone-Verhalten
 gui.door_factory.door_double_door=Doppeltür
 gui.door_factory.door_sound=Geräusch
@@ -140,11 +139,10 @@ gui.door_factory.redstone_behavior.STANDARD=Standard
 gui.door_factory.redstone_behavior.REDSTONE_ONLY=Nur Redstone
 gui.door_factory.redstone_behavior.REDSTONE_LOCK=Redstone-Sperre
 gui.door_factory.redstone_behavior.HAND_ONLY=Nur manuell
- 
+
 gui.door_factory.frame_type=Rahmenart
 gui.door_factory.top_material=Material oben
 gui.door_factory.bottom_material=Material unten
 gui.door_factory.door_edit_slot=Zu ändernde Tür
 gui.door_factory.create_door=Tür bauen
 gui.door_factory.edit_door=Tür ändern
-
