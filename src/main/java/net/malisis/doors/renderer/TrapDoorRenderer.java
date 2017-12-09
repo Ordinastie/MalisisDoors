@@ -37,6 +37,7 @@ import net.malisis.core.renderer.model.MalisisModel;
 import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
+import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.item.Item;
@@ -64,6 +65,7 @@ public class TrapDoorRenderer extends MalisisRenderer<TrapDoorTileEntity>
 	public TrapDoorRenderer()
 	{
 		registerFor(TrapDoorTileEntity.class);
+		ensureBlock(TrapDoor.class);
 	}
 
 	@Override
