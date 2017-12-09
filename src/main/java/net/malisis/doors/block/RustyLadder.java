@@ -59,10 +59,10 @@ public class RustyLadder extends MalisisBlock
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
-		if (type == BoundingBoxType.COLLISION)
-			return null;
+		//if (type == BoundingBoxType.COLLISION)
+		//	return null;
 
-		return new AxisAlignedBB(0, 0, 0, 1, 1, 0.125F);
+		return new AxisAlignedBB(0, 0, 0, 1, 1, 0.1875F);
 	}
 
 	@Override
