@@ -24,6 +24,7 @@
 
 package net.malisis.doors.block;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -38,6 +39,7 @@ import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.core.renderer.icon.Icon;
 import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.AABBUtils;
+import net.malisis.core.util.MBlockState;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.multiblock.AABBMultiBlock;
 import net.malisis.core.util.multiblock.MultiBlock;
@@ -131,26 +133,52 @@ public class RustyHatch extends MalisisBlock
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
+	public AxisAlignedBB[] getBoundingBoxes(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
 		RustyHatchTileEntity te = getRustyHatch(world, pos);
 		if (te == null || te.getMovement() == null)
-			return AABBUtils.identity();
-		if (te.isMoving())
-			return null;
+			return AABBUtils.identities();
 
-		AxisAlignedBB aabb = te.isOpened()	? te.getMovement().getOpenBoundingBox(te, te.isTop(), type)
-											: te.getMovement().getClosedBoundingBox(te, te.isTop(), type);
+		ArrayList<AxisAlignedBB> aabbs = Lists.newArrayList();
+		if (type == BoundingBoxType.COLLISION)
+		{
+			//adds collision boxes for ladders
+			MultiBlock mb = MultiBlockComponent.getMultiBlock(world, pos, state, null);
+			BlockPos origin = MultiBlock.getOrigin(world, pos);
+			IBlockState originState = world.getBlockState(origin);
 
-		if (aabb == null)
-			return null;
+			for (MBlockState mstate : mb)
+			{
+				MBlockState ws = mb.getWorldState(mstate, origin, originState);
+				if (te.shouldLadder(ws.getPos()))
+				{
+					//default BB for rusty ladder is facing south, by default, rusty hacth ladder face the opposite direction
+					AxisAlignedBB aabb = AABBUtils.rotate(RustyLadder.BOUNDING_BOX, EnumFacing.NORTH).offset(mstate.getPos());
+					aabbs.add(aabb);
+				}
+			}
+		}
 
-		//rotate before origin offset
-		aabb = AABBUtils.rotate(aabb, te.getDirection());
-		//returned AABB expected to be relative to this blockPos, but it's relative to TE's pos, so wee need to offset
-		aabb = aabb.offset(te.getPos().subtract(pos));
+		if (!te.isMoving())
+		{
+			AxisAlignedBB aabb = te.isOpened()	? te.getMovement().getOpenBoundingBox(te, te.isTop(), type)
+												: te.getMovement().getClosedBoundingBox(te, te.isTop(), type);
+			if (aabb != null)
+				aabbs.add(aabb);
+		}
 
-		return aabb;
+		AxisAlignedBB[] ret = new AxisAlignedBB[aabbs.size()];
+		for (int i = 0; i < aabbs.size(); i++)
+		{
+			//rotate before origin offset
+			AxisAlignedBB aabb = AABBUtils.rotate(aabbs.get(i), te.getDirection());
+			//returned AABB expected to be relative to this blockPos, but it's relative to TE's pos, so wee need to offset
+			aabb = aabb.offset(te.getPos().subtract(pos));
+
+			ret[i] = aabb;
+		}
+
+		return ret;
 	}
 
 	@Override
