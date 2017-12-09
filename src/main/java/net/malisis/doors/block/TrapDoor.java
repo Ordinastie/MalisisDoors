@@ -53,6 +53,7 @@ import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -207,6 +208,18 @@ public class TrapDoor extends BlockTrapDoor implements IBoundingBox, IComponentP
 	}
 
 	//#end BoudingBox
+
+	@Override
+	public boolean isLadder(IBlockState state, IBlockAccess world, BlockPos pos, EntityLivingBase entity)
+	{
+		if (!state.getValue(OPEN))
+			return false;
+
+		BlockPos dp = pos.down();
+		IBlockState ds = world.getBlockState(dp);
+		return ds.getBlock().isLadder(ds, world, dp, entity);
+	}
+
 	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{
