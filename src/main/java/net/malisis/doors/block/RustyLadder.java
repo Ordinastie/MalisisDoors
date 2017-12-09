@@ -46,6 +46,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @MalisisRendered(RustyLadderRenderer.class)
 public class RustyLadder extends MalisisBlock
 {
+	public static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 1, 1, 0.1875F);
+
 	public RustyLadder()
 	{
 		super(Material.IRON);
@@ -59,10 +61,7 @@ public class RustyLadder extends MalisisBlock
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockAccess world, BlockPos pos, IBlockState state, BoundingBoxType type)
 	{
-		//if (type == BoundingBoxType.COLLISION)
-		//	return null;
-
-		return new AxisAlignedBB(0, 0, 0, 1, 1, 0.1875F);
+		return BOUNDING_BOX;
 	}
 
 	@Override
