@@ -162,8 +162,12 @@ public class DoorTileEntity extends TileEntity implements ITickable
 
 	public boolean isOpened()
 	{
-		IBlockState state = getBlockState();
-		return state != null && state.getValue(BlockDoor.OPEN);
+		return isOpened(getBlockState());
+	}
+
+	public boolean isOpened(IBlockState state)
+	{
+		return state != null && state.getValue(openProperty);
 	}
 
 	public boolean isHingeLeft()

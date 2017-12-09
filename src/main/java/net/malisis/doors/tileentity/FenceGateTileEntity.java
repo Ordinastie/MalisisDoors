@@ -24,6 +24,8 @@
 
 package net.malisis.doors.tileentity;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.malisis.core.renderer.MalisisRenderer;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.syncer.Syncable;
@@ -31,6 +33,7 @@ import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
 import net.malisis.doors.movement.FenceGateMovement;
 import net.malisis.doors.sound.FenceGateSound;
+import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -38,24 +41,26 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 /**
  * @author Ordinastie
  */
 @Syncable("TileEntity")
 public class FenceGateTileEntity extends DoorTileEntity
 {
+	private static DoorDescriptor FENCE_GATE_DESCRIPTOR = new DoorDescriptor();
+	static
+	{
+		FENCE_GATE_DESCRIPTOR.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
+		FENCE_GATE_DESCRIPTOR.setSound(DoorRegistry.getSound(FenceGateSound.class));
+	}
 	private IBlockState camoState;
 	private int camoColor = -1;
 	private boolean isWall = false;
 
 	public FenceGateTileEntity()
 	{
-		DoorDescriptor descriptor = new DoorDescriptor();
-		descriptor.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
-		descriptor.setSound(DoorRegistry.getSound(FenceGateSound.class));
-		setDescriptor(descriptor);
+		setDescriptor(FENCE_GATE_DESCRIPTOR);
+		openProperty = BlockFenceGate.OPEN;
 	}
 
 	@Override

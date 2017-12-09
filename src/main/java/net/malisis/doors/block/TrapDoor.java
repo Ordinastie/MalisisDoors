@@ -43,13 +43,13 @@ import net.malisis.core.util.AABBUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.TrapDoorDescriptor;
 import net.malisis.doors.renderer.TrapDoorRenderer;
 import net.malisis.doors.tileentity.DoorTileEntity;
 import net.malisis.doors.tileentity.TrapDoorTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTrapDoor;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -70,7 +70,7 @@ import net.minecraft.world.World;
  *
  */
 @MalisisRendered(TrapDoorRenderer.class)
-public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBoundingBox, IComponentProvider, IRegisterable<Block>
+public class TrapDoor extends BlockTrapDoor implements IBoundingBox, IComponentProvider, IRegisterable<Block>
 {
 	private TrapDoorDescriptor descriptor;
 	protected final List<IComponent> components = Lists.newArrayList();
@@ -207,12 +207,19 @@ public class TrapDoor extends BlockTrapDoor implements ITileEntityProvider, IBou
 	}
 
 	//#end BoudingBox
+	@Override
+	public boolean hasTileEntity(IBlockState state)
+	{
+		return true;
+	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		TrapDoorTileEntity te = new TrapDoorTileEntity();
 		te.setDescriptor(descriptor);
+		if (te.isOpened(state))
+			te.setState(DoorState.OPENED);
 		return te;
 	}
 

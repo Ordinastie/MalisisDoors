@@ -41,6 +41,7 @@ import net.malisis.core.renderer.icon.provider.IIconProvider;
 import net.malisis.core.util.EntityUtils;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.clientnotif.ClientNotification;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.iconprovider.CamoFenceGateIconProvider;
 import net.malisis.doors.renderer.FenceGateRenderer;
@@ -49,7 +50,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockPlanks.EnumType;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -71,7 +71,7 @@ import net.minecraft.world.World;
  *
  */
 @MalisisRendered(FenceGateRenderer.class)
-public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IComponentProvider, IRegisterable<Block>
+public class FenceGate extends BlockFenceGate implements IComponentProvider, IRegisterable<Block>
 {
 	public static enum Type
 	{
@@ -216,9 +216,18 @@ public class FenceGate extends BlockFenceGate implements ITileEntityProvider, IC
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2)
+	public boolean hasTileEntity(IBlockState state)
 	{
-		return new FenceGateTileEntity();
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
+	{
+		FenceGateTileEntity te = new FenceGateTileEntity();
+		if (te.isOpened(state))
+			te.setState(DoorState.OPENED);
+		return te;
 	}
 
 	@Override

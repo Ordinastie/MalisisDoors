@@ -45,6 +45,7 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.raytrace.RaytraceBlock;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
+import net.malisis.doors.DoorState;
 import net.malisis.doors.gui.DigicodeGui;
 import net.malisis.doors.iconprovider.DoorIconProvider;
 import net.malisis.doors.renderer.DoorRenderer;
@@ -400,6 +401,8 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 			te = new DoorTileEntity();
 		}
 		te.setDescriptor(descriptor);
+		if (te.isOpened(state))
+			te.setState(DoorState.OPENED);
 		return te;
 	}
 
