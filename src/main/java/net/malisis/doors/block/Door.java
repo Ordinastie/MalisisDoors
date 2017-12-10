@@ -82,11 +82,13 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 {
 	public static Block[] centerBlocks = new Block[] {	Blocks.IRON_BARS,
 														Blocks.COBBLESTONE_WALL,
+														Blocks.OAK_FENCE,
 														Blocks.SPRUCE_FENCE,
 														Blocks.BIRCH_FENCE,
 														Blocks.JUNGLE_FENCE,
 														Blocks.DARK_OAK_FENCE,
-														Blocks.ACACIA_FENCE };
+														Blocks.ACACIA_FENCE,
+														Blocks.GLASS_PANE };
 
 	public static final float DOOR_WIDTH = 0.1875F;
 
