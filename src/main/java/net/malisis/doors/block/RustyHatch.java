@@ -73,8 +73,8 @@ import net.minecraft.world.World;
 @MalisisRendered(block = RustyHatchRenderer.class, item = DefaultRenderer.Item.class)
 public class RustyHatch extends MalisisBlock
 {
-	private AABBMultiBlock bottomMultiBlock = new AABBMultiBlock(this, new AxisAlignedBB(-1, -2, 0, 1, 1, 2));
-	private AABBMultiBlock topMultiBlock = new AABBMultiBlock(this, new AxisAlignedBB(-1, 0, 0, 1, 3, 2));
+	private AABBMultiBlock bottomMultiBlock = new AABBMultiBlock(new AxisAlignedBB(-1, -2, 0, 1, 1, 2));
+	private AABBMultiBlock topMultiBlock = new AABBMultiBlock(new AxisAlignedBB(-1, 0, 0, 1, 3, 2));
 	public static PropertyBool TOP = PropertyBool.create("top");
 
 	public RustyHatch()
@@ -90,6 +90,8 @@ public class RustyHatch extends MalisisBlock
 		topMultiBlock.setBulkProcess(true, true);
 
 		addComponent(new MultiBlockComponent((world, pos, state, itemStack) -> isTop(state) ? topMultiBlock : bottomMultiBlock));
+		bottomMultiBlock.setDefaultState(getDefaultState().withProperty(TOP, false));
+		topMultiBlock.setDefaultState(getDefaultState().withProperty(TOP, true));
 
 		if (MalisisCore.isClient())
 			addComponent(RustyHatchIconProvider.get());

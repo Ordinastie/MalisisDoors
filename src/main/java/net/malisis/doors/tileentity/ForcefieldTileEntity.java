@@ -95,7 +95,7 @@ public class ForcefieldTileEntity extends TileEntity
 		if (tag.hasKey("minX"))
 		{
 			AxisAlignedBB aabb = AABBUtils.readFromNBT(tag);
-			multiBlock = new AABBMultiBlock(MalisisDoors.Blocks.forcefieldDoor, aabb);
+			multiBlock = new AABBMultiBlock(MalisisDoors.Blocks.forcefieldDoor.getDefaultState(), aabb);
 			multiBlock.setBulkProcess(true, true);
 		}
 

@@ -141,7 +141,7 @@ public class ForcefieldItem extends MalisisItem
 		if (state.getBlock() != block)
 			return clearStartPosition(itemStack);
 
-		AABBMultiBlock multiBlock = new AABBMultiBlock(block, aabb.offset(-pos.getX(), -pos.getY(), -pos.getZ()));
+		AABBMultiBlock multiBlock = new AABBMultiBlock(block.getDefaultState(), aabb.offset(-pos.getX(), -pos.getY(), -pos.getZ()));
 		multiBlock.setBulkProcess(true, true);
 		ForcefieldTileEntity te = TileEntityUtils.getTileEntity(ForcefieldTileEntity.class, world, pos);
 		if (te != null)
