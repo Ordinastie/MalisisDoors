@@ -30,6 +30,7 @@ import net.malisis.core.block.component.LadderComponent;
 import net.malisis.core.renderer.MalisisRendered;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.renderer.RustyLadderRenderer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
@@ -52,6 +53,8 @@ public class RustyLadder extends MalisisBlock
 	{
 		super(Material.IRON);
 		setName("rustyLadder");
+		setHardness(2F);
+		setSoundType(SoundType.LADDER);
 		setCreativeTab(MalisisDoors.tab);
 		setTexture(MalisisDoors.modid + ":blocks/rusty_hatch_handle");
 
