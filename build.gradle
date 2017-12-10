@@ -25,7 +25,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-version = "1.12.2-7.1.2"
+version = "1.12.2-7.2.0"
 group = "net.malisis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "malisisdoors"
 
@@ -36,7 +36,7 @@ ext.url = 'http://github.com/Ordinastie/MalisisDoors'
 dependencies
 {
 	//compile 'net.malisis:malisiscore:1.10.2-4.2.8:dev'
-	compile files('../MalisisCore/build/libs/malisiscore-1.12.2-6.1.7-dev.jar')
+	compile files('../MalisisCore/build/libs/malisiscore-1.12.2-6.3.0-dev.jar')
 }
 
 
