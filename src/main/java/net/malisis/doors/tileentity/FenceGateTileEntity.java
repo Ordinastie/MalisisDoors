@@ -47,18 +47,22 @@ import net.minecraft.util.math.BlockPos;
 @Syncable("TileEntity")
 public class FenceGateTileEntity extends DoorTileEntity
 {
-	private static DoorDescriptor FENCE_GATE_DESCRIPTOR = new DoorDescriptor();
-	static
-	{
-		FENCE_GATE_DESCRIPTOR.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
-		FENCE_GATE_DESCRIPTOR.setSound(DoorRegistry.getSound(FenceGateSound.class));
-	}
+	private static DoorDescriptor FENCE_GATE_DESCRIPTOR;
+
 	private IBlockState camoState;
 	private int camoColor = -1;
 	private boolean isWall = false;
 
 	public FenceGateTileEntity()
 	{
+		//can't initialize statically because class is loaded from MalisisCore (@Sync) and triggers unavoidable warnings
+		if (FENCE_GATE_DESCRIPTOR == null)
+		{
+			FENCE_GATE_DESCRIPTOR = new DoorDescriptor();
+			FENCE_GATE_DESCRIPTOR.setMovement(DoorRegistry.getMovement(FenceGateMovement.class));
+			FENCE_GATE_DESCRIPTOR.setSound(DoorRegistry.getSound(FenceGateSound.class));
+		}
+
 		setDescriptor(FENCE_GATE_DESCRIPTOR);
 		openProperty = BlockFenceGate.OPEN;
 	}
