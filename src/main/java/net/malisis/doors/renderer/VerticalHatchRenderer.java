@@ -64,7 +64,7 @@ public class VerticalHatchRenderer extends DoorRenderer
 	@Override
 	public void render()
 	{
-		if (renderType == RenderType.BLOCK)
+		if (renderType == RenderType.BLOCK && tileEntity != null)
 		{
 			if (!Door.isTop(blockState))
 			{

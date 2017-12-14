@@ -152,7 +152,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 
 		rp.icon.set(null);
 		rp.brightness.reset();
-		if (renderType == RenderType.TILE_ENTITY)
+		if (renderType == RenderType.TILE_ENTITY && tileEntity != null)
 		{
 			setTileEntity();
 			setup();
@@ -185,6 +185,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 		if (direction == EnumFacing.EAST)
 			model.rotate(90, 0, 1, 0, 0, 0, 0);
 
+		//check TE because called for Item too
 		if (tileEntity != null && tileEntity.isCentered())
 			model.translate(0, 0, 0.5F - Door.DOOR_WIDTH / 2);
 	}
