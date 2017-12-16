@@ -1,7 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"AAA"
+		"A A",
+		"AAA",
+		"A A"
 	],
 	"key": {
 		"A": {
@@ -9,6 +11,7 @@
 		}
 	},
 	"result": {
-		"item": "malisisdoors:rustyLadder"
+		"item": "malisisdoors:rustyLadder",
+		"count": 2
 	}
 }
