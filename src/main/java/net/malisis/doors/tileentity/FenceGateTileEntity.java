@@ -31,6 +31,7 @@ import net.malisis.core.util.TileEntityUtils;
 import net.malisis.core.util.syncer.Syncable;
 import net.malisis.doors.DoorDescriptor;
 import net.malisis.doors.DoorRegistry;
+import net.malisis.doors.block.FenceGate;
 import net.malisis.doors.movement.FenceGateMovement;
 import net.malisis.doors.sound.FenceGateSound;
 import net.minecraft.block.BlockFenceGate;
@@ -157,6 +158,8 @@ public class FenceGateTileEntity extends DoorTileEntity
 		if (!descriptor.isDoubleDoor())
 			return null;
 
+		if (!(getBlockState().getBlock() instanceof FenceGate)) //for some reason, this get called when the block at the position is not a FenceGate
+			return null;
 		EnumFacing dir = getDirection().rotateY();
 		FenceGateTileEntity te = TileEntityUtils.getTileEntity(FenceGateTileEntity.class, world, pos.offset(dir));
 		if (te != null && isMatchingDoubleDoor(te))
