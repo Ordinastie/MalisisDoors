@@ -77,7 +77,7 @@ public class FenceGate extends BlockFenceGate implements IComponentProvider, IRe
 	{
 		OAK("minecraft:fence_gate", "fenceGate", EnumType.OAK),
 		ACACIA("minecraft:acacia_fence_gate", "acaciaFenceGate", EnumType.ACACIA),
-		BIRCH("minecraft:birch_fence_fate", "birchFenceGate", EnumType.BIRCH),
+		BIRCH("minecraft:birch_fence_gate", "birchFenceGate", EnumType.BIRCH),
 		DARK_OAK("minecraft:dark_oak_fence_gate", "darkOakFenceGate", EnumType.DARK_OAK),
 		JUNGLE("minecraft:jungle_fence_gate", "jungleFenceGate", EnumType.JUNGLE),
 		SPRUCE("minecraft:spruce_fence_gate", "spruceFenceGate", EnumType.SPRUCE),
