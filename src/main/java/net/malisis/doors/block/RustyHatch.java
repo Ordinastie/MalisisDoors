@@ -147,16 +147,19 @@ public class RustyHatch extends MalisisBlock
 			//adds collision boxes for ladders
 			MultiBlock mb = MultiBlockComponent.getMultiBlock(world, pos, state, null);
 			BlockPos origin = MultiBlock.getOrigin(world, pos);
-			IBlockState originState = world.getBlockState(origin);
-
-			for (MBlockState mstate : mb)
+			if (origin != null)
 			{
-				MBlockState ws = mb.getWorldState(mstate, origin, originState);
-				if (te.shouldLadder(ws.getPos()))
+				IBlockState originState = world.getBlockState(origin);
+
+				for (MBlockState mstate : mb)
 				{
-					//default BB for rusty ladder is facing south, by default, rusty hacth ladder face the opposite direction
-					AxisAlignedBB aabb = AABBUtils.rotate(RustyLadder.BOUNDING_BOX, EnumFacing.NORTH).offset(mstate.getPos());
-					aabbs.add(aabb);
+					MBlockState ws = mb.getWorldState(mstate, origin, originState);
+					if (te.shouldLadder(ws.getPos()))
+					{
+						//default BB for rusty ladder is facing south, by default, rusty hacth ladder face the opposite direction
+						AxisAlignedBB aabb = AABBUtils.rotate(RustyLadder.BOUNDING_BOX, EnumFacing.NORTH).offset(mstate.getPos());
+						aabbs.add(aabb);
+					}
 				}
 			}
 		}
