@@ -64,6 +64,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -306,21 +307,9 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	}
 
 	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		//		if (!player.capabilities.isCreativeMode)
-		//		{
-		//			DoorTileEntity te = Door.getDoor(world, pos);
-		//			if (te != null)
-		//				spawnAsEntity(world, pos, getDoorItemStack(world, pos));
-		//		}
-		return super.removedByPlayer(state, world, pos, player, willHarvest);
-	}
-
-	@Override
-	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
-	{
-		return Lists.newArrayList();
+		drops.add(getDoorItemStack(world, pos));
 	}
 
 	//#region BoundingBox
