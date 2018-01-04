@@ -48,6 +48,8 @@ import net.malisis.core.util.TransformBuilder;
 import net.malisis.doors.MalisisDoors.Blocks;
 import net.malisis.doors.MalisisDoorsSettings;
 import net.malisis.doors.block.Door;
+import net.malisis.doors.block.FenceGate;
+import net.malisis.doors.block.TrapDoor;
 import net.malisis.doors.iconprovider.DoorIconProvider;
 import net.malisis.doors.item.DoorItem;
 import net.malisis.doors.tileentity.DoorTileEntity;
@@ -75,6 +77,7 @@ public class DoorRenderer extends MalisisRenderer<DoorTileEntity>
 	public DoorRenderer()
 	{
 		registerFor(DoorTileEntity.class);
+		ensureBlock(Door.class, TrapDoor.class, FenceGate.class);
 		setBatched();
 	}
 
