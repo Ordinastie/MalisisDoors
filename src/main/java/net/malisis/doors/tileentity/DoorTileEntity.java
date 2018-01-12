@@ -84,6 +84,7 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	protected boolean moving;
 	protected boolean centered = false;
 	protected PropertyBool openProperty = BlockDoor.OPEN;
+	protected boolean powered = false;
 
 	//#region Getter/Setter
 	public DoorDescriptor getDescriptor()
@@ -178,9 +179,27 @@ public class DoorTileEntity extends TileEntity implements ITickable
 		return state.getBlock() instanceof Door && state.getValue(BlockDoor.HINGE) == BlockDoor.EnumHingePosition.LEFT;
 	}
 
+	public void updatePowered()
+	{
+		setPowered(getWorld().isBlockIndirectlyGettingPowered(pos) + getWorld().isBlockIndirectlyGettingPowered(pos.up()) != 0);
+		Syncer.sync(this, "power");
+	}
+
+	@Sync("power")
 	public boolean isPowered()
 	{
-		return getWorld().isBlockIndirectlyGettingPowered(pos) + getWorld().isBlockIndirectlyGettingPowered(pos.up()) != 0;
+		return powered;
+	}
+
+	@Sync("power")
+	public void setPowered(boolean powered)
+	{
+		boolean wasPowered = this.powered;
+		this.powered = powered;
+		if (wasPowered && !powered && !isDoubleDoorPowered())
+			close();
+		else if (!wasPowered && powered)
+			open();
 	}
 
 	public boolean isDoubleDoorPowered()
@@ -384,21 +403,21 @@ public class DoorTileEntity extends TileEntity implements ITickable
 	/**
 	 * Change the state of this DoorTileEntity based on powered
 	 */
-	public void setPowered(boolean powered)
-	{
-		if (isOpened() == powered && !isMoving())
-			return;
-
-		DoorTileEntity te = getDoubleDoor();
-		if (!powered && te != null && te.isPowered())
-			return;
-
-		DoorState newState = powered ? DoorState.OPENING : DoorState.CLOSING;
-		setDoorState(newState);
-
-		if (te != null)
-			te.setDoorState(newState);
-	}
+	//	public void setPowered(boolean powered)
+	//	{
+	//		if (isOpened() == powered && !isMoving())
+	//			return;
+	//
+	//		DoorTileEntity te = getDoubleDoor();
+	//		if (!powered && te != null && te.isPowered())
+	//			return;
+	//
+	//		DoorState newState = powered ? DoorState.OPENING : DoorState.CLOSING;
+	//		setDoorState(newState);
+	//
+	//		if (te != null)
+	//			te.setDoorState(newState);
+	//	}
 
 	protected boolean hasPlayer()
 	{
@@ -420,11 +439,11 @@ public class DoorTileEntity extends TileEntity implements ITickable
 			setDoorState(getState() == DoorState.CLOSING ? DoorState.CLOSED : DoorState.OPENED);
 
 		//door is powered, open doors
-		if (isPowered() || isDoubleDoorPowered())
-		{
-			open();
-			return;
-		}
+		//		if (isPowered() || isDoubleDoorPowered())
+		//		{
+		//			open();
+		//			return;
+		//		}
 
 		//door has player in proximity, open doors
 		if (getDescriptor().hasProximityDetection() && (hasPlayer() || doubleDoorHasPlayer()))

@@ -265,9 +265,8 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 				if (te.getDescriptor().hasCode())
 					return;
 
-				boolean powered = te.isPowered();
-				if ((powered || block.getDefaultState().canProvidePower()) && block != this)
-					te.setPowered(powered);
+				if (block.getDefaultState().canProvidePower() && block != this)
+					te.updatePowered();
 
 				//center check
 				boolean centered = te.shouldCenter();
