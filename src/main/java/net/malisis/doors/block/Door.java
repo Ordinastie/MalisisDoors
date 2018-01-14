@@ -28,6 +28,8 @@ import static com.google.common.base.Preconditions.*;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.google.common.collect.Lists;
@@ -308,7 +310,23 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-		drops.add(getDoorItemStack(world, pos));
+		if (!isTop(state))
+			drops.add(getDoorItemStack(world, pos));
+	}
+
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	{
+		if (willHarvest)
+			return true; //If it will harvest, delay deletion of the block until after getDrops
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack tool)
+	{
+		super.harvestBlock(world, player, pos, state, te, tool);
+		world.setBlockToAir(pos);
 	}
 
 	//#region BoundingBox
