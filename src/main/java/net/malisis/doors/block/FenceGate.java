@@ -195,8 +195,9 @@ public class FenceGate extends BlockFenceGate implements IComponentProvider, IRe
 
 		if (!world.isRemote) //server
 		{
-			if (world.isBlockIndirectlyGettingPowered(pos) != 0 || neighborBlock.getDefaultState().canProvidePower())
-				te.setPowered(te.isPowered());
+			boolean powered = world.isBlockPowered(pos);
+			if (powered || neighborBlock.getDefaultState().canProvidePower())
+				te.setPowered(powered);
 		}
 		else
 		{
