@@ -26,7 +26,7 @@ package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
 import net.malisis.core.network.IMalisisMessageHandler;
-import net.malisis.core.network.MalisisMessage;
+import net.malisis.core.registry.AutoLoad;
 import net.malisis.core.util.TileEntityUtils;
 import net.malisis.doors.DoorDescriptor.RedstoneBehavior;
 import net.malisis.doors.DoorRegistry;
@@ -43,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author Ordinastie
  *
  */
-@MalisisMessage
+@AutoLoad(true)
 public class DoorFactoryMessage implements IMalisisMessageHandler<DoorFactoryMessage.Packet, IMessage>
 {
 	public DoorFactoryMessage()

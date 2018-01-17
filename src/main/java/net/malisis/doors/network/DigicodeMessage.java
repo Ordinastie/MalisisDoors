@@ -26,7 +26,7 @@ package net.malisis.doors.network;
 
 import io.netty.buffer.ByteBuf;
 import net.malisis.core.network.IMalisisMessageHandler;
-import net.malisis.core.network.MalisisMessage;
+import net.malisis.core.registry.AutoLoad;
 import net.malisis.doors.MalisisDoors;
 import net.malisis.doors.block.Door;
 import net.malisis.doors.tileentity.DoorTileEntity;
@@ -40,7 +40,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author Ordinastie
  *
  */
-@MalisisMessage
+@AutoLoad(true)
 public class DigicodeMessage implements IMalisisMessageHandler<DigicodeMessage.Packet, IMessage>
 {
 	public DigicodeMessage()
@@ -59,8 +59,10 @@ public class DigicodeMessage implements IMalisisMessageHandler<DigicodeMessage.P
 		te.openOrCloseDoor();
 
 		if (te.getDescriptor().getAutoCloseTime() > 0 && !te.isOpened())
-			world.scheduleBlockUpdate(message.pos, world.getBlockState(message.pos).getBlock(), te.getDescriptor().getAutoCloseTime()
-					+ te.getDescriptor().getOpeningTime(), 0);
+			world.scheduleBlockUpdate(	message.pos,
+										world.getBlockState(message.pos).getBlock(),
+										te.getDescriptor().getAutoCloseTime() + te.getDescriptor().getOpeningTime(),
+										0);
 
 		return;
 	}
