@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AA",
+		"AA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:acacia_door"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:big_door_acacia_3x3"
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AA",
+		"AA"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:birch_door"
+		}
+	},
+	"result": {
+		"item": "malisisdoors:big_door_birch_3x3"
+	}
+}
