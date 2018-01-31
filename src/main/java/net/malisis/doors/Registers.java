@@ -28,6 +28,8 @@ import static net.malisis.doors.MalisisDoors.Blocks.*;
 import static net.malisis.doors.MalisisDoors.Items.*;
 
 import net.malisis.core.item.MalisisItem;
+import net.malisis.doors.bigdoors.Door3x3;
+import net.malisis.doors.bigdoors.Door3x3Tile;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
@@ -325,6 +327,33 @@ public class Registers
 
 		medievalDoor = new BigDoor(BigDoor.Type.MEDIEVAL);
 		medievalDoor.register();
+
+		//3x3 doors
+		bigDoorOak = new Door3x3(Door3x3.Type.OAK);
+		bigDoorOak.register();
+
+		bigDoorSpruce = new Door3x3(Door3x3.Type.SPRUCE);
+		bigDoorSpruce.register();
+
+		bigDoorBirch = new Door3x3(Door3x3.Type.BIRCH);
+		bigDoorBirch.register();
+
+		bigDoorJungle = new Door3x3(Door3x3.Type.JUNGLE);
+		bigDoorJungle.register();
+
+		bigDoorAcacia = new Door3x3(Door3x3.Type.ACACIA);
+		bigDoorAcacia.register();
+
+		bigDoorDarkOak = new Door3x3(Door3x3.Type.DARK_OAK);
+		bigDoorDarkOak.register();
+
+		bigDoorIron = new Door3x3(Door3x3.Type.IRON);
+		bigDoorIron.register();
+
+		bigDoorRusty = new Door3x3(Door3x3.Type.RUSTY);
+		bigDoorRusty.register();
+
+		GameRegistry.registerTileEntity(Door3x3Tile.class, "door3x3");
 
 		GameRegistry.registerTileEntity(BigDoorTileEntity.class, "bigDoorTileEntity");
 	}

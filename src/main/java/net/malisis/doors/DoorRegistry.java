@@ -33,6 +33,7 @@ import com.google.common.collect.Maps;
 
 import net.malisis.doors.movement.CarriageDoorMovement;
 import net.malisis.doors.movement.CurtainMovement;
+import net.malisis.doors.movement.Door3x3Movement;
 import net.malisis.doors.movement.DoubleRotateMovement;
 import net.malisis.doors.movement.DoubleSlideMovement;
 import net.malisis.doors.movement.FenceGateMovement;
@@ -64,6 +65,7 @@ import net.malisis.doors.sound.IronDoorSound;
 import net.malisis.doors.sound.IronTrapDoorSound;
 import net.malisis.doors.sound.JailDoorSound;
 import net.malisis.doors.sound.PneumaticSound;
+import net.malisis.doors.sound.RustyDoorSound;
 import net.malisis.doors.sound.RustyHatchSound;
 import net.malisis.doors.sound.ShojiDoorSound;
 import net.malisis.doors.sound.SilentDoorSound;
@@ -106,6 +108,7 @@ public class DoorRegistry
 		registerMovement("sliding_trapdoor", new SlidingTrapDoorMovement());
 		registerMovement("saloon_door", new SaloonDoorMovement());
 		registerMovement("vertical_hatch", new VerticalHatchMovement());
+		registerMovement("door3x3", new Door3x3Movement());
 
 		registerSound("silent_door", new SilentDoorSound());
 		registerSound("vanilla_door", new WoodenDoorSound());
@@ -119,6 +122,8 @@ public class DoorRegistry
 		registerSound("rusty_hatch", new RustyHatchSound());
 		registerSound("carriage_door", new BigDoorSound());
 		registerSound("fence_gate", new FenceGateSound());
+
+		registerSound("rustyDoor", new RustyDoorSound());
 	}
 
 	//#region Movements

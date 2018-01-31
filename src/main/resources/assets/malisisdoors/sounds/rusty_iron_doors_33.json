@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shapeless",
+    "group": "big_door",
+    "ingredients": [
+        {
+            "item": "big_doors:iron_doors_33"
+        },
+        {
+            "item": "minecraft:dirt"
+        }
+    ],
+    "result": {
+        "item": "big_doors:rusty_iron_doors_33"
+    }
+}

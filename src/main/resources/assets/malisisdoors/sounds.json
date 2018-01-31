@@ -8,5 +8,8 @@
 	"rustyhatch_close": {"category": "block","sounds": [{"name": "malisisdoors:rustyhatch_close","stream": false}]},
 	"carriage_opening": {"category": "block","sounds": [{"name": "malisisdoors:carriage_opening","stream": false}]},
 	"carriage_closing": {"category": "block","sounds": [{"name": "malisisdoors:carriage_closing","stream": false}]},
-	"carriage_closed": {"category": "block","sounds": [{"name": "malisisdoors:carriage_closed","stream": false}]}
+	"carriage_closed": {"category": "block","sounds": [{"name": "malisisdoors:carriage_closed","stream": false}]},
+	"rustydoor_opening": {"category": "block","sounds": [{"name": "malisisdoors:rustydoor_opening","stream": false}]},
+    "rustydoor_closing": {"category": "block","sounds": [{"name": "malisisdoors:rustydoor_closing","stream": false}]},
+    "rustydoor_closed": {"category": "block","sounds": [{"name": "malisisdoors:rustydoor_closed","stream": false}]}
 }

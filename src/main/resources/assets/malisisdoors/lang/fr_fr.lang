@@ -21,6 +21,7 @@ item.saloon.name=Porte de saloon
 item.verticalHatch.name=Porte renforcée
 item.malisisdoors:hitechdoor.name=Porte hi-tech
 
+
 item.curtain_white.name=Rideau Blanc
 item.curtain_orange.name=Rideau Orange
 item.curtain_magenta.name=Rideau Magenta
@@ -68,6 +69,15 @@ tile.trapdoor_spruce.name=Trappe en bois de sapin
 tile.camoFenceGate.name=Portillon camouflé
 tile.verticalHatch.name=Porte renforcée
 tile.malisisdoors:hitechdoor.name=Porte hi-tech
+
+tile.big_door_oak_3x3.name=Grande double portes en chêne
+tile.big_door_spruce_3x3.name=Grande double porte en bois de sapin
+tile.big_door_birch_3x3.name=Grande double porte en bois de bouleau
+tile.big_door_jungle_3x3.name=Grande double porte en bois d'acajou
+tile.big_door_acacia_3x3.name=Grande double porte en bois d'acacia
+tile.big_door_dark_oak_3x3.name=Grande double porte en bois de chêne noir
+tile.big_door_iron_3x3.name=Grande double porte en fer
+tile.big_door_rusty_3x3.name=Grande double porte en en fer rouillé
 
 tile.curtain_white.name=Rideau Blanc
 tile.curtain_orange.name=Rideau Orange

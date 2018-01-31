@@ -1,0 +1,20 @@
+{
+    "type": "crafting_shaped",
+    "group": "big_door",
+    "pattern": [
+        "XX",
+        "YY"
+    ],
+    "key": {
+        "X": {
+            "item": "minecraft:spruce_door"
+        },
+        "Y": {
+            "item": "minecraft:planks",
+            "data": 1
+        }
+    },
+    "result": {
+        "item": "big_doors:spruce_doors_33"
+    }
+}

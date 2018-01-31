@@ -9,6 +9,7 @@ import net.malisis.core.network.MalisisNetwork;
 import net.malisis.core.registry.MalisisRegistry;
 import net.malisis.core.renderer.font.MalisisFont;
 import net.malisis.core.util.modmessage.ModMessageManager;
+import net.malisis.doors.bigdoors.Door3x3;
 import net.malisis.doors.block.BigDoor;
 import net.malisis.doors.block.CustomDoor;
 import net.malisis.doors.block.Door;
@@ -152,6 +153,16 @@ public class MalisisDoors implements IMalisisMod
 		public static BigDoor carriageDoor;
 		public static BigDoor medievalDoor;
 		public static VerticalHatchDoor verticalHatch;
+
+		//3x3 doors
+		public static Door3x3 bigDoorOak;
+		public static Door3x3 bigDoorBirch;
+		public static Door3x3 bigDoorSpruce;
+		public static Door3x3 bigDoorJungle;
+		public static Door3x3 bigDoorAcacia;
+		public static Door3x3 bigDoorDarkOak;
+		public static Door3x3 bigDoorIron;
+		public static Door3x3 bigDoorRusty;
 
 		public static TrapDoor slidingTrapDoor;
 		public static FenceGate camoFenceGate;
