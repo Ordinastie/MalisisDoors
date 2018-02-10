@@ -24,13 +24,14 @@
 
 package net.malisis.doors.gui;
 
+import org.lwjgl.input.Keyboard;
+
 import net.malisis.core.client.gui.Anchor;
 import net.malisis.core.client.gui.MalisisGui;
-import net.malisis.core.client.gui.component.container.UIWindow;
+import net.malisis.core.client.gui.component.container.UIContainer;
+import net.malisis.core.client.gui.render.BackgroundTexture.WindowBackground;
 import net.malisis.doors.network.DigicodeMessage;
 import net.malisis.doors.tileentity.DoorTileEntity;
-
-import org.lwjgl.input.Keyboard;
 
 /**
  * @author Ordinastie
@@ -53,7 +54,8 @@ public class DigicodeGui extends MalisisGui
 	{
 		digicode = new Digicode(this, expected).setAnchor(Anchor.MIDDLE | Anchor.CENTER).register(this);
 
-		UIWindow window = new UIWindow(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
+		UIContainer<?> window = new UIContainer<>(this, digicode.getWidth() + 20, digicode.getHeight() + 20);
+		window.setBackground(new WindowBackground(this));
 		window.add(digicode);
 
 		addToScreen(window);
