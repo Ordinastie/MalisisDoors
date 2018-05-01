@@ -1,0 +1,51 @@
+itemGroup.malisisdoors=MalisisDoors
+
+item.wood_sliding_door.name=Puerta Corredera de Madera
+item.iron_sliding_door.name=Puerta Corredera de Hierro
+item.jail_door.name=Puerta de Celda
+item.laboratory_door.name=Puerta de Laboratorio
+item.factory_door.name=Puerta de Fábrica
+item.custom_door.name=Puerta Personalizada
+item.shoji_door.name=Puerta Shoji
+
+tile.garage_door.name=Puerta de Garaje
+tile.jail_door.name=Puerta de Celda
+tile.laboratory_door.name=Puerta de Laboratorio
+tile.factory_door.name=Puerta de Fábrica
+tile.door_factory.name=Puerta de Fábrica
+tile.custom_door.name=Puerta Personalizada
+tile.shoji_door.name=Puerta Shoji
+
+malisisdoors.command.usage=Use el comando /malisisdoors con el argumento config o version
+
+config.modifyVanillaDoors=Permitir mejora a las puertas de Minecraft normal.
+config.modifyVanillaDoors.comment=Permitir animaciones para puertas, puertas de vallas y escotillas.\r\nEsto reemplaza completamente las puertas; pueden surgir conflictos si otro mod trata de modificarlas también.
+
+door_movement.rotating_door=Rotación
+door_movement.sliding_door=Desplazamiento hacia el costado
+door_movement.sliding_up_door=Desplazamiento hacia arriba
+door_movement.sliding_split_door=Desplazamiento hacia arriba y abajo
+door_movement.rotating_split_door=Rotación hacia arriba y abajo
+door_movement.vault_door=Bóveda
+door_movement.sliding_4ways=Desplazamiento en cuatro direcciones
+door_movement.rotating_4ways=Rotación en cuatro direcciones
+door_movement.rotate_around=Rotar hacia atrás
+door_movement.rotate_slide=Rotar y desplazar
+door_movement.rotate_place=Rotar hacia adelante
+
+gui.door_factory.tab_properties=Propiedades
+gui.door_factory.tab_materials=Materiales
+gui.door_factory.door_movement=Movimiento
+gui.door_factory.door_open_time=Tiempo de Apertura
+gui.door_factory.door_require_redstone=Requiere redstone
+gui.door_factory.door_double_door=Puerta Doble
+gui.door_factory.door_sound=Tipo de Sonido
+gui.door_factory.door_sound.vanilla_door=Puerta normal
+gui.door_factory.door_sound.glass_door=Puerta Corredera
+gui.door_factory.door_sound.jail_door=Puerta de Celda
+gui.door_factory.door_sound.pneumatic_door=Puerta Neumática
+
+gui.door_factory.frame_type=Tipo de marco
+gui.door_factory.top_material=Material de la parte superior
+gui.door_factory.bottom_material=Material de la parte inferior
+gui.door_factory.create_door=Construir puerta
