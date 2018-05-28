@@ -8,7 +8,7 @@ item.factory_door.name=Porte d'usine
 item.custom_door.name=Porte personnalisée
 item.shoji_door.name=Porte shoji
 item.rustyHatch.name=Trappe rouillée
-item.rustyHandle.name=Poignée Rouillée
+item.rustyHandle.name=Poignée rouillée
 item.carriage_door.name=Porte cochère
 item.medieval_door.name=Porte médiévale
 item.forcefieldItem.name=Contrôleur de champs de force
@@ -100,7 +100,7 @@ malisisdoors.command.usage=Utilisez /malisisdoors <commande> où commande est co
 
 config.modifyVanillaDoors=Activer l'amélioration des portes vanilla.
 config.modifyVanillaDoors.comment=Active l'animation des portes, trappes et portillons.\r\nLes blocs sont remplacés et peuvent provoquer des conflits si d'autres mods tentent aussi de les modifier.
-config.use3DItems=Render the door items in 3D
+config.use3DItems=Rendre les objets en 3D
 
 
 door_movement.rotating_door=Tournante
