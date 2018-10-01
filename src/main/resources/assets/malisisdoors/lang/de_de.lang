@@ -10,7 +10,7 @@ item.shoji_door.name=Shoji-Schiebetür
 item.rustyHatch.name=Rostige Luke
 item.rustyHandle.name=Rostiger Griff
 item.carriage_door.name=Kutschentor
-tile.medieval_door.name=Mittelalterliches Tor
+item.medieval_door.name=Mittelalterliches Tor
 item.forcefieldItem.name=Kraftfeldregler
 item.door_spruce.name=Fichtenholztür
 item.door_birch.name=Birkenholztür
@@ -49,7 +49,7 @@ tile.wood_sliding_door.name=Holz-Schiebetür
 tile.iron_sliding_door.name=Eisen-Schiebetür
 tile.rustyHatch.name=Rostige Luke
 tile.carriage_door.name=Wagentor
-item.medieval_door.name=Mittelalterliches Tor
+tile.medieval_door.name=Mittelalterliches Tor
 tile.forcefieldDoor.name=Forcefield
 tile.rustyLadder.name=Rostige Leiter
 tile.door_spruce.name=Fichtenholztür
@@ -68,6 +68,15 @@ tile.trapdoor_spruce.name=Fichtenholzfalltür
 tile.camoFenceGate.name=Camo-Zauntor
 tile.verticalHatch.name=Verstärkte Tür
 tile.malisisdoors:hitechdoor.name=Hightechtür
+
+tile.big_door_oak_3x3.name=Große Eichenholzdoppeltür
+tile.big_door_spruce_3x3.name=Große Fichtenholzdoppeltür
+tile.big_door_birch_3x3.name=Große Buchenholzdoppeltür
+tile.big_door_jungle_3x3.name=Große Tropenholzdoppeltür
+tile.big_door_acacia_3x3.name=Große Akazienholzdoppeltür
+tile.big_door_dark_oak_3x3.name=Große Schwarzeichenholzdoppeltür
+tile.big_door_iron_3x3.name=Große Eisendoppeltür
+tile.big_door_rusty_3x3.name=Große rostige Eisendoppeltür
 
 tile.curtain_white.name=Weißer Vorhang
 tile.curtain_orange.name=Oranger Vorhang
@@ -92,6 +101,7 @@ config.modifyVanillaDoors=Aktiviere Vanilla-Verbesserungen
 config.modifyVanillaDoors.comment=Aktiviert Animationen für Türen, Zaungatter und Falltüren.\r\nDies ersetzt die Türen komplett, daher können Konflikte mit anderen Mods auftreten.
 config.use3DItems=Rendere Türen als Items in 3D
 
+
 door_movement.rotating_door=Aufschwingend
 door_movement.sliding_door=Aufgleitend
 door_movement.sliding_up_door=Aufgleitend (hoch)
@@ -110,6 +120,7 @@ door_movement.double_slide_left=Doppelt nach links aufgleitend
 door_movement.double_slide_right=Doppelt nach rechts aufgleitend
 door_movement.double_rotate_left=Doppelt nach links aufschwingend
 door_movement.double_rotate_right=Doppelt nach rechts aufschwingend
+
 
 gui.door_factory.tab_properties=Eigenschaften
 gui.door_factory.tab_materials=Materialien
