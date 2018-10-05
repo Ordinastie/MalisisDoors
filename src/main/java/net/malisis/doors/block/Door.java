@@ -298,7 +298,7 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	protected ItemStack getDoorItemStack(IBlockAccess world, BlockPos pos)
 	{
 		DoorTileEntity te = getDoor(world, pos);
-		return te != null ? te.getItemStack() : null;
+		return te != null ? te.getItemStack() : ItemStack.EMPTY;
 	}
 
 	@Override
