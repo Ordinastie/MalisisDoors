@@ -21,6 +21,15 @@ item.saloon.name=Дверь салуна
 item.verticalHatch.name=Бронированная дверь
 item.malisisdoors:hitechdoor.name=Высокотехнологичная дверь
 
+tile.big_door_oak_3x3.name=Большая дубовая двойная дверь
+tile.big_door_spruce_3x3.name=Большая еловая двойная дверь
+tile.big_door_birch_3x3.name=Большая берёзовая двойная дверь
+tile.big_door_jungle_3x3.name=Большая тропическая двойная дверь
+tile.big_door_acacia_3x3.name=Большая акациевая двойная дверь
+tile.big_door_dark_oak_3x3.name=Большая двойная дверь из тёмного дуба
+tile.big_door_iron_3x3.name=Большая железная двойная дверь
+tile.big_door_rusty_3x3.name=Большая ржавая двойная дверь
+
 item.curtain_white.name=Белая штора
 item.curtain_orange.name=Оранжевая штора
 item.curtain_magenta.name=Пурпурная штора
@@ -123,6 +132,7 @@ gui.door_factory.door_open_time=Время открытия
 gui.door_factory.door_auto_close_time=Задержка закрытия
 gui.door_factory.redstone_behavior=Поведение редстоуна
 gui.door_factory.door_double_door=Двойная дверь
+gui.door_factory.proximity_detection=Обнаружение игрока
 gui.door_factory.door_sound=Тип звука
 gui.door_factory.door_sound.silent_door=Без звука
 gui.door_factory.door_sound.vanilla_door=Обычная дверь
@@ -135,6 +145,7 @@ gui.door_factory.door_sound.fence_gate=Калитка
 gui.door_factory.door_sound.iron_door=Железная дверь
 gui.door_factory.door_sound.iron_trapdoor=Железный люк
 gui.door_factory.door_sound.wooden_trapdoor=Люк
+gui.door_factory.door_sound.rustyDoor=Ржавая дверь
 
 gui.door_factory.redstone_behavior.STANDARD=Обычное
 gui.door_factory.redstone_behavior.REDSTONE_ONLY=Только при сигнале редстоуна
