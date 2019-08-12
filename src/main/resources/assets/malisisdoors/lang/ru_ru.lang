@@ -123,6 +123,7 @@ gui.door_factory.door_open_time=Время открытия
 gui.door_factory.door_auto_close_time=Задержка закрытия
 gui.door_factory.redstone_behavior=Поведение редстоуна
 gui.door_factory.door_double_door=Двойная дверь
+gui.door_factory.proximity_detection=Обнаружение игрока
 gui.door_factory.door_sound=Тип звука
 gui.door_factory.door_sound.silent_door=Без звука
 gui.door_factory.door_sound.vanilla_door=Обычная дверь
@@ -135,6 +136,7 @@ gui.door_factory.door_sound.fence_gate=Калитка
 gui.door_factory.door_sound.iron_door=Железная дверь
 gui.door_factory.door_sound.iron_trapdoor=Железный люк
 gui.door_factory.door_sound.wooden_trapdoor=Люк
+gui.door_factory.door_sound.rustyDoor=Ржавая дверь
 
 gui.door_factory.redstone_behavior.STANDARD=Обычное
 gui.door_factory.redstone_behavior.REDSTONE_ONLY=Только при сигнале редстоуна
