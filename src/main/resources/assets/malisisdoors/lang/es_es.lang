@@ -1,0 +1,161 @@
+#####Translation into Spanish by OdinsRagnarok#####
+
+itemGroup.malisisdoors=Puertas Malisis
+
+item.wood_sliding_door.name=Puerta de Cristal de Madera
+item.iron_sliding_door.name=Puerta de Cristal de Hierro
+item.jail_door.name=Puerta de Cárcel
+item.laboratory_door.name=Puerta de Laboratorio
+item.factory_door.name=Puerta de Fábrica
+item.custom_door.name=Puerta Personalizada
+item.shoji_door.name=Puerta Shoji
+item.rustyHatch.name=Escotilla Oxidada
+item.rustyHandle.name=Manija Oxidada
+item.carriage_door.name=Puerta de Carruaje
+item.medieval_door.name=Puerta Medieval
+item.forcefieldItem.name=Controlador de Campo de Fuerza
+item.door_spruce.name=Puerta de Abeto
+item.door_birch.name=Puerta de Abedul
+item.door_jungle.name=Puerta de Jungla
+item.door_acacia.name=Puerta de Acacia
+item.door_dark_oak.name=Puerta de Roble Oscuro
+item.saloon.name=Puerta de Salón
+item.verticalHatch.name=Puerta Reforzada
+item.malisisdoors:hitechdoor.name=Puerta Hi-Tec
+
+item.curtain_white.name=Cortina Blanca
+item.curtain_orange.name=Cortina Naranja
+item.curtain_magenta.name=Cortina Magenta
+item.curtain_light_blue.name=Cortina Azul Claro
+item.curtain_yellow.name=Cortina Amarilla
+item.curtain_lime.name=Cortina Lima
+item.curtain_pink.name=Cortina Rosa
+item.curtain_gray.name=Cortina Gris
+item.curtain_silver.name=Cortina Plateada
+item.curtain_cyan.name=Cortina Cian
+item.curtain_purple.name=Cortina Púrpura
+item.curtain_blue.name=Cortina Azul
+item.curtain_brown.name=Cortina Marrón
+item.curtain_green.name=Cortina Verde
+item.curtain_red.name=Cortina Roja
+item.curtain_black.name=Cortina Negra
+
+tile.garage_door.name=Puerta de Garaje
+tile.jail_door.name=Puerta de Cárcel
+tile.laboratory_door.name=Puerta de Laboratorio
+tile.factory_door.name=Puerta de Fábrica
+tile.door_factory.name=Fábrica de Puertas
+tile.custom_door.name=Puerta Personalizada
+tile.shoji_door.name=Puerta Shoji
+tile.wood_sliding_door.name=Puerta de Cristal de Madera
+tile.iron_sliding_door.name=Puerta de Cristal de Hierro
+tile.rustyHatch.name=Escotilla Oxidada
+tile.carriage_door.name=Puerta de Carruaje
+tile.medieval_door.name=Puerta Medieval
+tile.forcefieldDoor.name=Campo de Fuerza
+tile.rustyLadder.name=Escalera Oxidada
+tile.door_spruce.name=Puerta de Abeto
+tile.door_birch.name=Puerta de Abedul
+tile.door_jungle.name=Puerta de Jungla
+tile.door_acacia.name=Puerta de Acacia
+tile.door_dark_oak.name=Puerta de Roble Oscuro
+tile.iron_trapdoor.name=Trampilla de Hierro
+tile.sliding_trapdoor.name=Trampilla Deslizante
+tile.saloon.name=Puerta de Salón
+tile.trapdoor_acacia.name=Trampilla de Acacia
+tile.trapdoor_birch.name=Trampilla de Abedul
+tile.trapdoor_dark_oak.name=Trampilla de Roble Oscuro
+tile.trapdoor_jungle.name=Trampilla de Jungla
+tile.trapdoor_spruce.name=Trampilla de Abeto
+tile.camoFenceGate.name=Puerta de Valla de Camuflaje
+tile.verticalHatch.name=Puerta Reforzada
+tile.malisisdoors:hitechdoor.name=Puerta Hi-Tec
+
+tile.big_door_oak_3x3.name=Puertas Grandes Dobles de Roble
+tile.big_door_spruce_3x3.name=Puertas Grandes Dobles de Abeto
+tile.big_door_birch_3x3.name=Puertas Grandes Dobles de Abedul
+tile.big_door_jungle_3x3.name=Puertas Grandes Dobles de Jungla
+tile.big_door_acacia_3x3.name=Puertas Grandes Dobles de Acacia
+tile.big_door_dark_oak_3x3.name=Puertas Grandes Dobles de Roble Oscuro
+tile.big_door_iron_3x3.name=Puertas Grandes Dobles de Hierro
+tile.big_door_rusty_3x3.name=Puertas Grandes Dobles de Hierro Oxidado
+
+tile.curtain_white.name=Cortina Blanca
+tile.curtain_orange.name=Cortina Naranja
+tile.curtain_magenta.name=Cortina Magenta
+tile.curtain_light_blue.name=Cortina Azul Claro
+tile.curtain_yellow.name=Cortina Amarilla
+tile.curtain_lime.name=Cortina Lima
+tile.curtain_pink.name=Cortina Rosa
+tile.curtain_gray.name=Cortina Gris
+tile.curtain_silver.name=Cortina Plateada
+tile.curtain_cyan.name=Cortina Cian
+tile.curtain_purple.name=Cortina Púrpura
+tile.curtain_blue.name=Cortina Azul
+tile.curtain_brown.name=Cortina Marrón
+tile.curtain_green.name=Cortina Verde
+tile.curtain_red.name=Cortina Roja
+tile.curtain_black.name=Cortina Negra
+
+malisisdoors.command.usage=Usar /malisisdoors <comando> donde el comando es configuración o versión
+
+config.modifyVanillaDoors=Permitir Mejora de Puertas Vainilla
+config.modifyVanillaDoors.comment=Habilita las animaciones para puertas, puertas de valla y trampillas.\r\nEsto reemplaza las puertas por completo, por lo que pueden surgir conflictos si otro mod intenta modificarlas también.
+config.use3DItems=Renderiza los elementos de la puerta en 3D
+
+
+door_movement.rotating_door=Rotante
+door_movement.sliding_door=Deslizante a un lado
+door_movement.sliding_up_door=Deslizante hacia arriba
+door_movement.sliding_split_door=Deslizante hacia arriba y abajo
+door_movement.rotating_split_door=Rotante hacia arriba y abajo
+door_movement.vault_door=Bóveda
+door_movement.sliding_4ways=Deslizante cuatro sentidos
+door_movement.rotating_4ways=Rotante cuatro sentidos
+door_movement.rotate_around=Rotante alrededor
+door_movement.rotate_slide=Rotante y deslizante
+door_movement.rotate_place=Rotante y reemplazante
+door_movement.vanishing_door=Desvaneciente
+door_movement.spinning_door=Girante
+door_movement.spinning_around_door=Vórtice
+door_movement.double_slide_left=Doble deslizante a la izquierda
+door_movement.double_slide_right=Doble deslizante a la derecha
+door_movement.double_rotate_left=Doble rotante a la izquierda
+door_movement.double_rotate_right=Doble rotante a la derecha
+
+
+gui.door_factory.tab_properties=Propiedades
+gui.door_factory.tab_materials=Materiales
+gui.door_factory.tab_digicode=DigiCódigo
+gui.door_factory.rb_create=Crear
+gui.door_factory.rb_edit=Modificar
+gui.door_factory.door_movement=Movimiento
+gui.door_factory.door_open_time=Tiempo de apertura
+gui.door_factory.door_auto_close_time=Retraso de cierre automático
+gui.door_factory.proximity_detection=Detección de jugador
+gui.door_factory.redstone_behavior=Comportamiento Redstone
+gui.door_factory.door_double_door=Puerta doble
+gui.door_factory.door_sound=Tipo de sonido
+gui.door_factory.door_sound.silent_door=Silenciosa
+gui.door_factory.door_sound.vanilla_door=Puerta de madera
+gui.door_factory.door_sound.glass_door=Puerta de cristal
+gui.door_factory.door_sound.jail_door=Puerta de Cárcel
+gui.door_factory.door_sound.pneumatic_door=Puerta neumática
+gui.door_factory.door_sound.shoji_door=Puerta Shoji
+gui.door_factory.door_sound.carriage_door=Puerta grande
+gui.door_factory.door_sound.fence_gate=Puerta de valla
+gui.door_factory.door_sound.iron_door=Puerta de hierro
+gui.door_factory.door_sound.iron_trapdoor=Trampilla de Hierro
+gui.door_factory.door_sound.wooden_trapdoor=Trampilla de Madera
+
+gui.door_factory.redstone_behavior.STANDARD=Estándar
+gui.door_factory.redstone_behavior.REDSTONE_ONLY=Sólo Redstone
+gui.door_factory.redstone_behavior.REDSTONE_LOCK=Cerradura Redstone
+gui.door_factory.redstone_behavior.HAND_ONLY=Solo mano
+
+gui.door_factory.frame_type=Tipo de marco
+gui.door_factory.top_material=Material de bloque superior
+gui.door_factory.bottom_material=Material de bloque inferior
+gui.door_factory.door_edit_slot=Puerta a modificar
+gui.door_factory.create_door=Crear puerta
+gui.door_factory.edit_door=Modificar puerta
