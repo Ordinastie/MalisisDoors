@@ -310,8 +310,12 @@ public class Door extends BlockDoor implements IBoundingBox, IComponentProvider,
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
+		ItemStack door = getDoorItemStack(world,pos);
+		if (door == null) {
+			return;
+		}
 		if (!isTop(state))
-			drops.add(getDoorItemStack(world, pos));
+			drops.add(door);
 	}
 
 	@Override
